@@ -1132,7 +1132,7 @@ public class Prolog implements Serializable {
                             val1 = arg1;
                         }
 
-                        if (val1.isNumber() && arg0.unify(val1, e.mark++)) {
+                        if (/*val1.isNumber() &&*/ arg0.unify(val1, e.mark++)) {
                             return (TRUE);
                         }
                         break;

@@ -36,7 +36,7 @@ public class PrologTextArea extends TextAreaDefaults
 	    bracketHighlight = true;
 	    eolMarkerColor = new Color(0x009999);
 	    eolMarkers = false;
-	    paintInvalid = true;
+	    paintInvalid = false;
 	}
 
 	private SyntaxStyle[] getSyntaxStyles()

@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,7 +55,7 @@ public class DotNetIDE extends Frame implements IDE {
         ThinletStatusBar statusBar = new ThinletStatusBar();
 
 		editor = new ThinletTheoryEditor();
-		editor.setEngine(engine);
+		//editor.setEngine(engine);
         editor.addPropertyChangeListener(statusBar);
 		corePanel.add(editor, BorderLayout.NORTH);
 
@@ -68,7 +68,7 @@ public class DotNetIDE extends Frame implements IDE {
         corePanel.add(editArea, BorderLayout.CENTER);
 
 		ThinletConsole console = new ThinletConsole(this);
-		console.setEngine(engine);
+		//console.setEngine(engine);
         console.addPropertyChangeListener(statusBar);
         console.setStatusMessage("Ready.");
 
@@ -95,7 +95,7 @@ public class DotNetIDE extends Frame implements IDE {
         Panel IDEPanel = new Panel();
         IDEPanel.setLayout(new BorderLayout());
         toolBar = new ThinletToolBar();
-        toolBar.setEngine(engine);
+        //toolBar.setEngine(engine);
         IDEPanel.add(toolBar, BorderLayout.NORTH);
         IDEPanel.add(corePanel, BorderLayout.CENTER);
         toolBar.addPropertyChangeListener(statusBar);
@@ -106,7 +106,7 @@ public class DotNetIDE extends Frame implements IDE {
         toolBar.setFrameLauncher(frameLauncher);
         IDEPanel.add(statusBar, BorderLayout.SOUTH);
 
-        LibraryManager.getInstance().setEngine(engine);
+        //LibraryManager.getInstance().setEngine(engine);
         LibraryDialog libraryDialog = new LibraryDialog();
         toolBar.setLibraryDialog(libraryDialog);
 

@@ -171,7 +171,7 @@ class RTContext implements Serializable {
     public Term getRenamedTermCopy(Term t) {
         alice.util.LinkedList l = new alice.util.LinkedList();
         t = t.copy(l);
-        time = Var.rename(l,time,true);
+        time = Var.rename(l,time+1,true);
         return(t);
     }
 

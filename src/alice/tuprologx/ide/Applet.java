@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,20 +18,30 @@
 package alice.tuprologx.ide;
 
 import javax.swing.JApplet;
+import java.awt.event.WindowListener;
 
 /**
  * A class for serving tuProlog as an applet.
  * Note that since tuProlog cannot run under JVM 1.1, the launched IDE is directly
  * the one for the Java2 platform, without passing through GUILauncher.
- * 
+ *
  * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - 7-apr-03
+ * @version	1.1 - 27-lug-04
  */
 
 public class Applet extends JApplet {
 
     public void init() {
-        new JavaIDE().show();
+    	JavaIDE ide = new JavaIDE();
+
+    	// Remove the attached window listener, causing the applet to
+		// exit and the browser to close due to a System.exit() call.
+		WindowListener[] listeners = ide.getWindowListeners();
+		for (int i = 0; i < listeners.length; i++)
+			ide.removeWindowListener(listeners[i]);
+
+    	ide.pack();
+        ide.show();
     }
 
 } // end Applet class

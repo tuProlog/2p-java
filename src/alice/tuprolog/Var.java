@@ -35,7 +35,8 @@ public class Var extends Term {
     private String name;
 
     // time, link, mark  are used for unification process */
-    private int    time;
+	private int    time;
+	private int    timeBackup;
     private Term   link;
     private Term   linkBackup;
     private int    mark;
@@ -248,6 +249,7 @@ public class Var extends Term {
     int renameVariables(int count){
         Term tt=getTerm();
         if (tt==this){
+        	timeBackup = time;
             time=count++;
             linkBackup=link;
             return count;
@@ -258,6 +260,7 @@ public class Var extends Term {
 
     int renameVariables(int currentStage, int count){
         if (renameStage!=currentStage){
+        	timeBackup = time; 
             time=count++;
             renameStage=currentStage;
             linkBackup=link;
@@ -267,6 +270,7 @@ public class Var extends Term {
 
     void restoreVariables(){
         link=linkBackup;
+        //time=timeBackup;
     }
 
 
@@ -330,7 +334,7 @@ public class Var extends Term {
                     return(true);
                 }
             } else if (t.isStruct()){
-                // occcur-check
+                // occur-check
                 if(findIn((Struct)t)){
                     return(false);
                 }

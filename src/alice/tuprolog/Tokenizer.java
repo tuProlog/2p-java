@@ -289,7 +289,7 @@ class Tokenizer implements Serializable {
                 //
                 //if (lastTokenType==FLOAT || lastTokenType==INTEGER || lastTokenType==VARIABLE || isSym(ch)){
                 //
-                if (lastTokenType==FLOAT || lastTokenType==INTEGER || lastTokenType==VARIABLE || isSym(ch)
+                if (lastTokenType==FLOAT || lastTokenType==INTEGER || lastTokenType==VARIABLE || isSym(ch) 
                     || lastTokenType==RPAR || lastTokenType==RBRA || lastTokenType==RBRA2 ){
 
                     unreadChar(ch);
@@ -301,7 +301,27 @@ class Tokenizer implements Serializable {
                 unreadChar(ch);
                 ch = '-';
             }
-        }
+        } 
+        //-----
+	    else if(ch == '+'){
+			ch = readChar();
+			if (isDgt(ch)){
+				if (lastTokenType==FLOAT || lastTokenType==INTEGER || lastTokenType==VARIABLE || isSym(ch)
+					|| lastTokenType==RPAR || lastTokenType==RBRA || lastTokenType==RBRA2 ){
+
+					unreadChar(ch);
+					ch = '+';
+				} else {
+					//seq = "+";
+				}
+			} else {
+				unreadChar(ch);
+				ch = '+';
+			}
+		} 
+        //------
+        
+        
         if(isNum(ch)) {
             if((ch = readChar()) != '.') {
                 unreadChar(ch);
@@ -344,6 +364,12 @@ class Tokenizer implements Serializable {
                     if (ch==-1){
                         unreadChar(-1);
                         break;
+					} else if (ch=='t'){ 
+						seq += "\t";
+					} else if (ch=='r'){ 
+						seq += "\r";
+                    } else if (ch=='n'){
+                    	seq += "\n";
                     } else if (!isTer(ch)){
                         seq += "\\";
                         unreadChar(ch);
@@ -360,7 +386,7 @@ class Tokenizer implements Serializable {
             ch = readChar();
             unreadChar(ch);
             type = SQ_SEQUENCE;
-            if(ch == '('){
+            if (ch == '('){
                 type = type | FUNCTOR;
             }
             return(type);
@@ -379,9 +405,28 @@ class Tokenizer implements Serializable {
                         unreadChar(ch);
                         break;
                     }
-                } else {
-                    seq += String.valueOf((char)ch);
-                }
+				} else if (ch == '\\'){
+						// ricci 020824 - managing the line break
+					ch = readChar();
+					if (ch==-1){
+						unreadChar(-1);
+						break;
+					} else if (ch=='t'){ 
+						seq += "\t";
+					} else if (ch=='r'){ 
+						seq += "\r";
+					} else if (ch=='n'){
+						seq += "\n";
+					} else if (!isTer(ch)){
+						seq += "\\";
+						unreadChar(ch);
+					} else {
+						ch = skip();
+						unreadChar(ch);
+					}
+				} else {
+					seq += String.valueOf((char)ch);
+				}
                 ch = readChar();
             }
             // ricci - 020726 ---------------------------------

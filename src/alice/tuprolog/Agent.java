@@ -19,6 +19,8 @@ package alice.tuprolog;
 
 import java.io.*;
 
+import alice.util.Tools;
+
 /**
  * Provides a prolog virtual machine embedded in a separate thread.
  * It needs a theory and optionally a goal.
@@ -146,12 +148,14 @@ public class Agent {
 
     public static void main(String args[]){
         if (args.length==1 || args.length==2){
-            FileInputStream is;
+            
+            FileReader fr;
             try {
+				String text = Tools.loadText(args[0]);
                 if (args.length==1){
-                    new Agent(new BufferedInputStream(ClassLoader.getSystemResourceAsStream(args[0]))).spawn();
+                    new Agent(text).spawn();
                 } else {
-                    new Agent(new BufferedInputStream(ClassLoader.getSystemResourceAsStream(args[0])),args[1]).spawn();
+                    new Agent(text,args[1]).spawn();
                 }
             } catch (Exception ex){
                 System.err.println("invalid theory.");

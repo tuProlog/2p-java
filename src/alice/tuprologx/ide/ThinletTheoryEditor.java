@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,7 +33,7 @@ import java.beans.*;
 public class ThinletTheoryEditor extends Thinlet implements PropertyChangeListener {
 
     /** The Prolog engine referenced by the editor. */
-	private Prolog engine;
+	private EngineThread engine;
     /** The edit area used by the editor. */
     private TheoryEditArea editArea;
     /** A message describing the status of the console. */
@@ -43,7 +43,7 @@ public class ThinletTheoryEditor extends Thinlet implements PropertyChangeListen
 
 	public ThinletTheoryEditor() {
 		try {
-			add(parse("ThinletTheoryEditor.xml"));
+			add(parse("xml/ThinletTheoryEditor.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,7 +55,7 @@ public class ThinletTheoryEditor extends Thinlet implements PropertyChangeListen
      *
      * @return The Prolog engine referenced by the editor.
      */
-	public Prolog getEngine() {
+	public EngineThread getEngine() {
 		return engine;
 	}
 
@@ -64,7 +64,7 @@ public class ThinletTheoryEditor extends Thinlet implements PropertyChangeListen
      *
      * @param engine an <code>alice.tuprolog.Prolog</code> engine.
      */
-	public void setEngine(Prolog engine) {
+	public void setEngine(EngineThread engine) {
 		this.engine = engine;
 	}
 
@@ -116,21 +116,24 @@ public class ThinletTheoryEditor extends Thinlet implements PropertyChangeListen
 		String theory = editArea.getTheory();
 		try {
 			getEngine().setTheory(new Theory(theory));
-            editArea.setDirty(false);
-            setStatusMessage("New theory accepted.");
+			editArea.setDirty(false);
+			setStatusMessage("New theory accepted.");
 		} catch (InvalidTheoryException ite) {
 			setStatusMessage("Error setting theory: Syntax Error at/before line " + ite.line);
-		} catch (Exception e) {
-            e.printStackTrace();
-            setStatusMessage("Error setting theory: Generic failure.");
-        }
+		} catch (EngineRunningException e) {
+			setStatusMessage("Error setting theory: " + e.getMessage());
+		} 
 	}
 
     /**
      * Get the tuProlog engine's current theory and display it in the edit area.
      */
     public void getEngineTheory() {
-        editArea.setTheory(engine.getTheory().toString());
+        try {
+			editArea.setTheory(engine.getTheory().toString());
+		} catch (EngineRunningException e) {
+			setStatusMessage(e.getMessage());
+		}
         setStatusMessage("Engine theory displayed.");
 	}
 

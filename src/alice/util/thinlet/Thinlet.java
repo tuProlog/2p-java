@@ -342,7 +342,7 @@ public class Thinlet extends Container //java
 						Math.max(0, (bounds.height - d.height) / 2),
 						Math.min(d.width, bounds.width), Math.min(d.height, bounds.height));
 				} else if ((iclass == ":combolist") || (iclass == ":popup")) {
-						iclass = iclass; //compiler bug
+						//iclass = iclass; //compiler bug
 				} else {
 					setRectangle(comp, "bounds", 0, 0, bounds.width, bounds.height);
 				}
@@ -5230,7 +5230,7 @@ public class Thinlet extends Container //java
 					(("row" == parentclass) && ("cell" == classname)) ||
 					((("tree" == parentclass) || ("node" == parentclass)) && ("node" == classname)) ||
 					(("menubar" == parentclass) && ("menu" == classname))) {
-				classname = classname; // compiler bug
+				//classname = classname; // compiler bug
 		}
 		else if (("menu" == parentclass) && (("menu" == classname) || ("menuitem" == classname) ||
 				("checkboxmenuitem" == classname) || ("separator" == classname))) {

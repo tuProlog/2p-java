@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -58,7 +58,7 @@ public class DotNetIOManager extends IOFileOperations {
             return null;
     }
 
-    public String saveTheoryAs(Prolog engine) throws Exception {
+    public String saveTheoryAs(EngineThread engine) throws Exception {
         FileDialog dialog = new FileDialog(parent, "Save Theory As...", FileDialog.SAVE);
         dialog.setDirectory(currentSaveDirectory);
         dialog.show();

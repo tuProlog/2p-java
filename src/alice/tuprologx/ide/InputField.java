@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,7 +35,7 @@ interface InputField {
      * This behaviour will change as soon as there will be no need of
      * separate input components for .NET and Java2, i.e. as soon as
      * the AltGr bug in Thinlet, preventing the use of italian keycombo
-     * AltGr + 'è' and AltGr + '+' to write '[' and ']', will be solved.
+     * AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
      */
     void setConsole(ThinletConsole console);
 
@@ -49,7 +49,7 @@ interface InputField {
     /**
      * Add the displayed goal to the history of the requested goals.
      */
-    public void setHistory();
+    public void addGoalToHistory();
 
     /**
      * Enable or disable the possibility of asking for goals to be solved.

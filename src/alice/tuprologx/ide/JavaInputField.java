@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,8 +21,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-import java.util.*;
-
 /**
  * An input field for the Java2 platform using Swing components.
  * 
@@ -35,9 +33,7 @@ public class JavaInputField extends JPanel implements InputField {
     /** The input field used in the graphic interface. */
     private JTextField inputField;
     /** A store for the history of the requested goals. */
-    private ArrayList history;
-    /** An index to navigate through the history. */
-    private int historyIndex;
+    private History history;
     /** The console referenced by this component. */
     private ThinletConsole console; // hopefully this will not needed soon...
 
@@ -53,8 +49,8 @@ public class JavaInputField extends JPanel implements InputField {
                 solve();
             }
         });
-        history = new ArrayList();
-        historyIndex = 0;
+
+        history = new History();
 
         setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
@@ -77,24 +73,11 @@ public class JavaInputField extends JPanel implements InputField {
      */
     private void inputFieldKeyReleased(KeyEvent event) {
         int code = event.getKeyCode();
-        if (code == 38) { // up arrow
-            // previous in history
-            if (historyIndex > 0) // first check on the size
-                historyIndex--;
-            if (historyIndex < history.size()) // second check on the size
-                inputField.setText((String) history.get(historyIndex));
-            else
-                inputField.setText("");
-        } else
-            if (code == 40) { // down arrow
-                // next in history
-                if (historyIndex < history.size()) // first check on the size
-                    historyIndex++;
-                if (historyIndex < history.size()) // second check on the size
-                    inputField.setText((String) history.get(historyIndex));
-                else
-                    inputField.setText("");
-            }
+        if (code == 38) // up arrow
+        	inputField.setText(history.previous());
+        else
+        	if (code == 40) // down arrow
+            	inputField.setText(history.next());
     }
 
     /**
@@ -105,7 +88,7 @@ public class JavaInputField extends JPanel implements InputField {
      * This behaviour will change as soon as there will be no need of
      * separate input components for .NET and Java2, i.e. as soon as
      * the AltGr bug in Thinlet, preventing the use of italian keycombo
-     * AltGr + 'è' and AltGr + '+' to write '[' and ']', will be solved.
+     * AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
      */
     public void setConsole(ThinletConsole console) {
         this.console = console;
@@ -115,11 +98,11 @@ public class JavaInputField extends JPanel implements InputField {
      * Solve the goal currently displayed in the input field.
      */
     public void solve() {
-        setHistory();
+        addGoalToHistory();
         console.solve();
     }
 
-    public void setHistory() {
+    public void addGoalToHistory() {
         history.add(getGoal());
     }
 

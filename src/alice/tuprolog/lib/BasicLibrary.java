@@ -61,7 +61,7 @@ public class BasicLibrary extends Library {
             if (!theory.isAtom()){
                 return false;
             }
-            getEngine().setTheory(new Theory(theory.getName()));
+            getEngine().addTheory(new Theory(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex){
             System.err.println("invalid theory - line "+ex.line);
@@ -78,6 +78,15 @@ public class BasicLibrary extends Library {
             return false;
         }
     }
+
+	public boolean load_library_2(Struct className, Term libName){
+		try {
+			Library lib = getEngine().loadLibrary(alice.util.Tools.removeApices(className.getName()));
+			return unify(libName,new Struct(lib.getName()));
+		} catch (Exception ex){
+			return false;
+		}
+	}
 
     public boolean get_operators_list_1(Struct arg){
         Struct list=new Struct();

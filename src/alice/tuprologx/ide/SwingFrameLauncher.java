@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -62,7 +62,7 @@ public class SwingFrameLauncher implements FrameLauncher {
             height = Math.min(height, screenSize.height);
             f.setBounds((screenSize.width - width) / 2, (screenSize.height - height) / 2, width, height);
         }
-        f.show();
+        f.setVisible(true);
     }
 
     public void setFrameIcon(String imagePathName) {

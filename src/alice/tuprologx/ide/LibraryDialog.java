@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,7 +33,7 @@ public class LibraryDialog extends Thinlet {
 
     public LibraryDialog() {
         try {
-			add(parse("LibraryDialog.xml"));
+			add(parse("xml/LibraryDialog.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,9 +85,15 @@ public class LibraryDialog extends Thinlet {
         Object choiceUnloaded = create("choice");
         add(combobox, choiceUnloaded, 1);
         setString(choiceUnloaded, "text", "Unloaded");
-        boolean selected = libraryManager.isLibraryLoaded(library.toString());
-        setInteger(combobox, "selected", selected ? 0 : 1);
-        setInteger(combobox, "weightx", 10);
+        boolean selected;
+		try {
+			selected = libraryManager.isLibraryLoaded(library.toString());
+			setInteger(combobox, "selected", selected ? 0 : 1);
+	        setInteger(combobox, "weightx", 10);
+		} catch (EngineRunningException e) {
+			setStatusMessage("Error loading library: " + e.getMessage());
+		}
+		
     }
 
     /**
@@ -137,11 +143,13 @@ public class LibraryDialog extends Thinlet {
                     libraryManager.loadLibrary(libraryClassname);
                 if (status.equals("Unloaded"))
                     libraryManager.unloadLibrary(libraryClassname);
+                closeLibraryDialog();
             } catch (alice.tuprolog.InvalidLibraryException e) {
                 setStatusMessage(e.getMessage());
-            }
+            } catch (EngineRunningException e) {
+            	setStatusMessage("Failed: " + e.getMessage());
+			}
         }
-        closeLibraryDialog();
     }
 
     /**

@@ -127,7 +127,7 @@ public class Parser implements Serializable {
             throw new InvalidTermException();
         } else if (p.tokenizer.readToken().getAttribute()==Tokenizer.EOF){
             try {
-                term.resolveVariables(0);
+                term.resolveVariables();
                 return term;
             } catch (Exception ex){
                 throw new InvalidTermException();
@@ -297,11 +297,33 @@ public class Parser implements Serializable {
 
             return(t);
         } else if(type == Tokenizer.LBRA2) {
+            //
+            //
+            //System.out.println("PARSING {");
+            Token atok = tokenizer.readToken();
+ 			if (atok.getType() == Tokenizer.RBRA2){
+				//System.out.println("PARSING {} OK");
+ 				return new Struct("{}"); 
+ 			} else {
+ 				tokenizer.unreadToken(atok);
+ 				Term arg    = exprA(OperatorManager.OP_HIGH);
+				//System.out.println("PARSING {} content: "+arg);
+				if (tokenizer.readToken().getType() != Tokenizer.RBRA2){
+					throw(new Exception());
+				}
+				Term t = new Struct("{}",arg);
+				return t;
+ 			}
+			//
+			//
+            
+			/*            
             Term t = expr0_list_bracket();
             if(tokenizer.readToken().getType() != Tokenizer.RBRA2){
                 throw(new Exception());
             }
             return(t);
+            */
         } else if(type == Tokenizer.INTEGER){
             long num=new java.lang.Long(tk.seq).longValue();
             if (num>Integer.MIN_VALUE && num<Integer.MAX_VALUE){

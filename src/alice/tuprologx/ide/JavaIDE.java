@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,7 +36,8 @@ public class JavaIDE extends JFrame implements IDE {
     private ThinletTheoryEditor editor;
     private JavaEditArea editArea;
     private ThinletToolBar toolBar;
-
+	private Prolog engine;
+	
     public JavaIDE() {
         super("tuProlog IDE");
         initComponents();
@@ -48,7 +49,11 @@ public class JavaIDE extends JFrame implements IDE {
     private void initComponents() {
         JPanel corePanel = new JPanel();
         corePanel.setLayout(new BorderLayout());
-        Prolog engine = new Prolog();
+        
+        engine = new Prolog();
+
+        
+        EngineThread et = new EngineThread(engine, null);
         System.out.println("tuProlog system - release " + Prolog.getVersion());
         ThinletDebugArea debugArea = new ThinletDebugArea();
         engine.addSpyListener(debugArea);
@@ -56,7 +61,7 @@ public class JavaIDE extends JFrame implements IDE {
         ThinletStatusBar statusBar = new ThinletStatusBar();
 
         editor = new ThinletTheoryEditor();
-        editor.setEngine(engine);
+        editor.setEngine(et);
         editor.addPropertyChangeListener(statusBar);
         corePanel.add(editor, BorderLayout.NORTH);
 
@@ -69,7 +74,7 @@ public class JavaIDE extends JFrame implements IDE {
         editArea.setBackground(new Color(230, 230, 230));
 
         ThinletConsole console = new ThinletConsole(this);
-        console.setEngine(engine);
+        console.setEngine(et);
         console.addPropertyChangeListener(statusBar);
         console.setStatusMessage("Ready.");
 
@@ -95,18 +100,18 @@ public class JavaIDE extends JFrame implements IDE {
         JPanel IDEPanel = new JPanel();
         IDEPanel.setLayout(new BorderLayout());
         toolBar = new ThinletToolBar();
-        toolBar.setEngine(engine);
+        toolBar.setEngine(et);
         IDEPanel.add(toolBar, BorderLayout.NORTH);
         IDEPanel.add(corePanel, BorderLayout.CENTER);
         toolBar.addPropertyChangeListener(statusBar);
         toolBar.setDebugArea(debugArea);
         toolBar.setFileManager(new JavaIOManager(toolBar));
         FrameLauncher frameLauncher = new SwingFrameLauncher();
-        frameLauncher.setFrameIcon("tuProlog.gif");
+        frameLauncher.setFrameIcon("img/tuProlog.gif");
         toolBar.setFrameLauncher(frameLauncher);
         IDEPanel.add(statusBar, BorderLayout.SOUTH);
 
-        LibraryManager.getInstance().setEngine(engine);
+        LibraryManager.getInstance().setEngine(et);
         LibraryDialog libraryDialog = new LibraryDialog();
         toolBar.setLibraryDialog(libraryDialog);
 
@@ -117,11 +122,27 @@ public class JavaIDE extends JFrame implements IDE {
         });
 
         getContentPane().add(IDEPanel);
-
+ 
         // Set a title bar icon
-        ImageIcon icon = new ImageIcon(getClass().getResource("tuProlog.gif"));
+        ImageIcon icon = new ImageIcon(getClass().getResource("img/tuProlog.gif"));
         setIconImage(icon.getImage());
+ 
+		engine.addWarningListener(debugArea);
+		engine.addOutputListener(console);
+		engine.addSpyListener(debugArea);
+
+ 
     }
+
+	public void onOutput(OutputEvent e) {
+		System.out.print(e.getMsg());
+	}
+	public void onSpy(SpyEvent e) {
+		System.out.println(e.getMsg());
+	}
+	public void onWarning(WarningEvent e) {
+		System.out.println(e.getMsg());
+	}
 
     public void enableTheoryCommands(boolean flag) {
         editor.enableTheoryCommands(flag);

@@ -144,6 +144,7 @@ public class Struct extends Term {
     public Struct() {
         this(".",2);
         arg[0] = arg[1] = NullTerm.NULL_TERM;
+        resolved = true;
     }
 
 
@@ -708,11 +709,24 @@ public class Struct extends Term {
     }
 
     private String toString0_bracket() {
-        if (arity==1){
-            return arg[0].getTerm().toString();
+		if (arity==0){
+			return "";
+		} else if (arity==1 && !((arg[0].isStruct()) && ((Struct)arg[0]).getName().equals(","))){
+        	return arg[0].getTerm().toString();
         } else {
-            return arg[0]+","+((Struct)arg[1]).toString0_bracket();
-        }
+        	// comma case 
+			Term head = ((Struct)arg[0]).getTerm(0);
+			Term tail = ((Struct)arg[0]).getTerm(1);
+			StringBuffer buf = new StringBuffer(head.toString());
+			while (tail.isStruct() && ((Struct)tail).getName().equals(",")){
+				head = ((Struct)tail).getTerm(0);
+				buf.append(","+head.toString());
+				tail = ((Struct)tail).getTerm(1);
+			}
+			buf.append(","+tail.toString());
+			return buf.toString();
+            //	return arg[0]+","+((Struct)arg[1]).toString0_bracket();
+    	}
     }
 
     private String toStringAsList(OperatorManager op) {

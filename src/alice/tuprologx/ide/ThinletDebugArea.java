@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -27,11 +27,11 @@ import alice.util.thinlet.*;
  * @version	1.0 - 15-dic-02
  */
 
-public class ThinletDebugArea extends Thinlet implements SpyListener {
+public class ThinletDebugArea extends Thinlet implements SpyListener, WarningListener {
 
     public ThinletDebugArea() {
         try {
-			add(parse("ThinletDebugArea.xml"));
+			add(parse("xml/ThinletDebugArea.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -42,6 +42,12 @@ public class ThinletDebugArea extends Thinlet implements SpyListener {
         String debugMessage = getString(debugArea, "text");
         setString(debugArea, "text", debugMessage + event.getMsg() + "\n");
     }
+
+	public void onWarning(WarningEvent event) {
+		Object debugArea = find("debugArea");
+		String debugMessage = getString(debugArea, "text");
+		setString(debugArea, "text", debugMessage + event.getMsg() + "\n");
+	}
 
     /**
      * Clear the debug area.

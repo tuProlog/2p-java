@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@ import java.util.*;
 public final class LibraryManager {
 
     /** The Prolog engine referenced by the Library Manager. */
-    private Prolog engine;
+    private EngineThread engine;
     /** The LibraryManager class is a Singleton. */
     private static final LibraryManager singleton = new LibraryManager();
     /** Stores classnames for managed libraries. */
@@ -64,7 +64,7 @@ public final class LibraryManager {
      *
      * @param engine The engine to be referenced by the library manager.
      */
-    public void setEngine(Prolog engine) {
+    public void setEngine(EngineThread engine) {
         this.engine = engine;
     }
 
@@ -73,7 +73,7 @@ public final class LibraryManager {
      *
      * @return the engine referenced by the library manager.
      */
-    public Prolog getEngine() {
+    public EngineThread getEngine() {
         return engine;
     }
 
@@ -82,8 +82,9 @@ public final class LibraryManager {
      *
      * @param libraryClassname The complete name of the library class to check.
      * @return true if the library is loaded into the engine, false otherwise.
+     * @throws EngineRunningException
      */
-    public boolean isLibraryLoaded(String libraryClassname) {
+    public boolean isLibraryLoaded(String libraryClassname) throws EngineRunningException {
         return (engine.getLibrary(libraryClassname) != null);
     }
 
@@ -116,9 +117,10 @@ public final class LibraryManager {
      * Load a library from the Library Manager into the engine.
      *
      * @param library The library to be loaded into the engine.
-     * @throws InvalidLibraryException if the library is not a valid one.
+     * @throws InvalidLibraryException
+     * @throws EngineRunningException
      */
-    public void loadLibrary(String library) throws InvalidLibraryException {
+    public void loadLibrary(String library) throws InvalidLibraryException, EngineRunningException {
         engine.loadLibrary(library);
     }
 
@@ -126,9 +128,10 @@ public final class LibraryManager {
      * Unload a library from the Library Manager out of the engine.
      *
      * @param library The library to be unloaded out of the engine.
-     * @throws InvalidLibraryException if the library is not a valid one.
+     * @throws InvalidLibraryException
+     * @throws EngineRunningException
      */
-    public void unloadLibrary(String library) throws InvalidLibraryException {
+    public void unloadLibrary(String library) throws InvalidLibraryException, EngineRunningException {
         engine.unloadLibrary(library);
     }
 

@@ -6,10 +6,12 @@
         <tab text="Output"/>
         <textarea name="outputArea" editable="false"/>
     </tabbedpane>
-    <panel columns="2" gap="4" halign="center">
+    <panel columns="3" gap="4" halign="center">
         <button name="nextButton" text="Next" icon="StepForward16.gif"
             tooltip="Ask for next solution" enabled="false" action="getNextSolution"/>
         <button name="acceptButton" text="Accept" icon="Stop16.gif"
             tooltip="Accept current solution" enabled="false" action="acceptSolution"/>
+        <button name="haltButton" text="Halt" icon="Stop16.gif"
+            tooltip="Halt current demo" enabled="false" action="haltDemonstration"/>
     </panel>
 </panel>

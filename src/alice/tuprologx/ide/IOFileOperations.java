@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -68,14 +68,16 @@ abstract class IOFileOperations {
      * if the operation is cancelled.
      * @throws java.lang.Exception if something goes wrong.
      */
-    public abstract String saveTheoryAs(Prolog engine) throws Exception;
+    public abstract String saveTheoryAs(EngineThread engine) throws Exception;
 
-    public String saveTheory(Prolog engine) throws Exception {
+    public String saveTheory(EngineThread engine) throws Exception {
         return save(engine);
     }
 
-    protected String save(Prolog engine) throws IOException {
-        new FileOutputStream(currentTheoryFileName).write(engine.getTheory().toString().getBytes());
+    protected String save(EngineThread engine) throws IOException, EngineRunningException {
+        FileOutputStream _file = new FileOutputStream(currentTheoryFileName);
+        _file.write(engine.getTheory().toString().getBytes());
+        _file.close();
         return currentTheoryFileName;
     }
 

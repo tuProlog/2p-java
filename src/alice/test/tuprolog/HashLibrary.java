@@ -24,31 +24,24 @@ import alice.tuprolog.*;
 import java.util.*;
 
 public class HashLibrary extends Library {
-	
-	private HashMap dicts = new HashMap();
-	private int counter = 0;
+	private HashMap dict;
 		
-	public boolean new_dict_1(Var arg0){
-		HashMap map = new HashMap();
-		String dict_name = "dict_"+counter++;
-		dicts.put(dict_name,map);
-		return unify(arg0, new Struct(dict_name));
+	public boolean hashtable_0(){
+		dict = new HashMap();
+		return true;
 	} 
 	
-	public boolean dict_put_3(Struct dictRef, Struct key, Term object){
-		HashMap dict = (HashMap)dicts.get(dictRef.toString());
+	public boolean put_data_2(Term key, Term object){
 		dict.put(key.toString(),object);
 		return true;
 	}
 	
-	public boolean dict_get_3(Struct dictRef, Struct key, Term res){
-		HashMap dict = (HashMap)dicts.get(dictRef.toString());
+	public boolean get_data_2(Term key, Term res){
 		Term result = (Term)dict.get(key.toString());
 		return unify(res,result);
 	}
 	
-	public boolean dict_remove_2(Struct dictRef, Struct key){
-		HashMap dict = (HashMap)dicts.get(dictRef.toString());
+	public boolean remove_data_1(Term key){
 		dict.remove(key.toString());
 		return true;
 	}

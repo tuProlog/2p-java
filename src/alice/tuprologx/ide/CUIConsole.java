@@ -2,7 +2,6 @@ package alice.tuprologx.ide;
 
 import alice.util.*;
 import alice.tuprolog.*;
-import alice.tuprolog.lib.*;
 import java.io.*;
 
 public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener {

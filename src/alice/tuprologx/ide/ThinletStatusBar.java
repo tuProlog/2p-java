@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,7 @@ public class ThinletStatusBar extends Thinlet implements PropertyChangeListener 
 
     public ThinletStatusBar() {
         try {
-			add(parse("ThinletStatusBar.xml"));
+			add(parse("xml/ThinletStatusBar.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

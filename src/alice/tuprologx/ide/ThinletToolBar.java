@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2003  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2004  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@ import java.beans.*;
 public class ThinletToolBar extends Thinlet {
 
     /** The Prolog engine referenced by the toolbar. */
-    private Prolog engine;
+    private EngineThread engine;
     /** The debug area launched by the toolbar. */
     private Thinlet debugArea;
     /** The Library dialog launched by the toolbar. */
@@ -48,7 +48,7 @@ public class ThinletToolBar extends Thinlet {
 
     public ThinletToolBar() {
         try {
-			add(parse("ThinletToolBar.xml"));
+			add(parse("xml/ThinletToolBar.xml"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,7 +60,7 @@ public class ThinletToolBar extends Thinlet {
      *
      * @return The Prolog engine referenced by the toolbar.
      */
-    public Prolog getEngine() {
+    public EngineThread getEngine() {
 		return engine;
 	}
 
@@ -69,7 +69,7 @@ public class ThinletToolBar extends Thinlet {
      *
      * @param engine an <code>alice.tuprolog.Prolog</code> engine.
      */
-	public void setEngine(Prolog engine) {
+	public void setEngine(EngineThread engine) {
 		this.engine = engine;
 	}
 
@@ -163,7 +163,11 @@ public class ThinletToolBar extends Thinlet {
      * Reset the engine's theory to a new blank theory.
      */
     public void newTheory() {
-        engine.clearTheory();
+        try {
+			engine.clearTheory();
+		} catch (EngineRunningException e) {
+			setStatusMessage("Error clearing Theory: " + e.getMessage());
+		}
         fileManager.resetDefaultTheoryFileName();
         setStatusMessage("Ready (new theory accepted).");
     }
@@ -190,6 +194,7 @@ public class ThinletToolBar extends Thinlet {
      */
     public void saveTheory() {
         try {
+        		//System.out.println(engine.getTheory().toString());
             String theoryFileName = fileManager.saveTheory(engine);
             setStatusMessage("Theory saved to " + theoryFileName + ".");
         } catch (Exception exception){
@@ -234,7 +239,7 @@ public class ThinletToolBar extends Thinlet {
     public void viewAboutInformation() {
         Thinlet aboutThinlet = new Thinlet();
         try {
-            aboutThinlet.add(parse("AboutDialog.xml"));
+            aboutThinlet.add(parse("xml/AboutDialog.xml"));
         } catch (Exception e) {
             e.printStackTrace();
         }

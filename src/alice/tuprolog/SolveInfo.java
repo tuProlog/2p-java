@@ -89,6 +89,13 @@ public class SolveInfo implements Serializable  {
     }
 
 
+	/**
+	 * Gets the list of the variables in the solution.
+	 * @return the arrray of variables.
+	 * 
+	 * @throws NoSolutionException if current solve information
+	 * does not concern a successful 
+	 */
     public Var[]  toVarArray() throws NoSolutionException {
         if (isSuccess){
             return bindings;
@@ -97,6 +104,37 @@ public class SolveInfo implements Serializable  {
         }
     }
     
+    
+    /**
+     * 
+     * Gets the term value bound to a variable
+     * 
+     * @param name the variable name
+     * @return the term value bound to the variable or null if the variable is not found
+     * @throws NoSolutionException if the solve request has no solution
+     */
+	public Term getVarValue(String name) throws NoSolutionException {
+		if (isSuccess){
+			String st="";
+			for (int i=0; i<bindings.length; i++){
+				if (bindings[i]!=null && !bindings[i].getName().equals(name)){
+					return bindings[i].getTerm();
+				}
+			}
+			return null;
+		} else {
+			throw new NoSolutionException();
+		}
+   }
+   
+    
+	/**
+	 * Returns the string representation of the result of the demonstration.
+	 * 
+	 * For successful demonstration, the representation concerns 
+	 * variables with bindings.  For failed demo, the method returns false string.
+	 * 
+	 */    
     public String toString(){
         if (isSuccess){
             String st="";

@@ -78,13 +78,13 @@ public class JavaLibrary extends Library {
                 //
                 // flags defined by the JavaLibrary theory
                 //
-                ":- flag(java_object_backtrackable,[true,false],false,true).\n" +
+                //":- flag(java_object_backtrackable,[true,false],false,true).\n" +
                 //
                 //
-                "java_object(ClassName,Args,Id):- current_prolog_flag(java_object_backtrackable,false),!,java_object_nb(ClassName,Args,Id).\n" +
-                "java_object(ClassName,Args,Id):- !,java_object_bt(ClassName,Args,Id).\n" +
+                //"java_object(ClassName,Args,Id):- current_prolog_flag(java_object_backtrackable,false),!,java_object_nb(ClassName,Args,Id).\n" +
+                //"java_object(ClassName,Args,Id):- !,java_object_bt(ClassName,Args,Id).\n" +
 
-                "java_object_bt(ClassName,Args,Id):- java_object_nb(ClassName,Args,Id).\n" +
+                "java_object_bt(ClassName,Args,Id):- java_object(ClassName,Args,Id).\n" +
                 "java_object_bt(ClassName,Args,Id):- destroy_object(Id).\n" +
 
                 "Obj <- What :- java_call(Obj,What,Res), Res \\== false.\n" +
@@ -161,7 +161,7 @@ public class JavaLibrary extends Library {
     /**
      * Creates of a java object - not backtrackable case
      */
-    public   boolean java_object_nb_3(Term className, Struct arg, Term id) {
+    public   boolean java_object_3(Term className, Struct arg, Term id) {
         try {
             if (!className.isAtom()) {
                 return false;
@@ -223,7 +223,7 @@ public class JavaLibrary extends Library {
     public   boolean destroy_object_1(Term id) {
         try {
             if (id.isGround()) {
-                unregisterObject(id);
+                unregisterDynamic((Struct)id);
             }
             return true;
         } catch (Exception ex) {
@@ -867,6 +867,18 @@ public class JavaLibrary extends Library {
         }
     }
 
+
+	/**
+	 * Unregisters a previously registered object.
+	 */
+	public   boolean unregister(Struct id) throws InvalidObjectIdException {
+		if (!id.isGround()) {
+			throw new InvalidObjectIdException();
+		}
+		return unregisterDynamic(id);
+	}
+
+
     /**
      * registers an object and returns a fresh id
      */
@@ -894,6 +906,19 @@ public class JavaLibrary extends Library {
         }
     }
 
+	/**
+	 * gets a registered dynamic object
+	 * (returns null if not presents)
+	 */
+	public   Object getRegisteredDynamicObject(Struct id) throws InvalidObjectIdException {
+		if (!id.isGround()) {
+			throw new InvalidObjectIdException();
+		}
+		synchronized (currentObjects){
+			return currentObjects.get(alice.util.Tools.removeApices(id.toString()));
+		}
+	}
+
     /**
      * tries to bind specified id to a provided java object
      */
@@ -916,7 +941,7 @@ public class JavaLibrary extends Library {
                     // get a ground term
                     Term idTerm = getGroundObject(id, getObjId());
                     unify(id, idTerm);
-                    registerObject(id, obj);
+                    registerDynamic((Struct)id, obj);
                     //log("not ground id for a new obj: "+id+" as ref for "+obj);
                     return true;
                 } else {
@@ -924,7 +949,7 @@ public class JavaLibrary extends Library {
                     String raw_name = alice.util.Tools.removeApices(id.getTerm().toString());
                     Object linkedobj = currentObjects.get(raw_name);
                     if (linkedobj == null) {
-                        registerObject(id, obj);
+                        registerDynamic((Struct)id, obj);
                         //log("ground id for a new obj: "+id+" as ref for "+obj);
                         return true;
                     } else {
@@ -968,7 +993,7 @@ public class JavaLibrary extends Library {
         return id++;
     }
 
-    protected void registerObject(Term term, Object obj) {
+    public void registerDynamic(Struct term, Object obj) {
         synchronized (currentObjects){
             String raw_name = alice.util.Tools.removeApices(term.getTerm().toString());
             currentObjects.put(raw_name, obj);
@@ -976,12 +1001,15 @@ public class JavaLibrary extends Library {
         }
     }
 
-    protected void unregisterObject(Term term) {
+    public boolean unregisterDynamic(Struct term) {
         synchronized (currentObjects){
             String raw_name = alice.util.Tools.removeApices(term.getTerm().toString());
             Object obj = currentObjects.remove(raw_name);
             if (obj != null) {
                 currentObjects_inverse.remove(obj);
+                return true;
+            } else {
+            	return false;
             }
         }
     }
