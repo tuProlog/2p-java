@@ -48,7 +48,7 @@ public class Var extends Term {
      * specified as a name, the variable is anonymous.
      *
      * @param n is the name
-     * @throws s InvalidVarNameException if n is not a valid name
+     * @throws InvalidVarNameException if n is not a valid name
      */
     public Var(String n) throws InvalidVarNameException {
         time = -1;

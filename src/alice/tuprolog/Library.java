@@ -31,21 +31,18 @@ import java.util.*;
  * <ul>
  * <li> a theory (as a string assigned to theory field)
  * <li> builtin predicates: each method whose signature is
- *       boolean name_arity(Struct goal)
+ *       boolean name_arity(Term arg0, Term arg1,...)
  *   is considered a built-in predicate provided by the library
  * <li> builtin evaluable functors: each method whose signature is
- *       Term name_arity(Struct goal)
+ *       Term name_arity(Term arg0, Term arg1,...)
  *   is considered a built-in functors provided by the library
  * </ul>
  * <p>
- * typically theory is assigned in library constructor
  *
  *
  *
  */
 public abstract class Library  implements Serializable {
-
-    private static final Class[] ARG_ARRAY = new Class[]{ Struct.class };
 
     /** prolog core which loaded the library */
     private Prolog engine;
@@ -57,6 +54,17 @@ public abstract class Library  implements Serializable {
         opMappingCached = getOperatorSynonymMap();
     }
 
+	/**
+	 * Gets the name of the library. 
+	 * 
+	 * By default the name is the class name.
+	 * 
+	 * @return the library name
+	 */
+	public String getName(){
+		return getClass().getName();
+	}
+	
     /**
      * Gets the theory provided with the library
      *
@@ -74,7 +82,12 @@ public abstract class Library  implements Serializable {
         return null;
     }
 
-    protected Prolog getEngine(){
+    /**
+     * Gets the engine to which the library is bound
+     *
+     * @return the engine
+     */
+    public Prolog getEngine(){
         return engine;
     }
 
@@ -85,7 +98,7 @@ public abstract class Library  implements Serializable {
     /**
      * tries to unify two terms
      *
-     * The runtime (demo) context currently used by the engine
+     * The runtime (demonstration) context currently used by the engine
      * is deployed and altered.
      */
     protected boolean unify(Term a0,Term a1){
@@ -108,7 +121,11 @@ public abstract class Library  implements Serializable {
         if (term.isNumber()){
             return term;
         }
-
+        
+        if (term.isVar()){
+            return null;
+        }
+        
         Struct t=(Struct)term;
         if (!t.isBuiltIn()){
             return null;
@@ -142,15 +159,27 @@ public abstract class Library  implements Serializable {
             ArrayList list=new ArrayList();
             for (int i=0; i<mlist.length; i++){
                 String name=mlist[i].getName();
+                
                 Class[] clist=mlist[i].getParameterTypes();
                 Class   rclass=mlist[i].getReturnType();
-                if (clist.length==1 && rclass.getName().equals("boolean")
-                        && clist[0].getName().endsWith(".Struct")){
+                if (rclass.getName().equals("boolean")){
                     int index=name.lastIndexOf('_');
                     if (index!=-1){
                         try {
                             int arity=Integer.parseInt(name.substring(index+1,name.length()));
-                            list.add(name);
+                            // check arg number
+                            if (clist.length==arity){
+                            	boolean valid=true;
+                            	for (int j=0; j<arity; j++){
+									if (!(Term.class.isAssignableFrom(clist[j]))){
+                            			valid=false;
+                            			break;
+                            		}
+                            	}
+                            	if (valid){
+                            		list.add(name);
+                            	}
+                            }
                         } catch (Exception ex){
                         }
                     }
@@ -173,26 +202,36 @@ public abstract class Library  implements Serializable {
                 String name=mlist[i].getName();
                 Class[] clist=mlist[i].getParameterTypes();
                 Class   rclass=mlist[i].getReturnType();
-                if (clist.length==1 && rclass.getName().endsWith(".Term")
-                        && clist[0].getName().endsWith(".Struct")){
+                if (rclass.getName().endsWith(".Term")){
                     int index=name.lastIndexOf('_');
                     if (index!=-1){
                         try {
                             String arityPart=name.substring(index+1,name.length());
                             int arity=Integer.parseInt(arityPart);
-                            list.add(name);
-                            //
-                            // adding also or synonims
-                            //
-                            if (opMappingCached!=null){
-                                String rawName=name.substring(0,index);
-                                for (int j=0; j<opMappingCached.length; j++){
-                                    String[] map=opMappingCached[j];
-                                    if (map[1].equals(rawName)){
-                                        list.add(map[0]+"_"+arityPart);
-                                    }
-                                }
-                            }
+							if (clist.length==arity){
+								boolean valid=true;
+								for (int j=0; j<arity; j++){
+									if (!(Term.class.isAssignableFrom(clist[j]))){
+										valid=false;
+										break;
+									}
+								}
+								if (valid){
+                            		list.add(name);
+		                            //
+		                            // adding also or synonims
+		                            //
+		                            if (opMappingCached!=null){
+		                                String rawName=name.substring(0,index);
+		                                for (int j=0; j<opMappingCached.length; j++){
+		                                    String[] map=opMappingCached[j];
+		                                    if (map[1].equals(rawName)){
+		                                        list.add(map[0]+"_"+arityPart);
+		                                    }
+		                                }
+		                            }
+								}
+							}
                         } catch (Exception ex){
                             ex.printStackTrace();
                             return null;
@@ -212,27 +251,50 @@ public abstract class Library  implements Serializable {
      *
      */
     public Method getLinkedMethod(Struct s){
-        try {
-            return this.getClass().getMethod(s.getName()+"_"+s.getArity(),ARG_ARRAY);
-        } catch (NoSuchMethodException ex){
+			//System.out.println("get linked for "+s);         
+		
+			int arity = s.getArity();
+			String name = s.getName()+"_"+arity; 
+
+			// NOT found, Try with synonims
+			Method m = findMethod(name,arity);	
+	        if (m!=null){
+	        	return m;
+	        }
+
             // try with synonims
             if (opMappingCached!=null){
                 String rawName=s.getName();
                 for (int j=0; j<opMappingCached.length; j++){
                     String[] map=opMappingCached[j];
                     if (map[0].equals(rawName)){
-                        try {
-                            return this.getClass().getMethod(map[1]+"_"+s.getArity(),ARG_ARRAY);
-                        } catch (NoSuchMethodException ex1){
-                            return null;
-                        }
+                    	return findMethod(map[1]+"_"+s.getArity(),s.getArity());
                     }
                 }
             }
             return null;
-        }
     }
 
+	private Method findMethod(String name, int arity){
+		Method[] mlist = this.getClass().getMethods();
+		for (int i=0; i<mlist.length; i++){
+			if (mlist[i].getName().equals(name)){
+				Class[] parms=mlist[i].getParameterTypes();
+				if (parms.length==arity){
+					boolean valid=true;
+					for (int j=0; j<parms.length; j++){
+						if (!Term.class.isAssignableFrom(parms[j])){
+							valid=false;
+						}
+					}
+					if (valid){
+						return mlist[i];
+					}
+				}
+			}
+		}
+		return null;
+	}
 
     /**
      * method invoked by prolog engine when library is
@@ -254,4 +316,5 @@ public abstract class Library  implements Serializable {
      */
     public void onSolveEnd(){
     }
+
 }

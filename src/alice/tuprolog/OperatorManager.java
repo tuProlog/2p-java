@@ -18,11 +18,9 @@
 package alice.tuprolog;
 
 /**
- * This class collects and manages operators inside a tuProlog virtual machine
+ * This class manages prolog operators
  *
  * @see Operator
- *
- *
  *
  */
 public class OperatorManager implements java.io.Serializable {
@@ -37,8 +35,11 @@ public class OperatorManager implements java.io.Serializable {
     public  static final int    OP_HIGH       = 1200;
 
     /**
-     * Creates a new operator (replacing an existing one with the same name
-     * and type)
+     * Creates a new operator
+     *
+     * If the operator is already provided,
+     * it replaces it with the new one
+     *
      */
     public boolean opNew(String name,String type,int prio) {
         int a = opQueue.length();

@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 import  alice.tuprolog.*;
 
-public class GUIConsole extends javax.swing.JFrame implements Serializable, OutputListener, SpyListener, StateListener {
+public class GUIConsole extends javax.swing.JFrame implements Serializable, OutputListener, SpyListener, WarningListener {
 
     public Prolog engine;
     SolveInfo info;
@@ -34,7 +34,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
         editTheoryForm=new EditTheory(this);
         outputArea=new OutputArea();
         engine=new Prolog();
-        engine.addStateListener(this);
+        engine.addWarningListener(this);
         engine.addSpyListener(this);
         engine.addOutputListener(this);
         enableSolutionCmds(false);
@@ -482,7 +482,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
       try {
           outputState.setText("solving...");
           info=engine.solveNext();
-          if (info.isHalt()){
+          if (engine.isHalted()){
               exitForm(null);
           } else
               if (!info.isSuccess()){
@@ -494,7 +494,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
                   outputState.setText("Ready.");
               } else {
                   outputState.setText("Found another solution (open alternatives can be explored).");
-                  String binds=toString(info.getSubstitution());
+                  String binds=info.toString();
                   outputSolution.setText(binds+engine.toString(info.getSolution())+" ?");
               }
       } catch (NoMoreSolutionException ex){
@@ -516,7 +516,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
   private void bYesActionPerformed (java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bYesActionPerformed
       // Add your handling code here:
       try {
-          String binds=toString(info.getSubstitution());
+          String binds=info.toString();
           if (binds.equals("")){
               outputSolution.setText("yes.\nSolution: "+engine.toString(info.getSolution()));
           } else{
@@ -561,7 +561,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
         spyAreaForm.getArea().append(ev.getMsg()+"\n");
     }
 
-    public void onState(StateEvent ev) {
+    public void onWarning(WarningEvent ev) {
         outputState.setText(ev.getMsg());
     }
 
@@ -582,7 +582,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
             try {
                 console.outputState.setText("solving...");
                 info=console.engine.solve(goal);
-                if (info.isHalt()){
+                if (console.engine.isHalted()){
                     exitForm(null);
                 } else
                     if (!info.isSuccess()){
@@ -591,7 +591,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
                         console.outputState.setText("Ready.");
                     } else
                         if (!engine.hasOpenAlternatives()){
-                            String binds=console.toString(info.getSubstitution());
+                            String binds=info.toString();
                             if (binds.equals("")){
                                 console.outputSolution.setText("yes.\nSolution: "+engine.toString(info.getSolution()));
                             } else {
@@ -603,7 +603,7 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
                             
                         } else {
                             console.outputState.setText("Found a solution (open alternatives can be explored).");
-                            String binds=console.toString(info.getSubstitution());
+                            String binds=info.toString();
                             console.outputSolution.setText(binds+engine.toString(info.getSolution())+" ?");
                             console.outputScrollPane.getHorizontalScrollBar().setValue(0);
                             console.enableSolutionCmds(true);
@@ -622,15 +622,6 @@ public class GUIConsole extends javax.swing.JFrame implements Serializable, Outp
     }
 
 
-    String toString(Substitution sub){
-        Var[] vars=sub.toVarArray();
-        String st="";
-        for (int i=0; i<vars.length; i++)
-            if (vars[i]!=null && !vars[i].getName().startsWith("_")){
-                st=st+vars[i].getName()+" = "+vars[i].getTerm()+"\n";
-            }
-        return st;
-    }
 
     public void setOutputState(String msg){
         outputState.setText(msg);

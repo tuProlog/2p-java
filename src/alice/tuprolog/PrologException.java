@@ -18,6 +18,12 @@
 package alice.tuprolog;
 
 /**
- * Base class for tuProlog exceptions
+ * Base class for tuProlog exceptions. Used
+ * also for representing generic 2P exceptions.
  */
-abstract public class PrologException extends Exception {}
+public class PrologException extends Exception {
+    public PrologException(){}
+    public PrologException(String st){
+        super(st);
+    }
+}

@@ -45,7 +45,8 @@ class BuiltIn {
     /** lib object where the builtin is defined */
     private Library library;
     /** for optimization purposes */
-    private Object[] builtin_args;
+    private Term[] builtin_args;
+	private Struct builtin_struct;
 
     /** Buils a built in whose behaviour is defined in the core engine */
     public BuiltIn(int code){
@@ -56,20 +57,38 @@ class BuiltIn {
     public BuiltIn(int type,Struct s,Library lib) throws NoSuchMethodException {
         this.code = type;
         library=lib;
-        builtin_args=new Object[]{ s };
-        method=library.getLinkedMethod(s);
-        if (method==null){
-            throw new NoSuchMethodException();
-        }
+        //
+		method=library.getLinkedMethod(s);
+		if (method==null){
+			throw new NoSuchMethodException();
+		}
+		//
+        builtin_struct = s;
+        builtin_args=new Term[s.getArity()];
+        
+        /*
+    	for (int i=0; i<builtin_args.length; i++){
+        	builtin_args[i]=s.getArg(i);
+        }*/
     }
 
+	/**
+	 * Creates a copy of this builtins, linking
+	 * it to the arguments of a new structure. 
+	 * 
+	 * @param ns
+	 * @return
+	 */
     public BuiltIn getCopy(Struct ns){
         BuiltIn bt=new BuiltIn(code);
         bt.library=library;
         bt.method=method;
-        if (builtin_args!=null){
-            bt.builtin_args=new Object[]{ ns };
-        }
+		bt.builtin_struct = ns;
+		bt.builtin_args=new Term[ns.getArity()];
+		/*
+		for (int i=0; i<ns.getArity(); i++){
+			bt.builtin_args[i]=ns.getArg(i);
+		}*/
         return bt;
     }
 
@@ -78,6 +97,13 @@ class BuiltIn {
      */
     public boolean evalAsPredicate(){
         try {
+			// be sure that bound var are treated properly
+			//for (int i=0; i<builtin_args.length; i++){
+			//	builtin_args[i]=builtin_args[i].getTerm();
+			//}
+			for (int i=0; i<builtin_args.length; i++){
+				builtin_args[i]=builtin_struct.getTerm(i);
+			}
             return ((Boolean)method.invoke(library,builtin_args)).booleanValue();
         } catch (Exception ex){
             ex.printStackTrace();
@@ -90,6 +116,13 @@ class BuiltIn {
      */
     public Term evalAsFunctor(){
         try {
+        	// be sure that bound var are treated properly
+        	//for (int i=0; i<builtin_args.length; i++){
+        	//	builtin_args[i]=builtin_args[i].getTerm();
+        	//}
+			for (int i=0; i<builtin_args.length; i++){
+				builtin_args[i]=builtin_struct.getTerm(i);
+			}
             return ((Term)method.invoke(library,builtin_args));
         } catch (Exception ex){
             return null;
@@ -124,7 +157,7 @@ class BuiltIn {
 
     public String toString(){
         if (isLibraryFunctor()||isLibraryPredicate()){
-            return "[ built-in: method "+method.getName()+" - args: "+builtin_args[0]+" - "+library.getClass().getName()+" ]\n";
+            return "[ built-in: method "+method.getName()+" - "+builtin_args+" - N args: "+builtin_args.length+" - "+library.getClass().getName()+" ]\n";
         } else {
             return "[ built-in: code "+code+" ]";
         }

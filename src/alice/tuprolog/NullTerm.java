@@ -28,7 +28,9 @@ package alice.tuprolog;
  */
 public class NullTerm extends Term {
 
-    public NullTerm() {
+	public final static NullTerm NULL_TERM = new NullTerm(); 
+
+    private NullTerm() {
     }
 
     // checking type and properties of the Term

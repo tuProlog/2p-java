@@ -94,10 +94,6 @@ public class PrologImpl extends _PrologImplBase {
             alice.tuprologx.runtime.corba.SolveInfo cinfo=
                 new alice.tuprologx.runtime.corba.SolveInfo();
             cinfo.success=info.isSuccess();
-            cinfo.halt=info.isHalt();
-            if (cinfo.halt){
-                cinfo.haltCode=info.getHaltCode();
-            }
             if (info.isSuccess()){
                 cinfo.solution=info.getSolution().toString();
             }

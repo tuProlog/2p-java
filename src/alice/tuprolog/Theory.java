@@ -17,7 +17,6 @@
  */
 package alice.tuprolog;
 import	java.io.*;
-import  java.util.*;
 
 /**
  * This class represents prolog theory which can be provided

@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog;
-import java.io.*;
 
 /**
  * Struct class represents both compound prolog term
@@ -31,6 +30,8 @@ public class Struct extends Term {
     private String name;
     /** args array */
     private Term[] arg;
+    /** arity **/
+    private int arity;
     /** to speedup hash map operation */
     private StructKey hashKey;
     /** builtin info */
@@ -43,18 +44,16 @@ public class Struct extends Term {
      * Builds a Struct representing an atom
      */
     public Struct(String f) {
-        name = f;
-        arg = new Term[0];
-        hashKey = new StructKey(name);
-        resolved=false;
+        this(f,0);
     }
+    
+
 
     /**
      * Builds a compound, with one argument
      */
     public Struct(String f,Term at0) {
-        this(f);
-        arg     = new Term[1];
+        this(f,1);
         arg[0] = at0;
     }
 
@@ -62,8 +61,7 @@ public class Struct extends Term {
      * Builds a compound, with two arguments
      */
     public Struct(String f,Term at0,Term at1) {
-        this(f);
-        arg     = new Term[2];
+        this(f,2);
         arg[0] = at0;
         arg[1] = at1;
     }
@@ -72,8 +70,7 @@ public class Struct extends Term {
      * Builds a compound, with three arguments
      */
     public Struct(String f,Term at0,Term at1,Term at2) {
-        this(f);
-        arg     = new Term[3];
+        this(f,3);
         arg[0] = at0;
         arg[1] = at1;
         arg[2] = at2;
@@ -83,8 +80,7 @@ public class Struct extends Term {
      * Builds a compound, with four arguments
      */
     public Struct(String f,Term at0,Term at1,Term at2,Term at3) {
-        this(f);
-        arg     = new Term[4];
+        this(f,4);
         arg[0] = at0;
         arg[1] = at1;
         arg[2] = at2;
@@ -95,8 +91,7 @@ public class Struct extends Term {
      * Builds a compound, with five arguments
      */
     public Struct(String f,Term at0,Term at1,Term at2,Term at3,Term at4) {
-        this(f);
-        arg     = new Term[5];
+        this(f,5);
         arg[0] = at0;
         arg[1] = at1;
         arg[2] = at2;
@@ -108,8 +103,7 @@ public class Struct extends Term {
      * Builds a compound, with six arguments
      */
     public Struct(String f,Term at0,Term at1,Term at2,Term at3,Term at4,Term at5) {
-        this(f);
-        arg     = new Term[6];
+        this(f,6);
         arg[0] = at0;
         arg[1] = at1;
         arg[2] = at2;
@@ -122,8 +116,7 @@ public class Struct extends Term {
      * Builds a compound, with seven arguments
      */
     public Struct(String f,Term at0,Term at1,Term at2,Term at3,Term at4,Term at5,Term at6) {
-        this(f);
-        arg     = new Term[7];
+        this(f,7);
         arg[0] = at0;
         arg[1] = at1;
         arg[2] = at2;
@@ -137,41 +130,28 @@ public class Struct extends Term {
      * Builds a compound, with an array of arguments
      */
     public Struct(String f,Term[] argList) {
-        this(f);
-        arg     = new Term[argList.length];
+        this(f,argList.length);
         for (int i=0; i<argList.length; i++){
             arg[i] = argList[i];
         }
     }
 
-    /**
-     * Builds a compound, with a linked list of arguments
-     */
-    Struct(String f,alice.util.LinkedList al) {
-        this(f);
-        int arity   = al.length();
-        arg     = new Term[arity];
-        for(int c = 0;c < arity;c++) {
-            arg[c] = (Term)al.head;
-            al = al.tail;
-        }
-    }
+
 
     /**
      * Builds a structure representing an empty list
      */
     public Struct() {
-        this(".");
-        arg     = new Term[2];
-        arg[0] = arg[1] = new NullTerm();
+        this(".",2);
+        arg[0] = arg[1] = NullTerm.NULL_TERM;
     }
+
 
     /**
      * Builds a list providing head and tail
      */
     public Struct(Term h,Term t) {
-        this(".");
-        arg     = new Term[2];
+        this(".",2);
         arg[0] = h;
         arg[1] = t;
     }
@@ -184,24 +164,45 @@ public class Struct extends Term {
     }
 
     private Struct(Term[] argList, int index){
-        this(".");
-        arg     = new Term[2];
+        this(".",2);
         if (index<argList.length){
             arg[0] = argList[index];
             arg[1] = new Struct(argList,index+1);
         } else {
-            arg[0] = arg[1] = new NullTerm();
+            arg[0] = arg[1] = NullTerm.NULL_TERM;
         }
     }
 
+    /**
+     * Builds a compound, with a linked list of arguments
+     */
+    Struct(String f,alice.util.LinkedList al) {
+        name = f;
+        arity = al.length();
+        if (arity>0){
+            arg = new Term[arity];
+            for(int c = 0;c < arity;c++) {
+                arg[c] = (Term)al.head;
+                al = al.tail;
+            }
+        }
+        hashKey = new StructKey(name,arity);
+        resolved=false;
+    }
 
-    private Struct(int arity) {
+    private Struct(int arity_) {
+        arity = arity_;
         arg      = new Term[arity];
     }
 
-    private Struct(String f,int arity){
-        this(f);
-        arg     = new Term[arity];
+    private Struct(String name_,int arity_){
+        name = name_;
+        arity = arity_;
+        if (arity>0){
+            arg = new Term[arity];
+        }
+        hashKey = new StructKey(name,arity);
+        resolved=false;
     }
 
     StructKey getHashKey(){
@@ -213,7 +214,7 @@ public class Struct extends Term {
      * this structure
      */
     public int getArity(){
-        return arg.length;
+        return arity;
     }
 
     /**
@@ -268,23 +269,22 @@ public class Struct extends Term {
     // check type services
 
     public boolean isAtomic() {
-        return  (arg.length == 0);
+        return  (arity == 0);
     }
 
     public boolean isCompound() {
-        return arg.length>0;
+        return arity>0;
     }
 
     public boolean isAtom() {
-        return (arg.length == 0 || isEmptyList());
+        return (arity == 0 || isEmptyList());
     }
 
     public boolean isList() {
-        return(name.equals(".") && arg.length == 2);
+        return(name.equals(".") && arity == 2);
     }
 
     public boolean isGround(){
-        int arity=arg.length;
         for (int i=0; i<arity; i++){
             if (!arg[i].isGround()){
                 return false;
@@ -294,7 +294,7 @@ public class Struct extends Term {
     }
 
     public boolean isClause() {
-        return(name.equals(":-") && arg.length == 2 && arg[0].getTerm().isStruct());
+        return(name.equals(":-") && arity == 2 && arg[0].getTerm().isStruct());
     }
 
     public Term getTerm(){
@@ -307,12 +307,11 @@ public class Struct extends Term {
 
     public boolean isGreater(Term t) {
         t = t.getTerm();
-        int arity=arg.length;
         if (!t.isStruct()){
             return(true);
         } else if (t.isStruct()) {
             Struct ts=(Struct)t;
-            int tarity= ts.arg.length;
+            int tarity= ts.arity;
             if(arity > tarity){
                 return(true);
             } else if(arity == tarity) {
@@ -336,19 +335,21 @@ public class Struct extends Term {
 
     public boolean isEqual(Term t) {
         t = t.getTerm();
-        int arity=arg.length;
         if (t.isStruct()){
             Struct ts=(Struct)t;
-            if (arity == ts.arg.length && name.equals(ts.name)) {
+            if (arity == ts.arity && name.equals(ts.name)) {
                 for (int c = 0;c < arity;c++){
                     if(!arg[c].isEqual(ts.arg[c])){
                         return(false);
                     }
                 }
+                return true;
+            } else {
+                return false;
             }
-            return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     //
@@ -357,33 +358,31 @@ public class Struct extends Term {
      * Gets a copy of this structure
      */
     public Term copy() {
-        int arity=arg.length;
         Struct t = new Struct(arity);
         t.resolved=resolved;
         t.name = name;
         t.hashKey    = hashKey;
-        if (builtIn!=null){
-            t.builtIn = builtIn.getCopy(t);
-        }
         for(int c = 0;c < arity;c++){
             t.arg[c] = arg[c].copy();
         }
+		if (builtIn!=null){
+			t.builtIn = builtIn.getCopy(t);
+		}
         return(t);
     }
 
 
     Term copy(alice.util.LinkedList vl) {
-        int arity=arg.length;
         Struct t = new Struct(arity);
         t.resolved=resolved;
         t.name = name;
         t.hashKey    = hashKey;
-        if (builtIn!=null){
-            t.builtIn = builtIn.getCopy(t);
-        }
         for(int c = 0;c < arity;c++){
             t.arg[c] = arg[c].copy(vl);
         }
+		if (builtIn!=null){
+			t.builtIn = builtIn.getCopy(t);
+		}
         return(t);
     }
 
@@ -391,7 +390,6 @@ public class Struct extends Term {
 
 
     void restoreVariables(){
-        int arity=arg.length;
         for(int c = 0;c < arity;c++){
             Term t=arg[c];
             if (t.isStruct()||t.isVar()){
@@ -407,7 +405,6 @@ public class Struct extends Term {
      * during the process, the rename-stage count is used
      *
      * @param count new starting time count for the renaming
-     * @param backup true if the valiable link must be saved
      * @return the new time count, after the renaming
      */
     int renameVariables(int count){
@@ -422,7 +419,6 @@ public class Struct extends Term {
 
     int renameVariables(int stage, int count){
         int newcount=count;
-        int arity=arg.length;
         for(int c = 0;c < arity;c++){
             Term t=arg[c];
             if (t.isStruct()){
@@ -451,7 +447,6 @@ public class Struct extends Term {
      */
      private int resolveVariables(alice.util.LinkedList vars,int count){
         int newcount=count;
-        int arity=arg.length;
         for(int c = 0;c < arity;c++){
             Term term=arg[c];
             if (term!=null){
@@ -503,7 +498,7 @@ public class Struct extends Term {
      * Is this structure an empty list?
      */
     public boolean isEmptyList() {
-        return (name.equals(".") && arg.length == 2 && arg[0].getTerm().isNull());
+        return (name.equals(".") && arity == 2 && arg[0].getTerm().isNull());
     }
 
     /**
@@ -547,7 +542,6 @@ public class Struct extends Term {
      */
     Struct toList() {
         Struct t = new Struct();
-        int arity=arg.length;
         for(int c = arity - 1;c >= 0;c--){
             t = new Struct(arg[c].getTerm(),t);
         }
@@ -610,8 +604,7 @@ public class Struct extends Term {
         t = t.getTerm();
         if (t.isStruct()){
             Struct ts=(Struct)t;
-            int arity= arg.length;
-            if ( arity == ts.arg.length && name.equals(ts.name)) {
+            if ( arity == ts.arity && name.equals(ts.name)) {
                 for(int c = 0;c < arity;c++){
                     if (!arg[c].unify(ts.arg[c],m)){
                         return false;
@@ -626,7 +619,6 @@ public class Struct extends Term {
     }
 
     void free(int m) {
-        int arity= arg.length;
         for(int c = 0;c < arity;c++){
             arg[c].free(m);
         }
@@ -656,7 +648,7 @@ public class Struct extends Term {
      */
     public String toString() {
         // list case
-        if (name.equals(".") && arg.length == 2){
+        if (name.equals(".") && arity == 2){
             if (arg[0].isNull()){
                 return("[]");
             } else {
@@ -666,8 +658,7 @@ public class Struct extends Term {
             return("{" + toString0_bracket() + "}");
         } else {
             String s = (Tokenizer.isAtom(name) ? name : "'" + name + "'");
-            int arity=arg.length;
-            if(arity > 0) {
+            if (arity > 0) {
                 s = s + "(";
                 for(int c = 1;c < arity;c++){
                     if (!arg[c - 1].isVar()){
@@ -717,7 +708,7 @@ public class Struct extends Term {
     }
 
     private String toString0_bracket() {
-        if (arg.length==1){
+        if (arity==1){
             return arg[0].getTerm().toString();
         } else {
             return arg[0]+","+((Struct)arg[1]).toString0_bracket();
@@ -742,7 +733,7 @@ public class Struct extends Term {
         int      p = 0;
         String   v = "";
 
-        if (name.equals(".") && arg.length == 2){
+        if (name.equals(".") && arity == 2){
             if (arg[0].isNull()){
                 return("[]");
             } else {
@@ -752,7 +743,6 @@ public class Struct extends Term {
             return("{" + toString0_bracket() + "}");
         }
 
-        int arity=arg.length;
         if(arity == 2) {
             if((p = op.opPrio(name,"xfx")) >= OperatorManager.OP_LOW){
                 return(

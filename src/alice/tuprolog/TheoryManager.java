@@ -70,13 +70,59 @@ class TheoryManager implements Serializable {
         return(q);
     }
 
+
+
+    private void checkExistance(Struct clause, String libName, alice.util.LinkedList list){
+                    Struct head = (Struct)clause.getArg(0);
+                    Library lib = engine.getLibraryPredicate(head.getName(),head.getArity());
+                    if (lib!=null){
+                        if (libName!=null){
+                            engine.warn("a builtin predicate with signature equals to the head of clause "+clause+" in library "+libName+"  has been defined in library "+
+                                    lib.getClass().getName());
+                        } else {
+                            engine.warn("a builtin predicate with signature equals to the head of clause "+clause+" has been defined in library "+
+                                    lib.getClass().getName());
+                        }
+                    } else {
+                        lib = engine.getLibraryFunctor(head.getName(),head.getArity());
+                        if (lib!=null){
+                            if (libName!=null){
+                                engine.warn("a builtin functor with signature equals to the head of clause "+clause+" in library "+libName+"  has been defined in library "+
+                                        lib.getClass().getName());
+                            } else {
+                                engine.warn("a builtin functor with signature equals to the head of clause "+clause+" has been defined in library "+
+                                        lib.getClass().getName());
+                            }
+                        } else {
+                            if (list.head!=null){
+                                String libn=((ClauseInfo)(list.head)).libName;
+                                if (libn!=null && !libn.equals(libName)){
+                                    if (libName!=null){
+                                        engine.warn("a clause with the same head of "+clause+" in library "+libName+"  has been defined in library "+
+                                                            ((ClauseInfo)list.head).libName+" as "+((ClauseInfo)list.head).clause);
+                                    } else {
+                                        engine.warn("a clause with the same head of "+clause+"  has been defined in library "+
+                                                            ((ClauseInfo)list.head).libName+" as "+((ClauseInfo)list.head).clause);
+                                    }
+                                }
+                            }
+                        }
+                    }
+    }
+
     /**
      * inserting of a clause at the head of the dbase
      */
     public void assertA(Struct clause,boolean dyn,String libName) {
         ClauseInfo  d = new ClauseInfo(clause,engine,dyn,libName);
         //System.out.println("ASSERTA "+clause);
-        alice.util.LinkedQueue q = getQueue(((Struct)(d.clause.getArg(0))).getHashKey());
+        alice.util.LinkedQueue q = getQueue(((Struct)d.clause.getArg(0)).getHashKey());
+        //
+        //
+        if (engine.isWarning()){
+            checkExistance(d.clause,libName,q.head);
+        }
+        //
         q.insFirst(d);
         transOp(d,true,true);
     }
@@ -88,6 +134,10 @@ class TheoryManager implements Serializable {
         //System.out.println("ASSERTZ "+clause);
         ClauseInfo  d = new ClauseInfo(clause,engine,dyn,libName);
         alice.util.LinkedQueue q = getQueue(((Struct)(d.clause.getArg(0))).getHashKey());
+        //
+        //
+        checkExistance(d.clause,libName,q.head);
+        //
         q.insLast(d);
         transOp(d,true,false);
     }
@@ -103,7 +153,7 @@ class TheoryManager implements Serializable {
         alice.util.LinkedList  l = q.head;
         while(!l.isEmptyList()) {
             ClauseInfo d = (ClauseInfo)l.head; l = l.tail;
-            if(d.flag) {
+            if(d.stillValid) {
                 boolean f = clause.unify(d.clause,m);
                 clause.free(m);
                 d.clause.free(m);
@@ -131,7 +181,7 @@ class TheoryManager implements Serializable {
         while(!l.isEmptyList()) {
             ClauseInfo d = (ClauseInfo)l.head;
             l = l.tail;
-            if(d.flag) {
+            if(d.stillValid) {
                 boolean f = head.unify(d.clause.getArg(0),m);
                 head.free(m);
                 d.clause.free(m);
@@ -156,16 +206,16 @@ class TheoryManager implements Serializable {
             while(!l.isEmptyList()) {
                 ClauseInfo d = (ClauseInfo)l.head;
                 l = l.tail;
-                if (d.flag && d.dynamic) {
+                if (d.stillValid && d.dynamic) {
                     //System.out.println("clause "+d.clause);
                     Term body=d.clause.getArg(1);
                     while (body.isStruct() && ((Struct)body).getName().equals(",")){
                         Term t=((Struct)body).getArg(0);
-                        engine.identify(t);
+                        engine.identify(t,false);
                         //System.out.println("identifying "+t);
                         body=((Struct)body).getArg(1);
                     }
-                    engine.identify(body);
+                    engine.identify(body,false);
                 }
             }
         }
@@ -183,7 +233,7 @@ class TheoryManager implements Serializable {
             alice.util.LinkedList  l = q.head;
             while(!l.isEmptyList()) {
                 ClauseInfo d = (ClauseInfo)l.head; l = l.tail;
-                if(d.flag){
+                if(d.stillValid){
                     r.insLast(new ClauseInfo(d.clause,engine,d.dynamic,null));
                 }
             }
@@ -203,7 +253,7 @@ class TheoryManager implements Serializable {
             while(!l.isEmptyList()) {
                 ClauseInfo d = (ClauseInfo)l.head;
                 l = l.tail;
-                if(d.flag && d.dynamic){
+                if(d.stillValid && d.dynamic){
                     list.add(d.clause);
                 }
             }
@@ -248,8 +298,8 @@ class TheoryManager implements Serializable {
                 while(!l.isEmptyList()) {
                     ClauseInfo d = (ClauseInfo)l.head;
                     l = l.tail;
-                    if (d.flag && d.dynamic){
-                        d.flag=false;
+                    if (d.stillValid && d.dynamic){
+                        d.stillValid=false;
                         clauseNumber--;
                     }
                 }
@@ -269,8 +319,8 @@ class TheoryManager implements Serializable {
             while(!l.isEmptyList()) {
                 ClauseInfo d = (ClauseInfo)l.head;
                 l = l.tail;
-                if (d.flag && d.libName!=null && libName.equals(d.libName)){
-                    d.flag=false;
+                if (d.stillValid && d.libName!=null && libName.equals(d.libName)){
+                    d.stillValid=false;
                     clauseNumber--;
                 }
             }
@@ -288,7 +338,7 @@ class TheoryManager implements Serializable {
 
     /**
      * makes a transaction operation on the dbase.
-     * <p>
+     *
      * d is the clause specified by the operation;
      * if f is true then insert, else delete clause from dbase;
      * if p is true then head insertion, else queue insertion
@@ -303,7 +353,7 @@ class TheoryManager implements Serializable {
             clauseNumber--;
             engine.spy("DELETE: " + d.clause + "\n");
         }
-        d.flag = f;
+        d.stillValid = f;
         if(updateTransientClauseList){
             transientClauseList = new alice.util.LinkedList(d,transientClauseList);
         }
@@ -323,7 +373,7 @@ class TheoryManager implements Serializable {
         while(transientClauseList != ol) {
             ClauseInfo d = (ClauseInfo)transientClauseList.head;
             transientClauseList = transientClauseList.tail;
-            if(d.flag) {
+            if(d.stillValid) {
                 clauseNumber--;
                 engine.spy("RESTORE-: " + d.clause + "\n");
             }
@@ -331,13 +381,13 @@ class TheoryManager implements Serializable {
                 clauseNumber++;
                 engine.spy("RESTORE+: " + d.clause + "\n");
             }
-            d.flag = !d.flag;
+            d.stillValid = !d.stillValid;
         }
     }
 
     /**
-     * ends a transaction.
-     * <p>
+     * Ends a transaction.
+     *
      * if f is false, then rolls back the dbase to the state
      * before transaction begin; if f is true, then commit changes
      */
@@ -346,7 +396,7 @@ class TheoryManager implements Serializable {
             while(!transientClauseList.isEmptyList()) {
                 ClauseInfo d = (ClauseInfo)transientClauseList.head;
                 transientClauseList = transientClauseList.tail;
-                if(d.flag) {
+                if(d.stillValid) {
                     clauseNumber--;
                     engine.spy("RESTORE-: " + d.clause + "\n");
                 }
@@ -354,7 +404,7 @@ class TheoryManager implements Serializable {
                     clauseNumber++;
                     engine.spy("RESTORE+: " + d.clause + "\n");
                 }
-                d.flag = !d.flag;
+                d.stillValid = !d.stillValid;
             }
         }
         updateTransientClauseList = false;
@@ -372,7 +422,7 @@ class TheoryManager implements Serializable {
             int      b = q.length();
             while(b-- > 0) {
                 ClauseInfo d = (ClauseInfo)q.remFirst();
-                if(d.flag){
+                if(d.stillValid){
                     q.insLast(d);
                 } else {
                     n++;
@@ -523,14 +573,15 @@ class TheoryManager implements Serializable {
     /**
      * saves the dbase on a output stream.
      */
-    public boolean save(OutputStream os,boolean onlyDynamic){
+    public synchronized boolean save(OutputStream os,boolean onlyDynamic){
         optimize();
         boolean          r  = true;
         DataOutputStream ds = new DataOutputStream(os);
         alice.util.LinkedList          l  = elements();
         while(!l.isEmptyList()) {
+
             ClauseInfo d = (ClauseInfo)l.head; l = l.tail;
-            if (d.flag && !(onlyDynamic && !d.dynamic)) {
+            if (d.stillValid && !(onlyDynamic && !d.dynamic)) {
                 try {
                     ds.writeBytes(d.toString(engine.getOperatorManager()));
                 } catch(Exception e) {

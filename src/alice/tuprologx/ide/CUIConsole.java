@@ -1,10 +1,11 @@
 package alice.tuprologx.ide;
+
 import alice.util.*;
 import alice.tuprolog.*;
 import alice.tuprolog.lib.*;
 import java.io.*;
 
-public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, StateListener {
+public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener {
 
     BufferedReader  stdin;
     Prolog          engine;
@@ -27,7 +28,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         }*/
         engine=new Prolog();
         stdin=new BufferedReader(new InputStreamReader(System.in));
-        engine.addStateListener(this);
+        engine.addWarningListener(this);
         engine.addOutputListener(this);
         engine.addSpyListener(this);
         if (args.length>0) {
@@ -63,13 +64,13 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     void solveGoal(String goal){
         try {
             info=engine.solve(goal);
-            if (info.isHalt())
+            if (engine.isHalted())
                 System.exit(0);
             else  if (!info.isSuccess()){
                 System.out.println("no.");
                 become("goalRequest");
             } else  if (!engine.hasOpenAlternatives()){
-                String binds=info.getSubstitution().toString();
+                String binds=info.toString();
                 if (binds.equals("")){
                     System.out.println("yes.");
                 } else {
@@ -78,7 +79,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
                 System.out.println("solution: "+engine.toString(info.getSolution()));
                 become("goalRequest");
             } else {
-                System.out.print("substitution: "+info.getSubstitution()+"  ?  ");
+                System.out.print("substitution: "+info+"  ?  ");
                 become("getChoice");
             }
         } catch (MalformedGoalException ex){
@@ -104,7 +105,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         }
         try {
             if (!choice.equals(";")){
-                String binds=info.getSubstitution().toString();
+                String binds=info.toString();
                 if (binds.equals(""))
                     System.out.println("yes.");
                 else
@@ -119,7 +120,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
                         System.out.println("no.");
                         become("goalRequest");
                     } else {
-                        System.out.print("substitution: "+info.getSubstitution()+"  ?  ");
+                        System.out.print("substitution: "+info+"  ?  ");
                         become("getChoice");
                     }
                 } catch (Exception ex){
@@ -139,7 +140,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     public void onSpy(SpyEvent e) {
         System.out.println(e.getMsg());
     }
-    public void onState(StateEvent e) {
+    public void onWarning(WarningEvent e) {
         System.out.println(e.getMsg());
     }
 

@@ -126,7 +126,6 @@ public abstract class Term implements java.io.Serializable {
      * during the process, the rename-stage count is used
      *
      * @param count new starting time count for the renaming
-     * @param backup true if the valiable link must be saved
      * @return the new time count, after the renaming
      */
     abstract int renameVariables(int count);

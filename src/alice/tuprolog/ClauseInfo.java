@@ -20,7 +20,7 @@ import	java.io.*;
 
 /**
  * This class mantains information about a clause creation
- * (clause copy, final time T after renaming, validity flag Flag).
+ * (clause copy, final time T after renaming, validity stillValid Flag).
  * These information are necessary to the Theory Manager
  * to use the clause in a consistent way
  *
@@ -42,7 +42,7 @@ class ClauseInfo implements Serializable {
      * logically from theory, but phisically
      * yet present)
      */
-    boolean flag;
+    boolean stillValid;
 
     /**
      * if dynamic clause, then  asserted/reatracted/user consulted
@@ -61,7 +61,7 @@ class ClauseInfo implements Serializable {
     ClauseInfo(Struct clause_,int t,boolean dyn,String libName) {
         alice.util.LinkedList l = new alice.util.LinkedList();
         clause = (Struct)clause_.copy(l);
-        flag   = true;
+        stillValid   = true;
         timestamp = Var.rename(l,t,true);
         dynamic = dyn;
         this.libName=libName;
@@ -75,8 +75,8 @@ class ClauseInfo implements Serializable {
     ClauseInfo(Struct clause_,Prolog engine,boolean dyn,String libName) {
         alice.util.LinkedList l = new alice.util.LinkedList();
         clause = (Struct)toClause(clause_).copy(l);
-        engine.identify(clause);
-        flag   = true;
+        engine.identify(clause,false);
+        stillValid   = true;
         timestamp = Var.rename(l,Integer.MIN_VALUE,false);
         dynamic = dyn;
         this.libName=libName;
@@ -101,15 +101,31 @@ class ClauseInfo implements Serializable {
         int p;
         if((p = op.opPrio(":-","xfx")) >= OperatorManager.OP_LOW){
             String st=indentPredicatesAsArgX(clause.getArg(1),op,p);
-            return(clause.getArg(0).toStringAsArgX(op,p) + " :-\n\t" + st +".\n");
+            String head = clause.getArg(0).toStringAsArgX(op,p);
+            if (st.equals("true")){
+                return head +".\n";
+            } else {
+                return (head + " :-\n\t" + st +".\n");
+            }
         }
         if((p = op.opPrio(":-","yfx")) >= OperatorManager.OP_LOW){
             String st=indentPredicatesAsArgX(clause.getArg(1),op,p);
-            return(clause.getArg(0).toStringAsArgY(op,p) + " :-\n\t" + st +".\n");
+            String head = clause.getArg(0).toStringAsArgY(op,p);
+            if (st.equals("true")){
+                return head +".\n";
+            } else {
+                return (head + " :-\n\t" + st +".\n");
+            }
+
         }
         if((p = op.opPrio(":-","xfy")) >= OperatorManager.OP_LOW){
             String st=indentPredicatesAsArgY(clause.getArg(1),op,p);
-            return(clause.getArg(0).toStringAsArgX(op,p) + " :-\n\t" + st +".\n");
+            String head = clause.getArg(0).toStringAsArgX(op,p);
+            if (st.equals("true")){
+                return head +".\n";
+            } else {
+                return (head + " :-\n\t" + st +".\n");
+            }
         }
         return(clause.toString());
     }

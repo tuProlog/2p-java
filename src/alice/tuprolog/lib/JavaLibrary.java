@@ -61,11 +61,7 @@ public class JavaLibrary extends Library {
     /** progressive conter used to identify registered objects */
     private int id = 0;
 
-    /** option: true --> use a backtrackable java_object*/
-    //private boolean isJavaObjectBacktrackable = false;
 
-    public JavaLibrary() {
-    }
 
     /**
      * library theory
@@ -91,7 +87,7 @@ public class JavaLibrary extends Library {
                 "java_object_bt(ClassName,Args,Id):- java_object_nb(ClassName,Args,Id).\n" +
                 "java_object_bt(ClassName,Args,Id):- destroy_object(Id).\n" +
 
-                "Obj <- What :- java_call(Obj,What,_).\n" +
+                "Obj <- What :- java_call(Obj,What,Res), Res \\== false.\n" +
                 "Obj <- What returns Res :- java_call(Obj,What,Res).\n" +
                 "java_array_set(Array,Index,Object):-           class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object').\n" +
                 "java_array_set_int(Array,Index,Object):-       class('java.lang.reflect.Array') <- setInt(Array as 'java.lang.Object',Index,Object as 'int').\n" +
@@ -113,28 +109,37 @@ public class JavaLibrary extends Library {
                 "java_array_get_byte(Array,Index,Object):-      class('java.lang.reflect.Array') <- getByte(Array as 'java.lang.Object',Index) returns Object.\n" +
                 "java_array_get_boolean(Array,Index,Object):-   class('java.lang.reflect.Array') <- getBoolean(Array as 'java.lang.Object',Index) returns Object.\n" +
 
-                "java_array_length(Array,Length):-              class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"+
+                "java_array_length(Array,Length):-              class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n" +
                 "java_object_string(Object,String):-    Object <- toString returns String.    \n";
     }
 
-    public void dismiss() {
-        currentObjects.clear();
-        currentObjects_inverse.clear();
+
+    public   void dismiss() {
+            currentObjects.clear();
+            currentObjects_inverse.clear();
     }
 
-    public void onSolveBegin(Term goal) {
-        // doing garbage collection: id -> 0
-        id = 0;
-        currentObjects.clear();
-        currentObjects_inverse.clear();
-        Iterator it = staticObjects_inverse.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry en = (Map.Entry) it.next();
-            bindObject((Struct) en.getValue(), en.getKey());
-        }
-        preregisterObjects();
+    public   void dismissAll() {
+            currentObjects.clear();
+            currentObjects_inverse.clear();
+            staticObjects.clear();
+            staticObjects_inverse.clear();
     }
 
+    public   void onSolveBegin(Term goal) {
+            id = 0;
+            currentObjects.clear();
+            currentObjects_inverse.clear();
+            Iterator it = staticObjects_inverse.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry en = (Map.Entry) it.next();
+                bindObject((Struct) en.getValue(), en.getKey());
+            }
+            preregisterObjects();
+    }
+
+    public   void onSolveEnd() {
+    }
 
     /**
      * objects actually pre-registered in order to be
@@ -151,25 +156,24 @@ public class JavaLibrary extends Library {
         }
     }
 
+    //----------------------------------------------------------------------------
 
     /**
      * Creates of a java object - not backtrackable case
      */
-    public boolean java_object_nb_3(Struct g) {
+    public   boolean java_object_nb_3(Term className, Struct arg, Term id) {
         try {
-            Term className = g.getTerm(0);
-            Term id = g.getTerm(2);
             if (!className.isAtom()) {
                 return false;
             }
             String clName = ((Struct) className).getName();
             // check for array type
             if (clName.endsWith("[]")) {
-                Object[] list = getArrayFromList((Struct) g.getTerm(1));
+                Object[] list = getArrayFromList(arg);
                 int nargs = ((Number) list[0]).intValue();
                 return java_array(clName, nargs, id);
             }
-            Signature args = parseArg(getArrayFromList((Struct) g.getTerm(1)));
+            Signature args = parseArg(getArrayFromList(arg));
             if (args == null) {
                 return false;
             }
@@ -182,22 +186,27 @@ public class JavaLibrary extends Library {
                 Constructor co = lookupConstructor(cl, args.getTypes(), args_value);
                 //
                 //
+                if (co==null){
+                    getEngine().warn("Constructor not found: class " + clName);
+                    return false;
+                }
+
                 Object obj = co.newInstance(args_value);
                 return bindObject(id, obj);
             } catch (ClassNotFoundException ex) {
-                System.err.println("Java class not found: " + clName);
+                getEngine().warn("Java class not found: " + clName);
                 return false;
             } catch (InvocationTargetException ex) {
-                System.err.println("Invalid constructor arguments.");
+                getEngine().warn("Invalid constructor arguments.");
                 return false;
             } catch (NoSuchMethodException ex) {
-                System.err.println("Constructor not found: " + args.getTypes());
+                getEngine().warn("Constructor not found: " + args.getTypes());
                 return false;
             } catch (InstantiationException ex) {
-                System.err.println("Objects of class " + clName + " cannot be instantiated");
+                getEngine().warn("Objects of class " + clName + " cannot be instantiated");
                 return false;
             } catch (IllegalArgumentException ex) {
-                System.err.println("Illegal constructor arguments  " + args);
+                getEngine().warn("Illegal constructor arguments  " + args);
                 return false;
             }
         } catch (Exception ex) {
@@ -211,9 +220,8 @@ public class JavaLibrary extends Library {
      * Destroy the link to a java object - called not directly, but from
      * predicate java_object (as second choice, for backtracking)
      */
-    public boolean destroy_object_1(Struct g) {
+    public   boolean destroy_object_1(Term id) {
         try {
-            Term id = g.getTerm(0);
             if (id.isGround()) {
                 unregisterObject(id);
             }
@@ -228,14 +236,11 @@ public class JavaLibrary extends Library {
     /**
      * Creates of a java class
      */
-    public boolean java_class_4(Struct g) {
+    public   boolean java_class_4(Struct classSource, Struct className, Struct classPathes, Term id) {
         try {
-            Struct classSource = (Struct) g.getTerm(0);
-            String fullClassName = alice.util.Tools.removeApices(g.getTerm(1).toString());
+            String fullClassName = alice.util.Tools.removeApices(className.toString());
 
             String fullClassPath = fullClassName.replace('.', '/');
-
-            Struct classPathes = (Struct) g.getTerm(2);
             Iterator it = classPathes.listIterator();
             String cp = "";
             while (it.hasNext()) {
@@ -248,7 +253,6 @@ public class JavaLibrary extends Library {
                 cp = " -classpath " + cp;
             }
 
-            Term id = g.getTerm(3);
             String text = alice.util.Tools.removeApices(classSource.toString());
 
             //System.out.println("class source: "+text+
@@ -259,8 +263,8 @@ public class JavaLibrary extends Library {
                 file.write(text);
                 file.close();
             } catch (IOException ex) {
-                System.err.println("Compilation of java sources failed");
-                System.err.println("(creation of " + fullClassPath + ".java fail failed)");
+                getEngine().warn("Compilation of java sources failed");
+                getEngine().warn("(creation of " + fullClassPath + ".java fail failed)");
                 return false;
             }
             String cmd = "javac " + cp + " " + fullClassPath + ".java";
@@ -269,21 +273,21 @@ public class JavaLibrary extends Library {
                 Process jc = Runtime.getRuntime().exec(cmd);
                 int res = jc.waitFor();
                 if (res != 0) {
-                    System.err.println("Compilation of java sources failed");
-                    System.err.println("(java compiler (javac) has stopped with errors)");
+                    getEngine().warn("Compilation of java sources failed");
+                    getEngine().warn("(java compiler (javac) has stopped with errors)");
                     return false;
                 }
             } catch (IOException ex) {
-                System.err.println("Compilation of java sources failed");
-                System.err.println("(java compiler (javac) invocation failed)");
+                getEngine().warn("Compilation of java sources failed");
+                getEngine().warn("(java compiler (javac) invocation failed)");
                 return false;
             }
             try {
                 Class the_class = Class.forName(fullClassName, true, new ClassLoader());
                 return bindObject(id, the_class);
             } catch (ClassNotFoundException ex) {
-                System.err.println("Compilation of java sources failed");
-                System.err.println("(Java Class compiled, but not created: " + fullClassName + " )");
+                getEngine().warn("Compilation of java sources failed");
+                getEngine().warn("(Java Class compiled, but not created: " + fullClassName + " )");
                 return false;
             }
         } catch (Exception ex) {
@@ -298,14 +302,11 @@ public class JavaLibrary extends Library {
      * Calls a method of a Java object
      *
      */
-    public boolean java_call_3(Struct g) {
-        Term objId = g.getTerm(0);
+    public   boolean java_call_3(Term objId, Struct method, Term idResult) {
         Object obj = null;
         Signature args = null;
-        Struct method = null;
         String methodName = null;
         try {
-            method = (Struct) g.getTerm(1);
             methodName = method.getName();
             // check for accessing field   Obj.Field <- set/get(X)
             //  in that case: objId is '.'(Obj, Field)
@@ -324,8 +325,6 @@ public class JavaLibrary extends Library {
             }
 
             args = parseArg(method);
-
-            Term idResult = g.getTerm(2);
 
             // object and argument must be instantiated
             if (objId.isVar() || args == null)
@@ -353,12 +352,12 @@ public class JavaLibrary extends Library {
                         res = m.invoke(obj, args_values);
 
                     } catch (IllegalAccessException ex) {
+                        getEngine().warn("Method invocation failed: " + methodName+ "( signature: " + args + " )");
                         ex.printStackTrace();
-                        System.err.println("Method invocation failed: " + methodName);
-                        System.err.println("( signature: " + args + " )");
                         return false;
                     }
                 } else {
+                    getEngine().warn("Method not found: " + methodName+ "( signature: " + args + " )");
                     return false;
                 }
             } else {
@@ -372,6 +371,7 @@ public class JavaLibrary extends Library {
                             res = m.invoke(null, args.getValues());
                         } catch (ClassNotFoundException ex) {
                             // if not found even as a class id -> consider as a String object value
+                            getEngine().warn("Unknown class.");
                             return false;
                         }
                     } else {
@@ -389,20 +389,18 @@ public class JavaLibrary extends Library {
             }
             return parseResult(idResult, res);
         } catch (InvocationTargetException ex) {
-            System.err.println("Method failed: " + methodName);
-            System.err.println("( signature: " + args + " )");
+            getEngine().warn("Method failed: " + methodName + " - ( signature: " + args +
+                        " ) - Original Exception: "+ex.getTargetException());
             return false;
         } catch (NoSuchMethodException ex) {
-            System.err.println("Method not found: " + methodName);
-            System.err.println("( signature: " + args + " )");
+            getEngine().warn("Method not found: " + methodName+ " - ( signature: " + args + " )");
             return false;
         } catch (IllegalArgumentException ex) {
-            System.err.println("Invalid arguments " + args);
-            System.err.println("( method: " + methodName + " )");
+            getEngine().warn("Invalid arguments " + args+ " - ( method: " + methodName + " )");
             //ex.printStackTrace();
             return false;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getEngine().warn("Generic error in method invocation " + methodName);
             return false;
         }
     }
@@ -425,10 +423,10 @@ public class JavaLibrary extends Library {
                 try {
                     cl = Class.forName(clName);
                 } catch (ClassNotFoundException ex) {
-                    System.err.println("Java class not found: " + clName);
+                    getEngine().warn("Java class not found: " + clName);
                     return false;
                 } catch (Exception ex) {
-                    System.err.println("Static field " + fieldName + " not found in class " + alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString()));
+                    getEngine().warn("Static field " + fieldName + " not found in class " + alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString()));
                     return false;
                 }
             } else {
@@ -468,7 +466,7 @@ public class JavaLibrary extends Library {
             }
             return true;
         } catch (NoSuchFieldException ex) {
-            System.err.println("Field " + fieldName + " not found in class " + objId);
+            getEngine().warn("Field " + fieldName + " not found in class " + objId);
             return false;
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -494,10 +492,10 @@ public class JavaLibrary extends Library {
                 try {
                     cl = Class.forName(clName);
                 } catch (ClassNotFoundException ex) {
-                    System.err.println("Java class not found: " + clName);
+                    getEngine().warn("Java class not found: " + clName);
                     return false;
                 } catch (Exception ex) {
-                    System.err.println("Static field " + fieldName + " not found in class " + alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString()));
+                    getEngine().warn("Static field " + fieldName + " not found in class " + alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString()));
                     return false;
                 }
             } else {
@@ -533,14 +531,15 @@ public class JavaLibrary extends Library {
                 return bindObject(what, res);
             }
             //} catch (ClassNotFoundException ex){
-            //    System.err.println("object of unknown class "+objId);
+            //    getEngine().warn("object of unknown class "+objId);
             //ex.printStackTrace();
             //    return false;
         } catch (NoSuchFieldException ex) {
-            System.err.println("Field " + fieldName + " not found in class " + objId);
+            getEngine().warn("Field " + fieldName + " not found in class " + objId);
             return false;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            getEngine().warn("Generic error in accessing the field");
+            //ex.printStackTrace();
             return false;
         }
     }
@@ -606,13 +605,21 @@ public class JavaLibrary extends Library {
                 types[i] = null;
             } else if (term.isAtom()) {
                 String name = alice.util.Tools.removeApices(term.toString());
-                Object obj = currentObjects.get(name);
-                if (obj == null) {
-                    values[i] = name;
+                if (name.equals("true")){
+                	values[i]=Boolean.TRUE;
+					types[i] = Boolean.TYPE;
+                } else if (name.equals("false")){
+					values[i]=Boolean.FALSE;
+					types[i] = Boolean.TYPE;
                 } else {
-                    values[i] = obj;
+	                Object obj = currentObjects.get(name);
+	                if (obj == null) {
+	                    values[i] = name;
+	                } else {
+	                    values[i] = obj;
+	                }
+					types[i] = values[i].getClass();
                 }
-                types[i] = values[i].getClass();
             } else if (term.isNumber()) {
                 Number t = (Number) term;
                 if (t.isTypeInt()) {
@@ -665,7 +672,18 @@ public class JavaLibrary extends Library {
             if (!castWhat.isNumber()) {
                 String castTo_name = alice.util.Tools.removeApices(((Struct) castTo).getName());
                 String castWhat_name = alice.util.Tools.removeApices(castWhat.getTerm().toString());
-                if (castTo_name.endsWith("[]")) {
+                //System.out.println(castWhat_name+" "+castTo_name);
+                if (castTo_name.equals("java.lang.String") && 
+                	castWhat_name.equals("true")){
+                	values[i]="true";
+                	types[i]=String.class;	
+                	return true;
+               	} else if (castTo_name.equals("java.lang.String") && 
+									castWhat_name.equals("false")){
+					values[i]="false";
+					types[i]=String.class;	
+					return true;
+				} else if (castTo_name.endsWith("[]")) {
                     if (castTo_name.equals("boolean[]")) {
                         castTo_name = "[Z";
                     } else if (castTo_name.equals("byte[]")) {
@@ -707,7 +725,7 @@ public class JavaLibrary extends Library {
                         try {
                             types[i] = (Class.forName(castTo_name));
                         } catch (ClassNotFoundException ex) {
-                            System.err.println("Java class not found: " + castTo_name);
+                            getEngine().warn("Java class not found: " + castTo_name);
                             return false;
                         }
                     }
@@ -733,7 +751,7 @@ public class JavaLibrary extends Library {
                         try {
                             types[i] = (Class.forName(castTo_name));
                         } catch (ClassNotFoundException ex) {
-                            System.err.println("Java class not found: " + castTo_name);
+                            getEngine().warn("Java class not found: " + castTo_name);
                             return false;
                         }
                     }
@@ -764,7 +782,7 @@ public class JavaLibrary extends Library {
                 }
             }
         } catch (Exception ex) {
-            System.err.println("Casting " + castWhat + " to " + castTo + " failed");
+            getEngine().warn("Casting " + castWhat + " to " + castTo + " failed");
             return false;
         }
         return true;
@@ -825,7 +843,7 @@ public class JavaLibrary extends Library {
     /**
      * registers an object with a specified id
      */
-    public boolean register(Struct id, Object obj) throws InvalidObjectIdException {
+    public   boolean register(Struct id, Object obj) throws InvalidObjectIdException {
         /*
          * note that this method act on the staticObject
          * and staticObject_inverse hashmaps
@@ -834,15 +852,32 @@ public class JavaLibrary extends Library {
             throw new InvalidObjectIdException();
         }
         // already registered object?
-        Object aKey = staticObjects_inverse.get(obj);
-        if (aKey != null) {
-            // object already referenced
-            return false;
+        synchronized (staticObjects){
+            Object aKey = staticObjects_inverse.get(obj);
+
+            if (aKey != null) {
+                // object already referenced
+                return false;
+            } else {
+                String raw_name = alice.util.Tools.removeApices(id.getTerm().toString());
+                staticObjects.put(raw_name, obj);
+                staticObjects_inverse.put(obj, id);
+                return true;
+            }
+        }
+    }
+
+    /**
+     * registers an object and returns a fresh id
+     */
+    public   Struct register(Object obj) {
+        //System.out.println("lib: "+this+" current id: "+this.id);
+        Term idt = new Var();
+        boolean res = bindObject(idt,obj);
+        if (!res){
+            return null;
         } else {
-            String raw_name = alice.util.Tools.removeApices(id.getTerm().toString());
-            staticObjects.put(raw_name, obj);
-            staticObjects_inverse.put(obj, id);
-            return true;
+            return (Struct)(idt.getTerm());
         }
     }
 
@@ -850,11 +885,13 @@ public class JavaLibrary extends Library {
      * gets a registered object
      * (returns null if not presents)
      */
-    public Object getRegisteredObject(Struct id) throws InvalidObjectIdException {
+    public   Object getRegisteredObject(Struct id) throws InvalidObjectIdException {
         if (!id.isGround()) {
             throw new InvalidObjectIdException();
         }
-        return staticObjects.get(alice.util.Tools.removeApices(id.toString()));
+        synchronized (staticObjects){
+            return staticObjects.get(alice.util.Tools.removeApices(id.toString()));
+        }
     }
 
     /**
@@ -866,33 +903,35 @@ public class JavaLibrary extends Library {
             return unify(id, new Var());
         }
         // already registered object?
-        Object aKey = currentObjects_inverse.get(obj);
-        if (aKey != null) {
-            // object already referenced -> unifying terms
-            // referencing the object
-            //log("obj already registered: unify "+id+" "+aKey);
-            return unify(id, (Term) aKey);
-        } else {
-            // object not previously referenced
-            if (!id.isGround()) {
-                // get a ground term
-                Term idTerm = getGroundObject(id, getObjId());
-                unify(id, idTerm);
-                registerObject(id, obj);
-                //log("not ground id for a new obj: "+id+" as ref for "+obj);
-                return true;
+        synchronized (currentObjects){
+            Object aKey = currentObjects_inverse.get(obj);
+            if (aKey != null) {
+                // object already referenced -> unifying terms
+                // referencing the object
+                //log("obj already registered: unify "+id+" "+aKey);
+                return unify(id, (Term) aKey);
             } else {
-                // verify of the id is already used
-                String raw_name = alice.util.Tools.removeApices(id.getTerm().toString());
-                Object linkedobj = currentObjects.get(raw_name);
-                if (linkedobj == null) {
+                // object not previously referenced
+                if (!id.isGround()) {
+                    // get a ground term
+                    Term idTerm = getGroundObject(id, getObjId());
+                    unify(id, idTerm);
                     registerObject(id, obj);
-                    //log("ground id for a new obj: "+id+" as ref for "+obj);
+                    //log("not ground id for a new obj: "+id+" as ref for "+obj);
                     return true;
                 } else {
-                    // an object with the same id is already
-                    // present: must be the same object
-                    return obj == linkedobj;
+                    // verify of the id is already used
+                    String raw_name = alice.util.Tools.removeApices(id.getTerm().toString());
+                    Object linkedobj = currentObjects.get(raw_name);
+                    if (linkedobj == null) {
+                        registerObject(id, obj);
+                        //log("ground id for a new obj: "+id+" as ref for "+obj);
+                        return true;
+                    } else {
+                        // an object with the same id is already
+                        // present: must be the same object
+                        return obj == linkedobj;
+                    }
                 }
             }
         }
@@ -902,28 +941,6 @@ public class JavaLibrary extends Library {
         System.out.println("JavaLibrary: " + m);
     }
 
-    /**
-     *
-     *  bind and object to a new generated id
-     *
-     */
-    protected Term bindObject(Object obj) {
-        // null object are considered to _ variable
-        if (obj == null) {
-            return new Var();
-        }
-        // already registered object?
-        Object aKey = currentObjects_inverse.get(obj);
-        if (aKey != null) {
-            // object already referenced -> unifyng terms
-            // referencing the object
-            return (Term) aKey;
-        } else {
-            Term id = new Struct("obj-" + getObjId() + "-_");
-            registerObject(id, obj);
-            return id;
-        }
-    }
 
     /**
      *
@@ -933,7 +950,8 @@ public class JavaLibrary extends Library {
     protected Term getGroundObject(Term term, int id) {
         Term t = term.getTerm();
         if (t.isVar()) {
-            return new Struct("obj-" + id + "-" + ((Var) t).getName());
+            //return new Struct("$obj_" + id + "_"+((Var) t).getName());
+            return new Struct("$obj_" + id);
         } else if (t.isStruct()) {
             Struct co = (Struct) t;
             Term[] args = new Term[co.getArity()];
@@ -951,16 +969,20 @@ public class JavaLibrary extends Library {
     }
 
     protected void registerObject(Term term, Object obj) {
-        String raw_name = alice.util.Tools.removeApices(term.getTerm().toString());
-        currentObjects.put(raw_name, obj);
-        currentObjects_inverse.put(obj, term.getTerm());
+        synchronized (currentObjects){
+            String raw_name = alice.util.Tools.removeApices(term.getTerm().toString());
+            currentObjects.put(raw_name, obj);
+            currentObjects_inverse.put(obj, term.getTerm());
+        }
     }
 
     protected void unregisterObject(Term term) {
-        String raw_name = alice.util.Tools.removeApices(term.getTerm().toString());
-        Object obj = currentObjects.remove(raw_name);
-        if (obj != null) {
-            currentObjects_inverse.remove(obj);
+        synchronized (currentObjects){
+            String raw_name = alice.util.Tools.removeApices(term.getTerm().toString());
+            Object obj = currentObjects.remove(raw_name);
+            if (obj != null) {
+                currentObjects_inverse.remove(obj);
+            }
         }
     }
 
@@ -996,6 +1018,7 @@ public class JavaLibrary extends Library {
         preregisterObjects();
     }
 
+	// --------------------------------------------------
     // ---------------
 
     //
@@ -1241,6 +1264,7 @@ public class JavaLibrary extends Library {
             return null;
         }
     }
+
 }
 
 /**
@@ -1277,3 +1301,21 @@ class Signature implements Serializable {
 /** used to load new classes without touching system class loader */
 class ClassLoader extends java.lang.ClassLoader {
 }
+
+/**
+ * Information about an EventListener
+ */
+class ListenerInfo implements Serializable {
+    public String listenerInterfaceName;
+    public EventListener listener;
+    //public String eventName;
+    public String eventFullClass;
+
+    public ListenerInfo(EventListener l, String eventClass, String n) {
+        listener = l;
+        //this.eventName=eventName;
+        this.eventFullClass = eventClass;
+        listenerInterfaceName = n;
+    }
+}
+

@@ -25,7 +25,8 @@ import	java.io.*;
  *
  *
  */
-class Parser implements Serializable {
+public class Parser implements Serializable {
+
     public static final int TERM  = 0;
     public static final int EOF   = 1;
     public static final int ERROR = 2;
@@ -43,10 +44,10 @@ class Parser implements Serializable {
      * the parser use a default operator manager
      * if none is provided
      */
-    static OperatorManager defaultOperatorManager=new DefaultOperatorManager();
+    private static OperatorManager defaultOperatorManager=new DefaultOperatorManager();
 
     /** operator manager actually used */
-    OperatorManager opManager;
+    private OperatorManager opManager;
 
     /**
      * creating a Parser specifing how to handle operators
@@ -363,6 +364,12 @@ class Parser implements Serializable {
         throw(new Exception());
     }
 
+
+     // RICCI 030227 begin
+
+    // original
+    /*
+
     private Term expr0_list_bracket() throws Exception {
         Term head = exprA_inStruct(OperatorManager.OP_HIGH);
         Token tok=tokenizer.readToken();
@@ -374,7 +381,38 @@ class Parser implements Serializable {
             return new Struct("{}",head);
         }
         throw(new Exception());
+    }*/
+
+    // new one
+
+    private Term expr0_list_bracket() throws Exception {
+        Term head = exprA_inStruct(OperatorManager.OP_HIGH);
+        Token tok=tokenizer.readToken();
+        if (tok.seq.equals(",")){
+            return new Struct("{}",new Struct(",",head,expr0_list_bracket2()));
+        }
+        if (tok.seq.equals("}")){
+            tokenizer.unreadToken(tok);
+            return new Struct("{}",head);
+        }
+        throw(new Exception());
     }
+
+    private Term expr0_list_bracket2() throws Exception {
+        Term head = exprA_inStruct(OperatorManager.OP_HIGH);
+        Token tok=tokenizer.readToken();
+        if (tok.seq.equals(",")){
+            return new Struct(",",head,expr0_list_bracket2());
+        }
+        if (tok.seq.equals("}")){
+            tokenizer.unreadToken(tok);
+            return head;
+        }
+        throw(new Exception());
+    }
+
+
+     // RICCI 030227 end
 
     private alice.util.LinkedList expr0_arglist() throws Exception {
         Term head = exprA_inStruct(OperatorManager.OP_HIGH);
@@ -409,7 +447,6 @@ class Parser implements Serializable {
         }
         Term tb = exprB_inStruct(prior);
         if(tb != null) {
-
             Token tk;
             while((tk = tokenizer.readToken()).getAttribute() == Tokenizer.OPERATOR) {
                 if (tk.seq.equals(",")){
@@ -476,10 +513,25 @@ class Parser implements Serializable {
                     return(new Struct(tk.seq,tb));
                 }
             }
-
             tokenizer.unreadToken(tk);
         }
         return(tb);
     }
 
+    // helpers
+
+    /**
+     * finds a var already present in a list
+     */
+    /*
+    private Var findIn(String name,alice.util.LinkedList l) {
+        while(!l.isEmptyList()) {
+            Var v = (Var)l.head;
+            l = l.tail;
+            if(v.getName().equals(name)){
+                return(v);
+            }
+        }
+        return(null);
+    }*/
 }

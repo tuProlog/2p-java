@@ -18,7 +18,6 @@
 package alice.tuprolog.lib;
 import  alice.tuprolog.*;
 import  alice.tuprolog.Number;
-import  java.io.*;
 
 /**
  * This class represents a tuProlog library providing most of the built-ins
@@ -34,20 +33,16 @@ public class ISOLibrary extends Library {
     public ISOLibrary(){
     }
 
-    public boolean atom_length_2(Struct g)
+    public boolean atom_length_2(Struct arg0, Term arg1)
     {
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
         if (!arg0.isAtom())
             return false;
-        return (unify(arg1,new Int(((Struct)arg0).getName().length())));
+        return (unify(arg1,new Int(arg0.getName().length())));
     }
 
 
-    public boolean atom_chars_2(Struct g)
+    public boolean atom_chars_2(Term arg0, Term arg1)
     {
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
         if (arg0.isVar()){
             if (!arg1.isList()){
                 return false;
@@ -90,9 +85,7 @@ public class ISOLibrary extends Library {
     }
 
 
-    public boolean char_code_2(Struct g){
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
+    public boolean char_code_2(Term arg0, Term arg1){
         if (arg1.isVar()){
             if (!arg0.isAtom()){
                 return false;
@@ -116,56 +109,56 @@ public class ISOLibrary extends Library {
 
     // functors
 
-    public Term sin_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term sin_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.sin(((Number)val0).doubleValue())));
     }
 
-    public Term cos_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term cos_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.cos(((Number)val0).doubleValue())));
     }
 
-    public Term exp_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term exp_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.exp(((Number)val0).doubleValue())));
     }
 
-    public Term atan_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term atan_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.atan(((Number)val0).doubleValue())));
     }
 
-    public Term log_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term log_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.log(((Number)val0).doubleValue())));
     }
 
-    public Term sqrt_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term sqrt_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.sqrt(((Number)val0).doubleValue())));
     }
 
-    public Term abs_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term abs_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
@@ -176,8 +169,8 @@ public class ISOLibrary extends Library {
         }
     }
 
-    public Term sign_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term sign_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
@@ -188,16 +181,16 @@ public class ISOLibrary extends Library {
         }
     }
 
-    public Term float_integer_part_1(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term float_integer_part_1(Term val) {
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double((long)Math.rint(((Number)val0).doubleValue())));
     }
 
-    public Term float_fractional_part_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term float_fractional_part_1(Term val){
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
@@ -205,41 +198,41 @@ public class ISOLibrary extends Library {
         return(new alice.tuprolog.Double(Math.abs(fl-Math.rint(fl))));
     }
 
-    public Term floor_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term floor_1(Term val){
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.floor(((Number)val0).doubleValue())));
     }
 
-    public Term round_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term round_1(Term val){
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Long(Math.round(((Number)val0).doubleValue())));
     }
 
-    public Term truncate_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term truncate_1(Term val){
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.rint(((Number)val0).doubleValue())));
     }
 
-    public Term ceiling_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term ceiling_1(Term val){
+        Term val0 = evalExpression(val);
         if(!val0.isNumber()){
             return null;
         }
         return(new alice.tuprolog.Double(Math.ceil(((Number)val0).doubleValue())));
     }
 
-    public Term div_2(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term div_2(Term v0, Term v1) {
+        Term val0 = evalExpression(v0);
+        Term val1 = evalExpression(v1);
         if(!val0.isNumber()){
             return null;
         }
@@ -249,9 +242,9 @@ public class ISOLibrary extends Library {
         return(new alice.tuprolog.Int(((Number)val0).intValue()/((Number)val1).intValue()));
     }
 
-    public Term mod_2(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term mod_2(Term v0, Term v1) {
+        Term val0 = evalExpression(v0);
+        Term val1 = evalExpression(v1);
         if(!val0.isNumber()){
             return null;
         }
@@ -261,9 +254,9 @@ public class ISOLibrary extends Library {
         return(new alice.tuprolog.Int(((Number)val0).intValue() % ((Number)val1).intValue()));
     }
 
-    public Term rem_2(Struct g) {
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term rem_2(Term v0, Term v1) {
+        Term val0 = evalExpression(v0);
+        Term val1 = evalExpression(v1);
         if(!val0.isNumber()){
             return null;
         }

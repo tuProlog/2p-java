@@ -17,6 +17,7 @@
  */
 package alice.tuprolog.lib;
 import alice.tuprolog.*;
+import alice.tuprolog.Number;
 
 /**
  * This class defines a set of basic built-in
@@ -39,13 +40,12 @@ public class BasicLibrary extends Library {
     /**
      * sets a new theory provided as a text
      */
-    public boolean set_theory_1(Struct g){
+    public boolean set_theory_1(Struct theory){
         try {
-            Term arg = g.getTerm(0);
-            if (!arg.isAtom()){
-                return false;
-            }
-            getEngine().setTheory(new Theory(((Struct)arg).getName()));
+        	if (!theory.isAtom()){
+        		return false;
+        	}
+            getEngine().setTheory(new Theory(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex){
             System.err.println("invalid theory - line "+ex.line);
@@ -56,13 +56,12 @@ public class BasicLibrary extends Library {
     /**
      *  adds a new theory provided as a text
      */
-    public boolean add_theory_1(Struct g){
+    public boolean add_theory_1(Struct theory){
         try {
-            Term arg = g.getTerm(0);
-            if (!arg.isAtom()){
+            if (!theory.isAtom()){
                 return false;
             }
-            getEngine().setTheory(new Theory(((Struct)arg).getName()));
+            getEngine().setTheory(new Theory(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex){
             System.err.println("invalid theory - line "+ex.line);
@@ -71,9 +70,8 @@ public class BasicLibrary extends Library {
     }
 
     /** gets current theory text */
-    public boolean get_theory_1(Struct g){
+    public boolean get_theory_1(Struct arg){
         try {
-            Term arg = g.getTerm(0);
             Term theory=new Struct(getEngine().getTheory().toString());
             return (unify(arg,theory));
         } catch (Exception ex){
@@ -81,8 +79,7 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean get_operators_list_1(Struct g){
-        Term arg = g.getTerm(0);
+    public boolean get_operators_list_1(Struct arg){
         Struct list=new Struct();
         java.util.Iterator it = getEngine().getCurrentOperatorList().iterator();
         while(it.hasNext()){
@@ -96,9 +93,8 @@ public class BasicLibrary extends Library {
      * spawns a separate prolog agent
      * providing it a theory text
      */
-    public boolean agent_1(Struct g){
+    public boolean agent_1(Struct theory){
         try {
-            Struct theory = (Struct)g.getTerm(0);
             new Agent(alice.util.Tools.removeApices(theory.toString())).spawn();
             return true;
         } catch (Exception ex){
@@ -111,10 +107,8 @@ public class BasicLibrary extends Library {
      * spawns a separate prolog agent
      * providing it a theory text and a goal
      */
-    public boolean agent_2(Struct g){
+    public boolean agent_2(Struct theory, Struct goal){
         try {
-            Struct theory = (Struct)g.getTerm(0);
-            Struct goal = (Struct)g.getTerm(1);
             new Agent(alice.util.Tools.removeApices(theory.toString()),
                 goal.toString()+".").spawn();
             return true;
@@ -124,13 +118,23 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean spy_0(Struct g){
+    public boolean spy_0(){
         getEngine().setSpy(true);
         return true;
     }
 
-    public boolean nospy_0(Struct g){
+    public boolean nospy_0(){
         getEngine().setSpy(false);
+        return true;
+    }
+
+    public boolean warning_0(){
+        getEngine().setWarning(true);
+        return true;
+    }
+
+    public boolean nowarning_0(){
+        getEngine().setWarning(false);
         return true;
     }
 
@@ -138,59 +142,48 @@ public class BasicLibrary extends Library {
     // term type inspection
     //
 
-    public boolean constant_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isAtomic());
+    public boolean constant_1(Term t){
+        return (t.isAtomic());
     }
 
-    public boolean number_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isNumber());
+    public boolean number_1(Term t){
+        return (t.isNumber());
     }
 
-    public boolean integer_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isNumber() && ((alice.tuprolog.Number)arg0).isInteger());
+    public boolean integer_1(Number t){
+        return (t.isInteger());
     }
 
-    public boolean float_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isNumber() && ((alice.tuprolog.Number)arg0).isReal());
+    public boolean float_1(Number t){
+        return (t.isReal());
     }
 
-    public boolean atom_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isAtom());
+    public boolean atom_1(Term t){
+        return (t.isAtom());
     }
 
-    public boolean compound_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isStruct() && !arg0.isAtom());
+    public boolean compound_1(Term t){
+        return (t.isStruct() && !t.isAtom());
     }
 
-    public boolean list_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isList());
+    public boolean list_1(Term t){
+        return (t.isList());
     }
 
-    public boolean var_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isVar());
+    public boolean var_1(Term t){
+        return (t.isVar());
     }
 
-    public boolean nonvar_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (!arg0.isVar());
+    public boolean nonvar_1(Term t){
+        return (!t.isVar());
     }
 
-    public boolean atomic_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isAtom()||arg0.isNumber());
+    public boolean atomic_1(Term t){
+        return (t.isAtom()||t.isNumber());
     }
 
-    public boolean ground_1(Struct g){
-        Term arg0 = g.getTerm(0);
-        return (arg0.isGround());
+    public boolean ground_1(Term t){
+        return (t.isGround());
     }
 
 
@@ -198,9 +191,9 @@ public class BasicLibrary extends Library {
     // term/espression comparison
     //
 
-    public boolean expression_equality_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public boolean expression_equality_2(Term arg0, Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0==null || val1==null || !val0.isNumber() || !val1.isNumber()){
             return false;
         }
@@ -213,9 +206,9 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean expression_greater_than_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public boolean expression_greater_than_2(Term arg0, Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0==null || val1==null || !val0.isNumber() || !val1.isNumber()){
             return false;
         }
@@ -228,9 +221,9 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean expression_less_than_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public boolean expression_less_than_2(Term arg0, Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0==null || val1==null || !val0.isNumber() || !val1.isNumber()){
             return false;
         }
@@ -243,27 +236,21 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean term_equality_2(Struct g){
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
+    public boolean term_equality_2(Term arg0, Term arg1){
         return arg0.isEqual(arg1);
     }
 
-    public boolean term_greater_than_2(Struct g){
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
+    public boolean term_greater_than_2(Term arg0, Term arg1){
         return arg0.isGreater(arg1);
     }
 
-    public boolean term_less_than_2(Struct g){
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
+    public boolean term_less_than_2(Term arg0, Term arg1){
         return !(arg0.isGreater(arg1)||arg0.isEqual(arg1));
     }
 
 
-    public Term expression_plus_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term expression_plus_1(Term arg0){
+        Term val0 = evalExpression(arg0);
         if (val0!=null && val0.isNumber()){
             return(val0);
         } else {
@@ -271,8 +258,8 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public Term expression_minus_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term expression_minus_1(Term arg1){
+        Term val0 = evalExpression(arg1);
         if (val0!=null && val0.isNumber()){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             if (val0n.isTypeInt()){
@@ -291,8 +278,8 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public Term expression_bitwise_not_1(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
+    public Term expression_bitwise_not_1(Term arg0){
+        Term val0 = evalExpression(arg0);
         if (val0!=null && val0.isNumber()){
             return (new Int(~((alice.tuprolog.Number)val0).intValue()));
         } else {
@@ -300,9 +287,9 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public Term expression_plus_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term expression_plus_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber() && (val1.isNumber())){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -316,9 +303,9 @@ public class BasicLibrary extends Library {
         }
 }
 
-    public Term expression_minus_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term expression_minus_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber() && (val1.isNumber())){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -332,9 +319,9 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public Term expression_multiply_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term expression_multiply_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber() && (val1.isNumber())){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -348,9 +335,9 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public Term expression_div_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term expression_div_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber() && (val1.isNumber())){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -360,9 +347,9 @@ public class BasicLibrary extends Library {
         }
    }
 
-    public Term expression_integer_div_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term expression_integer_div_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber() && (val1.isNumber())){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -371,9 +358,9 @@ public class BasicLibrary extends Library {
             return null;
         }
    }
-    public Term expression_pow_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+    public Term expression_pow_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber() && (val1.isNumber())){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -383,9 +370,9 @@ public class BasicLibrary extends Library {
         }
    }
 
-   public Term expression_bitwise_shift_right_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+   public Term expression_bitwise_shift_right_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber()&&val1.isNumber()){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -395,9 +382,9 @@ public class BasicLibrary extends Library {
         }
    }
 
-   public Term expression_bitwise_shift_left_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+   public Term expression_bitwise_shift_left_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber()&&val1.isNumber()){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -407,9 +394,9 @@ public class BasicLibrary extends Library {
         }
    }
 
-   public Term expression_bitwise_and_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+   public Term expression_bitwise_and_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber()&&val1.isNumber()){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -419,9 +406,9 @@ public class BasicLibrary extends Library {
         }
    }
 
-   public Term expression_bitwise_or_2(Struct g){
-        Term val0 = evalExpression(g.getTerm(0));
-        Term val1 = evalExpression(g.getTerm(1));
+   public Term expression_bitwise_or_2(Term arg0,Term arg1){
+        Term val0 = evalExpression(arg0);
+        Term val1 = evalExpression(arg1);
         if (val0!=null && val1!=null && val0.isNumber()&&val1.isNumber()){
             alice.tuprolog.Number val0n=(alice.tuprolog.Number)val0;
             alice.tuprolog.Number val1n=(alice.tuprolog.Number)val1;
@@ -438,14 +425,13 @@ public class BasicLibrary extends Library {
     /**
      * bidirectional text/term conversion.
      */
-    public boolean text_term_2(Struct g){
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
-        if (!arg0.isStruct()){
+    public boolean text_term_2(Term arg0, Term arg1){
+        if (!arg0.isGround()){
             return unify(arg0,new Struct(arg1.toString()));
         } else {
             try {
-                return unify(arg1,getEngine().toTerm(arg0.toString()));
+                String text = alice.util.Tools.removeApices(arg0.toString());
+                return unify(arg1,getEngine().toTerm(text));
             } catch (Exception ex){
                 return false;
             }
@@ -453,10 +439,7 @@ public class BasicLibrary extends Library {
     }
 
 
-    public boolean text_concat_3(Struct g){
-        Term source1=g.getTerm(0);
-        Term source2=g.getTerm(1);
-        Term dest=g.getTerm(2);
+    public boolean text_concat_3(Term source1, Term source2, Term dest){
         if (source1.isAtom() && source2.isAtom()){
             return unify(dest,
                 new Struct( ((Struct)source1).getName()+ ((Struct)source2).getName()));
@@ -465,9 +448,7 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean num_atom_2(Struct g){
-        Term arg0 = g.getTerm(0);
-        Term arg1 = g.getTerm(1);
+    public boolean num_atom_2(Term arg0,Term arg1){
         if (arg1.isVar()){
             if (!arg0.isNumber()){
                 return false;
@@ -545,6 +526,8 @@ public class BasicLibrary extends Library {
             //
             ":- op(  700, xfx,  'is'). \n"+
             ":- op(  700, xfx,  '=..'). \n"+
+            ":- op(  600, xfx,  '?'). \n"+
+            ":- op(  550, xfx,  '@'). \n"+
             ":- op(  500, yfx,  '+'). \n"+
             ":- op(  500, yfx,  '-'). \n"+
             ":- op(  500, yfx,  '/\\'). \n"+
@@ -559,7 +542,6 @@ public class BasicLibrary extends Library {
             ":- op(  200, fx,   '\\'). \n"+
             ":- op(  200, fy,   '-'). \n"+
             ":- op(  200, fy,   '+'). \n"+
-            ":- op(  100, xfx,  '@'). \n"+
             ":- op(  50, xfx,  ':'). \n"+
             //
             // flags defined by the BasicLibrary theory

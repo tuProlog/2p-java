@@ -30,8 +30,8 @@ class StructKey implements java.io.Serializable {
     int hash;
     String key;
 
-    public StructKey(String key) {
-        hash=key.hashCode();
+    public StructKey(String key, int arity) {
+        hash=(key+arity).hashCode();
     }
 
     public int hashCode() {

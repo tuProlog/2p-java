@@ -36,6 +36,12 @@ public class Agent {
     private InputStream theoryInputStream;
     private String      goalText;
 
+    private OutputListener defaultOutputListener = new OutputListener() {
+            public void onOutput(OutputEvent ev) {
+                System.out.print(ev.getMsg());
+    }};
+
+
     /**
      * Builds a prolog agent providing it a theory
      *
@@ -44,6 +50,7 @@ public class Agent {
     public Agent(String theory){
         theoryText=theory;
         core=new Prolog();
+        core.addOutputListener(defaultOutputListener);
     }
 
     /**
@@ -53,6 +60,7 @@ public class Agent {
         theoryText=theory;
         goalText=goal;
         core=new Prolog();
+        core.addOutputListener(defaultOutputListener);
     }
 
     /**
@@ -62,6 +70,7 @@ public class Agent {
     public Agent(InputStream is){
         theoryInputStream=is;
         core=new Prolog();
+        core.addOutputListener(defaultOutputListener);
     }
 
     /**
@@ -72,6 +81,7 @@ public class Agent {
         theoryInputStream=is;
         goalText=goal;
         core=new Prolog();
+        core.addOutputListener(defaultOutputListener);
     }
 
     /**
@@ -81,12 +91,34 @@ public class Agent {
         new Agent.AgentThread(this).start();
     }
 
-    private void body(){
-        OutputListener l=new OutputListener() {
-            public void onOutput(OutputEvent ev) {
-                System.out.print(ev.getMsg());
-        }};
+    /**
+     * Adds a listener to ouput events
+     *
+     * @param l the listener
+     */
+    public synchronized void addOutputListener(OutputListener l) {
         core.addOutputListener(l);
+    }
+
+    /**
+     * Removes a listener to ouput events
+     *
+     * @param l the listener
+     */
+    public synchronized void removeOutputListener(OutputListener l) {
+        core.removeOutputListener(l);
+    }
+
+    /**
+     * Removes all output event listeners
+     */
+    public void removeAllOutputListener(){
+       core.removeAllOutputListeners();
+    }
+
+
+
+    private void body(){
         try {
             if (theoryText==null){
                 core.setTheory(new Theory(theoryInputStream));
