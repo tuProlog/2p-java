@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE attributes PUBLIC "-//NetBeans//DTD DefaultAttributes 1.0//EN" "http://www.netbeans.org/dtds/attributes-1_0.dtd">
+<attributes version="1.0">
+    <fileobject name="GUIConsole.java">
+        <attr name="class_dependency_alice.tuprolog.SpyListener" stringvalue="GUIConsole"/>
+        <attr name="class_dependency_java.lang.Thread" stringvalue="GUIConsole.ProcessInput"/>
+        <attr name="class_dependency_alice.tuprolog.StateListener" stringvalue="GUIConsole"/>
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="GUIConsole"/>
+        <attr name="class_dependency_alice.tuprolog.OutputListener" stringvalue="GUIConsole"/>
+        <attr name="class_dependency_java.io.Serializable" stringvalue="GUIConsole"/>
+    </fileobject>
+    <fileobject name="About.java">
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="About"/>
+    </fileobject>
+    <fileobject name="EditTheory.java">
+        <attr name="class_dependency_javax.swing.JFrame" stringvalue="EditTheory"/>
+    </fileobject>
+</attributes>
