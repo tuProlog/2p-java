@@ -1,0 +1,1 @@
+halls(H,K):-get_theories(H,K).
