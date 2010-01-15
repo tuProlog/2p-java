@@ -119,8 +119,9 @@ public abstract class Library implements Serializable, IPrimitives {
 	 *
 	 * The runtime (demo) context currently used by the engine
 	 * is deployed and altered.
+	 * @throws Throwable 
 	 */
-	protected Term evalExpression(Term term) {
+	protected Term evalExpression(Term term) throws Throwable {
 		if (term == null)
 			return null;
 		Term val = term.getTerm();

@@ -5,10 +5,10 @@ import alice.tuprolog.event.OutputListener;
 
 class TestOutputListener implements OutputListener {
 	
-	public String output = "";
+	public String output;
 
 	public void onOutput(OutputEvent e) {
-		output += e.getMsg();
+		output = e.getMsg();
 	}
 
 }

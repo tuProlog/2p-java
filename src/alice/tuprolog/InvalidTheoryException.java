@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2007 aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,14 +25,18 @@ package alice.tuprolog;
  */
 public class InvalidTheoryException extends PrologException {
 	
-	public int line=-1;
-	public int pos=-1;
+	public int line = -1;
+	public int pos = -1;
 	
 	public InvalidTheoryException() {}
 	
-	public InvalidTheoryException(int line,int pos) {
-		this.line=line;
-		this.pos=pos;
+	public InvalidTheoryException(int line, int pos) {
+		this.line = line;
+		this.pos = pos;
+	}
+
+	public InvalidTheoryException(String message) {
+		super(message);
 	}
 	
 }

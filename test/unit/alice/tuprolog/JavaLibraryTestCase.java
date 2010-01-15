@@ -6,15 +6,6 @@ import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {
 	
-	public void testGetPrimitives() {
-		Library library = new JavaLibrary();
-		java.util.List[] primitives = library.getPrimitives();
-		assertEquals(3, primitives.length);
-		assertEquals(0, primitives[PrimitiveInfo.DIRECTIVE].size());
-		assertTrue(primitives[PrimitiveInfo.PREDICATE].size() > 0);
-		assertEquals(0, primitives[PrimitiveInfo.FUNCTOR].size());
-	}
-	
 	public void testAnonymousObjectRegistration() throws InvalidTheoryException, InvalidObjectIdException {
 		Prolog engine = new Prolog();		
 		JavaLibrary lib = (JavaLibrary) engine.getLibrary("alice.tuprolog.lib.JavaLibrary");

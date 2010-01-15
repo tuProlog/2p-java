@@ -161,8 +161,8 @@ public class Double extends Number {
 		t = t.getTerm();
 		if (t instanceof Var) {
 			return t.unify(vl2, vl1, this);
-		} else if (t instanceof Number) {
-			return value==((Number)t).doubleValue();
+		} else if (t instanceof Number && ((Number) t).isReal()) {
+			return value == ((Number) t).doubleValue();
 		} else {
 			return false;
 		}

@@ -4,18 +4,6 @@ import junit.framework.TestCase;
 
 public class IntTestCase extends TestCase {
 	
-	public void testIsAtomic() {
-		assertTrue(new Int(0).isAtomic());
-	}
-	
-	public void testIsAtom() {
-		assertFalse(new Int(0).isAtom());
-	}
-	
-	public void testIsCompound() {
-		assertFalse(new Int(0).isCompound());
-	}
-	
 	public void testEqualsToStruct() {
 		Struct s = new Struct();
 		Int zero = new Int(0);

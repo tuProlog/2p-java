@@ -85,11 +85,13 @@ public abstract class Term implements java.io.Serializable {
 	 * Tests for the equality of two object terms
 	 *
 	 * The comparison follows the same semantic of
-	 * the isEQU method.
+	 * the isEqual method.
 	 *
 	 */
 	public boolean equals(Object t) {
-		return isEqual((Term)t);
+		if (!(t instanceof Term))
+			return false;
+		return isEqual((Term) t);
 	}
 	
 	
@@ -152,13 +154,11 @@ public abstract class Term implements java.io.Serializable {
 	 */
 	public Term copyResult(Collection goalVars, List resultVars) {
 		IdentityHashMap originals = new IdentityHashMap();
-		Iterator i = goalVars.iterator();
-		while (i.hasNext()) {
-			Var key = (Var)i.next();
+		for (Iterator i = goalVars.iterator(); i.hasNext();) {
+			Var key = (Var) i.next();
 			Var clone = new Var();
-			try {
+			if (!key.isAnonymous())
 				clone = new Var(key.getOriginalName());
-			} catch(InvalidTermException e) {}
 			originals.put(key,clone);
 			resultVars.add(clone);
 		}
@@ -197,9 +197,9 @@ public abstract class Term implements java.io.Serializable {
 			ExecutionContext ec = engine.getCurrentContext();
 			if (ec != null) {
 				int id = (engine.env==null)? Var.PROGRESSIVE : engine.env.nDemoSteps;
-				//Aggiorna il trailingVars
+				// Update trailingVars
 				ec.trailingVars = new OneWayList(v1,ec.trailingVars);
-				//Eseguo il renaming dopo unify perchè la sua utilità non riguarda il motore ma l'utente
+				// Renaming after unify because its utility regards not the engine but the user
 				int count = 0;
 				Iterator it = v1.iterator();
 				while (it.hasNext()) {
@@ -256,14 +256,14 @@ public abstract class Term implements java.io.Serializable {
 	 * @return the term represented by the string
 	 * @throws InvalidTermException if the string does not represent a valid term
 	 */
-	public static Term createTerm(String st) throws InvalidTermException {
+	public static Term createTerm(String st) {
 		return Parser.parseSingleTerm(st);
 	}
 	
 	/**
 	 * @deprecated Use {@link Term#createTerm(String)} instead.
 	 */
-	public static Term parse(String st) throws InvalidTermException {
+	public static Term parse(String st) {
 		return Term.createTerm(st);
 	}
 	
@@ -275,14 +275,14 @@ public abstract class Term implements java.io.Serializable {
 	 * @return the term represented by the string
 	 * @throws InvalidTermException if the string does not represent a valid term
 	 */
-	public static Term createTerm(String st, OperatorManager op) throws InvalidTermException {
+	public static Term createTerm(String st, OperatorManager op) {
 		return Parser.parseSingleTerm(st, op);
 	}
 	
 	/**
 	 * @deprecated Use {@link Term#createTerm(String, OperatorManager)} instead.
 	 */
-	public static Term parse(String st, OperatorManager op) throws InvalidTermException {
+	public static Term parse(String st, OperatorManager op) {
 		return Term.createTerm(st, op);
 	}
 	

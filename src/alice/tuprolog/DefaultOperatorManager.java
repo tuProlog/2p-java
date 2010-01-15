@@ -51,7 +51,7 @@ class DefaultOperatorManager extends OperatorManager {
 		opNew("=<", "xfx", 700);
 		opNew(">=", "xfx", 700);
 		opNew("is", "xfx", 700);
-		opNew("==..", "xfx", 700);
+		opNew("=..", "xfx", 700);
 		//opNew("?","xfx",600);
 		//opNew("@","xfx",550);
 		opNew("+", "yfx", 500);

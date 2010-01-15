@@ -92,7 +92,7 @@ public abstract class Number extends Term {
      * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
 	public abstract boolean isLong();
 	
-	public static Number createNumber(String s) throws InvalidTermException {
+	public static Number createNumber(String s) {
 		Term t = Term.createTerm(s);
 		if (t instanceof Number)
 			return (Number) t;

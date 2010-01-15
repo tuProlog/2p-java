@@ -21,34 +21,55 @@ package alice.tuprolog;
  * @author Alex Benini
  */
 public class StateGoalEvaluation extends State {
-	
+
 	public StateGoalEvaluation(EngineManager c) {
 		this.c = c;
 		stateName = "Eval";
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see alice.tuprolog.AbstractRunState#doJob()
 	 */
 	void doJob(Engine e) {
 		if (e.currentContext.currentGoal.isPrimitive()) {
-			//Recupero primitiva
-			PrimitiveInfo primitive = e.currentContext.currentGoal.getPrimitive();
+			// Recupero primitiva
+			PrimitiveInfo primitive = e.currentContext.currentGoal
+					.getPrimitive();
 			try {
-				e.nextState =
-					(primitive.evalAsPredicate(e.currentContext.currentGoal)) ?
-							c.GOAL_SELECTION : c.BACKTRACK;
+				e.nextState = (primitive
+						.evalAsPredicate(e.currentContext.currentGoal)) ? c.GOAL_SELECTION
+						: c.BACKTRACK;
 			} catch (HaltException he) {
 				e.nextState = c.END_HALT;
 			} catch (Throwable t) {
-				//TODO Gestire le eccezioni in prolog
-				t.printStackTrace();
-				e.nextState = c.END_HALT;
+
+				if (t instanceof PrologError) {
+					// cast da Throwable a PrologError
+					PrologError error = (PrologError) t;
+					// sostituisco il gol in cui si è verificato l'errore con il
+					// subgoal throw/1
+					e.currentContext.currentGoal = new Struct("throw", error
+							.getError());
+				} else if (t instanceof JavaException) {
+					// cast da Throwable a JavaException
+					JavaException exception = (JavaException) t;
+					
+					// sostituisco il gol in cui si è verificato l'errore con il
+					// subgoal java_throw/1
+					e.currentContext.currentGoal = new Struct("java_throw",
+							exception.getException());
+				}
+
+				// mi sposto nello stato EXCEPTION
+				e.nextState = c.EXCEPTION;
 			}
-			//Incremento il counter dei passi di dimostrazione
+			// Incremento il counter dei passi di dimostrazione
 			e.nDemoSteps++;
-		} else
+		} else {
 			e.nextState = c.RULE_SELECTION;
+		}
 	}
-	
+
 }

@@ -1,7 +1,5 @@
 package alice.tuprolog;
 
-import java.util.List;
-
 import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {
@@ -33,22 +31,10 @@ public class TheoryManagerTestCase extends TestCase {
 		assertFalse(firstSolution.hasOpenAlternatives());
 	}
 	
-	public void testAbolish() throws PrologException {
-		Prolog engine = new Prolog();
-		String theory = "test(A, B) :- A is 1+2, B is 2+3.";
-		engine.setTheory(new Theory(theory));
-		TheoryManager manager = engine.getTheoryManager();
-		Struct testTerm = new Struct("test", new Struct("a"), new Struct("b"));
-		List testClauses = manager.find(testTerm);
-		assertEquals(1, testClauses.size());
-		manager.abolish(new Struct("test/2"));
-		testClauses = manager.find(testTerm);
-		// The predicate should also disappear completely from the clause
-		// database, i.e. ClauseDatabase#get(f/a) should return null
-		assertEquals(0, testClauses.size());
-	}
-	
-	// TODO test retractall: ClauseDatabase#get(f/a) should return an
-	// empty list
+	// TODO test abolish: not only the predicate is no more defined, but
+	// it should also disappear completely from the clause database, i.e.
+	// ClauseDatabase#get(f/a) should return null instead of an empty list
+	// (it returns an empty list as a result of a retract_all, please test
+	// also this one, thank you).
 	
 }

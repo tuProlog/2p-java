@@ -43,7 +43,7 @@ public class PrimitiveManager {
 	 * Config this Manager
 	 */
 	void initialize(Prolog vm) {
-		createPrimitiveInfo(new BuiltIn(vm));
+		createPrimitiveInfo(new BuiltIn(vm)); 
 	}
 	
 	void createPrimitiveInfo(IPrimitives src) {

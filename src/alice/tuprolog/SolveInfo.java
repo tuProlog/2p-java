@@ -181,24 +181,24 @@ public class SolveInfo implements Serializable  {
 	 */    
 	public String toString() {
 		if (isSuccess) {
-			StringBuffer st=new StringBuffer("yes");
-			if (bindings.size()>0) {
+			StringBuffer st = new StringBuffer("yes");
+			if (bindings.size() > 0) {
 				st.append(".\n");
 			} else {
 				st.append(". ");
 			}
 			Iterator it = bindings.iterator();
 			while(it.hasNext()) {
-				Var v = (Var)it.next();
-				if (v!=null && !v.isAnonymous() && v.isBound() &&
-						(!(v.getTerm() instanceof Var) || (!((Var)(v.getTerm())).getName().startsWith("_")))){
+				Var v = (Var) it.next();
+				if (v != null && !v.isAnonymous() && v.isBound() &&
+						(!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
 					st.append(v);
 					st.append("  ");
 				}
 			}
-			return st.toString();
+			return st.toString().trim();
 		} else {
-			return "no";
+			return "no.";
 		}
 	}
 	

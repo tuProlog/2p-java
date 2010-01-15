@@ -48,9 +48,9 @@ public class Var extends Term {
 	 * specified as a name, the variable is anonymous.
 	 *
 	 * @param n is the name
-	 * @throws InvalidTermException if n is not a valid name
+	 * @throws InvalidTermException if n is not a valid Prolog variable name
 	 */
-	public Var(String n) throws InvalidTermException {
+	public Var(String n) {
 		link = null;
 		id = -1; //no execCtx owners
 		if (n.equals(ANY)) {
@@ -206,7 +206,7 @@ public class Var extends Term {
 			return name;
 		} else {
 			//return ANY+timestamp;
-			return ANY;
+			return ANY + hashCode();
 		}
 	}
 	
@@ -490,7 +490,7 @@ public class Var extends Term {
 			}
 		} else {
 			if (tt == this) {
-				return ANY;
+				return ANY + hashCode();
 			} else {
 				return tt.toString();
 			}
@@ -514,7 +514,7 @@ public class Var extends Term {
 			}
 		} else {
 			if (tt == this) {
-				return ANY;
+				return ANY + hashCode();
 			} else {
 				return tt.toString();
 			}

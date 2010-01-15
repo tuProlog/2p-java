@@ -162,10 +162,10 @@ public class Int extends Number {
 	 */
 	boolean unify(List vl1, List vl2, Term t) {
 		t = t.getTerm();
-		if (t instanceof Var){
+		if (t instanceof Var) {
 			return t.unify(vl2, vl1, this);
-		} else if (t instanceof Number) {
-			return value == ( (Number) t ).intValue();
+		} else if (t instanceof Number && ((Number) t).isInteger()) {
+			return value == ((Number) t).intValue();
 		} else {
 			return false;
 		}

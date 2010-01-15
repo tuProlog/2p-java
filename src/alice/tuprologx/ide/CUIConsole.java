@@ -19,7 +19,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     SolveInfo       info;
 
     static final String incipit =
-        "tuProlog " + Prolog.getVersion() + " - DEIS,  Università di Bologna a Cesena \n"+
+        "tuProlog " + Prolog.getVersion() + " - Alma Mater Studiorum Università di Bologna\n"+
         new java.util.Date();
        
     public CUIConsole(String[] args){
@@ -83,7 +83,8 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         			}
         			become("goalRequest");
         		} else {
-        			System.out.print(solveInfoToString(info) + " ? ");
+        			String bindings = solveInfoToString(info); 
+        			System.out.print((bindings == "" ? "true" : bindings) + " ? ");
         			become("getChoice");
         		}
         } catch (MalformedGoalException ex){
@@ -131,7 +132,8 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
 		            System.out.println("no.");
 		            become("goalRequest");
 		        } else {
-		            System.out.print(solveInfoToString(info) + " ? ");
+		        	String bindings = solveInfoToString(info); 
+        			System.out.print((bindings == "" ? "true" : bindings) + " ? ");
 		            become("getChoice");
 		        }
 		    } catch (Exception ex){

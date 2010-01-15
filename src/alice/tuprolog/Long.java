@@ -163,8 +163,8 @@ public class Long extends Number {
 		t = t.getTerm();
 		if (t instanceof Var) {
 			return t.unify(vl1, vl2, this);
-		} else if (t instanceof Number) {
-			return value == ( (Number) t ).longValue();
+		} else if (t instanceof Number && ((Number) t).isInteger()) {
+			return value == ((Number) t).longValue();
 		} else {
 			return false;
 		}

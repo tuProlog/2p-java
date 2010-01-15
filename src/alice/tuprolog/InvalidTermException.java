@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2007 aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,12 +18,15 @@
 package alice.tuprolog;
 
 /**
- * This exeption means that a not valid tuProlog term has been specified.
- *
+ * This exception means that a method has been passed an argument
+ * containing an invalid Prolog term.
  */
-public class InvalidTermException extends PrologException {
+public class InvalidTermException extends IllegalArgumentException {
+
+	private static final long serialVersionUID = -4416801118548866803L;
 
 	public InvalidTermException(String message) {
 		super(message);
 	}
+	
 }

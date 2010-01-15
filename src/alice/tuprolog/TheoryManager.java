@@ -21,11 +21,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Stack;
 import java.util.List;
+import java.util.Stack;
+
+import alice.util.Tools;
 
 /**
  * This class defines the Theory Manager who manages the clauses/theory often referred to as the Prolog database.
@@ -95,7 +96,6 @@ public class TheoryManager implements Serializable {
 
     /**
      * removing from dbase the first clause with head unifying with clause
-     * (m if a free substitution index and t is the first free timestamp)
      */
     ClauseInfo retract(Struct cl) {
     	Struct clause = toClause(cl);
@@ -115,12 +115,11 @@ public class TheoryManager implements Serializable {
     }
 
     /**
-     * removing from dbase the first clause with head unifying with clause
-     * (m if a free substitution index and t is the first free timestamp)
+     * removing from dbase all the clauses corresponding to the
+     * predicate indicator passed as a parameter
      */
-    boolean abolish(Struct cl) {
-    	cl = toClause(cl);
-    	String key = cl.getPredicateIndicator();
+    boolean abolish(Struct pi) {
+    	String key = Tools.removeApices(pi.toString());
         LinkedList abolished = dynamicDBase.abolish(key);
         if (abolished != null)
         	engine.spy("ABOLISHED: " + key + " number of clauses=" + abolished.size() + "\n");
@@ -158,20 +157,25 @@ public class TheoryManager implements Serializable {
      *
      * @param theory        theory to add
      * @param dynamicTheory if it is true, then the clauses are marked as dynamic
-     * @param libName       if it not null, then the clauses are marked to belong to the specificed library
+     * @param libName       if it not null, then the clauses are marked to belong to the specified library
      */
     void consult(Theory theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
     	startGoalStack = new Stack();
 
 		// iterate all clauses in theory and assert them
-		for (Iterator it = theory.iterator(engine); it.hasNext();) {
-			Struct d = (Struct) it.next();
-			if (!runDirective(d))
-				assertZ(d, dynamicTheory, libName, true);
-		}
+    	try {
+			for (Iterator it = theory.iterator(engine); it.hasNext();) {
+				Struct d = (Struct) it.next();
+				if (!runDirective(d))
+					assertZ(d, dynamicTheory, libName, true);
+			}
+    	} catch (InvalidTermException e) {
+    		throw new InvalidTheoryException(e.getMessage());
+    	}
 		
 		if (libName == null)
-			lastConsultedTheory.append(theory);
+			//lastConsultedTheory.append(theory);
+			lastConsultedTheory = theory;
 	}
 
     /**
@@ -181,8 +185,10 @@ public class TheoryManager implements Serializable {
     void rebindPrimitives() {
         for (Iterator allClauses = dynamicDBase.iterator(); allClauses.hasNext();) {
             ClauseInfo d = (ClauseInfo) allClauses.next();
-            for (Iterator itBody = d.getBody().iterator(); itBody.hasNext();)
-            	primitiveManager.identifyPredicate((Struct) itBody.next());
+            for (Iterator itBody = d.getBody().iterator(); itBody.hasNext();) {
+            	Term t = ((SubGoalElement) itBody.next()).getValue();
+            	primitiveManager.identifyPredicate(t);
+            }
         }
     }
 
@@ -223,12 +229,8 @@ public class TheoryManager implements Serializable {
      * Gets a clause from a generic Term
      */
     private Struct toClause(Struct t) {
-        try {
-            // TODO bad, slow way of cloning. requires approx twice the time necessary
-            t = (Struct) Term.createTerm(t.toString(), this.engine.getOperatorManager());
-        } catch (InvalidTermException e) {
-        	// this should never happen
-        }
+    	// TODO bad, slow way of cloning. requires approx twice the time necessary
+        t = (Struct) Term.createTerm(t.toString(), this.engine.getOperatorManager());
         if (!t.isClause())
             t = new Struct(":-", t, new Struct("true"));
         primitiveManager.identifyPredicate(t);

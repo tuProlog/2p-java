@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2011  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,7 +43,7 @@ import alice.tuprolog.event.WarningListener;
 public class Prolog implements Serializable {
 	
 	// 2P version
-	private static final String VERSION = "2.1";    
+	private static final String VERSION = "2.2.1";    
 	
 	/*  manager of current theory */
 	private TheoryManager theoryManager;
@@ -186,7 +186,7 @@ public class Prolog implements Serializable {
 	}
 	
 	/** Gets the component managing engine */
-	EngineManager getEngineManager() {
+	public EngineManager getEngineManager() {
 		return engineManager; 
 	}
 	
@@ -223,11 +223,11 @@ public class Prolog implements Serializable {
 	 * @see Theory
 	 */
 	public synchronized void addTheory(Theory th) throws InvalidTheoryException {
-		Theory oldTh = theoryManager.getLastConsultedTheory();
+		Theory oldTh = getTheory();
 		theoryManager.consult(th, true, null);
 		theoryManager.solveTheoryGoal();
-		Theory newTh = theoryManager.getLastConsultedTheory();
-		TheoryEvent ev = new TheoryEvent(this,oldTh,newTh);	
+		Theory newTh = getTheory();
+		TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);	
 		this.notifyChangedTheory(ev);
 	}	
 	
@@ -251,11 +251,7 @@ public class Prolog implements Serializable {
 	 * @return theory
 	 */
 	public synchronized Theory getLastConsultedTheory() {
-		try {
-			return theoryManager.getLastConsultedTheory();
-		} catch (Exception ex){
-			return null;
-		}
+		return theoryManager.getLastConsultedTheory();
 	}
 	
 	

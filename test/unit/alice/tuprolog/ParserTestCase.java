@@ -57,12 +57,6 @@ public class ParserTestCase extends TestCase {
 		assertEquals(s, parser.nextTerm(false).toString());
 	}
 	
-	public void testUnivOperator() throws InvalidTermException {
-		Parser p = new Parser("p =.. q.");
-		Struct result = new Struct("=..", new Struct("p"), new Struct("q"));
-		assertEquals(result, p.nextTerm(true));
-	}
-	
 	public void testDotOperator() throws InvalidTermException {
 		String s = "class('java.lang.Integer').'MAX_VALUE'";
 		DefaultOperatorManager om = new DefaultOperatorManager();
@@ -210,18 +204,6 @@ public class ParserTestCase extends TestCase {
 		Parser p = new Parser(theory);
 		assertEquals(new Struct("t1"), p.nextTerm(true));
 		assertEquals(new Struct("t3"), p.nextTerm(true));
-	}
-	
-	public void testSingleQuotedTermWithInvalidLineBreaks() {
-		String s = "out('"+
-		           "can_do(X).\n"+
-		           "can_do(Y).\n"+
-	               "').";
-		Parser p = new Parser(s);
-		try {
-			p.nextTerm(true);
-			fail();
-		} catch (InvalidTermException expected) {}
 	}
 	
 	// TODO More tests on Parser

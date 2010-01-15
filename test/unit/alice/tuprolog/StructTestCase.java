@@ -1,60 +1,11 @@
 package alice.tuprolog;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 public class StructTestCase extends TestCase {
-	
-	public void testStructWithNullArgument() {
-		try {
-			new Struct("p", (Term) null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			new Struct("p", new Int(1), null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			new Struct("p", new Int(1), new Int(2), null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			new Struct("p", new Int(1), new Int(2), new Int(3), null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), new Int(5), null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), new Int(5), new Int(6), null);
-			fail();
-		} catch (InvalidTermException expected) {}
-		try {
-			Term[] args = new Term[] {new Struct("a"), null, new Var("P")};
-			new Struct("p", args);
-			fail();
-		} catch (InvalidTermException expected) {}
-	}
-	
-	public void testStructWithNullName() {
-		try {
-			new Struct(null, new Int(1), new Int(2));
-			fail();
-		} catch (InvalidTermException expected) {}
-	}
-	
-	/** Structs with an empty name can only be atoms. */
-	public void testStructWithEmptyName() {
-		try {
-			new Struct("", new Int(1), new Int(2));
-			fail();
-		} catch (InvalidTermException expected) {}
-		assertEquals(0, new Struct("").getName().length());
-	}
 	
 	public void testEmptyList() {
 		Struct list = new Struct();
@@ -202,56 +153,6 @@ public class StructTestCase extends TestCase {
 	public void testIsList() {
 		Struct notList = new Struct(".", new Struct("a"), new Struct("b"));
 		assertFalse(notList.isList());
-	}
-	
-	public void testIsAtomic() {
-		Struct emptyList = new Struct();
-		assertTrue(emptyList.isAtomic());
-		Struct atom = new Struct("atom");
-		assertTrue(atom.isAtomic());
-		Struct list = new Struct(new Term[] {new Int(0), new Int(1)});
-		assertFalse(list.isAtomic());
-		Struct compound = new Struct("f", new Struct("a"), new Struct("b"));
-		assertFalse(compound.isAtomic());
-		Struct singleQuoted = new Struct("'atom'");
-		assertTrue(singleQuoted.isAtomic());
-		Struct doubleQuoted = new Struct("\"atom\"");
-		assertTrue(doubleQuoted.isAtomic());
-	}
-	
-	public void testIsAtom() {
-		Struct emptyList = new Struct();
-		assertTrue(emptyList.isAtom());
-		Struct atom = new Struct("atom");
-		assertTrue(atom.isAtom());
-		Struct list = new Struct(new Term[] {new Int(0), new Int(1)});
-		assertFalse(list.isAtom());
-		Struct compound = new Struct("f", new Struct("a"), new Struct("b"));
-		assertFalse(compound.isAtom());
-		Struct singleQuoted = new Struct("'atom'");
-		assertTrue(singleQuoted.isAtom());
-		Struct doubleQuoted = new Struct("\"atom\"");
-		assertTrue(doubleQuoted.isAtom());
-	}
-	
-	public void testIsCompound() {
-		Struct emptyList = new Struct();
-		assertFalse(emptyList.isCompound());
-		Struct atom = new Struct("atom");
-		assertFalse(atom.isCompound());
-		Struct list = new Struct(new Term[] {new Int(0), new Int(1)});
-		assertTrue(list.isCompound());
-		Struct compound = new Struct("f", new Struct("a"), new Struct("b"));
-		assertTrue(compound.isCompound());
-		Struct singleQuoted = new Struct("'atom'");
-		assertFalse(singleQuoted.isCompound());
-		Struct doubleQuoted = new Struct("\"atom\"");
-		assertFalse(doubleQuoted.isCompound());
-	}
-	
-	public void testEqualsToObject() {
-		Struct s = new Struct("id");
-		assertFalse(s.equals(new Object()));
 	}
 
 }

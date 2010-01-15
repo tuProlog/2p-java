@@ -67,38 +67,22 @@ public class TermIteratorTestCase extends TestCase {
 		} catch (NoSuchElementException expected) {}
 	}
 	
-	public void testIteratorOnInvalidTerm() {
-		String t = "q(1)"; // missing the End-Of-Clause!
-		try {
-			Term.getIterator(t);
-			fail();
-		} catch (InvalidTermException expected) {}
-	}
-	
-	public void testIterationOnInvalidTheory() {
+	public void testIterationOnWrongTheory() {
 		String theory = "q(1)." + "\n" +
 		                "q(2)." + "\n" +
 						"q(3) " + "\n" + // missing the End-Of-Clause!
 						"q(5)." + "\n" +
 						"q(7).";
-		Struct firstTerm = new Struct("q", new Int(1));
-		Struct secondTerm = new Struct("q", new Int(2));
-		Iterator i1 = Term.getIterator(theory);
-		assertTrue(i1.hasNext());
-		assertEquals(firstTerm, i1.next());
-		assertTrue(i1.hasNext());
-		assertEquals(secondTerm, i1.next());
+		Iterator i = Term.getIterator(theory);
+		assertTrue(i.hasNext());
+		assertEquals(new Struct("q", new Int(1)), i.next());
+		assertTrue(i.hasNext());
+		assertEquals(new Struct("q", new Int(2)), i.next());
+		assertFalse(i.hasNext());
 		try {
-			i1.hasNext();
+			System.out.println(i.next());
 			fail();
-		} catch (InvalidTermException expected) {}
-		Iterator i2 = Term.getIterator(theory);
-		assertEquals(firstTerm, i2.next());
-		assertEquals(secondTerm, i2.next());
-		try {
-			i2.next();
-			fail();
-		} catch (InvalidTermException expected) {}
+		} catch (NoSuchElementException expected) {}
 	}
 	
 	public void testRemoveOperationNotSupported() {

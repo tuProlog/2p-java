@@ -41,7 +41,6 @@ public class StateBacktrack extends State {
 	 */
 	void doJob(Engine e) {
 		ChoicePointContext curChoice = e.choicePointSelector.fetch();
-		
 		//verify ChoicePoint
 		if (curChoice == null) {
 			e.nextState = c.END_FALSE;

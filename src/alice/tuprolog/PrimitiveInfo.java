@@ -123,15 +123,16 @@ public class PrimitiveInfo {
 	
 	/**
 	 * evaluates the primitive as a functor
+	 * @throws Throwable 
 	 */
-	public Term evalAsFunctor(Struct g) {
+	public Term evalAsFunctor(Struct g) throws Throwable {
 		try {
 			for (int i=0; i<primitive_args.length; i++) {
 				primitive_args[i] = g.getTerm(i);
 			}
 			return ((Term)method.invoke(source,primitive_args));
 		} catch (Exception ex) {
-			return null;
+			throw ex.getCause();
 		}
 	}
 	

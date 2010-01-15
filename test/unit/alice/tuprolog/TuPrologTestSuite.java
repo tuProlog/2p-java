@@ -10,9 +10,7 @@ public class TuPrologTestSuite {
 		suite.addTestSuite(BuiltInTestCase.class);
 		suite.addTestSuite(PrologTestCase.class);
 		suite.addTestSuite(IntTestCase.class);
-		suite.addTestSuite(IOLibraryTestCase.class);
 		suite.addTestSuite(DoubleTestCase.class);
-		suite.addTestSuite(SolveInfoTestCase.class);
 		suite.addTestSuite(StateRuleSelectionTestCase.class);
 		suite.addTestSuite(StructIteratorTestCase.class);
 		suite.addTestSuite(StructTestCase.class);
@@ -23,7 +21,6 @@ public class TuPrologTestSuite {
 		suite.addTestSuite(JavaLibraryTestCase.class);
 		suite.addTestSuite(ParserTestCase.class);
 		suite.addTestSuite(SpyEventTestCase.class);
-		suite.addTestSuite(VarTestCase.class);
 		return suite;
 	}
 

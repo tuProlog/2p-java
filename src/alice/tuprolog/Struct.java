@@ -51,88 +51,62 @@ public class Struct extends Term {
 	/**
 	 * Builds a compound, with one argument
 	 */
-	public Struct(String f,Term at0) {
-		this(f,1);
-		arg[0] = at0;
+	public Struct(String f, Term at0) {
+		this(f, new Term[] {at0});
 	}
 	
 	/**
 	 * Builds a compound, with two arguments
 	 */
-	public Struct(String f,Term at0,Term at1) {
-		this(f,2);
-		arg[0] = at0;
-		arg[1] = at1;
+	public Struct(String f, Term at0, Term at1) {
+		this(f, new Term[] {at0, at1});
 	}
 	
 	/**
 	 * Builds a compound, with three arguments
 	 */
-	public Struct(String f,Term at0,Term at1,Term at2) {
-		this(f,3);
-		arg[0] = at0;
-		arg[1] = at1;
-		arg[2] = at2;
+	public Struct(String f, Term at0, Term at1, Term at2) {
+		this(f, new Term[] {at0, at1, at2});
 	}
 	
 	/**
 	 * Builds a compound, with four arguments
 	 */
-	public Struct(String f,Term at0,Term at1,Term at2,Term at3) {
-		this(f,4);
-		arg[0] = at0;
-		arg[1] = at1;
-		arg[2] = at2;
-		arg[3] = at3;
+	public Struct(String f, Term at0, Term at1, Term at2, Term at3) {
+		this(f, new Term[] {at0, at1, at2, at3});
 	}
 	
 	/**
 	 * Builds a compound, with five arguments
 	 */
-	public Struct(String f,Term at0,Term at1,Term at2,Term at3,Term at4) {
-		this(f,5);
-		arg[0] = at0;
-		arg[1] = at1;
-		arg[2] = at2;
-		arg[3] = at3;
-		arg[4] = at4;
+	public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4) {
+		this(f, new Term[] {at0, at1, at2, at3, at4});
 	}
 	
 	/**
 	 * Builds a compound, with six arguments
 	 */
-	public Struct(String f,Term at0,Term at1,Term at2,Term at3,Term at4,Term at5) {
-		this(f,6);
-		arg[0] = at0;
-		arg[1] = at1;
-		arg[2] = at2;
-		arg[3] = at3;
-		arg[4] = at4;
-		arg[5] = at5;
+	public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4, Term at5) {
+		this(f, new Term[] {at0, at1, at2, at3, at4, at5});
 	}
 	
 	/**
 	 * Builds a compound, with seven arguments
 	 */
-	public Struct(String f,Term at0,Term at1,Term at2,Term at3,Term at4,Term at5,Term at6) {
-		this(f,7);
-		arg[0] = at0;
-		arg[1] = at1;
-		arg[2] = at2;
-		arg[3] = at3;
-		arg[4] = at4;
-		arg[5] = at5;
-		arg[6] = at6;
+	public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4, Term at5, Term at6) {
+		this(f, new Term[] {at0, at1, at2, at3, at4, at5, at6});
 	}
 	
 	/**
 	 * Builds a compound, with an array of arguments
 	 */
-	public Struct(String f,Term[] argList) {
-		this(f,argList.length);
-		for (int i=0; i<argList.length; i++){
-			arg[i] = argList[i];
-		}
+	public Struct(String f, Term[] argList) {
+		this(f, argList.length);
+		for (int i = 0; i < argList.length; i++)
+			if (argList[i] == null)
+				throw new InvalidTermException("Arguments of a Struct cannot be null");
+			else
+				arg[i] = argList[i];
 	}
 	
 	
@@ -195,6 +169,10 @@ public class Struct extends Term {
 	}
 	
 	private Struct(String name_,int arity_) {
+		if (name_ == null)
+			throw new InvalidTermException("The functor of a Struct cannot be null");
+		if (name_.length() == 0 && arity_ > 0)
+			throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string");
 		name = name_;
 		arity = arity_;
 		if (arity > 0) {

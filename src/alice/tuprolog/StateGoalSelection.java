@@ -57,15 +57,15 @@ public class StateGoalSelection extends State {
 					e.nextState = c.END_FALSE;
 					return;
 				}
-
+				
 				// Code inserted to allow evaluation of meta-clause
 				// such as p(X) :- X. When evaluating directly terms,
-				// they are coverted to execution of a call/1 predicate.
+				// they are converted to execution of a call/1 predicate.
 				// This enables the dynamic linking of built-ins for
 				// terms coming from outside the demonstration context.
 				if (curGoal != goal_app)
 					curGoal = new Struct("call", goal_app);
-
+				
 				e.currentContext.currentGoal = (Struct) curGoal;
 				e.nextState = c.GOAL_EVALUATION;
 				return;

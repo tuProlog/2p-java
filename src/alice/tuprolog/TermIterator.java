@@ -17,41 +17,38 @@
  */
 package alice.tuprolog;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * This class represents an iterator of terms from a string.
- *
- * @see Term
+ * This class represents an iterator of terms from Prolog text embedded
+ * in a parser. Note that this class resembles more a generator than an
+ * iterator type. In fact, both {@link TermIterator#next()} and
+ * {@link TermIterator#hasNext()} throws {@link InvalidTermException} if
+ * the next term they are trying to return or check for contains a syntax
+ * error; this is due to both methods trying to generate the next term
+ * instead of just returning it or checking for its existence from a pool
+ * of already produced terms.
  */
-class TermIterator implements java.util.Iterator, java.io.Serializable {
+class TermIterator implements Iterator, java.io.Serializable {
 	
 	private Parser parser;
 	private boolean hasNext;
 	private Term next;
-	private String parserError;
 	
 	TermIterator(Parser p) {
 		parser = p;
-		try {
-			next = parser.nextTerm(true);
-			hasNext = (next != null);
-		} catch (InvalidTermException e) {
-			parserError = e.getMessage();
-			hasNext = false;
-		}	
+		next = parser.nextTerm(true);
+		hasNext = (next != null);	
 	}
 	
 	public Object next() {
 		if (hasNext) {
-			if (next == null)
-				try {
-					next = parser.nextTerm(true);
-					if (next == null)
-						throw new NoSuchElementException();
-				} catch (InvalidTermException e) {
+			if (next == null) {
+				next = parser.nextTerm(true);
+				if (next == null)
 					throw new NoSuchElementException();
-				}
+			}
 			hasNext = false;
 			Term temp = next;
 			next = null;
@@ -66,33 +63,21 @@ class TermIterator implements java.util.Iterator, java.io.Serializable {
 		throw new NoSuchElementException();
 	}
 	
+	/**
+	 * @throws InvalidTermException if, while the parser checks for the
+	 * existence of the next term, a syntax error is encountered.
+	 */
 	public boolean hasNext() {
 		if (hasNext)
 			return hasNext;
-		if (parserError != null)
-			return hasNext; // should always be false if parserError is not null
-		try {
-			next = parser.nextTerm(true);
-			if (next != null)
-				hasNext = true;
-		} catch (InvalidTermException e) {
-			parserError = e.getMessage();
-			next = null;
-			hasNext = false;
-		}
+		next = parser.nextTerm(true);
+		if (next != null)
+			hasNext = true;
 		return hasNext;
 	}
 	
 	public void remove() {
 		throw new UnsupportedOperationException();
-	}
-	
-	/**
-	 * Returns what was wrong in the parser if the {@link TermIterator#hasNext()}
-	 * or {@link TermIterator#next()} methods catch an {@link InvalidTermException}.
-	 */
-	public String getParserError() {
-		return parserError;
 	}
 	
 }

@@ -4,18 +4,6 @@ import junit.framework.TestCase;
 
 public class DoubleTestCase extends TestCase {
 	
-	public void testIsAtomic() {
-		assertTrue(new alice.tuprolog.Double(0).isAtomic());
-	}
-	
-	public void testIsAtom() {
-		assertFalse(new alice.tuprolog.Double(0).isAtom());
-	}
-	
-	public void testIsCompound() {
-		assertFalse(new alice.tuprolog.Double(0).isCompound());
-	}
-	
 	public void testEqualsToStruct() {
 		alice.tuprolog.Double zero = new alice.tuprolog.Double(0);
 		Struct s = new Struct();

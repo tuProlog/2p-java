@@ -4,7 +4,7 @@
     <label name="tuPrologIDE" text="tuProlog IDE version 2.0"/>
     <label name="tuPrologSystem" text=""/>
     <label text="" colspan="2"/>
-    <label text="tuProlog is (C) Copyright 2001-2006 aliCE team" colspan="2"/>
+    <label colspan="2" text="tuProlog is (C) Copyright 2001-2010 aliCE team"/>
     <label text="at DEIS, University of Bologna and Cesena, Italy." colspan="2"/>
-    <label text="URL: http://lia.deis.unibo.it/Research/2P" colspan="2"/>
+    <label colspan="2" text="URL: http://tuprolog.sourceforge.net"/>
 </panel>

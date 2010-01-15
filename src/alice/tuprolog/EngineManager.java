@@ -36,6 +36,7 @@ public class EngineManager implements java.io.Serializable {
 	/** States */
 	final State INIT;
 	final State GOAL_EVALUATION;
+	final State EXCEPTION;
 	final State RULE_SELECTION;
 	final State GOAL_SELECTION;
 	final State BACKTRACK;
@@ -54,6 +55,7 @@ public class EngineManager implements java.io.Serializable {
 		/* Istanzio gli stati */
 		INIT            = new StateInit(this);
 		GOAL_EVALUATION = new StateGoalEvaluation(this);
+		EXCEPTION		= new StateException(this);
 		RULE_SELECTION  = new StateRuleSelection(this);
 		GOAL_SELECTION  = new StateGoalSelection(this);
 		BACKTRACK       = new StateBacktrack(this);
@@ -103,7 +105,7 @@ public class EngineManager implements java.io.Serializable {
 			defreeze();
 			
 			sinfo = new SolveInfo(
-					env.query,
+					query,
 					result.getResultGoal(),
 					result.getResultDemo(),
 					result.getResultVars()
