@@ -18,9 +18,15 @@
 package alice.tuprologx.ide;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.undo.*;
 import javax.swing.event.*;
+
+import alice.util.jedit.SyntaxDocument;
+
 import java.beans.*;
+import java.util.StringTokenizer;
+import java.awt.Font;
 import java.awt.event.*;
 
 /**
@@ -30,7 +36,7 @@ import java.awt.event.*;
  * @version	1.0 - 14-nov-02
  */
 
-public class JavaEditArea extends JPanel implements TheoryEditArea {
+public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea {
 
     /** The advanced Swing text area used by this edit area. */
     private alice.util.jedit.JEditTextArea inputTheory;
@@ -44,10 +50,15 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
      * issued by the editor.
      */
     private boolean dirty;
+    /**
+     * Indicate if the edit area is changed after the last save operation
+     */
+    private boolean saved;
     /** Used for components interested in changes of console's properties. */
     private PropertyChangeSupport propertyChangeSupport;
     /** Undo Manager for the Document in the JEditTextArea. */
     private UndoManager undoManager;
+
 
     public JavaEditArea() {
         PrologTextArea textArea = new PrologTextArea();
@@ -60,12 +71,12 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
         java.awt.GridBagConstraints constraints = new java.awt.GridBagConstraints();
         constraints.gridx = 0;
         constraints.gridy = 0;
-        constraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
+        //constraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
         constraints.fill = java.awt.GridBagConstraints.BOTH;
         constraints.weightx = 1;
         constraints.weighty = 1;
-        constraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        //constraints.insets = new java.awt.Insets(0, 0, 10, 0);
 
         inputTheory.addCaretListener(new CaretListener() {
             public void caretUpdate(CaretEvent event) {
@@ -74,6 +85,7 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
         });
 
         dirty = false;
+        saved = true;
         inputTheory.getDocument().addDocumentListener(new DocumentListener() {
             public void insertUpdate(DocumentEvent event) {
                 changedUpdate(event);
@@ -84,6 +96,8 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
             public void changedUpdate(DocumentEvent event) {
                 if (!dirty)
                     setDirty(true);
+              	if (saved)
+               		setSaved(false);
             }
 
         });
@@ -92,7 +106,9 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
         inputTheory.getDocument().addUndoableEditListener(undoManager);
 
         add(inputTheory, constraints);
+        
         propertyChangeSupport = new PropertyChangeSupport(this);
+        
     }
 
     /**
@@ -111,6 +127,69 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
         textArea.inputHandler.addKeyBinding("CS+Z", new AbstractAction() {
             public void actionPerformed(ActionEvent event) {
                 redoAction();
+            }
+        });
+        // C+A == Ctrl + A
+        textArea.inputHandler.addKeyBinding("C+A", new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+            	inputTheory.selectAll();
+            }
+        });
+        // ENTER == Enter
+        textArea.inputHandler.addKeyBinding("ENTER", new AbstractAction() {
+            public void actionPerformed(ActionEvent event) {
+            	if (inputTheory.isEditable())
+            	{
+	            	String line=inputTheory.getLineText(inputTheory.getCaretLine());
+	            	int breakPoint=inputTheory.getCaretPosition();
+	            	String padding = "";
+	            	int paddingLength;
+		        	StringTokenizer st = new StringTokenizer(line," \t\n");
+		        	paddingLength = 0;
+		        	String noPadding = "";
+		        	if(st.hasMoreTokens())
+		        	{
+		        		noPadding=st.nextToken();
+		        		paddingLength=line.indexOf(noPadding);
+			        	padding=line.substring(0, paddingLength);
+		        	}
+		        	else //if line is empty or if it's made only by ' ', '\t' or '\n'
+	            	{
+	            		padding=line;
+	            		paddingLength=line.length();
+	            	}
+	
+	            	//String part1 = inputTheory.getText().substring(0, breakPoint);
+	            	String part2 = inputTheory.getText().substring(breakPoint);
+	            	/**
+	            	 * JEditTextArea.setText richiama 2 metodi che agiscono sul SyntaxDocument
+	            	 * provocando 2 "entry" nell'elenco undo/redo e quindi non va bene usare
+	            	 * setText, meglio agire direttamente sul SyntaxDocument
+	            	 */
+	            	//inputTheory.setText(part1+"\n"+padding+part2);
+	            	
+	            	SyntaxDocument document = inputTheory.getDocument();
+	            	try
+	            	{
+	            	    document.beginStructEdit();
+	            	    /*
+	            	     * There is no way to avoid the double modification... or, if there is, I
+	            	     * wasn't able to find it; I've tried to get the best possible result anyway
+	            	     */
+	            	    document.remove(breakPoint, document.getLength()-breakPoint);
+						document.insertString(breakPoint, "\n"+padding+part2, null);
+		            	inputTheory.setDocument(document);
+		            	inputTheory.setCaretPosition(breakPoint+padding.length()+1);
+	            	}
+					catch(BadLocationException bl)
+					{
+						bl.printStackTrace();
+					}
+					finally
+					{
+						document.endStructEdit();
+					}
+            	}
             }
         });
     }
@@ -135,6 +214,9 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
 
     public void setTheory(String theory) {
         inputTheory.setText(theory);
+
+        //to set caret at the begin of the edit area
+        inputTheory.setCaretPosition(0);
     }
 
     public String getTheory() {
@@ -147,6 +229,19 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
 
     public boolean isDirty() {
         return dirty;
+    }
+
+    public void setSaved(boolean flag) {
+    	if (inputTheory.isEditable())
+    	{
+	    	boolean oldSaved = isSaved();
+	        saved = flag;
+	        propertyChangeSupport.firePropertyChange("saved", oldSaved, saved);
+    	}
+    }
+
+    public boolean isSaved() {
+        return saved;
     }
 
     /* Managing Undo/Redo actions. */
@@ -167,4 +262,14 @@ public class JavaEditArea extends JPanel implements TheoryEditArea {
         }
     }
 
+	public void setFontDimension(int dimension)
+	{
+		Font font = new Font(inputTheory.getPainter().getFont().getName(),inputTheory.getPainter().getFont().getStyle(),dimension);
+		inputTheory.getPainter().setFont(font);
+	}
+
+	public void setEditable(boolean flag)
+	{
+		inputTheory.setEditable(flag);
+	}
 } // end JavaEditArea class

@@ -18,8 +18,10 @@
 package alice.tuprologx.ide;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 
 /**
  * An input field for the Java2 platform using Swing components.
@@ -28,15 +30,21 @@ import java.awt.event.*;
  * @version	1.0 - 29-nov-02
  */
 
-public class JavaInputField extends JPanel implements InputField {
+public class JavaInputField
+	extends JPanel
+	implements InputField
+{
+    
+	private static final long serialVersionUID = 1L;
 
     /** The input field used in the graphic interface. */
     private JTextField inputField;
     /** A store for the history of the requested goals. */
     private History history;
     /** The console referenced by this component. */
-    private ThinletConsole console; // hopefully this will not needed soon...
+    private ConsoleManager console;
 
+    
     public JavaInputField() {
         inputField = new JTextField();
         inputField.addKeyListener(new KeyAdapter() {
@@ -49,18 +57,48 @@ public class JavaInputField extends JPanel implements InputField {
                 solve();
             }
         });
+        
+        JButton solveButton = new JButton();
+    	URL urlImage = getClass().getResource("img/Solve18.png");
+    	solveButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+    	solveButton.setPreferredSize(new Dimension(18,18));
+        solveButton.setToolTipText("Solve");
+        solveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                solve();
+            }
+        });
+
+        JButton solveAllButton = new JButton();
+    	urlImage = getClass().getResource("img/SolveAll18.png");
+    	solveAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+    	solveAllButton.setPreferredSize(new Dimension(18,18));
+        solveAllButton.setToolTipText("Solve All");
+        solveAllButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent event) {
+                solveAll();
+            }
+        });
+
 
         history = new History();
 
-        setLayout(new GridBagLayout());
+        JPanel inputFieldPanel = new JPanel();
+        JPanel buttonsPanel = new JPanel();
+        setLayout(new BorderLayout());
+        add(new JLabel("?- "), BorderLayout.WEST);
+        add(inputFieldPanel,BorderLayout.CENTER);
+        add(buttonsPanel,BorderLayout.EAST);
+        inputFieldPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
         constraints.gridy = 0;
-        add(new JLabel("?- "), constraints);
         constraints.gridx = 1;
         constraints.weightx = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        add(inputField, constraints);
+        inputFieldPanel.add(inputField, constraints);
+        
+        buttonsPanel.add(solveButton);
+        buttonsPanel.add(solveAllButton);
     }
 
     /**
@@ -90,16 +128,36 @@ public class JavaInputField extends JPanel implements InputField {
      * the AltGr bug in Thinlet, preventing the use of italian keycombo
      * AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
      */
-    public void setConsole(ThinletConsole console) {
-        this.console = console;
+    public void setConsole(ConsoleManager consoleManager)
+    {
+        this.console = consoleManager;
     }
 
     /**
      * Solve the goal currently displayed in the input field.
      */
-    public void solve() {
-        addGoalToHistory();
-        console.solve();
+    public void solve()
+    {
+    	if (getGoal().length()>0)//if the goal isn't empty
+    	{
+	        addGoalToHistory();
+	    	console.setSolveType(0);
+	        console.solve();
+    	}
+    	else
+    		console.setStatusMessage("Ready.");
+    }
+
+    public void solveAll()
+    {
+    	if (getGoal().length()>0)//if the goal isn't empty
+    	{
+	    	addGoalToHistory();
+	    	console.setSolveType(1);
+	    	console.solveAll();
+    	}
+    	else
+    		console.setStatusMessage("Ready.");
     }
 
     public void addGoalToHistory() {
@@ -110,8 +168,10 @@ public class JavaInputField extends JPanel implements InputField {
 		return inputField.getText();
     }
 
-    public void enableSolveCommands(boolean flag) {
-        inputField.setEnabled(flag);
-    }
+	public void setFontDimension(int dimension)
+	{
+		Font font = new Font(inputField.getFont().getName(),inputField.getFont().getStyle(),dimension);
+		inputField.setFont(font);
+	}
 
 } // end JavaInputField class

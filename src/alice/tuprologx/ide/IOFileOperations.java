@@ -17,10 +17,8 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
-
-import java.io.IOException;
 import java.io.FileOutputStream;
+import javax.swing.JFrame;
 
 /**
  * A common interface to Input/Output file operations managers. Note that this
@@ -30,25 +28,19 @@ import java.io.FileOutputStream;
  * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
  * @version	1.0 - 16-dic-02
  */
-
-abstract class IOFileOperations {
-    /**
-     * The name of the file where the Prolog engine's current theory
-     * is to be saved as a default.
-     */
-    String DEFAULT_THEORY_FILENAME = "default.pl";
+abstract class IOFileOperations extends JFrame 
+{
     /** The current directory where to load theories. */
     protected String currentLoadDirectory;
     /** The current directory where to save theories. */
     protected String currentSaveDirectory;
-    /** The filename of the current opened theory. */
-    protected String currentTheoryFileName;
 
     IOFileOperations() {
         currentLoadDirectory = null;
         currentSaveDirectory = null;
-        currentTheoryFileName = DEFAULT_THEORY_FILENAME;
     }
+
+    public abstract void setTypeFileFilter(String type);
 
     /**
      * Load a theory from an input device, typically a file.
@@ -57,7 +49,7 @@ abstract class IOFileOperations {
      * or <code>null</code> if the operation is cancelled.
      * @throws java.lang.Exception if something goes wrong.
      */
-    public abstract Theory loadTheory() throws Exception;
+    public abstract FileIDE loadFile() throws Exception;
 
     /**
      * Save the engine's current theory to an output device, typically a file.
@@ -68,21 +60,27 @@ abstract class IOFileOperations {
      * if the operation is cancelled.
      * @throws java.lang.Exception if something goes wrong.
      */
-    public abstract String saveTheoryAs(String theory) throws Exception;
+    public abstract FileIDE saveFileAs(FileIDE fileIDE) throws Exception;
     
-    public String saveTheory(String theory) throws Exception {
-    	return save(theory);
+    public FileIDE saveFile(FileIDE fileIDE) throws Exception {
+    	return save(fileIDE);
     }
     
-    protected String save(String theory) throws IOException {
-    	FileOutputStream file = new FileOutputStream(currentTheoryFileName);
-    	file.write(theory.getBytes());
-    	file.close();
-    	return currentTheoryFileName;
+    protected FileIDE save(FileIDE fileIDE) throws Exception {
+    	if (fileIDE.getFileName()!=null)
+    	{
+	    	FileOutputStream file = new FileOutputStream(fileIDE.getFilePath()+fileIDE.getFileName());
+	    	file.write(fileIDE.getContent().getBytes());
+	    	file.close();
+//	    	editArea.setSaved(true);
+	    	return fileIDE;
+    	}
+    	else
+    		return saveFileAs(fileIDE);
     }
 
-    public void resetDefaultTheoryFileName() {
-        currentTheoryFileName = DEFAULT_THEORY_FILENAME;
+    public void resetDefaultFileName() {
+//        currentTheoryFileName = null;
     }
 
 } // end IOFileOperations interface

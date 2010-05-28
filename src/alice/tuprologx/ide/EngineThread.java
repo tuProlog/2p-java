@@ -17,6 +17,8 @@
  */
 package alice.tuprologx.ide;
 
+//import javax.swing.JOptionPane;
+
 import alice.tuprolog.*;
 
 /**
@@ -29,10 +31,10 @@ public class EngineThread extends Thread {
  
     private String goal;
     private Prolog engine;
-    private ThinletConsole console;
+    private ConsoleManager console;
     private int actionToDo;
     
-    public EngineThread(Prolog engine, String goal, ThinletConsole c){
+    public EngineThread(Prolog engine, String goal, ConsoleManager c){
         this.engine = engine;
         console = c;
         this.goal = goal;
@@ -44,12 +46,19 @@ public class EngineThread extends Thread {
         actionToDo = 2;
     }
     
-    public void run(){
+    public void run() {
         if (actionToDo==1){
             try {
                 engine.solve(goal);
             } catch (MalformedGoalException ex){
                 console.setStatusMessage("Syntax Error: malformed goal.");
+                
+                /**rows added by Castellani Juri to enable toolbars and stop bottons
+                 * when there is a malformed goal
+                 */
+                console.enableTheoryCommands(true);
+                console.enableStopButton(false);
+                
             }
         } else if (actionToDo==2){
             try {

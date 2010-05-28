@@ -23,6 +23,7 @@ import alice.tuprolog.event.SpyEvent;
 import alice.tuprolog.event.WarningEvent;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -34,13 +35,16 @@ import java.awt.event.*;
  * @version	1.0 - 14-nov-02
  */
 
-public class JavaIDE extends JFrame implements IDE {
-
-    private ThinletTheoryEditor editor;
-    private JavaEditArea editArea;
-    private ThinletToolBar toolBar;
-	private Prolog engine;
+public class JavaIDE
+	extends JFrame
+{
 	
+	private static final long serialVersionUID = 1L;
+
+	//private Prolog engine;
+    private ToolBar toolBar;
+	private TheoryTabbedPane tabbedPane;
+
     public JavaIDE() {
         super("tuProlog IDE");
         initComponents();
@@ -50,92 +54,103 @@ public class JavaIDE extends JFrame implements IDE {
      * Initialize the graphic components and set the dependencies among them.
      */
     private void initComponents() {
-        JPanel corePanel = new JPanel();
-        corePanel.setLayout(new BorderLayout());
-        
-        engine = new Prolog();
+    	System.out.println("tuProlog system - release " + Prolog.getVersion());
 
-        //EngineThread et = new EngineThread(engine, null);
-        System.out.println("tuProlog system - release " + Prolog.getVersion());
-        ThinletDebugArea debugArea = new ThinletDebugArea();
-    
-        ThinletStatusBar statusBar = new ThinletStatusBar();
+        Prolog engine = new Prolog();
 
-        editor = new ThinletTheoryEditor();
-        editor.setEngine(engine);
-        editor.addPropertyChangeListener(statusBar);
-        corePanel.add(editor, BorderLayout.NORTH);
+        tabbedPane = new TheoryTabbedPane();
+        tabbedPane.setEngine(engine);
+        toolBar = new ToolBar(tabbedPane,this);
+        tabbedPane.setToolBar(toolBar);
 
-        editArea = new JavaEditArea();
-        editor.setEditArea(editArea);
-        editArea.addPropertyChangeListener(editor);
-        corePanel.add(editArea, BorderLayout.CENTER);
-        // make visible Swing components the same background color as Thinlet(s).
-        // (there is no way to get the right background color from a Thinlet yet)
-        editArea.setBackground(new Color(230, 230, 230));
+        StatusBar statusBar = new StatusBar();
+        tabbedPane.setStatusBar(statusBar);
 
-        ThinletConsole console = new ThinletConsole(this);
-        console.setEngine(engine);
-        console.addPropertyChangeListener(statusBar);
-        console.setStatusMessage("Ready.");
-        engine.addQueryListener(console);
+        TheoryEditor editor = new TheoryEditor(tabbedPane);
+        tabbedPane.setTheoryEditor(editor);
 
         JavaInputField inputField = new JavaInputField();
-        // make visible Swing components the same background color as Thinlet(s).
-        // (there is no way to get the right background color from a Thinlet yet)
-        inputField.setBackground(new Color(230, 230, 230));
-        console.setInputField(inputField);
-        JPanel queryPanel = new JPanel();
-        queryPanel.setLayout(new GridBagLayout());
-        GridBagConstraints inputConstraints = new GridBagConstraints();
-        inputConstraints.gridx = 0;
-        inputConstraints.gridy = 0;
-        inputConstraints.weightx = 1;
-        inputConstraints.fill = GridBagConstraints.HORIZONTAL;
-        queryPanel.add(inputField, inputConstraints);
-        JPanel consolePanel = new JPanel();
-        consolePanel.setLayout(new BorderLayout());
-        consolePanel.add(queryPanel, BorderLayout.NORTH);
-        consolePanel.add(console, BorderLayout.CENTER);
-        corePanel.add(consolePanel, BorderLayout.SOUTH);
+		tabbedPane.setInputField(inputField);
 
-        JPanel IDEPanel = new JPanel();
-        IDEPanel.setLayout(new BorderLayout());
-        toolBar = new ThinletToolBar(this);
-        toolBar.setEngine(engine);
-        IDEPanel.add(toolBar, BorderLayout.NORTH);
-        IDEPanel.add(corePanel, BorderLayout.CENTER);
-        toolBar.addPropertyChangeListener(statusBar);
-        toolBar.setDebugArea(debugArea);
-        toolBar.setFileManager(new JavaIOManager(toolBar));
-        FrameLauncher frameLauncher = new SwingFrameLauncher();
-        frameLauncher.setFrameIcon("img/tuProlog.gif");
-        toolBar.setFrameLauncher(frameLauncher);
-        IDEPanel.add(statusBar, BorderLayout.SOUTH);
+		ConsoleManager consoleManager=new ConsoleManager(tabbedPane);
+        ConsoleDialog consoleDialog = new ConsoleDialog(consoleManager);
+        tabbedPane.setConsoleDialog(consoleDialog);
+
+        PrologConfigFrame configFrame = new PrologConfigFrame(this,tabbedPane);
+        configFrame.addPropertyChangeListener(consoleManager);
+        configFrame.addPropertyChangeListener(consoleDialog);
+        //set default value
+        configFrame.setMillsStopEngine(5000);
+        configFrame.setSelectDisplayModality(0);
+
+        toolBar.setPrologConfig(configFrame);
+
+
+        tabbedPane.newTheory();
+        tabbedPane.addChangeListener(tabbedPane);
+
+        editor.setEngine(engine);
+        editor.addPropertyChangeListener(statusBar);
+        editor.setEditArea(tabbedPane.getSelectedTheoryEditArea());
+
+        tabbedPane.getSelectedJavaEditArea().setBackground(new Color(230, 230, 230));
+
+        consoleManager.setEngine(engine);
+        consoleDialog.addPropertyChangeListener(statusBar);
+        consoleDialog.setStatusMessage("Ready.");
+        engine.addQueryListener(consoleManager);
+		engine.addOutputListener(consoleDialog);
+		consoleManager.addInformationToDisplayListener(consoleDialog);
+		consoleManager.setDialog(consoleDialog);
+		consoleDialog.setFileManager(new JavaIOManager(this));
+		consoleDialog.setFileManagerType("csv");
+
+        inputField.setBackground(new Color(230, 230, 230));
+        inputField.setConsole(consoleManager);
+        consoleManager.setInputField(inputField);
 
         LibraryManager libraryManager = new LibraryManager();
         libraryManager.setEngine(engine);
-        LibraryDialog libraryDialog = new LibraryDialog(libraryManager);
-        engine.addLibraryListener(libraryDialog);
-        toolBar.setLibraryDialog(libraryDialog);
+        toolBar.setLibraryManager(libraryManager);
+        toolBar.setEngine(engine);
+        toolBar.addPropertyChangeListener(statusBar);
+        toolBar.setFileManager(new JavaIOManager(toolBar));
+        toolBar.setFileManagerType("theory");
 
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent event) {
-                System.exit(0);
-            }
-        });
+        addWindowListener(new WindowListener());
+
+
+
+        //insert component in the panels
+        JPanel consolePanel = new JPanel();
+        consolePanel.setLayout(new BorderLayout());
+		consolePanel.add(inputField, BorderLayout.NORTH);
+        consolePanel.add(consoleDialog, BorderLayout.CENTER);
+
+		JSplitPane splitPaneV = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
+		splitPaneV.setLeftComponent(tabbedPane);
+		splitPaneV.setRightComponent(consolePanel);
+
+		JPanel corePanel = new JPanel();
+        corePanel.setLayout(new BorderLayout());
+        corePanel.add(editor, BorderLayout.NORTH);
+		corePanel.add(splitPaneV, BorderLayout.CENTER);
+
+		JPanel IDEPanel = new JPanel();
+        IDEPanel.setLayout(new BorderLayout());
+        IDEPanel.add(toolBar, BorderLayout.NORTH);
+        IDEPanel.add(corePanel, BorderLayout.CENTER);
+        IDEPanel.add(statusBar, BorderLayout.SOUTH);
 
         getContentPane().add(IDEPanel);
- 
+
+		pack();
+		setSize(new Dimension(585,675));
+		splitPaneV.setResizeWeight(0.7);
+
         // Set a title bar icon
         ImageIcon icon = new ImageIcon(getClass().getResource("img/tuProlog.gif"));
         setIconImage(icon.getImage());
- 
-		engine.addWarningListener(debugArea);
-		engine.addOutputListener(console);
-		engine.addSpyListener(debugArea);
-
- 
     }
 
 	public void onOutput(OutputEvent e) {
@@ -149,24 +164,45 @@ public class JavaIDE extends JFrame implements IDE {
 	}
 
     public void enableTheoryCommands(boolean flag) {
-        editor.enableTheoryCommands(flag);
-        toolBar.enableTheoryCommands(flag);
+    	tabbedPane.enableTheoryCommands(flag);
     }
 
     public boolean isFeededTheory() {
-        return !editArea.isDirty();
+        return tabbedPane.isFeededTheory();
     }
     
     public void setFeededTheory(boolean flag) {
-    	editArea.setDirty(!flag);
+    	tabbedPane.setFeededTheory(flag);
     }
 
     public String getEditorContent() {
-        return editArea.getTheory();
+        return tabbedPane.getEditorContent();
     }
     
     public void setEditorContent(String text) {
-    	editArea.setTheory(text);
+    	tabbedPane.setEditorContent(text);
     }
 
+    public void onClose()
+    {
+    	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+    	boolean isWindowClosable = true;
+    	for (int i=0;i<tabbedPane.getTabCount()&& isWindowClosable;i++)
+    	{
+   			isWindowClosable = tabbedPane.isClosable(i); 
+    	}
+        if (isWindowClosable)
+        {
+        	dispose();
+        	System.exit(0);
+        }
+    }
+
+    class WindowListener extends WindowAdapter
+    {
+    	public void windowClosing(WindowEvent w)
+    	{
+    		onClose();
+    	}
+    }
 } // end JavaIDE class

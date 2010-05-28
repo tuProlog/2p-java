@@ -1,0 +1,94 @@
+Elenco delle modifiche apportate al progetto tuProlog 
+durante l'aggiornamento dalla versione 2.2 con eccezioni alla 3.0alpha
+
+- Nuova libreria IO ISO-compliant:
+    file coinvolti:
+    + alice/tuprolog/lib/ISOIOLibrary.java (NUOVO)
+- Inserimento predicato set_seed, 
+    file coinvolti: 
+    + alice/tuprolog/lib/IOLibrary.java
+- Inserimento predicato write_base, 
+    file coinvolti:
+    + alice/tuprolog/lib/IOLibrary.java
+- Modifica metodo di caricamento/salvataggio teorie, 
+    file coinvolti: 
+    + alice/tuprologx/ide/IDE.java
+    + alice/tuprologx/ide/IOFileOperations.java
+    + alice/tuprologx/ide/JavaIDE.java
+    + alice/tuprologx/ide/JavaIOManager.java
+- Estensione degli shortcut da tastiera:
+    file coinvolti:
+    + alice/tuprologx/ide/JavaEditArea.java
+- Inserimento metodi di rimozione, reset e impostazione librerie:
+    file coinvolti:
+    + alice/tuprologx/ide/LibraryManager.java
+- Inserimento framework P@J:
+    + alice/tuprologx/pj/* (NUOVO) (* indica tutti i file del framework)
+- Migrazione a Swing
+    file coinvolti:
+    + alice/tuprologx/ide/JavaIDE.java
+    + alice/tuprologx/ide/JavaInputField.java
+    + alice/tuprologx/ide/AWTFrameLauncher.java (RIMOSSO)
+    + alice/tuprologx/ide/DotNetEditArea.java (RIMOSSO)
+    + alice/tuprologx/ide/DotNetIDE.java (RIMOSSO)
+    + alice/tuprologx/ide/DotNetInputField.java (RIMOSSO)
+    + alice/tuprologx/ide/DotNetIOManager.java (RIMOSSO)
+    + alice/tuprologx/ide/FrameLauncher.java (RIMOSSO)
+    + alice/tuprologx/ide/img: Debugger.png (RIMOSSO)
+    + alice/tuprologx/ide/img: Help24.png (RIMOSSO)
+    + alice/tuprologx/ide/img: Library.png (RIMOSSO)
+    + alice/tuprologx/ide/LibraryDialog.java (RIMOSSO)
+    + alice/tuprologx/ide/SwingFrameLauncher.java (RIMOSSO)
+    + alice/tuprologx/ide/ThinletConsole.java (RIMOSSO)
+    + alice/tuprologx/ide/ThinletDebugArea.java (RIMOSSO)
+    + alice/tuprologx/ide/ThinletStatusBar.java (RIMOSSO)
+    + alice/tuprologx/ide/ThinletTheoryEditor.java (RIMOSSO)
+    + alice/tuprologx/ide/ThinletToolBar.java (RIMOSSO)
+    + alice/tuprologx/ide/xml (RIMOSSO)
+    + alice/util/thinlet (RIMOSSO)
+    + alice/tuprologx/ide/AboutFrame.java (NUOVO)
+    + alice/tuprologx/ide/ConsoleDialog.java (NUOVO)
+    + alice/tuprologx/ide/Console.java (NUOVO)
+    + alice/tuprologx/ide/ConsoleManager.java (NUOVO)
+    + alice/tuprologx/ide/DebugAreaFrame.java (NUOVO)
+    + alice/tuprologx/ide/FileEditArea.java (NUOVO)
+    + alice/tuprologx/ide/FileIDE.java (NUOVO)
+    + alice/tuprologx/ide/FontDimensionHandler.java (NUOVO)
+    + alice/tuprologx/ide/GenericFrame.java (NUOVO)
+    + alice/tuprologx/ide/img/About24.png (NUOVO)
+    + alice/tuprologx/ide/img/Clear24.png (NUOVO)
+    + alice/tuprologx/ide/img/collapseAll.png (NUOVO)
+    + alice/tuprologx/ide/img/collapseSelected.png (NUOVO)
+    + alice/tuprologx/ide/img/Configure24.png (NUOVO)
+    + alice/tuprologx/ide/img/Debugger24.png (NUOVO)
+    + alice/tuprologx/ide/img/expandAll.png (NUOVO)
+    + alice/tuprologx/ide/img/expandSelected.png (NUOVO)
+    + alice/tuprologx/ide/img/ExportCSV24.png (NUOVO)
+    + alice/tuprologx/ide/img/Library24.png (NUOVO)
+    + alice/tuprologx/ide/img/Solve18.png (NUOVO)
+    + alice/tuprologx/ide/img/Solve24.png (NUOVO)
+    + alice/tuprologx/ide/img/SolveAll18.png (NUOVO)
+    + alice/tuprologx/ide/img/SolveAll24.png (NUOVO)
+    + alice/tuprologx/ide/InformationToDisplayEvent.java (NUOVO)
+    + alice/tuprologx/ide/InformationToDisplayListener.java (NUOVO)
+    + alice/tuprologx/ide/LibraryDialogFrame.java (NUOVO)
+    + alice/tuprologx/ide/PrologConfigFrame.java (NUOVO)
+    + alice/tuprologx/ide/PrologFileChooser.java (NUOVO)
+    + alice/tuprologx/ide/PrologTable.java (NUOVO)
+    + alice/tuprologx/ide/StatusBar.java (NUOVO)
+    + alice/tuprologx/ide/TextAreaRenderer.java (NUOVO)
+    + alice/tuprologx/ide/TheoryEditor.java (NUOVO)
+    + alice/tuprologx/ide/TheoryTabbedPane.java (NUOVO)
+    + alice/tuprologx/ide/ToolBar.java
+    - Migrazione da ConsoleManager a ThinletManager, 
+        file coinvolti: 
+        + alice/tuprologx/ide/InputField.java
+        + alice/tuprologx/ide/EngineThread.java
+    - Inserimento interface FileEditArea:
+        file coinvolti:
+        + alice/tuprologx/ide/FileEditArea.java
+        + alice/tuprologx/ide/JavaEditArea.java
+    - Scartata l'interfaccia IDE in JavaIDE 
+      (chiedere a chi ha curato la migrazione a Swing)
+        file coinvolti:
+        + alice/tuprologx/ide/JavaIDE.java

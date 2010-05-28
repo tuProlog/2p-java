@@ -59,15 +59,18 @@ interface TheoryEditArea {
     /**
      * Set the dirty flag for the theory contained in the edit area.
      *
-     * @param flag <code>true</code> if the theory has been modified,
+     * @param flag <code>true</code> if the theory has been modified after
+     * the last Set Theory operation,
      * <code>false</code> otherwise.
      */
     public void setDirty(boolean flag);
 
     /**
-     * Check if the theory in the edit area has been modified.
+     * Check if the theory in the edit area has been modified after the
+     * last Set Theory operation.
      *
-     * @return <code>true</code> if the theory has been modified,
+     * @return <code>true</code> if the theory has been modified after
+     * the last Set Theory operation,
      * <code>false</code> otherwise.
      */
     public boolean isDirty();

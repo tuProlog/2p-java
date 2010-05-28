@@ -17,6 +17,7 @@
  */
 package alice.tuprologx.ide;
 
+
 /**
  * A common interface to an IDE.
  * This interface is not public, since it is intended for internal use,
@@ -64,4 +65,12 @@ interface IDE {
      */
     public void setEditorContent(String text);
 
+
+    public void newTheory();
+
+    public void loadTheory();
+
+    public void saveTheory();
+
+    public void getTheory();
 } // end IDE interface

@@ -24,8 +24,8 @@ public class PrologTextArea extends TextAreaDefaults
 	    caretBlinks = true;
 	    electricScroll = 3;
 
-	    cols = 80;
-	    rows = 25;
+	    cols = 5;
+	    rows = 5;
 	    styles = getSyntaxStyles();
 	    caretColor = Color.red;
         selectionColor = new Color(0xCCCCFF);

@@ -1,0 +1,17 @@
+STUDENTE DI RIGUZZI (CAVALLINI):
+
+Il predicato in cui il programma si blocca è read_all_actions.
+Il comando per eseguire il file su tuprolog è load_actions('alltraces.kb',_).
+Le invio anche lo screen dell'errore.
+
+
+RIGUZZI STESSO:
+Carica prova.pl e esegui main.
+Dovrebbe stampare:
+	prova
+	fail
+invece stampa solo
+	prova
+Nell'esperimento che ho fatto oggi non mi fa vedere eccezioni sulla
+console, in ottobre invece le vedevamo.
+

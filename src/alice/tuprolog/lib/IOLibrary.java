@@ -18,6 +18,7 @@
 package alice.tuprolog.lib;
 
 import alice.tuprolog.*;
+import alice.tuprolog.Number;
 
 import java.util.*;
 import java.io.*;
@@ -207,7 +208,7 @@ public class IOLibrary extends Library {
 		if (!(arg instanceof Int))
 			throw PrologError.type_error(engine.getEngineManager(), 1,
 					"integer", arg);
-		Int numSpaces = (Int) arg;
+		Int numSpaces = (Int) arg.getTerm(); // was: arg; changed by ED
 		int n = numSpaces.intValue();
 		if (outputStreamName.equals("stdout")) {
 			for (int i = 0; i < n; i++) {
@@ -368,6 +369,24 @@ public class IOLibrary extends Library {
 	}
 
 	// miscellanea
+	/**
+	 * Sets an arbitrary seed for the Random object.
+	 * 
+	 * @param seed Seed to use
+	 * @return true if seed Term has a valid long value, false otherwise
+	 */
+	public boolean set_seed_1(Term t) throws PrologError {
+	    t = t.getTerm();
+	    if( !(t instanceof Number) ) {
+	    	throw PrologError.type_error(engine.getEngineManager(), 1, "Integer Number", t);
+	    }
+	    Number seed = (Number)t;
+	    if( !seed.isInteger() ){
+	    	throw PrologError.type_error(engine.getEngineManager(), 1, "Integer Number", t);
+	    }
+	    gen.setSeed(((Number)seed).longValue());
+	    return true;
+	}
 
 	public boolean rand_float_1(Term t) {
 		return unify(t, new alice.tuprolog.Double(gen.nextFloat()));
@@ -427,5 +446,25 @@ public class IOLibrary extends Library {
 		if (inputStreamName.equals("user")) {
 			inputStream = System.in;
 		}
+	}
+	
+
+	public boolean write_base_1(Term arg0) throws PrologError {
+		arg0 = arg0.getTerm();
+		
+		if (arg0 instanceof Var)
+			throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+		if (outputStreamName.equals("stdout")) {
+			getEngine().stdOutput(arg0.toString());
+		} else {
+			try {
+				outputStream.write(arg0.toString().getBytes());
+			} catch (IOException e) {
+				throw PrologError.permission_error(engine.getEngineManager(),
+						"output", "stream", new Struct(outputStreamName),
+						new Struct(e.getMessage()));
+			}
+		}
+		return true;
 	}
 }

@@ -1,0 +1,351 @@
+=== tuProlog 2.3.0 alpha ==
+
+Release on 28th May 2010
+
+ * Fixed several bugs (Lorenzo Zoffoli)
+ 
+ * Added new Swing GUI for IDE
+ 
+ * Added exception handling as stated in ISO standard ( Matteo Iuliani )
+ 
+ * Added new ISO-compliant IO library ( Sara Sabioni )
+ 
+ * Added new predicate: set_seed/1 to set a seed to be used by random object ( Lorenzo Zoffoli )
+
+=== tuProlog 2.1.1 ===
+
+Released on 23rd December 2008
+
+Thanks to Maurizio Cimadamore, Juri Luca De Coi, and George S. Cowan
+for contributions to this release.
+
+ * DCGLibrary now works even with simplest (e.g. "a --> [].")
+grammars. (Giulio Piancastelli)
+
+ * op/3 is now available as a predicate and accepts also a list of
+operators as its third argument. (Giulio Piancastelli)
+
+ * [SourceForge bug 2013434] SolveInfo query changes accordingly to
+the latest goal asked to the engine. (Giulio Piancastelli)
+
+ * [SourceForge bug 2078199] abolish/1 now works, removing
+predicates corresponding to the indicator passed as argument.
+(Giulio Piancastelli)
+
+ * [SourceForge bug 1945853] univ (..=/2) now properly works with an
+atomic term passed as first argument and a variable passed as second
+argument. (George S. Cowan, Giulio Piancastelli) 
+
+ * Added include/1 ISO directive. Deprecated solve/1 and consult/1
+directives in favor of ISO standard initialization/1 and include/1
+directives. (Giulio Piancastelli)
+
+ * [SourceForge bug 1881215] LaTeX documentation uses the correct
+single quote character in code examples. (Giulio Piancastelli)
+ 
+ * The output representation of anonymous variables is now postfixed
+by a unique integer number to distinguish each one from the other.
+(Juri Luca De Coi, Giulio Piancastelli)
+
+ * TheoryEvent now really contains the engine theories before and
+after the set of addition of a new theory. (Giulio Piancastelli) 
+
+ * The last consulted theory returned from TheoryManager and Prolog
+is now really the last consulted theory by the engine instead of
+being the concatenation of the consulted theories. (Giulio
+Piancastelli) 
+
+ * No more ClassCastException when doing equality tests between
+terms and objects external to the Term hierarchy. (Giulio
+Piancastelli)
+
+ * get_operators_list/1 works, and so does current_op/3. (Giulio
+Piancastelli)
+
+ * clause/2 does not directly operate on clauses from the engine
+knowledge base, but performs a copy before using them. (Giulio
+Piancastelli)
+
+ * retractall/1 works also on rules. (Giulio Piancastelli)
+ 
+ * Real and Integer numbers are no more unifiable. (Giulio
+Piancastelli)
+
+ * No more ClassCastException when a library is unloaded from an
+engine that has been previously fed with a user-defined Prolog
+theory. (Giulio Piancastelli)
+
+ * Definite Clause Grammars work again after restoring an operator
+that got lost between 2.0.1 and 2.1. (Giulio Piancastelli)
+
+ * atomic/1 and compound/1 have been aligned to work the same as
+Term#isAtomic and Term#isCompound. (Giulio Piancastelli)
+
+ * [SourceForge bug 1718459] tab/1 inserts spaces instead of
+tabulation characters on the output stream. (Giulio Piancastelli)
+
+ * [SourceForge bug 1707884] Prolog#addTheory throws
+InvalidTheoryException again on invalid theories. (Giulio
+Piancastelli)
+
+ * It is no more possible to build Struct instances passing null
+arguments. (Maurizio Cimadamore, Giulio Piancastelli) 
+
+=== tuProlog 2.1 ===
+
+Released on 20th April 2007
+
+Thanks to Ivar ¯rstavik, Nathan Finley, and Maurizio Cimadamore for
+contributions to this release.
+ 
+ * Removed '$copy'/2. Use the ISO Standard built-in copy_term/2
+predicate instead. (Giulio Piancastelli)
+ 
+ * A subgoal under the form of a variable (e.g. X) is now executed
+with the same semantics as a call/1 subgoal (e.g call(X)). In the
+process, a built-in '$call'/1 has been introduced, having the same
+effects as call/1 but without cut opacity. (Giulio Piancastelli)
+ 
+ * A warning is issued when the demonstration process encounter an
+unknown predicate. (Giulio Piancastelli)
+ 
+ * [SourceForge bugs 1648665, 1675798] The interaction between goal
+disjunction, if-then-else, and cut now properly follows ISO standard.
+(Alex Benini, Giulio Piancastelli, Nathan Finley)
+ 
+ * [SourceForge bug 1659422] Cut now always cuts at the right level.
+(Alex Benini, Giulio Piancastelli, Nathan Finley)
+ 
+ * CUIConsole output has been polished to resemble more closely what
+seems to be the "standard" output amongst Prolog consoles. (Giulio
+Piancastelli)
+ 
+ * told/0 (seen/0) does not close System.out (System.in) anymore;
+tell/1 (see/1) closes the previously opened output (input) stream.
+(Alex Benini, Giulio Piancastelli)
+ 
+ * Removed problematic assert_backtrackable and retract_backtrackable
+flags from BasicLibrary, in order to more strictly adhere to ISO and
+to simplify and improve performances on knowledge base management. As
+a consequence, removed '$restore_db'/0. (Ivar ¯rstavik, Giulio
+Piancastelli, Alex Benini)
+
+ * Redesigned the theory management subsystem and introduced a new
+ClauseDatabase class with storage responsibilities. Gained performance
+on large theories and overall simplification of the code. (Ivar
+¯rstavik)
+
+ * Prolog library predicates are now overriden by Prolog predicates
+with the same indicator in user-defined theories. (Alex Benini, Ivar
+¯rstavik)
+
+ * Removed '$asserta'/1 and '$assertz'/1. Use asserta/1 and assertz/1
+instead. (Ivar ¯rstavik, Giulio Piancastelli, Alex Benini)
+
+ * abolish/1 is now a built-in. (Ivar ¯rstavik, Giulio Piancastelli,
+Alex Benini)
+
+ * Deprecated Term#isVar, Term#isStruct, Term#isNumber: use instanceof
+instead. (Ivar ¯rstavik, Giulio Piancastelli, Alex Benini)
+
+ * Deprecated the package method Struct#getHashKey: use
+Struct#getPredicateIndicator instead. The rename has been performed to
+more strictly adhere to ISO Standard terminology. (Ivar ¯rstavik,
+Giulio Piancastelli, Alex Benini)
+
+ * Deprecated Number#isInt, Number#isFloat, Number#isDouble,
+Number#isLong: use instanceof instead. (Giulio Piancastelli)
+ 
+ * retract/1 now behaves as prescribed by the ISO Standard
+specification. (Giulio Piancastelli)
+ 
+ * Appending two non-textual theories with more than one clause does
+not result anymore in a never-ending loop. (Maurizio Cimadamore)
+
+ * Remove non-ISO operators from BasicLibrary and
+DefaultOperatorManager. (Giulio Piancastelli)
+
+ * Binary, Octal and Hexadecimal notations for integer numbers are
+now recognized. (Ivar ¯rstavik)
+
+ * Removed alice.util.StringInputStream from the codebase and replaced
+its use with Java java.io.Reader. (Ivar ¯rstavik)
+
+ * Tokenizer is now implemented as a java.io.StreamTokenizer.
+(Ivar ¯rstavik)
+
+ * Terms using operators not surrounded by quotes as functors (e.g.
++(2, 3)) are now correctly recognized. (Ivar ¯rstavik)
+
+ * Several lexical inconsistencies with ISO Standard have now been
+resolved. (Ivar ¯rstavik)
+
+ * Added BNF JavaDoc documentation for both Parser and Tokenizer.
+(Ivar ¯rstavik)
+
+ * The Tokenizer class is now restricted to package access.
+(Ivar ¯rstavik)
+
+ * Changed the parser interface to an object-oriented style, and
+removed current term and numeric state information. (Ivar ¯rstavik)
+ 
+ * Added parse errors as exceptions. (Ivar ¯rstavik)
+ 
+ * Deprecated alice.tuprolog.InvalidVarNameException; just use
+alice.tuprolog.InvalidTermException instead. (Ivar ¯rstavik)
+
+ * Renamed parser interface methods: toTerm is now parseSingleTerm,
+readTerm is nextTerm. (Ivar ¯rstavik)
+
+ * Added a Number#createNumber factory method to build Prolog numbers
+from input string. (Ivar ¯rstavik)
+
+ * Deprecated the Term#parse factory method to build Prolog terms
+from String objects. Use Term#createTerm instead. (Ivar ¯rstavik)
+
+ * No more StackOverflowError(s) in parsing large theories, and a
+three times speed-up in parsing Prolog terms. (Ivar ¯rstavik)
+
+ * Added a getParserError method to alice.tuprolog.TermIterator in
+order to retrieve the parsing error message if the iterator fails on
+recognizing terms. (Ivar ¯rstavik)
+
+=== tuProlog 2.0.1 ===
+
+Released on 30th January 2007
+
+Thanks to Ivar ¯rstavik and Miklos Espak for contributions to this release.
+
+ * [SourceForge bug 1600617] Eliminated loop in solving conjunctions of
+goals. (Alex Benini)
+
+ * [SourceForge bug 1601045] No more ClassCastException throwing when a
+library is loaded in an engine already containing a theory. (Alex Benini)
+
+ * [SourceForge bug 1589823] assert/1 does no more throw an exception on
+backtracking. (Alex Benini, Giulio Piancastelli)
+
+ * [SourceForge bug 1589898] Halting in CUIConsole does no more throw an
+exception. (Alex Benini, Giulio Piancastelli)
+
+ * alice.util.LinkedList has been removed from the codebase. (Ivar ¯rstavik)
+ 
+ * Corrected error in guide where it seemed that only One Anonymous
+Variable existed in Prolog. (Giulio Piancastelli)
+
+ * Removed alice.tuprolog.StructKey, since hash codes are stored in String
+objects anyway in the JVM: no need for a class to do that. (Ivar ¯rstavik,
+Giulio Piancastelli)
+
+ * Removed alice.tuprolog.SymbolMap, since it wasn't really optimizing
+anything. (Ivar ¯rstavik, Giulio Piancastelli)
+
+ * [SourceForge bug 1610797] Following the ISO Standard, arg/3 must not
+work if the first argument is a variable. (Giulio Piancastelli)
+
+ * =../2 now also works with numbers as its first argument, following more
+closely the ISO Standard. (Giulio Piancastelli)
+
+ * functor/3 now also works with numbers as its first or second argument,
+following more closely the ISO Standard. (Giulio Piancastelli)
+
+ * Now >=/2 and =</2 fail when called with a variable. (Giulio Piancastelli)
+ 
+ * New, almost pure-Prolog, bagof/3 algorithm. This fixes a whole load of
+tests, but does not solve SourceForge bug 1589920 entirely, because
+failures still happen; so, that bug is left open. (Giulio Piancastelli)
+
+ * [SourceForge bug 1622783] list/1 (and Term#isList) now correclty
+identify lists as terms with another list as their tail. (Giulio
+Piancastelli)
+
+ * [SourceForge bug 1601871] assert/1 does not lose variable bindings when
+called multiple times with a clause containing variables. (Alex Benini)
+
+ * Prolog clauses contained in a library's theory are no more retractable.
+(Alex Benini)
+
+ * Var#isAtomic, Var#isAtom, Var#isCompound now take into account the term
+to which the variable is bound. (Alex Benini)
+
+ * Added a Term#isEmptyList method to the Term hierarchy. (Alex Benini)
+ 
+ * Removed the Term#isNull method from the Term hierarchy, since NullTerm
+is no longer part of the engine's codebase. (Alex Benini)
+
+ * [SourceForge bug 1644455] No more NullPointerException in
+SpyEvent#toString. (Alex Benini)
+
+ * Corrected example in section 8.2 of the tuProlog's Guide: called
+resolveTerm on a Struct built with different Var instances with the same
+name. (Alex Benini, Giulio Piancastelli)
+
+ * [SourceForge bug 1644264] Fixed bug in Theory#append for theories
+created from clause lists. (Miklos Espak)
+
+ * [SourceForge bug 1644193] Arithmetic operations with long integer
+numbers are now supported for '+'/2, '-'/2, '*'/2, '/'/2, '//'/2. (Ivar
+¯rstavik, Giulio Piancastelli)
+
+ * Deprecated isTypeXXX methods in the Number hierarchy, inserted instead
+isXXX methods to make the Term hierarchy interface uniform. (Alex Benini)
+
+ * Methods Struct#listXXX now enforce the list nature of the callee
+structure, by throwing an UnsupportedOperationException if that condition
+is not verified. (Giulio Piancastelli)
+
+=== tuProlog 2.0 ===
+
+Released on 30th October 2006
+
+Thanks to Ivar ¯rstavik for contributions to this release.
+
+ * Completely redesigned the engine as a set of managers operating around a
+Finite State Machine inferential core. (Andrea Omicini, Alessandro Ricci,
+Alex Benini)
+ 
+ * Libraries can define new directives. (Alex Benini)
+
+ * Fixed bug in subsequent execution of multiple directives contained in the
+same Prolog theory. (Alex Benini)
+ 
+ * Fixed semantics of Prolog#getLibrary(String): it now uses the library's
+name instead of the library's complete classname. (Alessandro Ricci, Giulio
+Piancastelli, Alex Benini)
+
+ * Added an hasOpenAlternatives method to alice.tuprolog.SolveInfo. (Alex
+Benini)
+
+ * Class alice.tuprolog.NullTerm has been removed, and empty list's
+implementation now lets [] =.. [[]] succeed. (Giulio Piancastelli)
+
+ * Fixed bugs in the evaluation triggered by is/2 and arithmetic functors.
+(Alex Benini)
+
+ * Added a button to clear the Output view in the GUI. (Giulio Piancastelli)
+ 
+ * Now the GUI saves theories from the editor's content instead of the
+engine's internal theory. Consequently, a button has been added to put the
+engine's internal content into the editor. (Giulio Piancastelli)
+
+ * Theories feeded to the engine from the GUI by means of consult/1 do not
+get directly displayed in the editor anymore. (Giulio Piancastelli)
+
+ * Fixed bug in the use of mod/1 with a negative second argument. It now
+conforms to the ISO Prolog standard specification. (Giulio Piancastelli)
+
+ * Fixed bugs in length/1: queries like length(A, -1) now fail; queries like
+length(X, 5) do not have multiple solutions. (Alex Benini, Giulio
+Piancastelli, Andrea Omicini)
+
+ * Fixed bug in term equality between integer numbers and real numbers with
+the same integer part. (Giulio Piancastelli)
+
+ * Fixed bugs in the type of numbers returned by the following evaluable
+functors: floor/1, ceiling/1, truncate/1, '/'/2. (Alex Benini, Giulio
+Piancastelli)
+
+ * Added the ISO Prolog float/1 evaluable functor. (Giulio Piancastelli)
+ 
+ * Fixed bug in JavaLibrary regarding the association mechanism between terms
+and objects. (Alex Benini)

@@ -1,5 +1,5 @@
 /*
- * tuProlog - Copyright (C) 2001-2011  aliCE team at deis.unibo.it
+ * tuProlog - Copyright (C) 2001-2002  aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,18 +20,7 @@ package alice.tuprolog;
 import java.util.*;
 import java.io.*;
 
-import alice.tuprolog.event.LibraryEvent;
-import alice.tuprolog.event.LibraryListener;
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
-import alice.tuprolog.event.QueryEvent;
-import alice.tuprolog.event.QueryListener;
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.SpyListener;
-import alice.tuprolog.event.TheoryEvent;
-import alice.tuprolog.event.TheoryListener;
-import alice.tuprolog.event.WarningEvent;
-import alice.tuprolog.event.WarningListener;
+import alice.tuprolog.event.*;
 
 
 
@@ -43,7 +32,7 @@ import alice.tuprolog.event.WarningListener;
 public class Prolog implements Serializable {
 	
 	// 2P version
-	private static final String VERSION = "2.2.1";    
+	private static final String VERSION = "2.3.0 alpha";
 	
 	/*  manager of current theory */
 	private TheoryManager theoryManager;

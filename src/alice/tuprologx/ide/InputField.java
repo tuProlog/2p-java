@@ -37,7 +37,7 @@ interface InputField {
      * the AltGr bug in Thinlet, preventing the use of italian keycombo
      * AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
      */
-    void setConsole(ThinletConsole console);
+    void setConsole(ConsoleManager console);
 
     /**
      * Get the goal displayed in the input field.
@@ -49,13 +49,13 @@ interface InputField {
     /**
      * Add the displayed goal to the history of the requested goals.
      */
-    public void addGoalToHistory();
+    //public void addGoalToHistory();
 
     /**
      * Enable or disable the possibility of asking for goals to be solved.
      *
      * @param flag true if the query device has to be enabled, false otherwise.
      */
-    public void enableSolveCommands(boolean flag);
+    //public void enableSolveCommands(boolean flag);
 
 } // end InputField interface

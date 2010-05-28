@@ -64,7 +64,7 @@ public class GUILauncher {
      */
     private void launchJavaGUI() {
         JavaIDE ide = new JavaIDE();
-		ide.pack();
+		//ide.pack();
 		ide.setVisible(true);
     }
 
@@ -72,9 +72,7 @@ public class GUILauncher {
      * Launch a GUI suitable for the .NET platform (Java 1.1 platform).
      */
     private void launchDotNetGUI() {
-        DotNetIDE ide = new DotNetIDE();
-        ide.pack();
-        ide.show();
+    	System.exit(1);
     }
 
     /**

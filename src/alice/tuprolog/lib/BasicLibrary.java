@@ -323,7 +323,11 @@ public class BasicLibrary extends Library {
 		alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
 		alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
 		if (val0n.isInteger() && val1n.isInteger()) {
-			return (val0n.intValue() == val1n.intValue()) ? true : false;
+			// return (val0n.intValue() == val1n.intValue()) ? true : false;
+			// by ED: note that this would work also with intValue, even with Long args,
+			// because in that case both values would be wrong, but 'equally wrong' :)
+			// However, it is much better to always operate consistently on long values
+			return (val0n.longValue() == val1n.longValue()) ? true : false;
 		} else {
 			return (val0n.doubleValue() == val1n.doubleValue()) ? true : false;
 		}
@@ -388,7 +392,8 @@ public class BasicLibrary extends Library {
 	private boolean expression_greater_than(alice.tuprolog.Number num0,
 			alice.tuprolog.Number num1) {
 		if (num0.isInteger() && num1.isInteger()) {
-			return num0.intValue() > num1.intValue();
+		//	return num0.intValue() > num1.intValue();
+			return num0.longValue() > num1.longValue();
 		} else {
 			return num0.doubleValue() > num1.doubleValue();
 		}
@@ -453,7 +458,8 @@ public class BasicLibrary extends Library {
 	private boolean expression_less_than(alice.tuprolog.Number num0,
 			alice.tuprolog.Number num1) {
 		if (num0.isInteger() && num1.isInteger()) {
-			return num0.intValue() < num1.intValue();
+//			return num0.intValue() < num1.intValue();
+			return num0.longValue() < num1.longValue();
 		} else {
 			return num0.doubleValue() < num1.doubleValue();
 		}
@@ -524,7 +530,9 @@ public class BasicLibrary extends Library {
 
 		}
 		if (val0 != null && val0 instanceof Number) {
-			return new Int(~((alice.tuprolog.Number) val0).intValue());
+			// return new Int(~((alice.tuprolog.Number) val0).intValue());
+			// CORRECTED BY ED ON JAN 28, 2011
+			return new alice.tuprolog.Long(~((alice.tuprolog.Number) val0).longValue());
 		} else {
 			return null;
 		}
@@ -677,7 +685,9 @@ public class BasicLibrary extends Library {
 				&& val1 instanceof Number) {
 			alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
 			alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-			return new Int(val0n.intValue() >> val1n.intValue());
+			// return new Int(val0n.intValue() >> val1n.intValue());
+			// CORRECTED BY ED ON JAN 28, 2011
+			return new alice.tuprolog.Long(val0n.longValue() >> val1n.longValue());
 		} else {
 			return null;
 		}
@@ -696,7 +706,9 @@ public class BasicLibrary extends Library {
 				&& val1 instanceof Number) {
 			alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
 			alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-			return new Int(val0n.intValue() << val1n.intValue());
+			// return new Int(val0n.intValue() << val1n.intValue());
+			// CORRECTED BY ED ON JAN 28, 2011
+			return new alice.tuprolog.Long(val0n.longValue() << val1n.longValue());
 		} else {
 			return null;
 		}
@@ -715,7 +727,9 @@ public class BasicLibrary extends Library {
 				&& val1 instanceof Number) {
 			alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
 			alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-			return new Int(val0n.intValue() & val1n.intValue());
+			// return new Int(val0n.intValue() & val1n.intValue());
+			// CORRECTED BY ED ON JAN 28, 2011
+			return new alice.tuprolog.Long(val0n.longValue() & val1n.longValue());
 		} else {
 			return null;
 		}
@@ -734,7 +748,9 @@ public class BasicLibrary extends Library {
 				&& val1 instanceof Number) {
 			alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
 			alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-			return new Int(val0n.intValue() | val1n.intValue());
+			// return new Int(val0n.intValue() | val1n.intValue());
+			// CORRECTED BY ED ON JAN 28, 2011
+			return new alice.tuprolog.Long(val0n.longValue() | val1n.longValue());
 		} else {
 			return null;
 		}
@@ -1047,7 +1063,7 @@ public class BasicLibrary extends Library {
 				+ "member0(E,[E|_]). \n                                                                       "
 				+ "member0(E,[_|L]):- member0(E,L). \n                                                                       "
 				+ "length(L, S) :- number(S), !, lengthN(L, S), !. \n"
-				+ "length(L, S) :- var(S), lengthS(L, S). \n"
+				+ "length(L, S) :- var(S), lengthX(L, S). \n"
 				+ "lengthN([],0). \n"
 				+ "lengthN(_, N) :- N < 0, !, fail. \n"
 				+ "lengthN([_|L], N) :- lengthN(L,M), N is M + 1. \n"
