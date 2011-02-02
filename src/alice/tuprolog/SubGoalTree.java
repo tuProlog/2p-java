@@ -5,9 +5,15 @@ import java.util.*;
 public class SubGoalTree extends AbstractSubGoalTree {
 	
 	private ArrayList terms;
+        //private LinkedList terms;
 	
 	public SubGoalTree() {
 		terms = new ArrayList();
+                //terms = new LinkedList();
+	}
+
+        public SubGoalTree(ArrayList terms) {
+		this.terms=terms;
 	}
 	
 	public void addChild(Term term) {
@@ -46,5 +52,16 @@ public class SubGoalTree extends AbstractSubGoalTree {
 		}
 		return result + " ] ";
 	}
-	
+
+        public boolean removeChild(int i) {
+            try {
+                terms.remove(i);
+                return true;
+            } catch (Exception e) {
+                return false;
+           }
+        }
+        public SubGoalTree copy(){
+            return new SubGoalTree(terms);
+        }
 }

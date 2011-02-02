@@ -174,5 +174,12 @@ public class Int extends Number {
 	public String toString() {
 		return Integer.toString(value);
 	}
+
+    /**
+     * @author Paolo Contessi
+     */
+    public int compareTo(Number o) {
+        return (new java.lang.Integer(value)).compareTo(o.intValue());
+    }
 	
 }

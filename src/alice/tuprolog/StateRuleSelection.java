@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import alice.tuprolog.ClauseInfo;
 import alice.tuprolog.Struct;
 import alice.util.OneWayList;
+import java.util.LinkedList;
 
 /**
  * @author Alex Benini
@@ -53,7 +54,8 @@ public class StateRuleSelection extends State {
 		if (alternative == null) {
 			/* from normal evaluation */
 			fromBacktracking = false;
-			List varsList = new ArrayList();
+			//List varsList = new LinkedList();
+                        List varsList = new ArrayList();
 			e.currentContext.trailingVars = new OneWayList(varsList,e.currentContext.trailingVars);
 			clauseStore = ClauseStore.build(goal, varsList, c.find(goal));
 			if (clauseStore == null){
@@ -123,9 +125,9 @@ public class StateRuleSelection extends State {
 			e.choicePointSelector.add(cpc);
 		}
 		//distruzione cpc
-		if (!ec.haveAlternatives && fromBacktracking) {
-			e.choicePointSelector.removeUnusedChoicePoints();
-		}
+		if (!ec.haveAlternatives && fromBacktracking) {			
+                    e.choicePointSelector.removeUnusedChoicePoints();
+                }
 		
 		ec.performTailRecursionOptimization(e);
 		

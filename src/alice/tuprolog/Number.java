@@ -28,8 +28,9 @@ import java.util.*;
  * @see Float
  * @see Double
  *
+ * Reviewed by Paolo Contessi: implements Comparable<Number>
  */
-public abstract class Number extends Term {
+public abstract class Number extends Term implements Comparable<Number> {
 	
 	/**
 	 *  Returns the value of the number as int

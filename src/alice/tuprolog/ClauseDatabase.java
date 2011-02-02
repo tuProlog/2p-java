@@ -17,38 +17,64 @@
  */
 package alice.tuprolog;
 
+import alice.util.ReadOnlyLinkedList;
 import java.util.*;
+import java.util.logging.*;
 
 /**
  * Customized HashMap for storing clauses in the TheoryManager
  *
  * @author ivar.orstavik@hist.no
+ *
+ * Reviewed by Paolo Contessi
  */
 class ClauseDatabase extends HashMap {
 
     void addFirst(String key, ClauseInfo d) {
-        LinkedList family = (LinkedList) get(key);
+        FamilyClausesList family = (FamilyClausesList) get(key);
         if (family == null)
-            put(key, family = new LinkedList());
+            put(key, family = new FamilyClausesList());
         family.addFirst(d);
     }
 
     void addLast(String key, ClauseInfo d) {
-        LinkedList family = (LinkedList) get(key);
+        FamilyClausesList family = (FamilyClausesList) get(key);
         if (family == null)
-            put(key, family = new LinkedList());
+            put(key, family = new FamilyClausesList());
         family.addLast(d);
     }
 
-    LinkedList abolish(String key) {
-        return (LinkedList) remove(key);
+    FamilyClausesList abolish(String key) {
+        return (FamilyClausesList) remove(key);
     }
 
-    List getPredicates(String key) {
-        LinkedList family = (LinkedList) get(key);
-        if (family == null)
-            return new LinkedList();
-        return (List) family.clone();
+    /**
+     * Retrieves a list of the predicates which has the same name and arity
+     * as the goal and which has a compatible first-arg for matching.
+     *
+     * @param headt The goal
+     * @return  The list of matching-compatible predicates
+     */
+    List getPredicates(Term headt) {
+        FamilyClausesList family = (FamilyClausesList) get(((Struct) headt).getPredicateIndicator());
+        if (family == null){
+            return new ReadOnlyLinkedList();
+        }
+        return family.get(headt);
+    }
+
+    /**
+     * Retrieves the list of clauses of the requested family
+     *
+     * @param key   Goal's Predicate Indicator
+     * @return      The family clauses
+     */
+    List getPredicates(String key){
+        FamilyClausesList family = (FamilyClausesList) get(key);
+        if(family == null){
+            return new ReadOnlyLinkedList();
+        }
+        return new ReadOnlyLinkedList(family);
     }
 
     public Iterator iterator() {
@@ -58,6 +84,7 @@ class ClauseDatabase extends HashMap {
     private static class CompleteIterator implements Iterator {
         Iterator values;
         Iterator workingList;
+        private boolean busy=false;
 
         public CompleteIterator(ClauseDatabase clauseDatabase) {
             values = clauseDatabase.values().iterator();
@@ -73,8 +100,10 @@ class ClauseDatabase extends HashMap {
             return false;
         }
 
-        public Object next() {
-            return workingList.next();
+        public synchronized Object next() {
+            if (workingList.hasNext())
+                return workingList.next();
+            else return null;
         }
 
         public void remove() {

@@ -1,0 +1,30 @@
+Gattavecchia ha svolto un progettino che migliora le performance di tuProlog 2.3 alpha 
+di un 20% medio, e che passa i test. 
+Usa l'indexing (più sofisticato di quello di Bromuri.. forse) e una piccola rifattorizzazione 
+della classe Term.
+
+L'archivio allegato contiene:
+
+     * speed-2p_Gattavecchia_presentazione.pdf - presentazione per la
+       discussione orale.
+
+     * speed-2p_Gattavecchia_relazione.pdf - relazione sulla mia attività.
+
+     * theories - directory contenente tutte le teorie prolog utilizzate
+       per il benchmarking.
+
+     * tuProlog 2.3 (fast-match) - directory contenente il progetto
+       NetBeans relativo all'ultima versione di TuProlog completa delle
+       modifiche discusse in relazione, l'engine supera con successo
+       tutti i test.
+
+
+19/1/2011:
+Gattavecchia:
+Salve professore, 
+ho aggiunto i TestCase sulle eccezioni, ed i nuovi test danno tutti esito positivo.
+
+Le allego il progetto Prolog 2.3alpha (fast-match) nel quale ho integrato le classi 
+per il test delle eccezioni ad ho aggiunto i relativi TestCase all'interno della suite 
+alice.tuprolog.TuPrologTestSuite.
+(è un progetto NetBeans, uso la versione 6.9.1)

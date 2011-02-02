@@ -231,7 +231,9 @@ public class Struct extends Term {
 	 * <code>getArg(index).getTerm()</code>
 	 */
 	public Term getTerm(int index) {
-		return arg[index].getTerm();
+            if (!(arg[index] instanceof Var))
+                return arg[index];
+            return arg[index].getTerm();
 	}
 	
 	
@@ -590,6 +592,7 @@ public class Struct extends Term {
 		if (isEmptyList()) {
 			name = ".";
 			arity = 2;
+                        predicateIndicator = name + "/" + arity; /* Added by Paolo Contessi */
 			arg = new Term[arity];
 			arg[0] = t; arg[1] = new Struct();
 		} else if (arg[1].isList()) {

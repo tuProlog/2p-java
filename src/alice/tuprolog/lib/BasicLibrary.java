@@ -392,7 +392,7 @@ public class BasicLibrary extends Library {
 	private boolean expression_greater_than(alice.tuprolog.Number num0,
 			alice.tuprolog.Number num1) {
 		if (num0.isInteger() && num1.isInteger()) {
-		//	return num0.intValue() > num1.intValue();
+			//	return num0.intValue() > num1.intValue();
 			return num0.longValue() > num1.longValue();
 		} else {
 			return num0.doubleValue() > num1.doubleValue();

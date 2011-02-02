@@ -32,7 +32,7 @@ import alice.tuprolog.event.*;
 public class Prolog implements Serializable {
 	
 	// 2P version
-	private static final String VERSION = "2.3.0 alpha";
+	private static final String VERSION = "2.3.1 beta";
 	
 	/*  manager of current theory */
 	private TheoryManager theoryManager;

@@ -18,13 +18,11 @@
 package alice.tuprolog;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import alice.util.OneWayList;
 
@@ -187,11 +185,11 @@ public abstract class Term implements java.io.Serializable {
 	 * @return true if the term is unifiable with this one
 	 */
 	public boolean unify(Prolog mediator, Term t1) {
-		EngineManager engine = mediator.getEngineManager();
+           	EngineManager engine = mediator.getEngineManager();
 		resolveTerm();
 		t1.resolveTerm();
-		List v1 = new ArrayList();
-		List v2 = new ArrayList();
+		List v1 = new LinkedList(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
+		List v2 = new LinkedList(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
 		boolean ok = unify(v1,v2,t1);
 		if (ok) {
 			ExecutionContext ec = engine.getCurrentContext();
@@ -210,11 +208,11 @@ public abstract class Term implements java.io.Serializable {
 					((Var)it.next()).rename(id,count);
 				}
 			}
-			return true;
+        		return true;
 		}
 		Var.free(v1);
 		Var.free(v2);
-		return false;
+              	return false;
 	}
 	
 	
@@ -230,8 +228,8 @@ public abstract class Term implements java.io.Serializable {
 	public boolean match(Term t) {
 		resolveTerm();
 		t.resolveTerm();
-		List v1 = new ArrayList();
-		List v2 = new ArrayList();
+		List v1 = new LinkedList(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
+		List v2 = new LinkedList(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
 		boolean ok = unify(v1,v2,t);
 		Var.free(v1);
 		Var.free(v2);

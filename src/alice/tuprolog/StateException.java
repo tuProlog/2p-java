@@ -30,18 +30,18 @@ public class StateException extends State {
 		Term errorTerm = e.currentContext.currentGoal.getArg(0);
 		e.currentContext = e.currentContext.fatherCtx;
 		if (e.currentContext == null) {
-			// passo nello stato HALT se l’errore non può essere gestito (sono
+			// passo nello stato HALT se l?errore non pu? essere gestito (sono
 			// arrivato alla radice dell'albero di risoluzione)
 			e.nextState = c.END_HALT;
 			return;
 		}
 		while (true) {
 			// visito all'indietro l'albero di risoluzione alla ricerca di un
-			// subgoal catch/3 il cui secondo argomento unifica con l’argomento
-			// dell’eccezione lanciata
+			// subgoal catch/3 il cui secondo argomento unifica con l?argomento
+			// dell?eccezione lanciata
 			if (e.currentContext.currentGoal.match(catchTerm)
 					&& e.currentContext.currentGoal.getArg(1).match(errorTerm)) {
-				// ho identificato l’ExecutionContext con il corretto subgoal
+				// ho identificato l?ExecutionContext con il corretto subgoal
 				// catch/3
 
 				// taglio tutti i punti di scelta generati da Goal
@@ -54,11 +54,11 @@ public class StateException extends State {
 				e.currentContext.currentGoal.getArg(1).unify(unifiedVars,
 						unifiedVars, errorTerm);
 
-				// inserisco il gestore dell’errore in testa alla lista dei
+				// inserisco il gestore dell?errore in testa alla lista dei
 				// subgoal da eseguire, come definito dal terzo argomento di
 				// catch/3. Il gestore deve inoltre essere preparato per
-				// l’esecuzione, mantenendo le sostituzioni effettuate durante
-				// il processo di unificazione tra l’argomento di throw/1 e il
+				// l?esecuzione, mantenendo le sostituzioni effettuate durante
+				// il processo di unificazione tra l?argomento di throw/1 e il
 				// secondo argomento di catch/3
 				Term handlerTerm = e.currentContext.currentGoal.getArg(2);
 				Term curHandlerTerm = handlerTerm.getTerm();
@@ -87,7 +87,7 @@ public class StateException extends State {
 				// passo all'ExecutionContext successivo
 				e.currentContext = e.currentContext.fatherCtx;
 				if (e.currentContext == null) {
-					// passo nello stato HALT se l’errore non può essere gestito
+					// passo nello stato HALT se l?errore non pu? essere gestito
 					// (sono arrivato alla radice dell'albero di risoluzione)
 					e.nextState = c.END_HALT;
 					return;
@@ -101,7 +101,7 @@ public class StateException extends State {
 		Term exceptionTerm = e.currentContext.currentGoal.getArg(0);
 		e.currentContext = e.currentContext.fatherCtx;
 		if (e.currentContext == null) {
-			// passo nello stato HALT se l’errore non può essere gestito (sono
+			// passo nello stato HALT se l?errore non pu? essere gestito (sono
 			// arrivato alla radice dell'albero di risoluzione)
 			e.nextState = c.END_HALT;
 			return;
@@ -113,7 +113,7 @@ public class StateException extends State {
 			if (e.currentContext.currentGoal.match(javaCatchTerm)
 					&& javaMatch(e.currentContext.currentGoal.getArg(1),
 							exceptionTerm)) {
-				// ho identificato l’ExecutionContext con il corretto subgoal
+				// ho identificato l?ExecutionContext con il corretto subgoal
 				// java_catch/3
 
 				// taglio tutti i punti di scelta generati da JavaGoal
@@ -132,7 +132,7 @@ public class StateException extends State {
 
 				// inserisco il gestore e il finally (se presente) in testa alla
 				// lista dei subgoal da eseguire. I due predicati devono inoltre
-				// essere preparati per l’esecuzione, mantenendo le sostituzioni
+				// essere preparati per l?esecuzione, mantenendo le sostituzioni
 				// effettuate durante il processo di unificazione tra
 				// l'eccezione e il catcher
 				Term curHandlerTerm = handlerTerm.getTerm();
@@ -142,7 +142,7 @@ public class StateException extends State {
 				}
 				Term finallyTerm = e.currentContext.currentGoal.getArg(2);
 				Term curFinallyTerm = finallyTerm.getTerm();
-				// verifico se c'è il blocco finally
+				// verifico se c'? il blocco finally
 				boolean isFinally = true;
 				if (curFinallyTerm instanceof Int) {
 					Int finallyInt = (Int) curFinallyTerm;
@@ -187,7 +187,7 @@ public class StateException extends State {
 				// passo all'ExecutionContext successivo
 				e.currentContext = e.currentContext.fatherCtx;
 				if (e.currentContext == null) {
-					// passo nello stato HALT se l’errore non può essere gestito
+					// passo nello stato HALT se l?errore non pu? essere gestito
 					// (sono arrivato alla radice dell'albero di risoluzione)
 					e.nextState = c.END_HALT;
 					return;
@@ -196,7 +196,7 @@ public class StateException extends State {
 		}
 	}
 
-	// verifica se c'è un catcher unificabile con l'argomento dell'eccezione
+	// verifica se c'? un catcher unificabile con l'argomento dell'eccezione
 	// lanciata
 	@SuppressWarnings("unchecked")
 	private boolean javaMatch(Term arg1, Term exceptionTerm) {

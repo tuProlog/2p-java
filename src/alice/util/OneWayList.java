@@ -17,6 +17,32 @@ public class OneWayList {
 		return new OneWayList(list.remove(0),transform(list));
 	}
 	
+        /**
+         * Transforms given list into a OneWayList without any modification
+         * to it
+         * 
+         * Method introduced during revision by Paolo Contessi
+         *
+         * @param list  Input list to be transformed
+         * @return      An equivalent OneWayList
+         */
+        public static OneWayList transform2(List list){
+		OneWayList result = null;
+                OneWayList p = null;
+
+                for(Object obj : list){
+                    OneWayList l = new OneWayList(obj, null);
+
+                    if(result == null){
+                        result = p = l;
+                    } else {
+                        p.tail = l;
+                        p = l;
+                    }
+                }
+
+                return result;
+	}
 	
 	public Object getHead() {
 		return head;

@@ -90,7 +90,7 @@ class FlagManager {
 		return null;
 	}
 
-	// restituisce true se esiste un flag di nome name, e tale flag è
+	// restituisce true se esiste un flag di nome name, e tale flag ?
 	// modificabile
 	public boolean isModifiable(String name) {
 		java.util.Iterator it = flags.iterator();
@@ -103,7 +103,7 @@ class FlagManager {
 		return false;
 	}
 
-	// restituisce true se esiste un flag di nome name, e Value è un valore
+	// restituisce true se esiste un flag di nome name, e Value ? un valore
 	// ammissibile per tale flag
 	public boolean isValidValue(String name, Term value) {
 		java.util.Iterator it = flags.iterator();

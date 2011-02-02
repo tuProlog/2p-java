@@ -47,7 +47,7 @@ public abstract class AnotherList {
       AnotherList lists = PJ.newInstance(AnotherList.class);
       List<Int> l=lists.nil();          // Creating an empty list []
       for (int i=10;i>0;i--){
-          l=lists.add(new Int(i),l);    // Adding elements...[1,2,3,4,5,6,7,8,9,10]
+       //   l=lists.add(new Int(i),l);    // Adding elements...[1,2,3,4,5,6,7,8,9,10]
       }
       Var<List<Int>> l1 = new Var<List<Int>>("X");
       Var<List<Int>> l2 = new Var<List<Int>>("Y");

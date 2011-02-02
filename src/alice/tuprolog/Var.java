@@ -18,6 +18,7 @@
 package alice.tuprolog;
 
 import java.util.*;
+import utility.StaticCounter;
 
 /**
  * This class represents a variable term.
@@ -34,7 +35,7 @@ public class Var extends Term {
 	
 	// the name identifying the var
 	private String name;
-	private String completeName;
+	private StringBuilder completeName;     /* Reviewed by Paolo Contessi: String -> StringBuilder */
 	
 	private Term   link;		    /* link is used for unification process */
 	private long   timestamp;		/* timestamp is used for fix vars order */
@@ -55,11 +56,11 @@ public class Var extends Term {
 		id = -1; //no execCtx owners
 		if (n.equals(ANY)) {
 			name = null;
-			completeName = null;
+			completeName = new StringBuilder();
 		} else if (Character.isUpperCase(n.charAt(0))||
 				(n.startsWith(ANY))) {
 			name = n;
-			completeName = n;
+			completeName = new StringBuilder(n);
 		} else {
 			throw new InvalidTermException("Illegal variable name: " + n);
 		}
@@ -73,7 +74,7 @@ public class Var extends Term {
 	 */
 	public Var() {
 		name = null;
-		completeName = null;
+		completeName = new StringBuilder();
 		link = null;
 		id = ORIGINAL;
 		timestamp = 0;
@@ -90,6 +91,7 @@ public class Var extends Term {
 	 */
 	private Var(String n, int id, int alias, long time) {
 		name = n;
+                completeName = new StringBuilder();
 		timestamp = time;
 		link  = null;
 		if(id < 0) id = ORIGINAL;
@@ -103,13 +105,27 @@ public class Var extends Term {
 	/**
 	 * Rename variable (assign completeName) 
 	 */
-	void rename(int idExecCtx, int count) {
+	void rename(int idExecCtx, int count) { /* Reviewed by Paolo Contessi: String -> StringBuilder */
 		id = idExecCtx;
+                
 		if (idExecCtx > -1) {
-			completeName = name + "_e" + idExecCtx;
+                    //completeName = name + "_e" + idExecCtx;
+                        completeName = completeName
+                            .delete(0, completeName.length())
+                            .append(name).append("_e").append(idExecCtx);
 		}
-		if (id == ORIGINAL) completeName = name;
-		if (id == PROGRESSIVE) completeName = "_"+count;
+
+		if (id == ORIGINAL) { //completeName = name;
+                        completeName = completeName
+                            .delete(0, completeName.length())
+                            .append(name);
+                }
+
+		if (id == PROGRESSIVE) { //completeName = "_"+count;
+                    completeName = completeName
+                            .delete(0, completeName.length())
+                            .append("_").append(count);
+                }
 	}
 	
 	
@@ -191,7 +207,7 @@ public class Var extends Term {
 	 */
 	public String getName() {
 		if (name!=null) {
-			return completeName;
+			return completeName.toString();
 		} else {
 			//return ANY+timestamp;
 			return ANY;
@@ -362,6 +378,7 @@ public class Var extends Term {
 			}
 		}
 		return false;
+
 	}
 	
 	//
@@ -412,7 +429,7 @@ public class Var extends Term {
 		Term tt = getTerm();
 		if(tt == this) {
 			t = t.getTerm();
-			if (t instanceof Var) {
+			if (t instanceof Var) { 
 				if (this == t) {
 					try{
 						vl1.add(this);            	
@@ -420,6 +437,7 @@ public class Var extends Term {
 					return true;
 				}
 			} else if (t instanceof Struct) {
+                           ;
 				// occur-check
 				if (occurCheck(vl2, (Struct)t)) {
 					return false;
@@ -480,13 +498,14 @@ public class Var extends Term {
 	 *
 	 * For bounded variables, the string is <Var Name>/<bound Term>.
 	 */
+        @Override
 	public String toString() {
 		Term tt = getTerm();
 		if (name != null) {
 			if (tt == this){
-				return completeName;
+				return completeName.toString();
 			} else {
-				return (completeName + " / " + tt.toString());
+				return (completeName.toString() + " / " + tt.toString());
 			}
 		} else {
 			if (tt == this) {
@@ -508,7 +527,7 @@ public class Var extends Term {
 		Term tt = getTerm();
 		if (name != null) {
 			if (tt == this) {
-				return completeName;
+				return completeName.toString();
 			} else {
 				return tt.toString();
 			}

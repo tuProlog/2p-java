@@ -25,8 +25,8 @@ public class AboutFrame
 		icon.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
 		JLabel versionSystem=new JLabel(" tuProlog version " + alice.tuprolog.Prolog.getVersion());
 		JLabel versionIDE=new JLabel(" tuProlog IDE version 3.0");
-		JLabel copyright=new JLabel(" tuProlog is (C) Copyright 2001-2008 aliCE team");
-		JLabel deis=new JLabel(" at DEIS, University of Bologna at Cesena, Italy.");
+		JLabel copyright=new JLabel(" tuProlog is (C) Copyright 2001-2011 aliCE team");
+		JLabel deis=new JLabel(" DEIS, Università di Bologna, Italy.");
 		JLabel url=new JLabel(" URL: http://tuprolog.alice.unibo.it");
 		
 		c.setLayout(new GridBagLayout());

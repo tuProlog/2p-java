@@ -25,12 +25,16 @@ public class ClauseStore {
 	
 	/**
 	 * Carica una famiglia di clausole
+         *
+         * Reviewed by Paolo Contessi:
+         * OneWayList.transform(List) -> OneWayList.transform2(List)
+         * 
 	 * @param familyClauses
 	 */
 	public static ClauseStore build(Term goal, List vars, List familyClauses) {
 		ClauseStore clauseStore = new ClauseStore(goal, vars);
-		clauseStore.clauses = OneWayList.transform(familyClauses);
-		if (clauseStore.clauses == null || !clauseStore.existCompatibleClause())
+                clauseStore.clauses = OneWayList.transform2(familyClauses);
+                if (clauseStore.clauses == null || !clauseStore.existCompatibleClause())
 			return null;
 		return clauseStore;
 	}
@@ -76,7 +80,8 @@ public class ClauseStore {
 	 * @return unificazioni delle variabili
 	 */
 	private List deunify(List varsToDeunify) {
-		List saveUnifications = new ArrayList();
+                List saveUnifications = new ArrayList();
+                //List saveUnifications = new LinkedList();
 		//deunifico le variabili termporaneamente
 		Iterator it = varsToDeunify.iterator();
 		while (it.hasNext()) {

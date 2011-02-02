@@ -48,7 +48,7 @@ public class StateGoalEvaluation extends State {
 				if (t instanceof PrologError) {
 					// cast da Throwable a PrologError
 					PrologError error = (PrologError) t;
-					// sostituisco il gol in cui si è verificato l'errore con il
+					// sostituisco il gol in cui si ? verificato l'errore con il
 					// subgoal throw/1
 					e.currentContext.currentGoal = new Struct("throw", error
 							.getError());
@@ -56,7 +56,7 @@ public class StateGoalEvaluation extends State {
 					// cast da Throwable a JavaException
 					JavaException exception = (JavaException) t;
 					
-					// sostituisco il gol in cui si è verificato l'errore con il
+					// sostituisco il gol in cui si ? verificato l'errore con il
 					// subgoal java_throw/1
 					e.currentContext.currentGoal = new Struct("java_throw",
 							exception.getException());

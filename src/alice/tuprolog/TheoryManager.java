@@ -120,7 +120,7 @@ public class TheoryManager implements Serializable {
      */
     boolean abolish(Struct pi) {
     	String key = Tools.removeApices(pi.toString());
-        LinkedList abolished = dynamicDBase.abolish(key);
+        List abolished = dynamicDBase.abolish(key); /* Reviewed by Paolo Contessi: LinkedList -> List */
         if (abolished != null)
         	engine.spy("ABOLISHED: " + key + " number of clauses=" + abolished.size() + "\n");
         return true;
@@ -129,13 +129,16 @@ public class TheoryManager implements Serializable {
     /**
      * Returns a family of clauses with functor and arity equals
      * to the functor and arity of the term passed as a parameter
+     *
+     * Reviewed by Paolo Contessi: modified according to new ClauseDatabase
+     * implementation
      */
     List find(Term headt) {
         if (headt instanceof Struct) {
-        	String key = ((Struct) headt).getPredicateIndicator();
-        	List list = (List) dynamicDBase.getPredicates(key);
+        	//String key = ((Struct) headt).getPredicateIndicator();
+        	List list = (List) dynamicDBase.getPredicates(headt);
         	if (list.isEmpty())
-        		list = (List) staticDBase.getPredicates(key);
+        		list = (List) staticDBase.getPredicates(headt);
         	return list;
         }
         	
@@ -205,8 +208,10 @@ public class TheoryManager implements Serializable {
     void removeLibraryTheory(String libName) {
         for (Iterator allClauses = staticDBase.iterator(); allClauses.hasNext();) {
             ClauseInfo d = (ClauseInfo) allClauses.next();
-            if (d.libName != null && libName.equals(d.libName))
-                allClauses.remove();
+            if (d.libName != null && libName.equals(d.libName)){}
+                try {allClauses.remove();}
+                catch (Exception e){}
+
         }
     }
 

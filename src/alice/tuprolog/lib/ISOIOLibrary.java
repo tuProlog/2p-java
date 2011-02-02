@@ -84,7 +84,7 @@ public class ISOIOLibrary extends Library{
 						if(!properties.containsKey(option.getName())){
 							throw PrologError.domain_error(engine.getEngineManager(), 4, "stream_option", option);
 						}
-						if(option.getName().equals("alias")){ //controllo che alias non sia già associato ad uno stream aperto
+						if(option.getName().equals("alias")){ //controllo che alias non sia gi? associato ad uno stream aperto
 						//ciclo su inputStreams
 							for(Map.Entry<InputStream, Hashtable<String, Term>> currentElement : inputStreams.entrySet()){
 								for(Map.Entry<String, Term> currentElement2 : currentElement.getValue().entrySet()){
@@ -176,8 +176,8 @@ public class ISOIOLibrary extends Library{
 					
 					//mi servono queste istruzioni per set_stream_position
 					//faccio una mark valida fino alla fine del file, appena lo apro in modo che mi possa
-					//permettere di fare una reset all'inizio del file. Il +5 alloca un po di spazio in più
-					//nel buffer, mi serve però per evitare che la mark non sia più valida quando leggo la fine del file
+					//permettere di fare una reset all'inizio del file. Il +5 alloca un po di spazio in pi?
+					//nel buffer, mi serve per? per evitare che la mark non sia pi? valida quando leggo la fine del file
 					if(((Struct)properties.get("reposition")).getName().equals("true")){
 						try {
 							input.mark((input.available())+5);
@@ -234,8 +234,8 @@ public class ISOIOLibrary extends Library{
 			throw PrologError.type_error(engine.getEngineManager(), 3, "variable", stream);
 		}
 		
-		//siccome è una open con la lista delle opzioni vuota, inizializzo comunque le opzioni 
-		//e inoltre inserisco i valori che già conosco come file_name,mode,input,output e type.
+		//siccome ? una open con la lista delle opzioni vuota, inizializzo comunque le opzioni
+		//e inoltre inserisco i valori che gi? conosco come file_name,mode,input,output e type.
 		Hashtable<String, Term> properties = new Hashtable<String, Term>(10);
 		boolean result = inizialize_properties(properties);
 		
@@ -338,10 +338,10 @@ public class ISOIOLibrary extends Library{
 			throw PrologError.type_error(engine.getEngineManager(), 4, "list", closeOptions);
 		}
 		
-		//Siccome non so di quale natura è lo stream, provo a cercarlo sia in inputStreams che 
-		//in outputStreams se in inputStreams non c'è la funzione lancia un errore
-		//raccolgo l'eccezione e controllo in out. Se anche lì non c'è non raccolgo l'eccezione
-		//perchè significa che lo stream che mi è stato passato non è aperto.
+		//Siccome non so di quale natura ? lo stream, provo a cercarlo sia in inputStreams che
+		//in outputStreams se in inputStreams non c'? la funzione lancia un errore
+		//raccolgo l'eccezione e controllo in out. Se anche l? non c'? non raccolgo l'eccezione
+		//perch? significa che lo stream che mi ? stato passato non ? aperto.
 		try{
 			in = find_input_stream(stream_or_alias);
 		}
@@ -359,12 +359,12 @@ public class ISOIOLibrary extends Library{
 				out.close();
 			} catch (IOException e) {
 				if(force == true){//devo forzare la chiusura 
-					//siccome in java non c'è modo di forzare la chiusura ho modellato il problema
+					//siccome in java non c'? modo di forzare la chiusura ho modellato il problema
 					//eliminando ogni riferimento all'oggetto stream, in modo tale che venga eliminato dal
 					//dal garabage colletor.
 					outputStreams.remove(in);
 					out = null;
-					//nel caso in cui lo stream che viene chiuso è lo stream corrente, riassegno stdin o stdout
+					//nel caso in cui lo stream che viene chiuso ? lo stream corrente, riassegno stdin o stdout
 					//ai riferimenti dello stream corrente
 					if(out_name.equals(outputStreamName)){
 						outputStreamName = "stdout";
@@ -470,7 +470,7 @@ public class ISOIOLibrary extends Library{
 		return true;
 	}
 	
-	//funzione integrata con codice Prolog: ricerca, data una proprietà, tutti gli stream
+	//funzione integrata con codice Prolog: ricerca, data una propriet?, tutti gli stream
 	//che la soddisfano
 	public boolean find_property_2(Term list, Term property)throws PrologError{
 		initLibrary();
@@ -489,7 +489,7 @@ public class ISOIOLibrary extends Library{
 		if(!propertyName.equals("input") && !propertyName.equals("output")){
 			propertyValue = (Struct)prop.getArg(0);
 		}
-		List<Struct> resultList = new ArrayList<Struct>(); //object generico perchè sono sia inputStream che outputStream
+		List<Struct> resultList = new ArrayList<Struct>(); //object generico perch? sono sia inputStream che outputStream
 			
 		if(propertyName.equals("input")){
 			for(Map.Entry<InputStream,Hashtable<String, Term>> stream:inputStreams.entrySet()){
@@ -588,7 +588,7 @@ public class ISOIOLibrary extends Library{
 		}
 	}
 	
-	//modificare la posizione dello stream se la proprietà reposition è true
+	//modificare la posizione dello stream se la propriet? reposition ? true
 	public boolean set_stream_position_2(Term stream_or_alias, Term position)throws PrologError{
 		//soltanto per inputStream!
 		initLibrary();
@@ -725,7 +725,7 @@ public class ISOIOLibrary extends Library{
 				
 				if(value != -1){
 					//vado a controllare il prossimo carattere
-					//se è fine file, end_of_stream diventa "at"
+					//se ? fine file, end_of_stream diventa "at"
 					Var nextChar = new Var();
 					peek_code_2(stream_or_alias,nextChar);
 					Term nextCharTerm = nextChar.getTerm();
@@ -893,7 +893,7 @@ public class ISOIOLibrary extends Library{
 					
 					stream2.close();
 				}
-				if(!Character.isDefined(value)&& value != -1){ 	//non devo nemmeno settare a eof la proprietà perchè la posizone
+				if(!Character.isDefined(value)&& value != -1){ 	//non devo nemmeno settare a eof la propriet? perch? la posizone
 												//dello stream deve rimanere inalterata.
 					throw PrologError.representation_error(engine.getEngineManager(), 2, "character");
 				}
@@ -981,7 +981,7 @@ public class ISOIOLibrary extends Library{
 					value = stream2.read();
 					stream2.close();
 				}
-				if(!Character.isDefined(value) && value != -1){ 	//non devo nemmeno settare a eof la proprietà perchè la posizone
+				if(!Character.isDefined(value) && value != -1){ 	//non devo nemmeno settare a eof la propriet? perch? la posizone
 												//dello stream deve rimanere inalterata.
 					throw PrologError.representation_error(engine.getEngineManager(), 2, "character");
 				}
@@ -1096,7 +1096,7 @@ public class ISOIOLibrary extends Library{
 	}
 	
 	public boolean get_byte_1(Term in_byte) throws PrologError{
-		//non faccio la stessa struttura della get_char perchè stdin e stdout sono type=text e non posso fare la get_byte su di loro
+		//non faccio la stessa struttura della get_char perch? stdin e stdout sono type=text e non posso fare la get_byte su di loro
 		//lo stesso vale per tutti gli altri predicati
 		initLibrary();
 		Struct stream_or_alias = new Struct(inputStream.toString());
@@ -1221,7 +1221,7 @@ public class ISOIOLibrary extends Library{
 	
 	public boolean put_byte_1(Term out_byte)throws PrologError{
 		//richiamo il metodo di IOLibrary che lavora sullo stream corrente
-		//la posso utilizzare così com'è in quanto presenta già tutti i controlli sul parametro arg richiesti
+		//la posso utilizzare cos? com'? in quanto presenta gi? tutti i controlli sul parametro arg richiesti
 		initLibrary();
 		out_byte = out_byte.getTerm();
 		return IOLib.put_1(out_byte);
@@ -1643,7 +1643,7 @@ public class ISOIOLibrary extends Library{
 					continue;
 				}
 				else{
-				//è un numero da solo o un operando
+				//? un numero da solo o un operando
 					if(ignore_ops == false){
 						result += arg.toString();
 						if(i%2 == 0 && operator != ""){
@@ -1752,7 +1752,7 @@ public class ISOIOLibrary extends Library{
 					result += create_string(options,(Struct)term.getArg(i));
 				}
 				else{
-					//costruito così per un problema di rappresentazione delle []
+					//costruito cos? per un problema di rappresentazione delle []
 					if((term.getArg(i).isList()) && !(term.getArg(i).isEmptyList()))
 						result+=print_list((Struct)term.getArg(i),options);
 					else{
@@ -1851,13 +1851,13 @@ public class ISOIOLibrary extends Library{
 		outputStreamName = IOLib.outputStreamName;
 		flag = 1;
 		
-		//inserisco anche stdin e stdout all'interno dell'hashtable con le sue proprietà
+		//inserisco anche stdin e stdout all'interno dell'hashtable con le sue propriet?
 		Hashtable<String, Term> propertyInput = new Hashtable<String, Term>(10);
 		inizialize_properties(propertyInput);
 		propertyInput.put("input", new Struct("true"));
 		propertyInput.put("mode", new Struct("read"));
 		propertyInput.put("alias", new Struct("user_input"));
-		//per essere coerente con la rappresentazione in IOLibrary dove stdin è inputStreamName
+		//per essere coerente con la rappresentazione in IOLibrary dove stdin ? inputStreamName
 		propertyInput.put("file_name", new Struct("stdin"));
 		propertyInput.put("eof_action", new Struct("reset"));
 		propertyInput.put("type", new Struct("text"));
@@ -1875,7 +1875,7 @@ public class ISOIOLibrary extends Library{
 		return;
 	}
 	
-	//serve per inizializzare la hashmap delle proprietà
+	//serve per inizializzare la hashmap delle propriet?
 	private boolean inizialize_properties(Hashtable<String,Term> map){
 		Struct s = new Struct();
 		map.put("file_name", s);
@@ -1919,7 +1919,7 @@ public class ISOIOLibrary extends Library{
 			}
 		}
 		
-		//altrimenti vado a fare tutti i controlli sul nome dello stream che mi è stato passato
+		//altrimenti vado a fare tutti i controlli sul nome dello stream che mi ? stato passato
 		if((stream.getName()).contains("Stream")){
 			if((stream.getName()).contains("Output")){
 				throw PrologError.permission_error(engine.getEngineManager(), "output", "stream", stream_or_alias, new Struct("S_or_a is an output stream"));
@@ -1933,7 +1933,7 @@ public class ISOIOLibrary extends Library{
 					}
 				}
 				if(flag == 0){
-					//se lo stream non si trova all'interno della hashtable, significa che non è mai stato aperto
+					//se lo stream non si trova all'interno della hashtable, significa che non ? mai stato aperto
 					throw PrologError.existence_error(engine.getEngineManager(), 1, "stream", stream_or_alias, new Struct("The input stream must be open"));
 				}
 			}
@@ -1971,7 +1971,7 @@ public class ISOIOLibrary extends Library{
 			if((stream.getName()).contains("Input")){
 				throw PrologError.permission_error(engine.getEngineManager(), "output", "stream", stream_or_alias, new Struct("S_or_a is an input stream"));
 			}
-			//devo controllare che contenga anche Print perchè stdout è di tipo PrintStream
+			//devo controllare che contenga anche Print perch? stdout ? di tipo PrintStream
 			if((stream.getName()).contains("Output") ||(stream.getName()).contains("Print")){
 				for(Map.Entry<OutputStream, Hashtable<String, Term>> currentElement : outputStreams.entrySet()){
 					if((currentElement.getKey().toString()).equals(stream.getName())){
@@ -1992,12 +1992,12 @@ public class ISOIOLibrary extends Library{
 	}
 	
 	
-	//come nome dello stream viene utilizzata la proprietà file_name
+	//come nome dello stream viene utilizzata la propriet? file_name
 	private String get_output_name(OutputStream output){
 		Term file_name = null;
 		//per reperire quello stream specifico devo per forza confrontare il nome degli stream ogni volta
-		//perchè la get non fuziona in quanto non ho lo stesso oggetto che è all'interno dell'hashtable
-		//è lo stesso ma lo passa l'utente dall'esterno quindi devo trovarlo scorrendo ogni membro dell'Hashtable
+		//perch? la get non fuziona in quanto non ho lo stesso oggetto che ? all'interno dell'hashtable
+		//? lo stesso ma lo passa l'utente dall'esterno quindi devo trovarlo scorrendo ogni membro dell'Hashtable
 		for(Map.Entry<OutputStream, Hashtable<String, Term>> element : outputStreams.entrySet()){
 			if((element.getKey().toString()).equals(output.toString())){
 				Hashtable<String,Term>properties = element.getValue();

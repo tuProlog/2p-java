@@ -173,5 +173,12 @@ public class Float extends Number {
 	public String toString() {
 		return java.lang.Float.toString(value);
 	}
+
+    /**
+     * @author Paolo Contessi
+     */
+    public int compareTo(Number o) {
+        return (new java.lang.Float(value)).compareTo(o.floatValue());
+    }
 	
 }

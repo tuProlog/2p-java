@@ -21,6 +21,7 @@ import java.util.*;
 
 import alice.tuprolog.Struct;
 import alice.util.OneWayList;
+import utility.StaticCounter;
 
 
 /**
@@ -122,14 +123,22 @@ public class ExecutionContext {
 	 * If no open alternatives and no other term to execute ->
 	 * current context no more needed ->
 	 * reused to execute g subgoal =>
-	 * got TAIL RECURSION OPTIMIZATION!
+	 * got TAIL RECURSION OPTIMIZATION!   «-- IT DOESN'T WORK!
 	 */
 	void performTailRecursionOptimization(Engine e) {
-		fatherCtx =
-			(!haveAlternatives && !goalsToEval.haveSubGoals()) ?
-					e.currentContext.fatherCtx :
-					e.currentContext;
-	}
-	
-	
+            if (!haveAlternatives && !goalsToEval.haveSubGoals()){
+                fatherCtx = e.currentContext.fatherCtx;
+             }
+            else{
+                fatherCtx = e.currentContext;
+            }
+ 	}
+        void performTailRecursionOptimization2(Engine e) {
+            if (!haveAlternatives){
+                fatherCtx = e.currentContext.fatherCtx;
+             }
+            else{
+                fatherCtx = e.currentContext;
+            }
+ 	}
 }

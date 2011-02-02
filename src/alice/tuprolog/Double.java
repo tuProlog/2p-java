@@ -175,5 +175,12 @@ public class Double extends Number {
 	public int resolveVariables(int count) {
 		return count;
 	}
+
+    /**
+     * @author Paolo Contessi
+     */
+    public int compareTo(Number o) {
+        return (new java.lang.Double(value)).compareTo(o.doubleValue());
+    }
 	
 }

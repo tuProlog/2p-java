@@ -208,8 +208,8 @@ public class IOLibrary extends Library {
 		if (!(arg instanceof Int))
 			throw PrologError.type_error(engine.getEngineManager(), 1,
 					"integer", arg);
-		Int numSpaces = (Int) arg.getTerm(); // was: arg; changed by ED
-		int n = numSpaces.intValue();
+		// int n = ((Int)arg).intValue(); // OLD BUGGED  VERSION (signaled by MViroli) 
+		int n = ((Int)arg.getTerm()).intValue(); // NEW CORRECT VERSION (by MViroli, EDenti)
 		if (outputStreamName.equals("stdout")) {
 			for (int i = 0; i < n; i++) {
 				getEngine().stdOutput(" ");

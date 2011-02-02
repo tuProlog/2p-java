@@ -173,5 +173,12 @@ public class Long extends Number {
 	public String toString() {
 		return java.lang.Long.toString(value);
 	}
+
+    /**
+     * @author Paolo Contessi
+     */
+    public int compareTo(Number o) {
+        return (new java.lang.Long(value)).compareTo(o.longValue());
+    }
 	
 }
