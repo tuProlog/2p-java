@@ -18,7 +18,7 @@ import java.util.Vector;
  *
  * @author Maurizio
  */
-public class PrologSolution<Q extends Term<?>, S extends Term<?>> {
+public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements ISolution<Q,S,Term<?>>*/ {
     
     private alice.tuprolog.SolveInfo _solveInfo;
     
@@ -64,7 +64,7 @@ public class PrologSolution<Q extends Term<?>, S extends Term<?>> {
     }
 
     public List<Term<?>> getBindingVars() throws alice.tuprolog.NoSolutionException {
-        List<alice.tuprolog.Term> retValue;        
+        List<alice.tuprolog.Var> retValue;        
         retValue = _solveInfo.getBindingVars();
         Vector<Term<?>> bindings = new Vector<Term<?>>();
         for (alice.tuprolog.Term t : retValue) {

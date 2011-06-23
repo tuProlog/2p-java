@@ -27,45 +27,45 @@ import alice.tuprolog.Struct;
  * End state of demostration.
  */
 public class StateEnd extends State {
-	
-	private int endState;	
-	private Struct goal;
-	private List vars;
-	
-	/**
-	 * Constructor
-	 * @param end Terminal state of computation
-	 */
-	public StateEnd(EngineManager c, int end) {
-		endState = end;
-	}
-	
-	public int getResultDemo() {
-		return endState;
-	}
-	
-	public Struct getResultGoal() {
-		return goal;
-	}
-	
-	public List getResultVars() {
-		return vars;
-	}
-	
-	
-	void doJob(Engine e) {
-		vars = new ArrayList();
-		goal = (Struct)e.startGoal.copyResult(e.goalVars,vars);
-	}
-	
-	
-	public String toString() {
-		switch(endState){
-		case EngineManager.FALSE  : return "FALSE";
-		case EngineManager.TRUE   : return "TRUE";
-		case EngineManager.TRUE_CP: return "TRUE_CP";
-		default                   : return "HALT";
-		}
-	}
-	
+    
+    private int endState;    
+    private Struct goal;
+    private List<Var> vars;
+    
+    /**
+     * Constructor
+     * @param end Terminal state of computation
+     */
+    public StateEnd(EngineManager c, int end) {
+        endState = end;
+    }
+    
+    public int getResultDemo() {
+        return endState;
+    }
+    
+    public Struct getResultGoal() {
+        return goal;
+    }
+    
+    public List<Var> getResultVars() {
+        return vars;
+    }
+    
+    
+    void doJob(Engine e) {
+        vars = new ArrayList<Var>();
+        goal = (Struct)e.startGoal.copyResult(e.goalVars,vars);
+    }
+    
+    
+    public String toString() {
+        switch(endState){
+        case EngineManager.FALSE  : return "FALSE";
+        case EngineManager.TRUE   : return "TRUE";
+        case EngineManager.TRUE_CP: return "TRUE_CP";
+        default                   : return "HALT";
+        }
+    }
+    
 }

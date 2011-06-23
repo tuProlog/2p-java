@@ -25,23 +25,24 @@ import java.awt.event.WindowListener;
  * Note that since tuProlog cannot run under JVM 1.1, the launched IDE is directly
  * the one for the Java2 platform, without passing through GUILauncher.
  *
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.1 - 27-lug-04
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.1 - 27-lug-04
  */
 
+@SuppressWarnings("serial")
 public class Applet extends JApplet {
 
     public void init() {
-    	JavaIDE ide = new JavaIDE();
+        JavaIDE ide = new JavaIDE();
 
-    	// Remove the attached window listener, causing the applet to
-		// exit and the browser to close due to a System.exit() call.
-		WindowListener[] listeners = ide.getWindowListeners();
-		for (int i = 0; i < listeners.length; i++)
-			ide.removeWindowListener(listeners[i]);
+        // Remove the attached window listener, causing the applet to
+        // exit and the browser to close due to a System.exit() call.
+        WindowListener[] listeners = ide.getWindowListeners();
+        for (int i = 0; i < listeners.length; i++)
+            ide.removeWindowListener(listeners[i]);
 
-    	ide.pack();
-        ide.show();
+        ide.pack();
+        ide.setVisible(true);
     }
 
 } // end Applet class

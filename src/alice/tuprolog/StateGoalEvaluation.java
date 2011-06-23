@@ -36,11 +36,11 @@ public class StateGoalEvaluation extends State {
 		if (e.currentContext.currentGoal.isPrimitive()) {
 			// Recupero primitiva
 			PrimitiveInfo primitive = e.currentContext.currentGoal
-					.getPrimitive();
+			.getPrimitive();
 			try {
 				e.nextState = (primitive
 						.evalAsPredicate(e.currentContext.currentGoal)) ? c.GOAL_SELECTION
-						: c.BACKTRACK;
+								: c.BACKTRACK;
 			} catch (HaltException he) {
 				e.nextState = c.END_HALT;
 			} catch (Throwable t) {
@@ -50,16 +50,20 @@ public class StateGoalEvaluation extends State {
 					PrologError error = (PrologError) t;
 					// sostituisco il gol in cui si ? verificato l'errore con il
 					// subgoal throw/1
-					e.currentContext.currentGoal = new Struct("throw", error
-							.getError());
+					e.currentContext.currentGoal = new Struct("throw", error.getError());
+					/*Castagna 06/2011*/					
+					e.manager.exception(error.toString());
+					/**/
 				} else if (t instanceof JavaException) {
 					// cast da Throwable a JavaException
 					JavaException exception = (JavaException) t;
-					
+
 					// sostituisco il gol in cui si ? verificato l'errore con il
 					// subgoal java_throw/1
-					e.currentContext.currentGoal = new Struct("java_throw",
-							exception.getException());
+					e.currentContext.currentGoal = new Struct("java_throw", exception.getException());
+					/*Castagna 06/2011*/					
+					e.manager.exception(exception.getException().toString());
+					/**/
 				}
 
 				// mi sposto nello stato EXCEPTION

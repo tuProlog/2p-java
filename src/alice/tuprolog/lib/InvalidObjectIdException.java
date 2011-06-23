@@ -28,5 +28,6 @@ import alice.tuprolog.PrologException;
  *
  *
  */
+@SuppressWarnings("serial")
 public class InvalidObjectIdException extends PrologException {
 }

@@ -25,35 +25,35 @@ import java.io.*;
 /**
  * A manager for Input/Output operations on the Java 2 platform.
  * 
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - 16-dic-02
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.0 - 16-dic-02
  */
 
 public class JavaIOManager extends IOFileOperations {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private PrologFileFilter fileFilter;
-	
-	/** The parent component to open the JFileChooser against. */
+    private PrologFileFilter fileFilter;
+    
+    /** The parent component to open the JFileChooser against. */
     private java.awt.Component parent;
 
     public JavaIOManager(java.awt.Component parent)
     {
-    	super();
+        super();
         this.parent = parent;
         fileFilter = new PrologFileFilter();
     }
 
     public void setTypeFileFilter(String type)
     {
-    	fileFilter = new PrologFileFilter();
-    	if (type.equals("csv"))
-    		fileFilter.setAsCSVFileFilter();
-    	if (type.equals("theory"))
-    		fileFilter.setAsTheoryFileFilter();
-    	if (type.equals("preferences"))
-    		fileFilter.setAsPreferencesFileFilter();
+        fileFilter = new PrologFileFilter();
+        if (type.equals("csv"))
+            fileFilter.setAsCSVFileFilter();
+        if (type.equals("theory"))
+            fileFilter.setAsTheoryFileFilter();
+        if (type.equals("preferences"))
+            fileFilter.setAsPreferencesFileFilter();
     }
 
     public FileIDE loadFile() throws Exception {
@@ -64,7 +64,7 @@ public class JavaIOManager extends IOFileOperations {
             currentLoadDirectory = chooser.getCurrentDirectory().toString();
             String theoryFileName = chooser.getCurrentDirectory() + File.separator + chooser.getSelectedFile().getName();
             Theory theory = new Theory(new FileInputStream(theoryFileName));
-    		return new FileIDE(theory.toString(),theoryFileName);
+            return new FileIDE(theory.toString(),theoryFileName);
         } else
             return new FileIDE("",null);
     }
@@ -80,7 +80,7 @@ public class JavaIOManager extends IOFileOperations {
             fileIDE.setFileName(chooser.getSelectedFile().getName());
             if(!hasValidExtension(fileIDE,fileFilter))
             {
-        		fileIDE.setFileName(fileIDE.getFileName()+"."+fileFilter.getDefaultExtension());
+                fileIDE.setFileName(fileIDE.getFileName()+"."+fileFilter.getDefaultExtension());
             }
             return save(fileIDE);
         } else
@@ -92,10 +92,10 @@ public class JavaIOManager extends IOFileOperations {
      */
     private boolean hasValidExtension(FileIDE fileIDE,PrologFileFilter fileFilter)
     {
-    	String fileExtension = "";
+        String fileExtension = "";
         int i = fileIDE.getFileName().lastIndexOf('.');
         if (i > 0 && i < fileIDE.getFileName().length() - 1)
-        	fileExtension = fileIDE.getFileName().substring(i + 1).toLowerCase();
+            fileExtension = fileIDE.getFileName().substring(i + 1).toLowerCase();
         return fileFilter.isMatchingExtension(fileExtension);
     }
 
@@ -109,24 +109,25 @@ public class JavaIOManager extends IOFileOperations {
      */
     private class PrologFileFilter extends javax.swing.filechooser.FileFilter {
 
-    	private String[] extensions;
-    	private String description;
-    	private String defaultExtension;
+        private String[] extensions;
+        private String description;
+        private String defaultExtension;
 
-    	public PrologFileFilter(String[] extensions, String description, String defaultExtension)
-    	{
-    		super();
-    		this.description = description;
-    		this.extensions = extensions;
-    		this.defaultExtension = defaultExtension;
-    	}
+        @SuppressWarnings("unused")
+        public PrologFileFilter(String[] extensions, String description, String defaultExtension)
+        {
+            super();
+            this.description = description;
+            this.extensions = extensions;
+            this.defaultExtension = defaultExtension;
+        }
 
-    	public PrologFileFilter()
-    	{
-    		super();
-    	}
+        public PrologFileFilter()
+        {
+            super();
+        }
 
-    	/**
+        /**
          * Return true if this file should be shown in the directory pane,
          * false if it shouldn't. Files that begin with "." are ignored.
          *
@@ -161,13 +162,13 @@ public class JavaIOManager extends IOFileOperations {
 
         private boolean isMatchingExtension(String extension)
         {
-        	boolean isMatch = false;
-        	for (int i=0;i<extensions.length && !isMatch;i++)
-        	{
-        		if (extension.equals(extensions[i]))
-        			isMatch = true;
-        	}
-        	return isMatch;
+            boolean isMatch = false;
+            for (int i=0;i<extensions.length && !isMatch;i++)
+            {
+                if (extension.equals(extensions[i]))
+                    isMatch = true;
+            }
+            return isMatch;
         }
 
         /**
@@ -182,35 +183,36 @@ public class JavaIOManager extends IOFileOperations {
         public void setAsTheoryFileFilter()
         {
             String[] extensions = {"pl", "pro"};
-    		this.description = "Prolog files (*.pro, *.pl)";
-    		this.extensions = extensions;
-    		this.defaultExtension = "pl";
+            this.description = "Prolog files (*.pro, *.pl)";
+            this.extensions = extensions;
+            this.defaultExtension = "pl";
         }
 
         public void setAsCSVFileFilter()
         {
             String[] extensions = {"csv"};
-    		this.description = "Comma separated values files (*.csv)";
-    		this.extensions = extensions;
-    		this.defaultExtension = "csv";
+            this.description = "Comma separated values files (*.csv)";
+            this.extensions = extensions;
+            this.defaultExtension = "csv";
         }
 
         public void setAsPreferencesFileFilter()
         {
             String[] extensions = {"2p"};
-    		this.description = "tuProlog preferences files (*.2p)";
-    		this.extensions = extensions;
-    		this.defaultExtension = "2p";
+            this.description = "tuProlog preferences files (*.2p)";
+            this.extensions = extensions;
+            this.defaultExtension = "2p";
         }
 
         public String getDefaultExtension()
         {
-        	return defaultExtension;
+            return defaultExtension;
         }
 
+        @SuppressWarnings("unused")
         public String[] getExtensions()
         {
-        	return extensions;
+            return extensions;
         }
     }// end PrologFileFilter class
 

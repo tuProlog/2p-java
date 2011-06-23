@@ -8,6 +8,7 @@ package alice.tuprologx.runtime.corba;
 * venerd? 28 dicembre 2001 12.37.09 GMT+01:00
 */
 
+@SuppressWarnings("serial")
 public class _PrologStub extends org.omg.CORBA.portable.ObjectImpl implements alice.tuprologx.runtime.corba.Prolog
 {
   // Constructors

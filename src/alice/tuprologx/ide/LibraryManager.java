@@ -25,8 +25,8 @@ import java.util.StringTokenizer;
 /**
  * A dynamic manager for tuProlog libraries.
  *
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.1 - 27-may-05
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.1 - 27-may-05
  */
 
 public final class LibraryManager
@@ -35,10 +35,10 @@ public final class LibraryManager
     /** The Prolog engine referenced by the Library Manager. */
     private Prolog engine;
     /** Stores classnames for managed libraries. */
-    private ArrayList libraries;
+    private ArrayList<String> libraries;
 
     public LibraryManager() {
-    		libraries = new ArrayList();
+            libraries = new ArrayList<String>();
     }
 
     /**
@@ -53,13 +53,13 @@ public final class LibraryManager
     
     /**
      * Initialize the repository for managed libraries using the
-	 * standard libraries which come loaded with the tuProlog engine.
+     * standard libraries which come loaded with the tuProlog engine.
      */
     void initialize() {
-    		String[] loadedLibraries = engine.getCurrentLibraries();
-    		for (int i = loadedLibraries.length - 1; i >= 0; i--)
-			libraries.add(loadedLibraries[i]);
-	}
+            String[] loadedLibraries = engine.getCurrentLibraries();
+            for (int i = loadedLibraries.length - 1; i >= 0; i--)
+            libraries.add(loadedLibraries[i]);
+    }
 
     /**
      * Get the engine referenced by the library manager.
@@ -88,23 +88,23 @@ public final class LibraryManager
      * @throws InvalidLibraryException if the library is not a valid tuProlog library.
      */
     public void addLibrary(String libraryClassname) throws ClassNotFoundException, InvalidLibraryException {
-    	if (libraryClassname.equals(""))
-    		throw new ClassNotFoundException();
-    	/** 
-    	 * check for classpath without uppercase at the first char of the last word
-    	 */
-    	StringTokenizer st=new StringTokenizer(libraryClassname,".");
-    	String str=null;
-    	while(st.hasMoreTokens())
-    		str=st.nextToken();
-    	if ((str.charAt(0)>'Z') ||(str.charAt(0)<'A'))
-    		throw new ClassNotFoundException();
+        if (libraryClassname.equals(""))
+            throw new ClassNotFoundException();
+        /** 
+         * check for classpath without uppercase at the first char of the last word
+         */
+        StringTokenizer st=new StringTokenizer(libraryClassname,".");
+        String str=null;
+        while(st.hasMoreTokens())
+            str=st.nextToken();
+        if ((str.charAt(0)>'Z') ||(str.charAt(0)<'A'))
+            throw new ClassNotFoundException();
 
-    	Class library = getClass().getClassLoader().loadClass(libraryClassname);
+        Class<?> library = getClass().getClassLoader().loadClass(libraryClassname);
         if (library.getSuperclass().equals(alice.tuprolog.Library.class))
-        	libraries.add(libraryClassname);
+            libraries.add(libraryClassname);
         else
-        	throw new InvalidLibraryException(libraryClassname,-1,-1);
+            throw new InvalidLibraryException(libraryClassname,-1,-1);
     }
 
     /**
@@ -116,7 +116,7 @@ public final class LibraryManager
      */
     public void removeLibrary(String libraryClassname) throws InvalidLibraryException
     {
-         	libraries.remove(libraryClassname);
+             libraries.remove(libraryClassname);
     }
 
     /**
@@ -129,25 +129,25 @@ public final class LibraryManager
         return libraries.toArray();
     }
 
-    public void setLibraries(ArrayList libraries)
+    public void setLibraries(ArrayList<String> libraries)
     {
-    	this.libraries=libraries;
+        this.libraries=libraries;
     }
 
     public void resetLibraries()
     {
-    	this.libraries=new ArrayList();
+        this.libraries=new ArrayList<String>();
     }
 
     public String toString()
     {
-    	String result = "";
-    	Object[] array = getLibraries();
-    	for (int i=0;i<array.length;i++)
-    	{
-    		result=result+array[i]+"\n";
-    	}
-    	return result;
+        String result = "";
+        Object[] array = getLibraries();
+        for (int i=0;i<array.length;i++)
+        {
+            result=result+array[i]+"\n";
+        }
+        return result;
     }
 
     /**
@@ -178,7 +178,7 @@ public final class LibraryManager
      * @since 1.3.0
      */
     public boolean contains(String library) {
-    		return libraries.contains(library);
+            return libraries.contains(library);
     }
 
 } // end LibraryManager class

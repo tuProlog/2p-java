@@ -12,8 +12,6 @@ package alice.tuprologx.pj.engine;
 
 import alice.tuprologx.pj.model.*;
 
-
-import alice.tuprolog.InvalidTheoryException;
 import java.util.*;
 
 /**
@@ -63,15 +61,15 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
         return new PrologSolution<G,S>(retValue);
     }
 
-    public void setTheory(Theory theory) throws InvalidTheoryException {
+    public void setTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
         engine.setTheory(new alice.tuprolog.Theory(theory.marshal()));
     }
 
-    public void addTheory(Theory theory) throws InvalidTheoryException {
+    public void addTheory(Theory theory) throws alice.tuprolog.InvalidTheoryException {
         engine.addTheory(new alice.tuprolog.Theory(theory.marshal()));
     }
     
-    public Theory getTheory() throws InvalidTheoryException {
+    public Theory getTheory() throws alice.tuprolog.InvalidTheoryException {
         return Theory.unmarshal(engine.getTheory());
     }
         
@@ -80,7 +78,7 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
         PrologSolution<G,S> current = null;
         PrologSolution<G,S> next = null;
 
-        SolutionIterator(PrologSolution first) {            
+        SolutionIterator(PrologSolution<G,S> first) {            
             this.current = first;
         }
 

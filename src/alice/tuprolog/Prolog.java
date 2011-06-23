@@ -21,6 +21,7 @@ import java.util.*;
 import java.io.*;
 
 import alice.tuprolog.event.*;
+import alice.tuprolog.interfaces.IProlog;
 
 
 
@@ -29,11 +30,12 @@ import alice.tuprolog.event.*;
  * The Prolog class represents a tuProlog engine.
  *
  */
-public class Prolog implements Serializable {
-	
+@SuppressWarnings("serial")
+public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
+
 	// 2P version
-	private static final String VERSION = "2.3.1 beta";
-	
+	private static final String VERSION = "2.4.0 beta";
+
 	/*  manager of current theory */
 	private TheoryManager theoryManager;
 	/*  component managing primitive  */
@@ -46,27 +48,35 @@ public class Prolog implements Serializable {
 	private LibraryManager libraryManager;
 	/* component managing engine */
 	private EngineManager engineManager;
-	
+
 	/*  spying activated ?  */
 	private boolean spy;  
 	/*  warning activated ?  */
 	private boolean warning;
 	/* listeners registrated for virtual machine output events */
-	private ArrayList outputListeners;
+	/*Castagna 06/2011*/	
+	/* exception activated ? */
+	private boolean exception;
+	/**/
+	private ArrayList<OutputListener> outputListeners;
 	/* listeners registrated for virtual machine internal events */
-	private ArrayList spyListeners;
+	private ArrayList<SpyListener> spyListeners;
 	/* listeners registrated for virtual machine state change events */
-	private ArrayList warningListeners;
-	
+	private ArrayList<WarningListener> warningListeners;
+	/*Castagna 06/2011*/	
+	/* listeners registrated for virtual machine state exception events */
+	private ArrayList<ExceptionListener> exceptionListeners;
+	/**/
+
 	/* listeners to theory events */
-	private ArrayList theoryListeners;
+	private ArrayList<TheoryListener> theoryListeners;
 	/* listeners to library events */
-	private ArrayList libraryListeners;
+	private ArrayList<LibraryListener> libraryListeners;
 	/* listeners to query events */
-	private ArrayList queryListeners;
-	
-	
-	
+	private ArrayList<QueryListener> queryListeners;
+
+
+
 	/**
 	 * Builds a prolog engine with default libraries loaded.
 	 *
@@ -96,8 +106,8 @@ public class Prolog implements Serializable {
 			ex.printStackTrace();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Builds a tuProlog engine with loaded
 	 * the specified libraries
@@ -112,8 +122,8 @@ public class Prolog implements Serializable {
 			}
 		}
 	}
-	
-	
+
+
 	/**
 	 * Initialize basic engine structures.
 	 * 
@@ -121,21 +131,27 @@ public class Prolog implements Serializable {
 	 * @param warning warning activated
 	 */
 	private Prolog(boolean spy, boolean warning) {
-		outputListeners = new ArrayList();
-		spyListeners = new ArrayList();
-		warningListeners = new ArrayList();
+		outputListeners = new ArrayList<OutputListener>();
+		spyListeners = new ArrayList<SpyListener>();
+		warningListeners = new ArrayList<WarningListener>();
+		/*Castagna 06/2011*/		
+		exceptionListeners = new ArrayList<ExceptionListener>();
+		/**/
 		this.spy = spy;
 		this.warning = warning;
-		theoryListeners = new ArrayList();
-		queryListeners = new ArrayList();
-		libraryListeners = new ArrayList();
+		/*Castagna 06/2011*/
+		exception = true;
+		/**/
+		theoryListeners = new ArrayList<TheoryListener>();
+		queryListeners = new ArrayList<QueryListener>();
+		libraryListeners = new ArrayList<LibraryListener>();
 		initializeManagers();
 	}
-	
-	
+
+
 	private void initializeManagers() {
 		flagManager      = new FlagManager();
-		libraryManager   = new LibraryManager();		
+		libraryManager   = new LibraryManager();        
 		opManager        = new OperatorManager();
 		theoryManager    = new TheoryManager();
 		primitiveManager = new PrimitiveManager();
@@ -147,50 +163,50 @@ public class Prolog implements Serializable {
 		primitiveManager.initialize(this);
 		engineManager.initialize(this);
 	}
-	
-	
+
+
 	/** Gets the component managing flags */
-	FlagManager getFlagManager() {
+	public FlagManager getFlagManager() {
 		return flagManager;
 	}
-	
+
 	/** Gets the component managing theory */
-	TheoryManager getTheoryManager() {
+	public TheoryManager getTheoryManager() {
 		return theoryManager;
 	}
-	
+
 	/** Gets the component managing primitives */
-	PrimitiveManager getPrimitiveManager() {
+	public PrimitiveManager getPrimitiveManager() {
 		return primitiveManager;
 	}
-	
+
 	/** Gets the component managing libraries */
-	LibraryManager getLibraryManager() {
+	public LibraryManager getLibraryManager() {
 		return libraryManager;
 	}
-	
+
 	/** Gets the component managing operators */
-	OperatorManager getOperatorManager() {
+	public OperatorManager getOperatorManager() {
 		return opManager; 
 	}
-	
+
 	/** Gets the component managing engine */
 	public EngineManager getEngineManager() {
 		return engineManager; 
 	}
-	
-	
+
+
 	/**
 	 * Gets the current version of the tuProlog system
 	 */
 	public static String getVersion() {
 		return VERSION;
 	}
-	
-	
-	
+
+
+
 	// theory management interface
-	
+
 	/**
 	 * Sets a new theory
 	 *
@@ -202,8 +218,8 @@ public class Prolog implements Serializable {
 		theoryManager.clear();
 		addTheory(th);
 	}
-	
-	
+
+
 	/**
 	 * Adds (appends) a theory
 	 *
@@ -216,10 +232,10 @@ public class Prolog implements Serializable {
 		theoryManager.consult(th, true, null);
 		theoryManager.solveTheoryGoal();
 		Theory newTh = getTheory();
-		TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);	
+		TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);    
 		this.notifyChangedTheory(ev);
-	}	
-	
+	}    
+
 	/**
 	 * Gets current theory
 	 *
@@ -232,8 +248,8 @@ public class Prolog implements Serializable {
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Gets last consulted theory, with the original textual format
 	 *  
@@ -242,8 +258,8 @@ public class Prolog implements Serializable {
 	public synchronized Theory getLastConsultedTheory() {
 		return theoryManager.getLastConsultedTheory();
 	}
-	
-	
+
+
 	/**
 	 * Clears current theory
 	 */
@@ -254,10 +270,10 @@ public class Prolog implements Serializable {
 			// this should never happen
 		}
 	}
-	
-	
+
+
 	// libraries management interface
-	
+
 	/**
 	 * Loads a library.
 	 *
@@ -271,8 +287,8 @@ public class Prolog implements Serializable {
 	public synchronized Library loadLibrary(String className) throws InvalidLibraryException {
 		return libraryManager.loadLibrary(className);
 	}
-	
-	
+
+
 	/**
 	 * Loads a specific instance of a library
 	 *
@@ -285,8 +301,8 @@ public class Prolog implements Serializable {
 	public synchronized void loadLibrary(Library lib) throws InvalidLibraryException {
 		libraryManager.loadLibrary(lib);
 	}
-	
-	
+
+
 	/**
 	 * Gets the list of current libraries loaded
 	 *
@@ -295,8 +311,8 @@ public class Prolog implements Serializable {
 	public synchronized String[] getCurrentLibraries() {
 		return libraryManager.getCurrentLibraries();
 	}
-	
-	
+
+
 	/**
 	 * Unloads a previously loaded library
 	 *
@@ -306,8 +322,8 @@ public class Prolog implements Serializable {
 	public synchronized void unloadLibrary(String name) throws InvalidLibraryException {
 		libraryManager.unloadLibrary(name);
 	}
-	
-	
+
+
 	/**
 	 * Gets the reference to a loaded library
 	 *
@@ -318,33 +334,33 @@ public class Prolog implements Serializable {
 	public synchronized Library getLibrary(String name) {
 		return libraryManager.getLibrary(name);
 	}
-	
-	
+
+
 	protected Library getLibraryPredicate(String name, int nArgs) {
 		return primitiveManager.getLibraryPredicate(name,nArgs);
 	}
-	
-	
+
+
 	protected Library getLibraryFunctor(String name, int nArgs) {
 		return primitiveManager.getLibraryFunctor(name,nArgs);
 	}
-	
-	
-	
+
+
+
 	// operators management
-	
+
 	/**
 	 *  Gets the list of the operators currently defined
 	 *
 	 *  @return the list of the operators
 	 */
-	public synchronized java.util.List getCurrentOperatorList() {
+	public synchronized java.util.List<Operator> getCurrentOperatorList() {
 		return opManager.getOperators();
 	}
-	
-	
+
+
 	// solve interface
-	
+
 	/**
 	 *  Solves a query
 	 *
@@ -355,16 +371,16 @@ public class Prolog implements Serializable {
 	public synchronized SolveInfo solve(Term g) {
 		//System.out.println("ENGINE SOLVE #0: "+g);
 		if (g == null) return null;
-		
+
 		SolveInfo sinfo = engineManager.solve(g);
-		
+
 		QueryEvent ev = new QueryEvent(this,sinfo);
 		notifyNewQueryResultAvailable(ev);
-		
+
 		return sinfo;
-		
+
 	}
-	
+
 	/**
 	 * Solves a query
 	 *
@@ -381,7 +397,7 @@ public class Prolog implements Serializable {
 			throw new MalformedGoalException();
 		}
 	}
-	
+
 	/**
 	 * Gets next solution
 	 *
@@ -398,22 +414,22 @@ public class Prolog implements Serializable {
 		} else
 			throw new NoMoreSolutionException();
 	}
-	
+
 	/**
 	 * Halts current solve computation
 	 */
 	public void solveHalt() {
 		engineManager.solveHalt();
 	}
-	
+
 	/**
 	 * Accepts current solution
 	 */
 	public synchronized void solveEnd() {
 		engineManager.solveEnd();
 	}
-	
-	
+
+
 	/**
 	 * Asks for the presence of open alternatives to be explored
 	 * in current demostration process.
@@ -423,7 +439,7 @@ public class Prolog implements Serializable {
 	public synchronized boolean hasOpenAlternatives() {
 		return engineManager.hasOpenAlternatives();
 	}
-	
+
 	/**
 	 * Checks if the demonstration process was stopped by an halt command.
 	 * 
@@ -432,7 +448,7 @@ public class Prolog implements Serializable {
 	public synchronized boolean isHalted() {
 		return engineManager.isHalted();
 	}
-	
+
 	/**
 	 * Unifies two terms using current demonstration context.
 	 *
@@ -443,7 +459,7 @@ public class Prolog implements Serializable {
 	public synchronized boolean match(Term t0, Term t1) {
 		return t0.match(t1);
 	}
-	
+
 	/**
 	 * Unifies two terms using current demonstration context.
 	 *
@@ -454,7 +470,7 @@ public class Prolog implements Serializable {
 	public synchronized boolean unify(Term t0, Term t1) {
 		return t0.unify(this,t1);
 	}
-	
+
 	/**
 	 * Identify functors
 	 * 
@@ -463,8 +479,8 @@ public class Prolog implements Serializable {
 	public synchronized void identifyFunctor(Term term) {
 		primitiveManager.identifyFunctor(term);
 	}
-	
-	
+
+
 	/**
 	 * Gets a term from a string, using the operators currently
 	 * defined by the engine
@@ -476,7 +492,7 @@ public class Prolog implements Serializable {
 	public synchronized Term toTerm(String st) throws InvalidTermException {
 		return Parser.parseSingleTerm(st, opManager);
 	}
-	
+
 	/**
 	 * Gets the string representation of a term, using operators
 	 * currently defined by engine
@@ -487,18 +503,18 @@ public class Prolog implements Serializable {
 	public synchronized String toString(Term term) {
 		return (term.toStringAsArgY(opManager, OperatorManager.OP_HIGH));
 	}
-	
-	
+
+
 	/**
 	 * Defines a new flag
 	 */
-	boolean defineFlag(String name, Struct valueList, Term defValue, boolean modifiable, String libName) {
+	public boolean defineFlag(String name, Struct valueList, Term defValue, boolean modifiable, String libName) {
 		return flagManager.defineFlag(name,valueList,defValue,modifiable,libName);
 	}
-	
-	
+
+
 	// spy interface ----------------------------------------------------------
-	
+
 	/**
 	 * Switches on/off the notification of spy information events
 	 *
@@ -507,7 +523,7 @@ public class Prolog implements Serializable {
 	public synchronized void setSpy(boolean state) {
 		spy = state;
 	}
-	
+
 	/**
 	 * Checks the spy state of the engine
 	 *
@@ -516,8 +532,8 @@ public class Prolog implements Serializable {
 	public synchronized boolean isSpy() {
 		return spy;
 	}
-	
-	
+
+
 	/**
 	 * Notifies a spy information event
 	 */
@@ -526,7 +542,7 @@ public class Prolog implements Serializable {
 			notifySpy(new SpyEvent(this, s));
 		}
 	}
-	
+
 	/**
 	 * Notifies a spy information event
 	 * @param s TODO
@@ -544,8 +560,8 @@ public class Prolog implements Serializable {
 			notifySpy(new SpyEvent(this, e, "spy: " + i + "  " + s + "  " + g));
 		}
 	}
-	
-	
+
+
 	/**
 	 * Switches on/off the notification of warning information events
 	 *
@@ -554,7 +570,7 @@ public class Prolog implements Serializable {
 	public synchronized void setWarning(boolean state) {
 		warning = state;
 	}
-	
+
 	/**
 	 * Checks if warning information are notified
 	 *
@@ -563,7 +579,7 @@ public class Prolog implements Serializable {
 	public synchronized boolean isWarning() {
 		return warning;
 	}
-	
+
 	/**
 	 * Notifies a warn information event
 	 *
@@ -576,8 +592,43 @@ public class Prolog implements Serializable {
 			//log.warn(m);
 		}
 	}
-	
-	
+
+	/*Castagna 06/2011*/
+	/**
+	 * Notifies a exception information event
+	 *
+	 *
+	 * @param m the exception message
+	 */
+	public void exception(String m) {
+		if (exception){
+			notifyException(new ExceptionEvent(this, m));
+		}
+	}
+	/**/
+
+	/*Castagna 06/2011*/
+	/**
+	 * Checks if exception information are notified
+	 *
+	 * @return true if the engine emits exception information
+	 */
+	public synchronized boolean isException() {
+		return exception;
+	}
+	/**/
+
+	/*Castagna 06/2011*/
+	/**
+	 * Switches on/off the notification of exception information events
+	 *
+	 * @param state - true for enabling exception information notification
+	 */
+	public synchronized void setException(boolean state) {
+		exception = state;
+	}
+	/**/
+
 	/**
 	 * Produces an output information event
 	 *
@@ -586,9 +637,9 @@ public class Prolog implements Serializable {
 	public synchronized void stdOutput(String m) {
 		notifyOutput(new OutputEvent(this, m));
 	}
-	
+
 	// event listeners management
-	
+
 	/**
 	 * Adds a listener to ouput events
 	 *
@@ -597,8 +648,8 @@ public class Prolog implements Serializable {
 	public synchronized void addOutputListener(OutputListener l) {
 		outputListeners.add(l);
 	}
-	
-	
+
+
 	/**
 	 * Adds a listener to theory events
 	 *
@@ -607,7 +658,7 @@ public class Prolog implements Serializable {
 	public synchronized void addTheoryListener(TheoryListener l) {
 		theoryListeners.add(l);
 	}
-	
+
 	/**
 	 * Adds a listener to library events
 	 *
@@ -616,7 +667,7 @@ public class Prolog implements Serializable {
 	public synchronized void addLibraryListener(LibraryListener l) {
 		libraryListeners.add(l);
 	}
-	
+
 	/**
 	 * Adds a listener to theory events
 	 *
@@ -625,7 +676,7 @@ public class Prolog implements Serializable {
 	public synchronized void addQueryListener(QueryListener l) {
 		queryListeners.add(l);
 	}
-	
+
 	/**
 	 * Adds a listener to spy events
 	 *
@@ -634,7 +685,7 @@ public class Prolog implements Serializable {
 	public synchronized void addSpyListener(SpyListener l) {
 		spyListeners.add(l);
 	}
-	
+
 	/**
 	 * Adds a listener to warning events
 	 *
@@ -643,7 +694,18 @@ public class Prolog implements Serializable {
 	public synchronized void addWarningListener(WarningListener l) {
 		warningListeners.add(l);
 	}
-	
+
+	/*Castagna 06/2011*/	
+	/**
+	 * Adds a listener to exception events
+	 *
+	 * @param l the listener
+	 */
+	public synchronized void addExceptionListener(ExceptionListener l) {
+		exceptionListeners.add(l);
+	}
+	/**/
+
 	/**
 	 * Removes a listener to ouput events
 	 *
@@ -652,14 +714,14 @@ public class Prolog implements Serializable {
 	public synchronized void removeOutputListener(OutputListener l) {
 		outputListeners.remove(l);
 	}
-	
+
 	/**
 	 * Removes all output event listeners
 	 */
 	public synchronized void removeAllOutputListeners() {
 		outputListeners.clear();
 	}
-	
+
 	/**
 	 * Removes a listener to theory events
 	 *
@@ -668,7 +730,7 @@ public class Prolog implements Serializable {
 	public synchronized void removeTheoryListener(TheoryListener l) {
 		theoryListeners.remove(l);
 	}
-	
+
 	/**
 	 * Removes a listener to library events
 	 *
@@ -677,7 +739,7 @@ public class Prolog implements Serializable {
 	public synchronized void removeLibraryListener(LibraryListener l) {
 		libraryListeners.remove(l);
 	}
-	
+
 	/**
 	 * Removes a listener to query events
 	 *
@@ -686,8 +748,8 @@ public class Prolog implements Serializable {
 	public synchronized void removeQueryListener(QueryListener l) {
 		queryListeners.remove(l);
 	}
-	
-	
+
+
 	/**
 	 * Removes a listener to spy events
 	 *
@@ -696,14 +758,14 @@ public class Prolog implements Serializable {
 	public synchronized void removeSpyListener(SpyListener l) {
 		spyListeners.remove(l);
 	}
-	
+
 	/**
 	 * Removes all spy event listeners
 	 */
 	public synchronized void removeAllSpyListeners() {
 		spyListeners.clear();
 	}
-	
+
 	/**
 	 * Removes a listener to warning events
 	 *
@@ -712,149 +774,184 @@ public class Prolog implements Serializable {
 	public synchronized void removeWarningListener(WarningListener l) {
 		warningListeners.remove(l);
 	}
-	
+
 	/**
 	 * Removes all warning event listeners
 	 */
 	public synchronized void removeAllWarningListeners() {
 		warningListeners.clear();
 	}
-	
+
+	/* Castagna 06/2011*/	
+	/**
+	 * Removes a listener to exception events
+	 *
+	 * @param l the listener
+	 */
+	public synchronized void removeExceptionListener(ExceptionListener l) {
+		exceptionListeners.remove(l);
+	}
+	/**/	
+
+	/*Castagna 06/2011*/	
+	/**
+	 * Removes all exception event listeners
+	 */
+	public synchronized void removeAllExceptionListeners() {
+		exceptionListeners.clear();
+	}
+	/**/
+
 	/**
 	 * Gets a copy of current listener list to output events
 	 */
-	public synchronized List getOutputListenerList() {
-		return (List) outputListeners.clone();
+	public synchronized List<OutputListener> getOutputListenerList() {
+		return new ArrayList<OutputListener>(outputListeners);
 	}
-	
+
 	/**
 	 * Gets a copy of current listener list to warning events
 	 *
 	 */
-	public synchronized List getWarningListenerList() {
-		return (List) warningListeners.clone();
+	public synchronized List<WarningListener> getWarningListenerList() {
+		return new ArrayList<WarningListener>(warningListeners);
 	}
+
+	/*Castagna 06/2011*/	
+	/**
+	 * Gets a copy of current listener list to exception events
+	 *
+	 */
+	public synchronized List<ExceptionListener> getExceptionListenerList() {
+		return new ArrayList<ExceptionListener>(exceptionListeners);
+	}
+	/**/
 	
 	/**
 	 * Gets a copy of current listener list to spy events
 	 *
 	 */
-	public synchronized List getSpyListenerList() {
-		return (List) spyListeners.clone();
+	public synchronized List<SpyListener> getSpyListenerList() {
+		return new ArrayList<SpyListener>(spyListeners);
 	}
-	
+
 	/**
 	 * Gets a copy of current listener list to theory events
 	 * 
 	 */
-	public synchronized List getTheoryListenerList() {
-		return (List) theoryListeners.clone();
+	public synchronized List<TheoryListener> getTheoryListenerList() {
+		return new ArrayList<TheoryListener>(theoryListeners);
 	}
-	
+
 	/**
 	 * Gets a copy of current listener list to library events
 	 *
 	 */
-	public synchronized List getLibraryListenerList() {
-		return (List) libraryListeners.clone();
+	public synchronized List<LibraryListener> getLibraryListenerList() {
+		return new ArrayList<LibraryListener>(libraryListeners);
 	}
-	
+
 	/**
 	 * Gets a copy of current listener list to query events
 	 *
 	 */
-	public synchronized List getQueryListenerList() {
-		return (List) queryListeners.clone();
+	public synchronized List<QueryListener> getQueryListenerList() {
+		return new ArrayList<QueryListener>(queryListeners);
 	}
-	
+
 	// notification
-	
+
 	/**
 	 * Notifies an ouput information event
 	 *
 	 * @param e the event
 	 */
 	protected void notifyOutput(OutputEvent e) {
-		Iterator it = outputListeners.listIterator();
-		while (it.hasNext()) {
-			((OutputListener) it.next()).onOutput(e);
+		for(OutputListener ol:outputListeners){
+			ol.onOutput(e);
 		}
 	}
-	
+
 	/**
 	 * Notifies a spy information event
 	 *
 	 * @param e the event
 	 */
 	protected void notifySpy(SpyEvent e) {
-		Iterator it = spyListeners.listIterator();
-		while (it.hasNext()) {
-			((SpyListener) it.next()).onSpy(e);
+		for(SpyListener sl:spyListeners){
+			sl.onSpy(e);
 		}
 	}
-	
+
 	/**
 	 * Notifies a warning information event
 	 *
 	 * @param e the event
 	 */
 	protected void notifyWarning(WarningEvent e) {
-		Iterator it = warningListeners.listIterator();
-		while (it.hasNext()) {
-			((WarningListener) it.next()).onWarning(e);
+		for(WarningListener wl:warningListeners){
+			wl.onWarning(e);
 		}
 	}
-	
+
+	/*Castagna 06/2011*/	
+	/**
+	 * Notifies a exception information event
+	 *
+	 * @param e the event
+	 */
+	protected void notifyException(ExceptionEvent e) {
+		for(ExceptionListener el:exceptionListeners){
+			el.onException(e);
+		}
+	}
+	/**/
 	
 	//
-	
+
 	/**
 	 * Notifies a new theory set or updated event
 	 * 
 	 * @param e the event
 	 */
 	protected void notifyChangedTheory(TheoryEvent e) {
-		Iterator it = theoryListeners.listIterator();
-		while (it.hasNext()) {
-			((TheoryListener) it.next()).theoryChanged(e);
+		for (TheoryListener tl : theoryListeners) {
+			tl.theoryChanged(e);
 		}
 	}
-	
+
 	/**
 	 * Notifies a library loaded event
 	 * 
 	 * @param e the event
 	 */
 	protected void notifyLoadedLibrary(LibraryEvent e) {
-		Iterator it = libraryListeners.listIterator();
-		while (it.hasNext()) {
-			((LibraryListener) it.next()).libraryLoaded(e);
+		for(LibraryListener ll:libraryListeners){
+			ll.libraryLoaded(e);
 		}
 	}
-	
+
 	/**
 	 * Notifies a library unloaded event
 	 * 
 	 * @param e the event
 	 */
 	protected void notifyUnloadedLibrary(LibraryEvent e) {
-		Iterator it = libraryListeners.listIterator();
-		while (it.hasNext()) {
-			((LibraryListener) it.next()).libraryUnloaded(e);
+		for(LibraryListener ll:libraryListeners){
+			ll.libraryUnloaded(e);
 		}
 	}
-	
+
 	/**
 	 * Notifies a library loaded event
 	 * 
 	 * @param e the event
 	 */
 	protected void notifyNewQueryResultAvailable(QueryEvent e) {
-		Iterator it = queryListeners.listIterator();
-		while (it.hasNext()) {
-			((QueryListener) it.next()).newQueryResultAvailable(e);
+		for(QueryListener ql:queryListeners){
+			ql.newQueryResultAvailable(e);
 		}
 	}
-	
-	
+
+
 }

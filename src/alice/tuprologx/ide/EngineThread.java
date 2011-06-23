@@ -64,7 +64,7 @@ public class EngineThread extends Thread {
             try {
                 engine.solveNext();
             } catch (Exception ex){
-            		ex.printStackTrace();
+                    ex.printStackTrace();
             }
         }
     }

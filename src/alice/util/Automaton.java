@@ -21,6 +21,7 @@ package alice.util;
  * (to allow correct behaviour of reflection)
  *
  */
+@SuppressWarnings("serial")
 public abstract class Automaton implements Runnable, java.io.Serializable {
 
     /** method name representing state behaviour */
@@ -30,7 +31,7 @@ public abstract class Automaton implements Runnable, java.io.Serializable {
     protected Object[] arguments=null;
 
     /** arguments class eventually associated to state transition */
-    protected Class[] argType;
+    protected Class<?>[] argType;
 
     public Automaton(){
         try {
@@ -61,7 +62,7 @@ public abstract class Automaton implements Runnable, java.io.Serializable {
             try {
                 if (!state.equals("end")){
                     if (arguments==null){
-                        this.getClass().getDeclaredMethod(state,null).invoke(this,null);
+                        this.getClass().getDeclaredMethod(state,(Class<?>[])null).invoke(this,(Object[])null);
                     } else {
                         this.getClass().getDeclaredMethod(state,argType).invoke(this,arguments);
                     }

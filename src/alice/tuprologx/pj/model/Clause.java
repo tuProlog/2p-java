@@ -9,7 +9,6 @@
 
 package alice.tuprologx.pj.model;
 
-import alice.tuprolog.Parser;
 import alice.tuprolog.Struct;
 
 /**

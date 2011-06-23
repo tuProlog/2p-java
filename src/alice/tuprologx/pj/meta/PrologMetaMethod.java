@@ -1,25 +1,12 @@
-/*
- * MetaPrologMethod.java
- *
- * Created on 5 aprile 2007, 9.21
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package alice.tuprologx.pj.meta;
+
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.annotations.parser.*;
 import alice.tuprologx.pj.annotations.parser.PrologTree.*;
 import alice.tuprologx.pj.model.*;
 import alice.tuprologx.pj.engine.*;
 
-/**
- *
- * @author Maurizio
- */
 import java.lang.reflect.*;
-import java.util.Vector;
 
 /**
  *
@@ -34,13 +21,13 @@ public class PrologMetaMethod {
     private int _arity;
     private String _predicateName;
     private Clause<?,?>[] _clauses; 
-    
+    /*
     private Vector<String> variableNames;
     private Vector<String> inputVariables;
     private Vector<String> outputVariables;
     
     private boolean multipleResult;
-    
+    */
     /** Creates a new instance of MetaPrologClass */
     public PrologMetaMethod(PrologMetaClass cl, Method m) {
         _theMethod = m;        
@@ -51,7 +38,7 @@ public class PrologMetaMethod {
     }
     
     void initClauses() {
-        String linkName;                
+        //String linkName;                
         if (_annotation.predicate().equals(""))  {
             _predicateName = _theMethod.getName();
             _arity = _theMethod.getTypeParameters().length;

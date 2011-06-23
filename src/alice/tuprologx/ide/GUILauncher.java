@@ -21,8 +21,8 @@ package alice.tuprologx.ide;
  * The GUI launcher chooses the GUI to execute (the Java2 or .NET version)
  * based on the version of the Java Platform tuProlog is executed on.
  *
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - Friday 20th December, 2002
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.0 - Friday 20th December, 2002
  */
 
 public class GUILauncher {
@@ -64,15 +64,15 @@ public class GUILauncher {
      */
     private void launchJavaGUI() {
         JavaIDE ide = new JavaIDE();
-		//ide.pack();
-		ide.setVisible(true);
+        //ide.pack();
+        ide.setVisible(true);
     }
 
     /**
      * Launch a GUI suitable for the .NET platform (Java 1.1 platform).
      */
     private void launchDotNetGUI() {
-    	System.exit(1);
+        System.exit(1);
     }
 
     /**

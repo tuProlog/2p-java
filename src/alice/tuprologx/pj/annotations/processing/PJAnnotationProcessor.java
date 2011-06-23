@@ -20,7 +20,6 @@ import javax.annotation.processing.*;
 import static javax.tools.Diagnostic.Kind.*;
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.model.*;
-import alice.tuprologx.pj.engine.*;
 import alice.tuprologx.pj.annotations.parser.PrologTree.*;
 import alice.tuprologx.pj.annotations.parser.Parser;
 
@@ -36,12 +35,14 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
     public static final String[] supportedAnnotations = {"alice.tuprologx.pj.annotations.*"};
     
     
-    private DeclaredType compoundType,compound1Type,compound2Type,consType,nilType,termType,varType,iterableType,j2PExceptionType,boolType;
+    //private DeclaredType compoundType,compound1Type,compound2Type,consType,varType,termType;
+    private DeclaredType nilType,iterableType,j2PExceptionType,boolType;
     //private PrimitiveType boolType;
-    private TypeElement teBool, teCompound,teCompound1,teCompound2,teCons,teNil,teTerm,teVar,teIterable,teJ2PException;    
+    //private TypeElement teCompound,teCompound1;
+    private TypeElement teBool,teCompound2,teCons,teNil,teTerm,teVar,teIterable,teJ2PException;    
     private ProcessingEnvironment env;
     private Theory classTheory;
-    private Theory methodTheory;
+    //private Theory methodTheory;
     private TypeElement enclosingDeclaration;
     private PredicateExpr predicate;
     private SignatureExpr signature;
@@ -75,7 +76,7 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
             for (String s : pm.clauses()) {
                 theory+=s+"\n";
             }            
-            methodTheory = checkTheory(theory);                        
+            //methodTheory = checkTheory(theory);                        
             checkPredicate(pm.predicate(),d);
             checkSignature(pm.signature(),d);
             checkThrowClause(pm.exceptionOnFailure(),d);
@@ -109,13 +110,14 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
             env.getMessager().printMessage(ERROR,ERR_PROLOG_CLASS_NOT_ALLOWED,d);
         }
     }
-    
+    /*
+     * unused
     private void checkAbstractOrInterface(ExecutableElement d) {
         if (!d.getModifiers().contains(Modifier.ABSTRACT)) {
             env.getMessager().printMessage(ERROR,ERR_PROLOG_METHOD_NOT_ALLOWED,d);
         }
     }
-    
+     */
     private void checkPredicate(String p,ExecutableElement md) {                        
         if (p.equals("")) {
             return;
@@ -145,9 +147,9 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
     private Theory checkTheory(String theory) {        
         Theory t = null;                  
         t = new Theory(theory);                            
-        if (t == null) {
+        /*if (t == null) {
             env.getMessager().printMessage(ERROR,ERR_THEORY_INVALID,enclosingDeclaration);
-        }        
+        } */       
         return t;
     }
     
@@ -180,9 +182,9 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
     
     private void checkReturnType(boolean keepSubstitutions, ExecutableElement md, PrologMethod pm) {                        
         boolean isMultiple = signature.multipleResult;        
-        String compoundType="alice.tuprologx.p2j.model.Cons";
-        String compoundN="alice.tuprologx.p2j.model.Compound";
-        String emptyCompoundType="alice.tuprologx.p2j.model.Nil";                                
+        //String compoundType="alice.tuprologx.p2j.model.Cons";
+        //String compoundN="alice.tuprologx.p2j.model.Compound";
+        //String emptyCompoundType="alice.tuprologx.p2j.model.Nil";                                
         Types types = env.getTypeUtils();
         TypeMirror returnType = md.getReturnType();        
         if (isMultiple && !types.isSameType(types.erasure(iterableType),types.erasure(returnType))) {
@@ -337,7 +339,9 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
     public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
         return null;
     }
-    
+
+    /*
+     * unused
     private boolean is(TypeMirror _this, DeclaredType _that) {
         DeclaredType dt = (DeclaredType)_this;
         if (dt.asElement().equals(_that.asElement())) {        
@@ -347,7 +351,9 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
             return false;
         }
     }
-    
+    */
+    /*
+     * unused
     private boolean contains(TypeMirror containing, DeclaredType contained) {
         if (containing instanceof DeclaredType) {  
             DeclaredType dt = (DeclaredType)containing;
@@ -374,11 +380,11 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
         }
         return false;        
     }
-
+    */
     public void init(ProcessingEnvironment processingEnv) {        
         env = processingEnv;                
-        teCompound = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Compound");
-        teCompound1 = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Compound1");
+        //teCompound = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Compound");
+        //teCompound1 = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Compound1");
         teCompound2 = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Compound2");
         teCons = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Cons");
         teNil = env.getElementUtils().getTypeElement("alice.tuprologx.pj.model.Nil");
@@ -389,13 +395,13 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
         teIterable = env.getElementUtils().getTypeElement("java.lang.Iterable");
         teJ2PException = env.getElementUtils().getTypeElement("alice.tuprologx.pj.engine.NoSolutionException");                        
         WildcardType wt = env.getTypeUtils().getWildcardType(null,null);
-        compoundType = env.getTypeUtils().getDeclaredType(teCompound,wt);
-        compound1Type = env.getTypeUtils().getDeclaredType(teCompound1,wt);
-        compound2Type = env.getTypeUtils().getDeclaredType(teCompound2,wt,wt);
-        consType = env.getTypeUtils().getDeclaredType(teCons,wt,wt);
+        //compoundType = env.getTypeUtils().getDeclaredType(teCompound,wt);
+        //compound1Type = env.getTypeUtils().getDeclaredType(teCompound1,wt);
+        //compound2Type = env.getTypeUtils().getDeclaredType(teCompound2,wt,wt);
+        //consType = env.getTypeUtils().getDeclaredType(teCons,wt,wt);
         nilType = env.getTypeUtils().getDeclaredType(teNil);
-        termType = env.getTypeUtils().getDeclaredType(teTerm,wt);
-        varType = env.getTypeUtils().getDeclaredType(teVar,wt);        
+        //termType = env.getTypeUtils().getDeclaredType(teTerm,wt);
+        //varType = env.getTypeUtils().getDeclaredType(teVar,wt);        
         boolType = env.getTypeUtils().getDeclaredType(teBool);        
         //boolType = env.getTypeUtils().getPrimitiveType(TypeKind.BOOLEAN);
         iterableType = env.getTypeUtils().getDeclaredType(teIterable,wt);        

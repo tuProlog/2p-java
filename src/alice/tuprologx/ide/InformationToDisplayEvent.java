@@ -13,12 +13,13 @@ import java.util.ArrayList;
  * 
  *
  */
+@SuppressWarnings("serial")
 public class InformationToDisplayEvent extends PrologEvent {
 
-	private ArrayList queryEventList;
-	private int solveType;
+    private ArrayList<QueryEvent> queryEventList;
+    private int solveType;
 
-    public InformationToDisplayEvent(Prolog source, ArrayList queryEventList, int solveType){
+    public InformationToDisplayEvent(Prolog source, ArrayList<QueryEvent> queryEventList, int solveType){
         super(source);
         this.queryEventList=queryEventList;
         this.solveType=solveType;
@@ -26,21 +27,21 @@ public class InformationToDisplayEvent extends PrologEvent {
     
     public int getSolveType()
     {
-    	return solveType;
+        return solveType;
     }
 
     public QueryEvent[] getQueryResults()
     {
-    	return (QueryEvent[]) queryEventList.toArray(new QueryEvent[queryEventList.size()]);
+        return (QueryEvent[]) queryEventList.toArray(new QueryEvent[queryEventList.size()]);
     }
 
     public SolveInfo getQueryResult()
     {
-    	return ( (QueryEvent) queryEventList.get(0)).getSolveInfo();
+        return ( (QueryEvent) queryEventList.get(0)).getSolveInfo();
     }
 
     public int getListSize()
     {
-    	return queryEventList.size();
+        return queryEventList.size();
     }
 }

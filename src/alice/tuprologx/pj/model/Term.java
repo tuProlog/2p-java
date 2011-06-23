@@ -1,15 +1,6 @@
-/*
- * Term.java
- *
- * Created on March 8, 2007, 5:05 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package alice.tuprologx.pj.model;
-import alice.tuprologx.pj.annotations.*;
 
+import alice.tuprologx.pj.annotations.*;
 
 /**
  *
@@ -31,31 +22,31 @@ public abstract class Term<X extends Term<?>> {
 			return (Z)new Bool((Boolean)o);
 		}
 		else if (o instanceof java.util.Collection<?>) {
-			return (Z)new List((java.util.Collection<?>)o);
+			return (Z)new List<Term<?>>((java.util.Collection<?>)o);
 		}
-                else if (o instanceof Term<?>[]) {
-			return (Z)new Cons("_",(Term<?>[])o);
+        else if (o instanceof Term<?>[]) {
+			return (Z)new Cons<Term<?>, Compound<?>>("_",(Term<?>[])o);
 		}
 		else if (o instanceof Term<?>) {
 			return (Z)o;
 		}
-                else if (o.getClass().isAnnotationPresent(Termifiable.class)) {
+        else if (o.getClass().isAnnotationPresent(Termifiable.class)) {
 			//return (Z)new Cons(o);
-                    return (Z)new JavaTerm(o);
+            return (Z)new JavaTerm<Object>(o);
 		}                
 		/*else {
 			throw new UnsupportedOperationException();
 		}*/
-                else {
-                    return (Z)new JavaObject(o);
-                }
+        else {
+            return (Z)new JavaObject<Object>(o);
+        }
 	}
         
-        public abstract alice.tuprolog.Term marshal() /*{
+    public abstract alice.tuprolog.Term marshal() /*{
             throw new UnsupportedOperationException();
         }*/;
         
-        public static <Z extends Term<?>> Z unmarshal(alice.tuprolog.Term t) {
+    public static <Z extends Term<?>> Z unmarshal(alice.tuprolog.Term t) {
 		if (Int.matches(t)) {
 			return (Z)Int.unmarshal((alice.tuprolog.Int)t);
 		}
@@ -74,13 +65,13 @@ public abstract class Term<X extends Term<?>> {
 		else if (List.matches(t)) {
 			return (Z)List.unmarshal((alice.tuprolog.Struct)t);
 		}
-                else if (JavaTerm.matches(t)) {
+        else if (JavaTerm.matches(t)) {
 			return (Z)JavaTerm.unmarshalObject((alice.tuprolog.Struct)t.getTerm());
 		}                
-                else if (Cons.matches(t)) {
+        else if (Cons.matches(t)) {
 			return (Z)Cons.unmarshal((alice.tuprolog.Struct)t);                        
 		}                
-                else if (Var.matches(t)) {
+        else if (Var.matches(t)) {
 			return (Z)Var.unmarshal((alice.tuprolog.Var)t);
 		}
 		else {System.out.println(t);

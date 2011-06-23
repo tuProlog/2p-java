@@ -8,6 +8,7 @@ package alice.tuprologx.runtime.corba;
 * venerd? 28 dicembre 2001 12.37.09 GMT+01:00
 */
 
+@SuppressWarnings("serial")
 public abstract class _PrologImplBase extends org.omg.CORBA.portable.ObjectImpl
                 implements alice.tuprologx.runtime.corba.Prolog, org.omg.CORBA.portable.InvokeHandler
 {
@@ -17,7 +18,7 @@ public abstract class _PrologImplBase extends org.omg.CORBA.portable.ObjectImpl
   {
   }
 
-  private static java.util.Hashtable _methods = new java.util.Hashtable ();
+  private static java.util.Hashtable<String,Integer> _methods = new java.util.Hashtable<String,Integer>();
   static
   {
     _methods.put ("clearTheory", new java.lang.Integer (0));

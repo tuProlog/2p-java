@@ -5,12 +5,12 @@ import java.awt.event.*;
 import java.awt.*;
 
 public class GenericFrame
-	extends JFrame
+    extends JFrame
 {
     
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String iconPathName = "img/tuProlog.gif";
+    private String iconPathName = "img/tuProlog.gif";
     private JFrame mainWindow=null;
 
 
@@ -36,9 +36,9 @@ public class GenericFrame
     
     public GenericFrame(String title, JFrame mainWindow, int width, int height, boolean onFront, boolean dimensionsBlocked)
     {
-    	setVisible(false);
-    	this.mainWindow=mainWindow;
-    	setTitle(title);
+        setVisible(false);
+        this.mainWindow=mainWindow;
+        setTitle(title);
         if (iconPathName != "") {
             // Set a title bar icon
             ImageIcon icon = new ImageIcon(getClass().getResource(getFrameIcon()));
@@ -57,7 +57,7 @@ public class GenericFrame
 
         if(onFront)
         {
-        	addWindowListener(new WindowListener());
+            addWindowListener(new WindowListener());
         }
         else
         {
@@ -70,10 +70,10 @@ public class GenericFrame
         
         if(dimensionsBlocked)
         {
-        	setResizable(false);
+            setResizable(false);
         }
     }
-	
+    
     public void setFrameIcon(String imagePathName) {
         iconPathName = imagePathName;
     }
@@ -84,17 +84,17 @@ public class GenericFrame
 
     public void onClose()
     {
-		mainWindow.setEnabled(true);
-		mainWindow.setVisible(true);
-		dispose();
+        mainWindow.setEnabled(true);
+        mainWindow.setVisible(true);
+        dispose();
     }
 
     class WindowListener extends WindowAdapter
     {
-    	public void windowClosing(WindowEvent w)
-    	{
-    		onClose();
-    	}
+        public void windowClosing(WindowEvent w)
+        {
+            onClose();
+        }
     }
 
 }

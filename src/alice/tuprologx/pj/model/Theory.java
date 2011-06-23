@@ -19,8 +19,6 @@ import java.util.Vector;
  */
 public class Theory extends List<Clause<?,?>> {
     
-    private static alice.tuprolog.TheoryManager _tm = null;
-    
     private static alice.tuprolog.Prolog engine;
       
     static {
@@ -64,10 +62,10 @@ public class Theory extends List<Clause<?,?>> {
     
     public static Theory unmarshal(alice.tuprolog.Theory t) {
         Vector<Clause<?,?>> clauses = new Vector<Clause<?,?>>();                
-        for (java.util.Iterator it = t.iterator(engine); it.hasNext();) {
+        for (java.util.Iterator<? extends alice.tuprolog.Term> it = t.iterator(engine); it.hasNext();) {
             alice.tuprolog.Struct st = (alice.tuprolog.Struct) it.next();                        
             //Clause<?,?> clause = new Clause(Term.unmarshal(st.getArg(0)),Term.unmarshal(st.getArg(1)));
-            Clause<?,?> clause = new Clause(st);
+            Clause<?,?> clause = new Clause<Term<?>, Term<?>>(st);
             clauses.add(clause);            
         }        
         return new Theory(clauses);
@@ -156,10 +154,10 @@ public class Theory extends List<Clause<?,?>> {
         catch (Exception e) {
             throw new UnsupportedOperationException(e);
         }
-        for (java.util.Iterator it = t.iterator(engine); it.hasNext();) {
+        for (java.util.Iterator<? extends alice.tuprolog.Term> it = t.iterator(engine); it.hasNext();) {
             alice.tuprolog.Struct st = (alice.tuprolog.Struct) it.next();                        
             //Clause<?,?> clause = new Clause(Term.unmarshal(st.getArg(0)),Term.unmarshal(st.getArg(1)));
-            Clause<?,?> clause = new Clause(st);
+            Clause<?,?> clause = new Clause<Term<?>, Term<?>>(st);
             clauses.add(clause);            
         }        
         return clauses;
@@ -173,7 +171,7 @@ public class Theory extends List<Clause<?,?>> {
         return parseTheory(temp);
     }
     
-    public Clause[] find(String name, int arity) {
+    public Clause<?,?>[] find(String name, int arity) {
         Vector<Clause<?,?>> temp = new Vector<Clause<?,?>>(); 
         for (Clause<?,?> c: this) {
             if (c.match(name,arity))
@@ -184,7 +182,7 @@ public class Theory extends List<Clause<?,?>> {
     
     public alice.tuprolog.Struct marshal() {            
             alice.tuprolog.Struct s = super.marshal();
-            java.util.Iterator listIterator = s.listIterator();
+            java.util.Iterator<? extends alice.tuprolog.Term> listIterator = s.listIterator();
             while (listIterator.hasNext()) {
                 ((alice.tuprolog.Term)listIterator.next()).resolveTerm();
             }

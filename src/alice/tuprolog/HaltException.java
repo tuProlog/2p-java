@@ -24,20 +24,21 @@ package alice.tuprolog;
  * @see SolveInfo
  *
  */
+@SuppressWarnings("serial")
 public class HaltException extends PrologException {
-	
-	private int value;
-	
-	public HaltException() {
-		value = 0;
-	}
-	
-	public HaltException(int haltType) {
-		value = haltType;
-	}
-	
-	public int getValue() {
-		return value;
-	}
-	
+    
+    private int value;
+    
+    public HaltException() {
+        value = 0;
+    }
+    
+    public HaltException(int haltType) {
+        value = haltType;
+    }
+    
+    public int getValue() {
+        return value;
+    }
+    
 }

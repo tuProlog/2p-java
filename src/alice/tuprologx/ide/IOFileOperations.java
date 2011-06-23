@@ -25,9 +25,10 @@ import javax.swing.JFrame;
  * interface is not public, since it is intended for internal use, and could be
  * subject to several changes in future releases.
  * 
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - 16-dic-02
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.0 - 16-dic-02
  */
+@SuppressWarnings("serial")
 abstract class IOFileOperations extends JFrame 
 {
     /** The current directory where to load theories. */
@@ -63,20 +64,20 @@ abstract class IOFileOperations extends JFrame
     public abstract FileIDE saveFileAs(FileIDE fileIDE) throws Exception;
     
     public FileIDE saveFile(FileIDE fileIDE) throws Exception {
-    	return save(fileIDE);
+        return save(fileIDE);
     }
     
     protected FileIDE save(FileIDE fileIDE) throws Exception {
-    	if (fileIDE.getFileName()!=null)
-    	{
-	    	FileOutputStream file = new FileOutputStream(fileIDE.getFilePath()+fileIDE.getFileName());
-	    	file.write(fileIDE.getContent().getBytes());
-	    	file.close();
-//	    	editArea.setSaved(true);
-	    	return fileIDE;
-    	}
-    	else
-    		return saveFileAs(fileIDE);
+        if (fileIDE.getFileName()!=null)
+        {
+            FileOutputStream file = new FileOutputStream(fileIDE.getFilePath()+fileIDE.getFileName());
+            file.write(fileIDE.getContent().getBytes());
+            file.close();
+//            editArea.setSaved(true);
+            return fileIDE;
+        }
+        else
+            return saveFileAs(fileIDE);
     }
 
     public void resetDefaultFileName() {

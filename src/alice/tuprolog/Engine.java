@@ -19,116 +19,112 @@ package alice.tuprolog;
 
 import java.util.*;
 
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
-
-
+import alice.tuprolog.interfaces.IEngine;
 
 /**
  * @author Alex Benini
  */
-public class Engine {
-	
-	State  nextState;
-	Term   query;
-	Struct startGoal;
-	Collection goalVars;
-	
-	int    nDemoSteps;
-	
-	ExecutionContext currentContext; 
-	//ClauseStore clauseSelector;
-	ChoicePointContext currentAlternative;
-	
-	ChoicePointStore choicePointSelector;
-	
-	boolean mustStop;
-	EngineManager manager;
-	
-	
-	public Engine(EngineManager manager, Term query) {
-		this.manager = manager;		
-		this.nextState = manager.INIT;
-		this.query = query;
-		this.mustStop = false;
-	}
-	
-	
-	public String toString() {
-		try {
-			return
-			"ExecutionStack: \n"+currentContext+"\n"+
-			"ChoicePointStore: \n"+choicePointSelector+"\n\n";
-		} catch(Exception ex) { return ""; }
-	}
-	
-	void mustStop() {
-		mustStop = true;
-	}
-	
-	/**
-	 * Core of engine. Finite State Machine
-	 */
-	StateEnd run() {
-		String action;
-		do {
-			if (mustStop) {
-				nextState = manager.END_FALSE;
-				break;
-			}
-			action = nextState.toString();
-			
-			nextState.doJob(this);
-			
-			manager.spy(action, this);
-			
-		} while (!(nextState instanceof StateEnd));
-		nextState.doJob(this);
-		return (StateEnd)(nextState);
-	}
-	
-	
-	/*
-	 * Methods for spyListeners
-	 */
-	
-	public Term getQuery() {
-		return query;
-	}
-	
-	public int getNumDemoSteps() {
-		return nDemoSteps;
-	}
-	
-	public List getExecutionStack() {
-		ArrayList l = new ArrayList();
-		ExecutionContext t = currentContext;
-		while (t != null) {
-			l.add(t);
-			t = t.fatherCtx;
-		}
-		return l;
-	}
-	
-	public ChoicePointStore getChoicePointStore() {
-		return choicePointSelector;
-	}
-	
-	void prepareGoal() {
-		LinkedHashMap goalVars = new LinkedHashMap();
-		startGoal = (Struct)(query).copyGoal(goalVars,0);
-		this.goalVars = goalVars.values();
-	}
-	
-//	void cut() {
-//		choicePointSelector.cut(currentContext.depth -1);
-//	}
-	
-	void initialize(ExecutionContext eCtx) {
-		currentContext = eCtx;
-		choicePointSelector = new ChoicePointStore();
-		nDemoSteps = 1;
-		currentAlternative = null;
-	}
-	
+public class Engine /*Castagna 06/2011*/implements IEngine/**/{    
+    State  nextState;
+    Term   query;
+    Struct startGoal;
+    Collection<Var> goalVars;
+    
+    int    nDemoSteps;
+    
+    ExecutionContext currentContext; 
+    //ClauseStore clauseSelector;
+    ChoicePointContext currentAlternative;
+    
+    ChoicePointStore choicePointSelector;
+    
+    boolean mustStop;
+    EngineManager manager;
+    
+    
+    public Engine(EngineManager manager, Term query) {
+        this.manager = manager;        
+        this.nextState = manager.INIT;
+        this.query = query;
+        this.mustStop = false;
+    }
+    
+    
+    public String toString() {
+        try {
+            return
+            "ExecutionStack: \n"+currentContext+"\n"+
+            "ChoicePointStore: \n"+choicePointSelector+"\n\n";
+        } catch(Exception ex) { return ""; }
+    }
+    
+    void mustStop() {
+        mustStop = true;
+    }
+    
+    /**
+     * Core of engine. Finite State Machine
+     */
+    StateEnd run() {
+        String action;
+        do {
+            if (mustStop) {
+                nextState = manager.END_FALSE;
+                break;
+            }
+            action = nextState.toString();
+            
+            nextState.doJob(this);
+            
+            manager.spy(action, this);
+            
+        } while (!(nextState instanceof StateEnd));
+        nextState.doJob(this);
+        return (StateEnd)(nextState);
+    }
+    
+    
+    /*
+     * Methods for spyListeners
+     */
+    
+    public Term getQuery() {
+        return query;
+    }
+    
+    public int getNumDemoSteps() {
+        return nDemoSteps;
+    }
+    
+    public List<ExecutionContext> getExecutionStack() {
+        ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
+        ExecutionContext t = currentContext;
+        while (t != null) {
+            l.add(t);
+            t = t.fatherCtx;
+        }
+        return l;
+    }
+    
+    public ChoicePointStore getChoicePointStore() {
+        return choicePointSelector;
+    }
+    
+    void prepareGoal() {
+        LinkedHashMap<Var,Var> goalVars = new LinkedHashMap<Var, Var>();
+        startGoal = (Struct)(query).copyGoal(goalVars,0);
+        this.goalVars = goalVars.values();
+    }
+    
+//    void cut() {
+//        choicePointSelector.cut(currentContext.depth -1);
+//    }
+    
+    void initialize(ExecutionContext eCtx) {
+        currentContext = eCtx;
+        choicePointSelector = new ChoicePointStore();
+        nDemoSteps = 1;
+        currentAlternative = null;
+    }
+    
 }

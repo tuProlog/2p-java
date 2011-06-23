@@ -26,4 +26,5 @@ package alice.tuprolog;
  *
  *
  */
+@SuppressWarnings("serial")
 public class NoMoreSolutionException extends PrologException {}

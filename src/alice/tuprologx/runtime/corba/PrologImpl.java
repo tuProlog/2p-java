@@ -1,8 +1,11 @@
 package alice.tuprologx.runtime.corba;
+
 import alice.tuprolog.*;
+
 import  java.io.*;
 
 
+@SuppressWarnings("serial")
 public class PrologImpl extends _PrologImplBase {
 
     alice.tuprolog.Prolog imp;

@@ -17,23 +17,12 @@
  */
 package alice.tuprologx.pj.lib;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.EventListener;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Vector;
 
 import alice.tuprolog.Int;
-import alice.tuprolog.Library;
 import alice.tuprolog.Number;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
@@ -63,6 +52,7 @@ import alice.tuprolog.lib.*;
  *
  *
  */
+@SuppressWarnings("serial")
 public class PJLibraryNew extends JavaLibrary {
 	
 	/**
@@ -253,7 +243,7 @@ public class PJLibraryNew extends JavaLibrary {
     }
 
     public boolean unmarshal_method_2(Term term, Term unmarshalledTerm) {
-        if (!term.getTerm().isStruct())
+        if (! (term.getTerm() instanceof Struct) )
             return false;
         Struct methodInfo = (Struct)term.getTerm();
         Term[] terms = new Term[methodInfo.getArity()];
@@ -317,7 +307,7 @@ public class PJLibraryNew extends JavaLibrary {
 
     private Object[] getArrayFromList(Struct list) {
 		Object args[] = new Object[list.listSize()];
-		Iterator it = list.listIterator();
+		Iterator<? extends Term> it = list.listIterator();
 		int count = 0;
 		while (it.hasNext()) {
 			args[count++] = it.next();
@@ -413,7 +403,7 @@ public class PJLibraryNew extends JavaLibrary {
 		String fieldName = ((Struct) fieldTerm).getName();
 		Object obj = null;
 		try {
-			Class cl = null;
+			Class<?> cl = null;
 			if (objId.isCompound() &&
 					((Struct) objId).getArity() == 1 && ((Struct) objId).getName().equals("class")) {
 				String clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
@@ -539,7 +529,7 @@ public class PJLibraryNew extends JavaLibrary {
 		String fieldName = ((Struct) fieldTerm).getName();
 		Object obj = null;
 		try {
-			Class cl = null;
+			Class<?> cl = null;
 			if (objId.isCompound() &&
 					((Struct) objId).getArity() == 1 && ((Struct) objId).getName().equals("class")) {
 				String clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
@@ -561,7 +551,7 @@ public class PJLibraryNew extends JavaLibrary {
 			}
 			
 			Field field = cl.getField(fieldName);
-			Class fc = field.getType();
+			Class<?> fc = field.getType();
 			// work only with JDK 1.2
 			field.setAccessible(true);
 			
@@ -602,7 +592,7 @@ public class PJLibraryNew extends JavaLibrary {
 	 */
 	private Signature parseArg(Struct method) {
 		Object[] values = new Object[method.getArity()];
-		Class[] types = new Class[method.getArity()];
+		Class<?>[] types = new Class[method.getArity()];
 		for (int i = 0; i < method.getArity(); i++) {
 			if (!parse_arg(values, types, i, (Term) method.getTerm(i)))
 				return null;
@@ -612,7 +602,7 @@ public class PJLibraryNew extends JavaLibrary {
 
     private Signature parseArg(Object[] objs) {
 		Object[] values = new Object[objs.length];
-		Class[] types = new Class[objs.length];
+		Class<?>[] types = new Class[objs.length];
 		for (int i = 0; i < objs.length; i++) {
 			if (!parse_arg(values, types, i, (Term) objs[i]))
 				return null;
@@ -620,7 +610,7 @@ public class PJLibraryNew extends JavaLibrary {
 		return new Signature(values, types);
 	}
 	
-	private boolean parse_arg(Object[] values, Class[] types, int i, Term term) {
+	private boolean parse_arg(Object[] values, Class<?>[] types, int i, Term term) {
 		try {
 			if (term == null) {
 				values[i] = null;
@@ -724,7 +714,7 @@ public class PJLibraryNew extends JavaLibrary {
 		}
 	}
 
-    private boolean parse_as(Object[] values, Class[] types, int i, Term castWhat, Term castTo) {
+    private boolean parse_as(Object[] values, Class<?>[] types, int i, Term castWhat, Term castTo) {
 		try {
 			if (!(castWhat instanceof Number)) {
 				String castTo_name = alice.util.Tools.removeApices(((Struct) castTo).getName());

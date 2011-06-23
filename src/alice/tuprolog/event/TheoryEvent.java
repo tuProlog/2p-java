@@ -26,6 +26,7 @@ import alice.tuprolog.Theory;
  * @since 1.3 
  *
  */
+@SuppressWarnings("serial")
 public class TheoryEvent extends PrologEvent {
 
     private Theory oldTh;
@@ -33,25 +34,25 @@ public class TheoryEvent extends PrologEvent {
     
     public TheoryEvent(Prolog source, Theory oldth,Theory newth){
         super(source);
-    	    oldTh=oldth;
-    	    newTh=newth;
-    	}
-    	
-    	/**
-    	 * Gets the old theory
-    	 * 
-    	 * @return the old theory
-    	 */
-    	public Theory getOldTheory(){
-    	    return oldTh;
-    	}
+            oldTh=oldth;
+            newTh=newth;
+        }
+        
+        /**
+         * Gets the old theory
+         * 
+         * @return the old theory
+         */
+        public Theory getOldTheory(){
+            return oldTh;
+        }
 
-    	/**
-    	 * Gets the new theory
-    	 * 
-    	 * @return the new theory
-    	 */
-    	public Theory getNewTheory(){
-    	    return newTh;
-    	}
+        /**
+         * Gets the new theory
+         * 
+         * @return the new theory
+         */
+        public Theory getNewTheory(){
+            return newTh;
+        }
 }

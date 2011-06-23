@@ -116,11 +116,11 @@ import javassist.util.proxy.*;
  * @since 3.1
  */
 public class J2PProxyFactory extends ProxyFactory {
-    private Class superClass;
-    private Class[] interfaces;
+    private Class<?> superClass;
+    private Class<?>[] interfaces;
     private MethodFilter methodFilter;
     private MethodHandler handler;
-    private Class thisClass;
+    private Class<?> thisClass;
 
     /**
      * If the value of this variable is not null, the class file of
@@ -133,7 +133,7 @@ public class J2PProxyFactory extends ProxyFactory {
      */
     public String writeDirectory;
 
-    private static final Class OBJECT_TYPE = Object.class;
+    private static final Class<?> OBJECT_TYPE = Object.class;
 
     private static final String HOLDER = "_methods_";
     private static final String HOLDER_TYPE = "[Ljava/lang/reflect/Method;";
@@ -147,12 +147,12 @@ public class J2PProxyFactory extends ProxyFactory {
     private static final String HANDLER_SETTER_TYPE = "(" + HANDLER_TYPE + ")V";
 
     private static final String METACLASS_FIELD = "_meta$Prolog$Class";
-    private static final String METACLASS_TYPE = "Lalice/tuprologx/pj/meta/PrologMetaClass;";
+    //private static final String METACLASS_TYPE = "Lalice/tuprologx/pj/meta/PrologMetaClass;";
     
     private static final String THEORY_FIELD = "_prolog$Theory";    
     
-    private static final String METACLASS_GETTER = "getMetaPrologClass";
-    private static final String METACLASS_GETTER_TYPE = "()" + METACLASS_TYPE;
+    //private static final String METACLASS_GETTER = "getMetaPrologClass";
+    //private static final String METACLASS_GETTER_TYPE = "()" + METACLASS_TYPE;
     
     /**
      * If true, a generated proxy class is cached and it will be reused
@@ -163,16 +163,16 @@ public class J2PProxyFactory extends ProxyFactory {
      */
     public static boolean useCache = true; 
 
-    private static WeakHashMap proxyCache = new WeakHashMap();
+    private static WeakHashMap<ClassLoader,Map<CacheKey,CacheKey>> proxyCache = new WeakHashMap<ClassLoader, Map<CacheKey,CacheKey>>();
 
     static class CacheKey {
         String classes;
         MethodFilter filter;
         private int hash;
-        WeakReference proxyClass;
+        WeakReference<Class<?>> proxyClass;
         MethodHandler handler;
 
-        public CacheKey(Class superClass, Class[] interfaces,
+        public CacheKey(Class<?> superClass, Class<?>[] interfaces,
                         MethodFilter f, MethodHandler h)
         {
             classes = getKey(superClass, interfaces);
@@ -194,7 +194,7 @@ public class J2PProxyFactory extends ProxyFactory {
                 return false;
         }
 
-        static String getKey(Class superClass, Class[] interfaces) {
+        static String getKey(Class<?> superClass, Class<?>[] interfaces) {
             StringBuffer sbuf = new StringBuffer();
             if (superClass != null)
                 sbuf.append(superClass.getName());
@@ -233,7 +233,7 @@ public class J2PProxyFactory extends ProxyFactory {
      *
      * @since 3.4
      */
-    public Class getSuperclass() { return superClass; }
+    public Class<?> getSuperclass() { return superClass; }
 
     /**
      * Sets the interfaces of a proxy class.
@@ -247,7 +247,7 @@ public class J2PProxyFactory extends ProxyFactory {
      *
      * @since 3.4
      */
-    public Class[] getInterfaces() { return interfaces; }
+    public Class<?>[] getInterfaces() { return interfaces; }
 
     /**
      * Sets a filter that selects the methods that will be controlled by a handler.
@@ -259,7 +259,7 @@ public class J2PProxyFactory extends ProxyFactory {
     /**
      * Generates a proxy class.
      */
-    public Class createClass() {
+    public Class<?> createClass() {
         if (thisClass == null) {
             ClassLoader cl = getClassLoader();
             synchronized (proxyCache) {
@@ -281,9 +281,9 @@ public class J2PProxyFactory extends ProxyFactory {
          * reducing concrrency.
          */
         // synchronized (proxyCache) {
-            HashMap cacheForTheLoader = (HashMap)proxyCache.get(cl);
+            Map<CacheKey,CacheKey> cacheForTheLoader = proxyCache.get(cl);
             if (cacheForTheLoader == null) {
-                cacheForTheLoader = new HashMap();
+                cacheForTheLoader = new HashMap<J2PProxyFactory.CacheKey, J2PProxyFactory.CacheKey>();
                 proxyCache.put(cl, cacheForTheLoader);
                 cacheForTheLoader.put(key, key);
             }
@@ -293,7 +293,7 @@ public class J2PProxyFactory extends ProxyFactory {
                     cacheForTheLoader.put(key, key);
                 else {
                     key = found;
-                    Class c = isValidEntry(key);    // no need to synchronize
+                    Class<?> c = isValidEntry(key);    // no need to synchronize
                     if (c != null) {
                         thisClass = c;
                         return;
@@ -303,20 +303,20 @@ public class J2PProxyFactory extends ProxyFactory {
         // }
 
         // synchronized (key) {
-            Class c = isValidEntry(key);
+            Class<?> c = isValidEntry(key);
             if (c == null) {
                 createClass3(cl);
-                key.proxyClass = new WeakReference(thisClass);
+                key.proxyClass = new WeakReference<Class<?>>(thisClass);
             }
             else
                 thisClass = c; 
         // }
     }
 
-    private Class isValidEntry(CacheKey key) {
-        WeakReference ref = key.proxyClass;
+    private Class<?> isValidEntry(CacheKey key) {
+        WeakReference<Class<?>> ref = key.proxyClass;
         if (ref != null) {
-            Class c = (Class)ref.get();
+            Class<?> c = ref.get();
             if(c != null)
                 return c;
         }
@@ -353,15 +353,15 @@ public class J2PProxyFactory extends ProxyFactory {
             }
     }
 
-    static MethodFilter getFilter(Class clazz) {
+    static MethodFilter getFilter(Class<?> clazz) {
         return (MethodFilter)getField(clazz, METHOD_FILTER_FIELD);
     }
 
-    static MethodHandler getHandler(Class clazz) {
+    static MethodHandler getHandler(Class<?> clazz) {
         return (MethodHandler)getField(clazz, DEFAULT_INTERCEPTOR);
     }
 
-    private static Object getField(Class clazz, String fieldName) {
+    private static Object getField(Class<?> clazz, String fieldName) {
         try {
             Field f = clazz.getField(fieldName);
             f.setAccessible(true);
@@ -441,7 +441,7 @@ public class J2PProxyFactory extends ProxyFactory {
     }
 
     protected ProtectionDomain getDomain() {
-        Class clazz;
+        Class<?> clazz;
         if (superClass != null && !superClass.getName().equals("java.lang.Object"))
             clazz = superClass;
         else if (interfaces != null && interfaces.length > 0)
@@ -479,8 +479,8 @@ public class J2PProxyFactory extends ProxyFactory {
         throws NoSuchMethodException, IllegalArgumentException,
                InstantiationException, IllegalAccessException, InvocationTargetException
     {
-        Class c = createClass();
-        Constructor cons = c.getConstructor(paramTypes);
+        Class<?> c = createClass();
+        Constructor<?> cons = c.getConstructor(paramTypes);
         return cons.newInstance(args);
     }
 
@@ -554,8 +554,8 @@ public class J2PProxyFactory extends ProxyFactory {
         cf.addField(finfo5);
         
 
-        HashMap allMethods = getMethods(superClass, interfaces);
-        int size = allMethods.size();
+        HashMap<String,Method> allMethods = getMethods(superClass, interfaces);
+        //int size = allMethods.size();
         makeConstructors(classname, cf, pool, classname);
         int s = overrideMethods(cf, pool, classname, allMethods);
         addMethodsHolder(cf, pool, classname, s);
@@ -574,7 +574,7 @@ public class J2PProxyFactory extends ProxyFactory {
         return cf;
     }
 
-    private static void setInterfaces(ClassFile cf, Class[] interfaces) {
+    private static void setInterfaces(ClassFile cf, Class<?>[] interfaces) {
         String setterIntf = ProxyObject.class.getName();
         String[] list;
         if (interfaces == null || interfaces.length == 0)
@@ -621,7 +621,9 @@ public class J2PProxyFactory extends ProxyFactory {
         minfo.setCodeAttribute(code.toCodeAttribute());
         cf.addMethod(minfo);
     }
-    
+    /*
+     * unused
+     * 
     private static void addGetter(String classname, ClassFile cf, ConstPool cp)
         throws CannotCompileException
     {
@@ -635,19 +637,17 @@ public class J2PProxyFactory extends ProxyFactory {
         minfo.setCodeAttribute(code.toCodeAttribute());
         cf.addMethod(minfo);
     }
-
+    */
+    
     private int overrideMethods(ClassFile cf, ConstPool cp, String className,
-                                HashMap allMethods)
+                                HashMap<String,Method> allMethods)
         throws CannotCompileException
     {
         String prefix = makeUniqueName("_d", allMethods);
-        Set entries = allMethods.entrySet();
-        Iterator it = entries.iterator();
         int index = 0;
-        while (it.hasNext()) {
-            Map.Entry e = (Map.Entry)it.next();
-            String key = (String)e.getKey();
-            Method meth = (Method)e.getValue();
+        for(Map.Entry<String,Method> e: allMethods.entrySet()){
+            String key = e.getKey();
+            Method meth = e.getValue();
             int mod = meth.getModifiers();
             if (!Modifier.isFinal(mod) && !Modifier.isStatic(mod)
                     && isVisible(mod, className, meth))
@@ -663,7 +663,7 @@ public class J2PProxyFactory extends ProxyFactory {
                           int index, String desc, ClassFile cf, ConstPool cp)
         throws CannotCompileException
     {
-        Class declClass = meth.getDeclaringClass();
+        Class<?> declClass = meth.getDeclaringClass();
         String delegatorName = prefix + index + meth.getName();
         if (Modifier.isAbstract(meth.getModifiers()))
             delegatorName = null;
@@ -684,9 +684,9 @@ public class J2PProxyFactory extends ProxyFactory {
     private void makeConstructors(String thisClassName, ClassFile cf,
             ConstPool cp, String classname) throws CannotCompileException
     {
-        Constructor[] cons = superClass.getDeclaredConstructors();
+        Constructor<?>[] cons = superClass.getDeclaredConstructors();
         for (int i = 0; i < cons.length; i++) {
-            Constructor c = cons[i];
+            Constructor<?> c = cons[i];
             int mod = c.getModifiers();
             if (!Modifier.isFinal(mod) && !Modifier.isPrivate(mod)
                     && isVisible(mod, classname, c)) {
@@ -696,8 +696,8 @@ public class J2PProxyFactory extends ProxyFactory {
         }
     }
 
-    private static String makeUniqueName(String name, HashMap hash) {
-        Set keys = hash.keySet();
+    private static String makeUniqueName(String name, HashMap<String,?> hash) {
+        Set<String> keys = hash.keySet();
         if (makeUniqueName0(name, keys.iterator()))
             return name;
 
@@ -710,10 +710,9 @@ public class J2PProxyFactory extends ProxyFactory {
         throw new RuntimeException("cannot make a unique method name");
     }
 
-    private static boolean makeUniqueName0(String name, Iterator it) {
+    private static boolean makeUniqueName0(String name, Iterator<String> it) {
         while (it.hasNext()) {
-            String key = (String)it.next();
-            if (key.startsWith(name))
+            if (it.next().startsWith(name))
                 return false;
         }
 
@@ -748,8 +747,8 @@ public class J2PProxyFactory extends ProxyFactory {
             return name.substring(0, i);
     }
 
-    private static HashMap getMethods(Class superClass, Class[] interfaceTypes) {
-        HashMap hash = new HashMap();
+    private static HashMap<String,Method> getMethods(Class<?> superClass, Class<?>[] interfaceTypes) {
+        HashMap<String,Method> hash = new HashMap<String, Method>();
         for (int i = 0; i < interfaceTypes.length; i++)
             getMethods(hash, interfaceTypes[i]);
 
@@ -757,12 +756,12 @@ public class J2PProxyFactory extends ProxyFactory {
         return hash;
     }
 
-    private static void getMethods(HashMap hash, Class clazz) {
-        Class[] ifs = clazz.getInterfaces();
+    private static void getMethods(HashMap<String,Method> hash, Class<?> clazz) {
+        Class<?>[] ifs = clazz.getInterfaces();
         for (int i = 0; i < ifs.length; i++)
             getMethods(hash, ifs[i]);
 
-        Class parent = clazz.getSuperclass();
+        Class<?> parent = clazz.getSuperclass();
         if (parent != null)
             getMethods(hash, parent);
 
@@ -779,8 +778,8 @@ public class J2PProxyFactory extends ProxyFactory {
         return key.substring(key.indexOf(':') + 1);
     }
 
-    private static MethodInfo makeConstructor(String thisClassName, Constructor cons,
-                                              ConstPool cp, Class superClass) {
+    private static MethodInfo makeConstructor(String thisClassName, Constructor<?> cons,
+                                              ConstPool cp, Class<?> superClass) {
         String desc = RuntimeSupport.makeDescriptor(cons.getParameterTypes(),
                                                     Void.TYPE);
         MethodInfo minfo = new MethodInfo(cp, "<init>", desc);
@@ -807,7 +806,7 @@ public class J2PProxyFactory extends ProxyFactory {
     }
 
     private static MethodInfo makeDelegator(Method meth, String desc,
-                ConstPool cp, Class declClass, String delegatorName) {
+                ConstPool cp, Class<?> declClass, String delegatorName) {
         MethodInfo delegator = new MethodInfo(cp, delegatorName, desc);
         delegator.setAccessFlags(Modifier.FINAL | Modifier.PUBLIC
                 | (meth.getModifiers() & ~(Modifier.PRIVATE
@@ -831,7 +830,7 @@ public class J2PProxyFactory extends ProxyFactory {
      */
     private static MethodInfo makeForwarder(String thisClassName,
                     Method meth, String desc, ConstPool cp,
-                    Class declClass, String delegatorName, int index) {
+                    Class<?> declClass, String delegatorName, int index) {
         MethodInfo forwarder = new MethodInfo(cp, meth.getName(), desc);
         forwarder.setAccessFlags(Modifier.FINAL
                     | (meth.getModifiers() & ~(Modifier.ABSTRACT
@@ -883,7 +882,7 @@ public class J2PProxyFactory extends ProxyFactory {
         code.addInvokeinterface(MethodHandler.class.getName(), "invoke",
             "(Ljava/lang/Object;Ljava/lang/reflect/Method;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;",
             5);
-        Class retType = meth.getReturnType();
+        Class<?> retType = meth.getReturnType();
         addUnwrapper(code, retType);
         addReturn(code, retType);
 
@@ -892,12 +891,12 @@ public class J2PProxyFactory extends ProxyFactory {
     }
 
     private static void setThrows(MethodInfo minfo, ConstPool cp, Method orig) {
-        Class[] exceptions = orig.getExceptionTypes();
+        Class<?>[] exceptions = orig.getExceptionTypes();
         setThrows(minfo, cp, exceptions);
     }
 
     private static void setThrows(MethodInfo minfo, ConstPool cp,
-                                  Class[] exceptions) {
+                                  Class<?>[] exceptions) {
         if (exceptions.length == 0)
             return;
 
@@ -910,7 +909,7 @@ public class J2PProxyFactory extends ProxyFactory {
         minfo.setExceptionsAttribute(ea);
     }
 
-    private static int addLoadParameters(Bytecode code, Class[] params,
+    private static int addLoadParameters(Bytecode code, Class<?>[] params,
                                          int offset) {
         int stacksize = 0;
         int n = params.length;
@@ -920,7 +919,7 @@ public class J2PProxyFactory extends ProxyFactory {
         return stacksize;
     }
 
-    private static int addLoad(Bytecode code, int n, Class type) {
+    private static int addLoad(Bytecode code, int n, Class<?> type) {
         if (type.isPrimitive()) {
             if (type == Long.TYPE) {
                 code.addLload(n);
@@ -941,7 +940,7 @@ public class J2PProxyFactory extends ProxyFactory {
         return 1;
     }
 
-    private static int addReturn(Bytecode code, Class type) {
+    private static int addReturn(Bytecode code, Class<?> type) {
         if (type.isPrimitive()) {
             if (type == Long.TYPE) {
                 code.addOpcode(Opcode.LRETURN);
@@ -966,7 +965,7 @@ public class J2PProxyFactory extends ProxyFactory {
         return 1;
     }
 
-    private static void makeParameterList(Bytecode code, Class[] params) {
+    private static void makeParameterList(Bytecode code, Class<?>[] params) {
         int regno = 1;
         int n = params.length;
         code.addIconst(n);
@@ -974,7 +973,7 @@ public class J2PProxyFactory extends ProxyFactory {
         for (int i = 0; i < n; i++) {
             code.addOpcode(Opcode.DUP);
             code.addIconst(i);
-            Class type = params[i];
+            Class<?> type = params[i];
             if (type.isPrimitive())
                 regno = makeWrapper(code, type, regno);
             else {
@@ -986,7 +985,7 @@ public class J2PProxyFactory extends ProxyFactory {
         }
     }
 
-    private static int makeWrapper(Bytecode code, Class type, int regno) {
+    private static int makeWrapper(Bytecode code, Class<?> type, int regno) {
         int index = FactoryHelper.typeIndex(type);
         String wrapper = FactoryHelper.wrapperTypes[index]; 
         code.addNew(wrapper);
@@ -1020,7 +1019,7 @@ public class J2PProxyFactory extends ProxyFactory {
         code.addOpcode(Opcode.AASTORE);
     }
 
-    private static void addUnwrapper(Bytecode code, Class type) {
+    private static void addUnwrapper(Bytecode code, Class<?> type) {
         if (type.isPrimitive()) {
             if (type == Void.TYPE)
                 code.addOpcode(Opcode.POP);

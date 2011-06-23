@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog;
-import	java.io.*;
+import    java.io.*;
 import java.util.Iterator;
 
 /**
@@ -29,106 +29,107 @@ import java.util.Iterator;
  * @see Prolog
  *
  */
+@SuppressWarnings("serial")
 public class Theory implements Serializable {
 
-	private String theory;
-	private Struct clauseList;
+    private String theory;
+    private Struct clauseList;
 
-	/**
-	 * Creates a theory getting its source text from an input stream
-	 *
-	 * @param is the input stream acting as source
-	 */
-	public Theory(InputStream is) throws IOException {
-		byte[] info = new byte[is.available()];
-		is.read(info);
-		theory = new String(info);
-	}
+    /**
+     * Creates a theory getting its source text from an input stream
+     *
+     * @param is the input stream acting as source
+     */
+    public Theory(InputStream is) throws IOException {
+        byte[] info = new byte[is.available()];
+        is.read(info);
+        theory = new String(info);
+    }
 
-	/**
-	 * Creates a theory from its source text
-	 *
-	 * @param theory the source text
-	 * @throws s InvalidTheoryException if theory is null
-	 */
-	public Theory(String theory) throws InvalidTheoryException {
-		if (theory == null) {
-			throw new InvalidTheoryException();
-		}
-		this.theory=theory;
-	}
-	
-	Theory() {
-		this.theory = "";
-	}
+    /**
+     * Creates a theory from its source text
+     *
+     * @param theory the source text
+     * @throws s InvalidTheoryException if theory is null
+     */
+    public Theory(String theory) throws InvalidTheoryException {
+        if (theory == null) {
+            throw new InvalidTheoryException();
+        }
+        this.theory=theory;
+    }
+    
+    Theory() {
+        this.theory = "";
+    }
 
-	/**
-	 * Creates a theory from a clause list
-	 *
-	 * @param clauseList the source text
-	 * @throws s InvalidTheoryException if clauseList is null or is not a prolog list
-	 */
-	public Theory(Struct clauseList) throws InvalidTheoryException {
-		if (clauseList==null || !clauseList.isList()) {
-			throw new InvalidTheoryException();
-		}
-		this.clauseList = clauseList;
-	}
-	
-	public Iterator iterator(Prolog engine) {
-		if (isTextual())
-			return new Parser(engine.getOperatorManager(), theory).iterator();
-		else
-			return clauseList.listIterator();
-	}
+    /**
+     * Creates a theory from a clause list
+     *
+     * @param clauseList the source text
+     * @throws s InvalidTheoryException if clauseList is null or is not a prolog list
+     */
+    public Theory(Struct clauseList) throws InvalidTheoryException {
+        if (clauseList==null || !clauseList.isList()) {
+            throw new InvalidTheoryException();
+        }
+        this.clauseList = clauseList;
+    }
+    
+    public Iterator<? extends Term> iterator(Prolog engine) {
+        if (isTextual())
+            return new Parser(engine.getOperatorManager(), theory).iterator();
+        else
+            return clauseList.listIterator();
+    }
 
-	/**
-	 * Adds (appends) a theory to this.
-	 *
-	 * @param th is the theory to be appended
-	 * @throws s InvalidTheoryException if the theory object are not compatibles (they are
-	 *  compatibles when both have been built from texts or both from clause lists)
-	 */
-	public void append(Theory th) throws InvalidTheoryException {
-		if (th.isTextual() && isTextual()) {
-			theory += th.theory;
-		} else if (!th.isTextual() && !isTextual()) {
-			Struct otherClauseList = th.getClauseListRepresentation();
-			if (clauseList.isEmptyList())
-				clauseList = otherClauseList;
-			else {
-				Struct p = clauseList, q;
-				while (!(q = (Struct) p.getArg(1)).isEmptyList())
-					p = q;
-				p.setArg(1, otherClauseList);
-			}
-		} else if (!isTextual() && th.isTextual()) {
-			theory = theory.toString() + "\n" + th;
-			clauseList = null;
-		} else if (isTextual() && !th.isTextual()) {
-			theory += th.toString();
-		}
-		else {
-			throw new InvalidTheoryException();
-		}
-	}
+    /**
+     * Adds (appends) a theory to this.
+     *
+     * @param th is the theory to be appended
+     * @throws s InvalidTheoryException if the theory object are not compatibles (they are
+     *  compatibles when both have been built from texts or both from clause lists)
+     */
+    public void append(Theory th) throws InvalidTheoryException {
+        if (th.isTextual() && isTextual()) {
+            theory += th.theory;
+        } else if (!th.isTextual() && !isTextual()) {
+            Struct otherClauseList = th.getClauseListRepresentation();
+            if (clauseList.isEmptyList())
+                clauseList = otherClauseList;
+            else {
+                Struct p = clauseList, q;
+                while (!(q = (Struct) p.getArg(1)).isEmptyList())
+                    p = q;
+                p.setArg(1, otherClauseList);
+            }
+        } else if (!isTextual() && th.isTextual()) {
+            theory = theory.toString() + "\n" + th;
+            clauseList = null;
+        } else if (isTextual() && !th.isTextual()) {
+            theory += th.toString();
+        }
+        else {
+            throw new InvalidTheoryException();
+        }
+    }
 
-	/**
-	 * Checks if the theory has been built
-	 * from a text or a clause list
-	 *
-	 */
-	boolean isTextual() {
-		return theory != null;
-	}
+    /**
+     * Checks if the theory has been built
+     * from a text or a clause list
+     *
+     */
+    boolean isTextual() {
+        return theory != null;
+    }
 
-	Struct getClauseListRepresentation() {
-		return clauseList;
-	}
+    Struct getClauseListRepresentation() {
+        return clauseList;
+    }
 
-	public String toString() {
-		return theory != null ? theory : clauseList.toString();
-	}
+    public String toString() {
+        return theory != null ? theory : clauseList.toString();
+    }
 
 
 }

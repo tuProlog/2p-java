@@ -1,17 +1,8 @@
-/*
- * TheoryFilter.java
- *
- * Created on April 4, 2007, 3:32 PM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package alice.tuprologx.pj.engine;
 
 import alice.tuprologx.pj.model.*;
+
 import java.util.Vector;
-import java.util.Collection;
 
 /**
  *
@@ -56,23 +47,23 @@ public class TheoryFilter {
             //System.out.println("PIPPO="+res);            
             Vector<Clause<?,?>> filtered_clauses = new Vector<Clause<?,?>>();
             for (Term<?> t : res) {
-                if (t instanceof Compound2 && ((Compound2)t).getName().equals(":-")) {
-                    filtered_clauses.add(new Clause(((Compound2)t).get0(),((Compound2)t).get1()));
+                if (t instanceof Compound2 && ((Compound2<Term<?>,Term<?>>)t).getName().equals(":-")) {
+                    filtered_clauses.add(new Clause<Term<?>,Term<?>>(((Compound2<Term<?>,Term<?>>)t).get0(),((Compound2<Term<?>,Term<?>>)t).get1()));
                 }
                 else {
-                    filtered_clauses.add(new Clause(t,null));
+                    filtered_clauses.add(new Clause<Term<?>,Term<?>>(t,null));
                 }
             }
             return new Theory(filtered_clauses);
         }
         catch (Exception e) {
             e.printStackTrace();
-            Var<Var<Int>> vvi = null;
-            Term<Var<Int>> ti3 = null;
-            Term<? extends Term<Int>> ti = null;
-            Int i = null;
-            ti = i;
-            ti = vvi;
+            //Var<Var<Int>> vvi = null;
+            //Term<Var<Int>> ti3 = null;
+            //Term<? extends Term<Int>> ti = null;
+            //Int i = null;
+            //ti = i;
+            //ti = vvi;
             return _theory;
         }
     }    

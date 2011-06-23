@@ -5,13 +5,14 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.*;
 
+@SuppressWarnings("serial")
 public class TextAreaRenderer
-	extends JTextArea
+    extends JTextArea
     implements TableCellRenderer
 {
   private final DefaultTableCellRenderer adaptee = new DefaultTableCellRenderer();
   /** map from table to map of rows to map of column heights */
-  private final Map cellSizes = new HashMap();
+  private final Map<JTable,Map<Integer,Map<Integer,Integer>>> cellSizes = new HashMap<JTable, Map<Integer,Map<Integer,Integer>>>();
   private boolean[] isExpandedCellArray;
   private boolean[] isBorderedCellArray;
 
@@ -44,32 +45,32 @@ public class TextAreaRenderer
     /** it isn't necessary "else" becouse border isn't dynamic. it is always the same, despite user interation*/
     if (isBorderedCellArray[row])
     {
-    	/** 2, 0, 0, 0 --> border only on cell top*/
-    	adaptee.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.black),getBorder()));
-    	this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.black),getBorder()));
+        /** 2, 0, 0, 0 --> border only on cell top*/
+        adaptee.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.black),getBorder()));
+        this.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(2, 0, 0, 0, Color.black),getBorder()));
     }
 
     height_wanted = findTotalMaximumRowSize(table, row);
     if (!isExpandedCellArray[row])
     {
-    	return adaptee;
+        return adaptee;
     }
     else
     {
-	    table.setRowHeight(row, height_wanted);
-	    return this;
+        table.setRowHeight(row, height_wanted);
+        return this;
     }
   }
 
   private void addSize(JTable table, int row, int column,
                        int height) {
-    Map rows = (Map) cellSizes.get(table);
+    Map<Integer,Map<Integer,Integer>> rows = cellSizes.get(table);
     if (rows == null) {
-      cellSizes.put(table, rows = new HashMap());
+      cellSizes.put(table, rows = new HashMap<Integer, Map<Integer,Integer>>());
     }
-    Map rowheights = (Map) rows.get(new Integer(row));
+    Map<Integer,Integer> rowheights = rows.get(new Integer(row));
     if (rowheights == null) {
-      rows.put(new Integer(row), rowheights = new HashMap());
+      rows.put(new Integer(row), rowheights = new HashMap<Integer, Integer>());
     }
     rowheights.put(new Integer(column), new Integer(height));
   }
@@ -81,7 +82,7 @@ public class TextAreaRenderer
    */
   private int findTotalMaximumRowSize(JTable table, int row) {
     int maximum_height = 0;
-    Enumeration columns = table.getColumnModel().getColumns();
+    Enumeration<TableColumn> columns = table.getColumnModel().getColumns();
     while (columns.hasMoreElements()) {
       TableColumn tc = (TableColumn) columns.nextElement();
       TableCellRenderer cellRenderer = tc.getCellRenderer();
@@ -95,15 +96,13 @@ public class TextAreaRenderer
   }
 
   private int findMaximumRowSize(JTable table, int row) {
-    Map rows = (Map) cellSizes.get(table);
+    Map<Integer,Map<Integer,Integer>> rows = cellSizes.get(table);
     if (rows == null) return 0;
-    Map rowheights = (Map) rows.get(new Integer(row));
+    Map<Integer,Integer> rowheights = rows.get(new Integer(row));
     if (rowheights == null) return 0;
     int maximum_height = 0;
-    for (Iterator it = rowheights.entrySet().iterator();
-         it.hasNext();) {
-      Map.Entry entry = (Map.Entry) it.next();
-      int cellHeight = ((Integer) entry.getValue()).intValue();
+    for( Map.Entry<Integer, Integer> entry:rowheights.entrySet()){
+      int cellHeight = entry.getValue();
       maximum_height = Math.max(maximum_height, cellHeight);
     }
     return maximum_height;

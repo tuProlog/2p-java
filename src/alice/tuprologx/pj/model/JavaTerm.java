@@ -19,7 +19,8 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
 
     public static HashMap<String, Class<?>> hashtable = new HashMap<String, Class<?>>();
 
-    static class TermifiableStruct<O> extends alice.tuprolog.Struct {
+    @SuppressWarnings("serial")
+	static class TermifiableStruct<O> extends alice.tuprolog.Struct {
         JavaTerm<O> _term;
 
         TermifiableStruct(String name, alice.tuprolog.Term[] arr) {
@@ -80,7 +81,7 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
                 //only read-write properties are translated into a compound
                 if (pdesc.getReadMethod()!=null && pdesc.getWriteMethod()!=null) {
                     Object o = pdesc.getReadMethod().invoke(_object);
-                    Term<?> t = o != null ? Term.fromJava(o) : new Var("X"+count);
+                    Term<?> t = o != null ? Term.fromJava(o) : new Var<Term<?>>("X"+count);
                     termArr.add(t);
                     count++;
                 }
@@ -149,12 +150,12 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
         try {                
             Object po = _class.newInstance();
             java.beans.BeanInfo binfo = java.beans.Introspector.getBeanInfo(_class);
-            int i = 0;
+            //int i = 0;
             java.util.Iterator<Term<?>> it = _properties.iterator();
             for (java.beans.PropertyDescriptor pdesc : binfo.getPropertyDescriptors()) {
                 if (pdesc.getReadMethod()!=null && pdesc.getWriteMethod()!=null) {
                     Term<?> property = it.next();
-                    if (!((property instanceof Var) && ((Var)property).getValue()==null)) {
+                    if (!((property instanceof Var) && ((Var<Term<?>>)property).getValue()==null)) {
                         //System.out.println(property.toJava().getClass() + " " + pdesc.getWriteMethod().getName());
                         pdesc.getWriteMethod().invoke(po, property.toJava());
                     }

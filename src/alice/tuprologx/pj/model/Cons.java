@@ -1,20 +1,11 @@
-/*
- * Compound.java
- *
- * Created on 9 marzo 2007, 14.54
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package alice.tuprologx.pj.model;
-import alice.tuprologx.pj.annotations.*;
+
 import java.util.*;
+
 /**
  *
  * @author Maurizio
  */
-
 public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Cons<H,R>> implements Iterable<Term<?>> {
         
     
@@ -35,13 +26,13 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
     
     public static <Z extends Cons<?,?>> Z make(String f, Term<?>[] termList) {        
         if (termList.length == 1)
-            return (Z)new Compound1(f,termList[0]);
+            return (Z)new Compound1<Term<?>>(f,termList[0]);
         else if (termList.length == 2)
-            return (Z)new Compound2(f,termList[0],termList[1]);
+            return (Z)new Compound2<Term<?>, Term<?>>(f,termList[0],termList[1]);
         else if (termList.length == 3)
-            return (Z)new Compound3(f,termList[0],termList[1],termList[2]);
+            return (Z)new Compound3<Term<?>, Term<?>, Term<?>>(f,termList[0],termList[1],termList[2]);
         else if (termList.length > 3)
-            return (Z)new Cons(f,termList);
+            return (Z)new Cons<Term<?>, Compound<?>>(f,termList);
         else
             throw new UnsupportedOperationException();
     }
@@ -73,12 +64,12 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
     public Iterator<Term<?>> iterator() {
         return new Iterator<Term<?>>() {
             Cons<?, ?> theTuple = (Cons<?,?>)Cons.this;	
-            public Term next() {
+            public Term<?> next() {
                 if (theTuple == null) {
                     throw new java.util.NoSuchElementException();
                 }
-                Term head = theTuple.getHead();
-                theTuple=(theTuple.getRest() instanceof Cons ? (Cons)theTuple.getRest() : null);
+                Term<?> head = theTuple.getHead();
+                theTuple=(theTuple.getRest() instanceof Cons ? (Cons<?,?>)theTuple.getRest() : null);
                 return head;
             }
             public boolean hasNext() {		
@@ -91,14 +82,14 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
     private void initFromList(java.util.List<Term<?>> termList) {
         if (!termList.isEmpty()) {
             _theHead = (H)termList.remove(0);            
-            _theRest = !termList.isEmpty() ? (R)new Cons(null,termList) : (R)new Nil();
+            _theRest = !termList.isEmpty() ? (R)new Cons<Term<?>, Compound<?>>(null,termList) : (R)new Nil();
             return;
         }
         throw new UnsupportedOperationException(); //cannot create a 0-sized compound
     }
 
     public Cons(String name, Term<?>[] termArr) {
-        this(name,new Vector(Arrays.asList(termArr)));
+        this(name,new Vector<Term<?>>(Arrays.asList(termArr)));
     }
 
     public H getHead() {

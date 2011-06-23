@@ -5,6 +5,7 @@ import  java.io.*;
 import java.rmi.*;
 import java.rmi.server.UnicastRemoteObject;
 
+@SuppressWarnings("serial")
 public class PrologImpl extends UnicastRemoteObject
     implements alice.tuprologx.runtime.rmi.Prolog, Serializable {
 

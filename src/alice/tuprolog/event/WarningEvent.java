@@ -23,6 +23,7 @@ import java.util.*;
  *  a prolog engine
  *
  */
+@SuppressWarnings("serial")
 public class WarningEvent extends EventObject {
 
     /** event description */

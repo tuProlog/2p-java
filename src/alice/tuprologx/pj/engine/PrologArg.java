@@ -1,14 +1,5 @@
-/*
- * PrologArg.java
- *
- * Created on March 12, 2007, 10:16 AM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package alice.tuprologx.pj.engine;
-import java.lang.annotation.*;
+
 import alice.tuprologx.pj.model.*;
 /**
  *
@@ -20,9 +11,9 @@ public class PrologArg<X extends Term<X>> {
     private TermKind[] _annotations;    
     
     /** Creates a new instance of PrologArg */
-    public PrologArg(Object arg, TermKind[] annotations) {        
+    public PrologArg(Term<X> arg, TermKind[] annotations) {        
         this(annotations);
-        _theArg = (Term<X>)arg;            
+        _theArg = arg;      
     }
     
     public PrologArg(TermKind[] annotations) {     
@@ -69,7 +60,7 @@ public class PrologArg<X extends Term<X>> {
         return _theArg;
     }
     
-    protected void setTerm(Object o) {
-        _theArg = (Term<X>)o;
+    protected void setTerm(Term<X> o) {
+        _theArg = o;
     }
 }

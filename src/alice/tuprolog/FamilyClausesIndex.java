@@ -1,7 +1,6 @@
 package alice.tuprolog;
 
 import java.util.LinkedList;
-import java.util.ListIterator;
 
 /**
  * <code>FamilyClausesIndex</code> enables family clauses indexing

@@ -13,6 +13,7 @@ package alice.tuprologx.pj.meta;
  *
  * @author maurizio
  */
+@SuppressWarnings("serial")
 public class InvalidPredicateException extends RuntimeException {
     
     /** Creates a new instance of InvalidPredicateException */

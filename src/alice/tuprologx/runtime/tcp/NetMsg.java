@@ -1,7 +1,7 @@
 package alice.tuprologx.runtime.tcp;
-import java.io.*;
 
-public class NetMsg implements Serializable {
+@SuppressWarnings("serial")
+public class NetMsg implements java.io.Serializable {
     public String methodName;
 
     public NetMsg(){

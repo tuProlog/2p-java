@@ -23,20 +23,33 @@ package alice.tuprolog;
  * @see Theory
  *
  */
+@SuppressWarnings("serial")
 public class InvalidTheoryException extends PrologException {
-	
-	public int line = -1;
-	public int pos = -1;
-	
-	public InvalidTheoryException() {}
-	
-	public InvalidTheoryException(int line, int pos) {
+    
+    public int line = -1;
+    public int pos = -1;
+    /*Castagna 06/2011*/	
+	public int clause = -1;
+	/**/
+    
+    public InvalidTheoryException() {}
+    
+    public InvalidTheoryException(int line, int pos) {
+        this.line = line;
+        this.pos = pos;
+    }
+
+    public InvalidTheoryException(String message) {
+        super(message);
+    }
+    
+    /*Castagna 06/2011*/
+	public InvalidTheoryException(String message, int clause, int line, int pos)
+	{
+		super(message);
+		this.clause = clause;
 		this.line = line;
 		this.pos = pos;
 	}
-
-	public InvalidTheoryException(String message) {
-		super(message);
-	}
-	
+	/**/
 }

@@ -2,10 +2,8 @@ package alice.tuprologx.runtime.rmi;
 
 import alice.tuprolog.*;
 
-import java.io.*;
 import java.rmi.*;
 import java.rmi.registry.*;
-import java.rmi.server.*;
 
 public class Test
 {

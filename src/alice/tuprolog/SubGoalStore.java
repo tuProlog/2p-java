@@ -1,6 +1,5 @@
 package alice.tuprolog;
 
-import utility.StaticCounter;
 
 public class SubGoalStore {
 

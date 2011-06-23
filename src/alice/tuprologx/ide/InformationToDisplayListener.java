@@ -7,7 +7,7 @@ import java.util.*;
  * 
  */
 public interface InformationToDisplayListener
-	extends EventListener
+    extends EventListener
 {
     void onInformation(InformationToDisplayEvent e);
 }

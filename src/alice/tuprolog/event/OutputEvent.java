@@ -26,6 +26,7 @@ import java.util.*;
  *
  *
  */
+@SuppressWarnings("serial")
 public class OutputEvent extends EventObject {
 
     /** text produced */

@@ -13,6 +13,7 @@ package alice.tuprologx.pj.annotations.parser;
  *
  * @author maurizio
  */
+@SuppressWarnings("serial")
 public class UnexpectedEndOfExpressionException extends RuntimeException {
     public UnexpectedEndOfExpressionException(Exception e) {super(e);}
 }

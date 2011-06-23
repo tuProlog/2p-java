@@ -23,10 +23,11 @@ package alice.tuprolog;
  * @see Var
  * @deprecated Use InvalidTermException with a meaningful message instead. 
  */
+@SuppressWarnings("serial")
 public class InvalidVarNameException extends InvalidTermException {
-	
-	public InvalidVarNameException(String message) {
-		super(message);
-	}
-	
+    
+    public InvalidVarNameException(String message) {
+        super(message);
+    }
+    
 }

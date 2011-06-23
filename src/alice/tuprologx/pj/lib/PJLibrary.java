@@ -60,19 +60,20 @@ import alice.tuprolog.lib.*;
  *
  *
  */
+@SuppressWarnings("serial")
 public class PJLibrary extends Library {
 	
 	/**
 	 * java objects referenced by prolog terms (keys)
 	 */
-	private HashMap currentObjects = new HashMap();
+	private HashMap<String,Object> currentObjects = new HashMap<String,Object>();
 	/**
 	 * inverse map useful for implementation issue
 	 */
-	private IdentityHashMap currentObjects_inverse = new IdentityHashMap();
+	private IdentityHashMap<Object,Struct> currentObjects_inverse = new IdentityHashMap<Object,Struct>();
 	
-	private HashMap staticObjects = new HashMap();
-	private IdentityHashMap staticObjects_inverse = new IdentityHashMap();
+	private HashMap<String,Object> staticObjects = new HashMap<String, Object>();
+	private IdentityHashMap<Object,Struct> staticObjects_inverse = new IdentityHashMap<Object, Struct>();
 	
 	/** progressive conter used to identify registered objects */
 	private int id = 0;
@@ -131,16 +132,13 @@ public class PJLibrary extends Library {
 		//id = 0;
 		currentObjects.clear();
 		currentObjects_inverse.clear();
-		Iterator it = staticObjects_inverse.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry en = (Map.Entry) it.next();
+		for(Map.Entry<Object, Struct> en: staticObjects_inverse.entrySet()){
 			bindDynamicObject((Struct) en.getValue(), en.getKey());
 		}
 		preregisterObjects();
 	}
 	
-	public   void onSolveEnd() {
-	}
+	public void onSolveEnd() { }
 	
 	/**
 	 * objects actually pre-registered in order to be
@@ -183,11 +181,11 @@ public class PJLibrary extends Library {
 			}
 			// object creation with argument described in args
 			try {
-				Class cl = Class.forName(clName);
+				Class<?> cl = Class.forName(clName);
 				Object[] args_value = args.getValues();
 				//
 				//Constructor co=cl.getConstructor(args.getTypes());
-				Constructor co = lookupConstructor(cl, args.getTypes(), args_value);
+				Constructor<?> co = lookupConstructor(cl, args.getTypes(), args_value);
 				//
 				//
 				if (co==null){
@@ -250,13 +248,13 @@ public class PJLibrary extends Library {
 			String fullClassName = alice.util.Tools.removeApices(className.toString());
 			
 			String fullClassPath = fullClassName.replace('.', '/');
-			Iterator it = classPathes.listIterator();
+			Iterator<? extends Term> it = classPathes.listIterator();
 			String cp = "";
 			while (it.hasNext()) {
 				if (cp.length() > 0) {
 					cp += ";";
 				}
-				cp += alice.util.Tools.removeApices(((Struct) it.next()).toString());
+				cp += alice.util.Tools.removeApices(it.next().toString());
 			}
 			if (cp.length() > 0) {
 				cp = " -classpath " + cp;
@@ -292,7 +290,7 @@ public class PJLibrary extends Library {
 				return false;
 			}
 			try {
-				Class the_class = Class.forName(fullClassName, true, new ClassLoader());
+				Class<?> the_class = Class.forName(fullClassName, true, new ClassLoader());
 				return bindDynamicObject(id, the_class);
 			} catch (ClassNotFoundException ex) {
 				getEngine().warn("Compilation of java sources failed");
@@ -348,7 +346,7 @@ public class PJLibrary extends Library {
 			Object res = null;
 			
 			if (obj != null) {                
-				Class cl = obj.getClass();
+				Class<?> cl = obj.getClass();
 				//
 				//
 				Object[] args_values = args.getValues();                
@@ -358,7 +356,7 @@ public class PJLibrary extends Library {
                 if (m == null) {                    
                     Object[] newValues = new Object[args_values.length];
                     Class<?>[] newTypes = new Class<?>[args_values.length];
-                    boolean ok = true;
+                    //boolean ok = true;
                     for (int i = 0; i < method.getArity();i++) {                        
                         newValues[i] = alice.tuprologx.pj.model.Term.unmarshal(method.getArg(i));
                         newTypes[i] = newValues[i].getClass();                        
@@ -387,7 +385,7 @@ public class PJLibrary extends Library {
 					Struct id = (Struct) objId;
 					if (id.getArity() == 1 && id.getName().equals("class")) {
 						try {
-							Class cl = Class.forName(alice.util.Tools.removeApices(id.getArg(0).toString()));
+							Class<?> cl = Class.forName(alice.util.Tools.removeApices(id.getArg(0).toString()));
 							Method m = cl.getMethod(methodName, args.getTypes());
 							m.setAccessible(true);
 							res = m.invoke(null, args.getValues());
@@ -444,7 +442,7 @@ public class PJLibrary extends Library {
 		String fieldName = ((Struct) fieldTerm).getName();
 		Object obj = null;
 		try {
-			Class cl = null;
+			Class<?> cl = null;
 			if (objId.isCompound() &&
 					((Struct) objId).getArity() == 1 && ((Struct) objId).getName().equals("class")) {
 				String clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
@@ -470,7 +468,7 @@ public class PJLibrary extends Library {
 			// first check for primitive data field
 			Field field = cl.getField(fieldName);            
             if (field.isAnnotationPresent(alice.tuprologx.pj.annotations.PrologField.class)) {                
-                alice.tuprologx.pj.model.Term t = alice.tuprologx.pj.model.Term.unmarshal(what);
+                alice.tuprologx.pj.model.Term<?> t = alice.tuprologx.pj.model.Term.unmarshal(what);
                 field.set(obj, t);
                 return true;
             }
@@ -520,7 +518,7 @@ public class PJLibrary extends Library {
 		String fieldName = ((Struct) fieldTerm).getName();
 		Object obj = null;
 		try {
-			Class cl = null;
+			Class<?> cl = null;
 			if (objId.isCompound() &&
 					((Struct) objId).getArity() == 1 && ((Struct) objId).getName().equals("class")) {
 				String clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
@@ -543,7 +541,7 @@ public class PJLibrary extends Library {
 			}
 			
 			Field field = cl.getField(fieldName);
-			Class fc = field.getType();
+			Class<?> fc = field.getType();
 			// work only with JDK 1.2
 			field.setAccessible(true);
 			
@@ -589,7 +587,7 @@ public class PJLibrary extends Library {
 			return false;
 		}
 		try {
-			Class cl = null;
+			Class<?> cl = null;
 			String objName = alice.util.Tools.removeApices(objId.toString());
 			obj = currentObjects.get(objName);
 			if (obj != null) {
@@ -670,7 +668,7 @@ public class PJLibrary extends Library {
 			return false;
 		}
 		try {
-			Class cl = null;
+			Class<?> cl = null;
 			String objName = alice.util.Tools.removeApices(objId.toString());
 			obj = currentObjects.get(objName);
 			if (obj != null) {
@@ -743,7 +741,7 @@ public class PJLibrary extends Library {
 			} else if (obtype.equals("double")) {
 				array = new double[nargs];
 			} else {
-				Class cl = Class.forName(obtype);
+				Class<?> cl = Class.forName(obtype);
 				array = Array.newInstance(cl, nargs);
 			}
 			return bindDynamicObject(id, array);
@@ -758,7 +756,7 @@ public class PJLibrary extends Library {
 	 */
 	private Signature parseArg(Struct method) {
 		Object[] values = new Object[method.getArity()];
-		Class[] types = new Class[method.getArity()];
+		Class<?>[] types = new Class[method.getArity()];
 		for (int i = 0; i < method.getArity(); i++) {
 			if (!parse_arg(values, types, i, (Term) method.getTerm(i)))
 				return null;
@@ -768,7 +766,7 @@ public class PJLibrary extends Library {
 	
 	private Signature parseArg(Object[] objs) {
 		Object[] values = new Object[objs.length];
-		Class[] types = new Class[objs.length];
+		Class<?>[] types = new Class[objs.length];
 		for (int i = 0; i < objs.length; i++) {
 			if (!parse_arg(values, types, i, (Term) objs[i]))
 				return null;
@@ -776,7 +774,7 @@ public class PJLibrary extends Library {
 		return new Signature(values, types);
 	}
 	
-	private boolean parse_arg(Object[] values, Class[] types, int i, Term term) {
+	private boolean parse_arg(Object[] values, Class<?>[] types, int i, Term term) {
 		try {
 			if (term == null) {
 				values[i] = null;
@@ -845,7 +843,7 @@ public class PJLibrary extends Library {
 	 * to define the specific class of an argument
 	 *
 	 */
-	private boolean parse_as(Object[] values, Class[] types, int i, Term castWhat, Term castTo) {
+	private boolean parse_as(Object[] values, Class<?>[] types, int i, Term castWhat, Term castTo) {
 		try {
 			if (!(castWhat instanceof Number)) {
 				String castTo_name = alice.util.Tools.removeApices(((Struct) castTo).getName());
@@ -1010,7 +1008,7 @@ public class PJLibrary extends Library {
 	
 	private Object[] getArrayFromList(Struct list) {
 		Object args[] = new Object[list.listSize()];
-		Iterator it = list.listIterator();
+		Iterator<? extends Term> it = list.listIterator();
 		int count = 0;
 		while (it.hasNext()) {
 			args[count++] = it.next();
@@ -1264,8 +1262,8 @@ public class PJLibrary extends Library {
 	 *  objects registered in maps
 	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		HashMap bak00 = currentObjects;
-		IdentityHashMap bak01 = currentObjects_inverse;
+		HashMap<String,Object> bak00 = currentObjects;
+		IdentityHashMap<Object,Struct> bak01 = currentObjects_inverse;
 		try {
 			currentObjects = null;
 			currentObjects_inverse = null;
@@ -1285,15 +1283,15 @@ public class PJLibrary extends Library {
 	 */
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		currentObjects = new HashMap();
-		currentObjects_inverse = new IdentityHashMap();
+		currentObjects = new HashMap<String, Object>();
+		currentObjects_inverse = new IdentityHashMap<Object, Struct>();
 		preregisterObjects();
 	}
 	
 	// --------------------------------------------------
 	
-	private static Method lookupMethod(Class target, String name,
-			Class[] argClasses, Object[] argValues) throws NoSuchMethodException {
+	private static Method lookupMethod(Class<?> target, String name,
+			Class<?>[] argClasses, Object[] argValues) throws NoSuchMethodException {
 		// first try for exact match
 		try {
 			Method m = target.getMethod(name, argClasses);
@@ -1306,7 +1304,7 @@ public class PJLibrary extends Library {
 		
 		// go the more complicated route
 		Method[] methods = target.getMethods();
-		Vector goodMethods = new Vector();
+		Vector<Method> goodMethods = new Vector<Method>();
 		for (int i = 0; i != methods.length; i++) {
 			if (name.equals(methods[i].getName()) &&
 					matchClasses(methods[i].getParameterTypes(), argClasses))
@@ -1324,7 +1322,7 @@ public class PJLibrary extends Library {
 			
 			for (int i = 0; i != methods.length; i++) {
 				if (name.equals(methods[i].getName())) {
-					Class[] types = methods[i].getParameterTypes();
+					Class<?>[] types = methods[i].getParameterTypes();
 					Object[] val = matchClasses(types, argClasses, argValues);
 					if (val != null) {
 						// found a method compatible
@@ -1346,7 +1344,7 @@ public class PJLibrary extends Library {
 		}
 	}
 	
-	private static Constructor lookupConstructor(Class target, Class[] argClasses, Object[] argValues) throws NoSuchMethodException {
+	private static Constructor<?> lookupConstructor(Class<?> target, Class<?>[] argClasses, Object[] argValues) throws NoSuchMethodException {
 		// first try for exact match
 		try {
 			return target.getConstructor(argClasses);
@@ -1357,8 +1355,8 @@ public class PJLibrary extends Library {
 		}
 		
 		// go the more complicated route
-		Constructor[] constructors = target.getConstructors();
-		Vector goodConstructors = new Vector();
+		Constructor<?>[] constructors = target.getConstructors();
+		Vector<Constructor<?>> goodConstructors = new Vector<Constructor<?>>();
 		for (int i = 0; i != constructors.length; i++) {
 			if (matchClasses(constructors[i].getParameterTypes(), argClasses))
 				goodConstructors.addElement(constructors[i]);
@@ -1374,7 +1372,7 @@ public class PJLibrary extends Library {
 			//  method algorithm is applied )
 			
 			for (int i = 0; i != constructors.length; i++) {
-				Class[] types = constructors[i].getParameterTypes();
+				Class<?>[] types = constructors[i].getParameterTypes();
 				Object[] val = matchClasses(types, argClasses, argValues);
 				if (val != null) {
 					// found a method compatible
@@ -1389,14 +1387,14 @@ public class PJLibrary extends Library {
 			
 			return null;
 		case 1:
-			return (Constructor) goodConstructors.firstElement();
+			return goodConstructors.firstElement();
 		default:
 			return mostSpecificConstructor(goodConstructors);
 		}
 	}
 	
 	// 1st arg is from method, 2nd is actual parameters
-	private static boolean matchClasses(Class[] mclasses, Class[] pclasses) {
+	private static boolean matchClasses(Class<?>[] mclasses, Class<?>[] pclasses) {
 		if (mclasses.length == pclasses.length) {
 			for (int i = 0; i != mclasses.length; i++) {
 				if (!matchClass(mclasses[i], pclasses[i])) {
@@ -1408,7 +1406,7 @@ public class PJLibrary extends Library {
 		return false;
 	}
 	
-	private static boolean matchClass(Class mclass, Class pclass) {
+	private static boolean matchClass(Class<?> mclass, Class<?> pclass) {
 		boolean assignable = mclass.isAssignableFrom(pclass);
 		if (assignable) {
 			return true;
@@ -1422,7 +1420,7 @@ public class PJLibrary extends Library {
 		return false;
 	}
 	
-	private static Method mostSpecificMethod(Vector methods) throws NoSuchMethodException {
+	private static Method mostSpecificMethod(Vector<Method> methods) throws NoSuchMethodException {
 		for (int i = 0; i != methods.size(); i++) {
 			for (int j = 0; j != methods.size(); j++) {
 				if ((i != j) &&
@@ -1441,8 +1439,8 @@ public class PJLibrary extends Library {
 	
 	// true if c1 is more specific than c2
 	private static boolean moreSpecific(Method c1, Method c2) {
-		Class[] p1 = c1.getParameterTypes();
-		Class[] p2 = c2.getParameterTypes();
+		Class<?>[] p1 = c1.getParameterTypes();
+		Class<?>[] p2 = c2.getParameterTypes();
 		int n = p1.length;
 		for (int i = 0; i != n; i++) {
 			if (!matchClass(p2[i], p1[i])) {
@@ -1452,11 +1450,11 @@ public class PJLibrary extends Library {
 		return true;
 	}
 	
-	private static Constructor mostSpecificConstructor(Vector constructors) throws NoSuchMethodException {
+	private static Constructor<?> mostSpecificConstructor(Vector<Constructor<?>> constructors) throws NoSuchMethodException {
 		for (int i = 0; i != constructors.size(); i++) {
 			for (int j = 0; j != constructors.size(); j++) {
 				if ((i != j) &&
-						(moreSpecific((Constructor) constructors.elementAt(i), (Constructor) constructors.elementAt(j)))) {
+						(moreSpecific(constructors.elementAt(i), constructors.elementAt(j)))) {
 					constructors.removeElementAt(j);
 					if (i > j) i--;
 					j--;
@@ -1464,15 +1462,15 @@ public class PJLibrary extends Library {
 			}
 		}
 		if (constructors.size() == 1)
-			return (Constructor) constructors.elementAt(0);
+			return constructors.elementAt(0);
 		else
 			throw new NoSuchMethodException(">1 most specific constructor");
 	}
 	
 	// true if c1 is more specific than c2
-	private static boolean moreSpecific(Constructor c1, Constructor c2) {
-		Class[] p1 = c1.getParameterTypes();
-		Class[] p2 = c2.getParameterTypes();
+	private static boolean moreSpecific(Constructor<?> c1, Constructor<?> c2) {
+		Class<?>[] p1 = c1.getParameterTypes();
+		Class<?>[] p2 = c2.getParameterTypes();
 		int n = p1.length;
 		for (int i = 0; i != n; i++) {
 			if (!matchClass(p2[i], p1[i])) {
@@ -1501,7 +1499,7 @@ public class PJLibrary extends Library {
 	//   required a int,    provided a   double => NOT CONSIDERED
 	//   required a long,   provided a   double => NOT CONSIDERED
 	//
-	private static Object[] matchClasses(Class[] mclasses, Class[] pclasses, Object[] values) {
+	private static Object[] matchClasses(Class<?>[] mclasses, Class<?>[] pclasses, Object[] values) {
 		if (mclasses.length == pclasses.length) {
 			Object[] newvalues = new Object[mclasses.length];
 			
@@ -1545,16 +1543,17 @@ public class PJLibrary extends Library {
  * about type and value of a method
  * arguments
  */
+@SuppressWarnings("serial")
 class Signature implements Serializable {
-	Class[] types;
+	Class<?>[] types;
 	Object[] values;
 	
-	public Signature(Object[] v, Class[] c) {
+	public Signature(Object[] v, Class<?>[] c) {
 		values = v;
 		types = c;
 	}
 	
-	public Class[] getTypes() {
+	public Class<?>[] getTypes() {
 		return types;
 	}
 	
@@ -1578,6 +1577,7 @@ class ClassLoader extends java.lang.ClassLoader {
 /**
  * Information about an EventListener
  */
+@SuppressWarnings("serial")
 class ListenerInfo implements Serializable {
 	public String listenerInterfaceName;
 	public EventListener listener;

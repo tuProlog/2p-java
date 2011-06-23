@@ -66,7 +66,7 @@ public class ReadOnlyLinkedList<E> implements List<E>{
     }
 
     public boolean contains(Object o) {
-        return list.contains((E) o);
+        return list.contains(o);
     }
 
     public Iterator<E> iterator() {
@@ -135,7 +135,7 @@ public class ReadOnlyLinkedList<E> implements List<E>{
      * @return A copy of the wrapped list
      */
     public LinkedList<E> getEditableCopy(){
-        return (LinkedList<E>) list.clone();
+        return new LinkedList<E>(list);
     }
 
 

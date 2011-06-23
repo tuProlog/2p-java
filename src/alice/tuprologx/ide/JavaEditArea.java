@@ -32,10 +32,11 @@ import java.awt.event.*;
 /**
  * An edit area for the Java 2 platform. Makes use of an advanced Swing text area.
  * 
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - 14-nov-02
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.0 - 14-nov-02
  */
 
+@SuppressWarnings("serial")
 public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea {
 
     /** The advanced Swing text area used by this edit area. */
@@ -96,8 +97,8 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
             public void changedUpdate(DocumentEvent event) {
                 if (!dirty)
                     setDirty(true);
-              	if (saved)
-               		setSaved(false);
+                  if (saved)
+                       setSaved(false);
             }
 
         });
@@ -132,64 +133,64 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         // C+A == Ctrl + A
         textArea.inputHandler.addKeyBinding("C+A", new AbstractAction() {
             public void actionPerformed(ActionEvent event) {
-            	inputTheory.selectAll();
+                inputTheory.selectAll();
             }
         });
         // ENTER == Enter
         textArea.inputHandler.addKeyBinding("ENTER", new AbstractAction() {
             public void actionPerformed(ActionEvent event) {
-            	if (inputTheory.isEditable())
-            	{
-	            	String line=inputTheory.getLineText(inputTheory.getCaretLine());
-	            	int breakPoint=inputTheory.getCaretPosition();
-	            	String padding = "";
-	            	int paddingLength;
-		        	StringTokenizer st = new StringTokenizer(line," \t\n");
-		        	paddingLength = 0;
-		        	String noPadding = "";
-		        	if(st.hasMoreTokens())
-		        	{
-		        		noPadding=st.nextToken();
-		        		paddingLength=line.indexOf(noPadding);
-			        	padding=line.substring(0, paddingLength);
-		        	}
-		        	else //if line is empty or if it's made only by ' ', '\t' or '\n'
-	            	{
-	            		padding=line;
-	            		paddingLength=line.length();
-	            	}
-	
-	            	//String part1 = inputTheory.getText().substring(0, breakPoint);
-	            	String part2 = inputTheory.getText().substring(breakPoint);
-	            	/**
-	            	 * JEditTextArea.setText richiama 2 metodi che agiscono sul SyntaxDocument
-	            	 * provocando 2 "entry" nell'elenco undo/redo e quindi non va bene usare
-	            	 * setText, meglio agire direttamente sul SyntaxDocument
-	            	 */
-	            	//inputTheory.setText(part1+"\n"+padding+part2);
-	            	
-	            	SyntaxDocument document = inputTheory.getDocument();
-	            	try
-	            	{
-	            	    document.beginStructEdit();
-	            	    /*
-	            	     * There is no way to avoid the double modification... or, if there is, I
-	            	     * wasn't able to find it; I've tried to get the best possible result anyway
-	            	     */
-	            	    document.remove(breakPoint, document.getLength()-breakPoint);
-						document.insertString(breakPoint, "\n"+padding+part2, null);
-		            	inputTheory.setDocument(document);
-		            	inputTheory.setCaretPosition(breakPoint+padding.length()+1);
-	            	}
-					catch(BadLocationException bl)
-					{
-						bl.printStackTrace();
-					}
-					finally
-					{
-						document.endStructEdit();
-					}
-            	}
+                if (inputTheory.isEditable())
+                {
+                    String line=inputTheory.getLineText(inputTheory.getCaretLine());
+                    int breakPoint=inputTheory.getCaretPosition();
+                    String padding = "";
+                    int paddingLength;
+                    StringTokenizer st = new StringTokenizer(line," \t\n");
+                    paddingLength = 0;
+                    String noPadding = "";
+                    if(st.hasMoreTokens())
+                    {
+                        noPadding=st.nextToken();
+                        paddingLength=line.indexOf(noPadding);
+                        padding=line.substring(0, paddingLength);
+                    }
+                    else //if line is empty or if it's made only by ' ', '\t' or '\n'
+                    {
+                        padding=line;
+                        paddingLength=line.length();
+                    }
+    
+                    //String part1 = inputTheory.getText().substring(0, breakPoint);
+                    String part2 = inputTheory.getText().substring(breakPoint);
+                    /**
+                     * JEditTextArea.setText richiama 2 metodi che agiscono sul SyntaxDocument
+                     * provocando 2 "entry" nell'elenco undo/redo e quindi non va bene usare
+                     * setText, meglio agire direttamente sul SyntaxDocument
+                     */
+                    //inputTheory.setText(part1+"\n"+padding+part2);
+                    
+                    SyntaxDocument document = inputTheory.getDocument();
+                    try
+                    {
+                        document.beginStructEdit();
+                        /*
+                         * There is no way to avoid the double modification... or, if there is, I
+                         * wasn't able to find it; I've tried to get the best possible result anyway
+                         */
+                        document.remove(breakPoint, document.getLength()-breakPoint);
+                        document.insertString(breakPoint, "\n"+padding+part2, null);
+                        inputTheory.setDocument(document);
+                        inputTheory.setCaretPosition(breakPoint+padding.length()+1);
+                    }
+                    catch(BadLocationException bl)
+                    {
+                        bl.printStackTrace();
+                    }
+                    finally
+                    {
+                        document.endStructEdit();
+                    }
+                }
             }
         });
     }
@@ -232,12 +233,12 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
     }
 
     public void setSaved(boolean flag) {
-    	if (inputTheory.isEditable())
-    	{
-	    	boolean oldSaved = isSaved();
-	        saved = flag;
-	        propertyChangeSupport.firePropertyChange("saved", oldSaved, saved);
-    	}
+        if (inputTheory.isEditable())
+        {
+            boolean oldSaved = isSaved();
+            saved = flag;
+            propertyChangeSupport.firePropertyChange("saved", oldSaved, saved);
+        }
     }
 
     public boolean isSaved() {
@@ -262,14 +263,14 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         }
     }
 
-	public void setFontDimension(int dimension)
-	{
-		Font font = new Font(inputTheory.getPainter().getFont().getName(),inputTheory.getPainter().getFont().getStyle(),dimension);
-		inputTheory.getPainter().setFont(font);
-	}
+    public void setFontDimension(int dimension)
+    {
+        Font font = new Font(inputTheory.getPainter().getFont().getName(),inputTheory.getPainter().getFont().getStyle(),dimension);
+        inputTheory.getPainter().setFont(font);
+    }
 
-	public void setEditable(boolean flag)
-	{
-		inputTheory.setEditable(flag);
-	}
+    public void setEditable(boolean flag)
+    {
+        inputTheory.setEditable(flag);
+    }
 } // end JavaEditArea class

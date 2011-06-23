@@ -22,4 +22,5 @@ package alice.tuprolog;
  *
  * @see SolveInfo
  */
+@SuppressWarnings("serial")
 public class NoSolutionException extends PrologException {}

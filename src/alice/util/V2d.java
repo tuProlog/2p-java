@@ -15,6 +15,7 @@ package alice.util;
  * objects are completely state-less
  *
  */
+@SuppressWarnings("serial")
 public class V2d implements java.io.Serializable {
 
     public float x,y;

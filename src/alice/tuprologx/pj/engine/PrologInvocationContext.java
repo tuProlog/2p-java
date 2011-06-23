@@ -1,21 +1,11 @@
-/*
- * InvocationObject.java
- *
- * Created on March 12, 2007, 10:02 AM
- *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
 package alice.tuprologx.pj.engine;
+
 import alice.tuprologx.pj.annotations.*;
 import alice.tuprologx.pj.annotations.parser.*;
 import alice.tuprologx.pj.annotations.parser.PrologTree.*;
 import alice.tuprologx.pj.model.*;
-import alice.tuprologx.pj.meta.*;
 
 import java.lang.reflect.*;
-import java.lang.annotation.*;
 import java.util.*;
 
 
@@ -37,7 +27,7 @@ public class PrologInvocationContext {
     /** Creates a new instance of InvocationObject */
     public PrologInvocationContext(Method m, Object[] args) {        
         PrologMethod pann = (PrologMethod)m.getAnnotation(PrologMethod.class);
-        assert (pann == null);            
+        assert (pann != null);         
         keepSubstitutions = pann.keepSubstitutions();// || pann.signature().equals("");
         initPredicateName(m,pann);
         initVariableNames(m,pann);
@@ -177,7 +167,9 @@ public class PrologInvocationContext {
 	catch (Exception e) {e.printStackTrace();return null;}
     }
     
-    
+    /*
+     * unused
+     *
     private Object buildSolution2(Term<?> theGoal, PJProlog _engine) throws NoSolutionException {
         try {                    
             if (multipleResult) {
@@ -257,13 +249,13 @@ public class PrologInvocationContext {
             return null;
         }
     }
-     
+    */
     
     private Object buildSolution(Term<?> theGoal, PJProlog _engine) throws NoSolutionException {
         try {                    
             if (multipleResult) {
                 final Iterable<? extends PrologSolution<?,Cons<?,?>>> answer = _engine.solveAll(theGoal);                            
-                Vector<Object> resultList = new Vector<Object>();
+                //Vector<Object> resultList = new Vector<Object>();
                 final Iterator<? extends PrologSolution<?,Cons<?,?>>> _result = answer.iterator();
                 if (!_result.hasNext() && exceptionOnFailure) {
                     throw new NoSolutionException();

@@ -24,56 +24,57 @@ import java.util.List;
  * Double class represents the double prolog data type
  *
  */
+@SuppressWarnings("serial")
 public class Double extends Number {
-	
-	private double value;
-	
-	public Double(double v) {
-		value = v;
-	}
-	
-	/**
-	 *  Returns the value of the Double as int
-	 */
-	final public int intValue() {
-		return (int) value;
-	}
-	
-	/**
-	 *  Returns the value of the Double as float
-	 *
-	 */
-	final public float floatValue() {
-		return (float) value;
-	}
-	
-	/**
-	 *  Returns the value of the Double as double
-	 *
-	 */
-	final public double doubleValue() {
-		return value;
-	}
-	
-	/**
-	 *  Returns the value of the Double as long
-	 */
-	final public long longValue() {
-		return (long) value;
-	}
-	
-	
-	/** is this term a prolog integer term? */
-	final public boolean isInteger() {
-		return false;
-	}
-	
-	/** is this term a prolog real term? */
-	final public boolean isReal() {
-		return true;
-	}
-	
-	/** is an int Integer number? 
+    
+    private double value;
+    
+    public Double(double v) {
+        value = v;
+    }
+    
+    /**
+     *  Returns the value of the Double as int
+     */
+    final public int intValue() {
+        return (int) value;
+    }
+    
+    /**
+     *  Returns the value of the Double as float
+     *
+     */
+    final public float floatValue() {
+        return (float) value;
+    }
+    
+    /**
+     *  Returns the value of the Double as double
+     *
+     */
+    final public double doubleValue() {
+        return value;
+    }
+    
+    /**
+     *  Returns the value of the Double as long
+     */
+    final public long longValue() {
+        return (long) value;
+    }
+    
+    
+    /** is this term a prolog integer term? */
+    final public boolean isInteger() {
+        return false;
+    }
+    
+    /** is this term a prolog real term? */
+    final public boolean isReal() {
+        return true;
+    }
+    
+    /** is an int Integer number? 
      * @deprecated Use <tt>instanceof Int</tt> instead. */
     final public boolean isTypeInt() {
         return false;
@@ -81,11 +82,11 @@ public class Double extends Number {
 
     /** is an int Integer number?
      * @deprecated Use <tt>instanceof Int</tt> instead. */
-	final public boolean isInt() {
-		return false;
-	}
-	
-	/** is a float Real number? 
+    final public boolean isInt() {
+        return false;
+    }
+    
+    /** is a float Real number? 
      * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
     final public boolean isTypeFloat() {
         return false;
@@ -93,11 +94,11 @@ public class Double extends Number {
 
     /** is a float Real number?
      * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
-	final public boolean isFloat() {
-		return false;
-	}
-	
-	/** is a double Real number? 
+    final public boolean isFloat() {
+        return false;
+    }
+    
+    /** is a double Real number? 
      * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead. */
     final public boolean isTypeDouble() {
         return true;
@@ -105,11 +106,11 @@ public class Double extends Number {
 
     /** is a double Real number?
      * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead. */
-	final public boolean isDouble() {
-		return true;
-	}
-	
-	/** is a long Integer number? 
+    final public boolean isDouble() {
+        return true;
+    }
+    
+    /** is a long Integer number? 
      * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
     final public boolean isTypeLong() {
         return false;
@@ -117,64 +118,64 @@ public class Double extends Number {
 
     /** is a long Integer number?
      * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
-	final public boolean isLong() {
-		return false;
-	}
-	
-	/**
-	 * Returns true if this Double term is grater that the term provided.
-	 * For number term argument, the int value is considered.
-	 */
-	public boolean isGreater(Term t) {
-		t = t.getTerm();
-		if (t instanceof Number) {
-			return value>((Number)t).doubleValue();
-		} else if (t instanceof Struct) {
-			return false;
-		} else if (t instanceof Var) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Returns true if this Double term is equal to the term provided.
-	 */
-	public boolean isEqual(Term t) {
-		t = t.getTerm();
-		if (t instanceof Number) {
-			Number n = (Number) t;
-			if (!n.isReal())
-				return false;
-			return value == n.doubleValue();
-		} else {
-			return false;
-		}
-	}
-	
-	/**
-	 * Tries to unify a term with the provided term argument.
-	 * This service is to be used in demonstration context.
-	 */
-	boolean unify(List vl1, List vl2, Term t) {
-		t = t.getTerm();
-		if (t instanceof Var) {
-			return t.unify(vl2, vl1, this);
-		} else if (t instanceof Number && ((Number) t).isReal()) {
-			return value == ((Number) t).doubleValue();
-		} else {
-			return false;
-		}
-	}
-	
-	public String toString() {
-		return java.lang.Double.toString(value);
-	}
-	
-	public int resolveVariables(int count) {
-		return count;
-	}
+    final public boolean isLong() {
+        return false;
+    }
+    
+    /**
+     * Returns true if this Double term is grater that the term provided.
+     * For number term argument, the int value is considered.
+     */
+    public boolean isGreater(Term t) {
+        t = t.getTerm();
+        if (t instanceof Number) {
+            return value>((Number)t).doubleValue();
+        } else if (t instanceof Struct) {
+            return false;
+        } else if (t instanceof Var) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Returns true if this Double term is equal to the term provided.
+     */
+    public boolean isEqual(Term t) {
+        t = t.getTerm();
+        if (t instanceof Number) {
+            Number n = (Number) t;
+            if (!n.isReal())
+                return false;
+            return value == n.doubleValue();
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Tries to unify a term with the provided term argument.
+     * This service is to be used in demonstration context.
+     */
+    boolean unify(List<Var> vl1, List<Var> vl2, Term t) {
+        t = t.getTerm();
+        if (t instanceof Var) {
+            return t.unify(vl2, vl1, this);
+        } else if (t instanceof Number && ((Number) t).isReal()) {
+            return value == ((Number) t).doubleValue();
+        } else {
+            return false;
+        }
+    }
+    
+    public String toString() {
+        return java.lang.Double.toString(value);
+    }
+    
+    public int resolveVariables(int count) {
+        return count;
+    }
 
     /**
      * @author Paolo Contessi
@@ -182,5 +183,5 @@ public class Double extends Number {
     public int compareTo(Number o) {
         return (new java.lang.Double(value)).compareTo(o.doubleValue());
     }
-	
+    
 }

@@ -26,44 +26,44 @@ import alice.util.OneWayList;
  * @author Alex Benini
  */
 public class ChoicePointContext {
-	
-	ClauseStore compatibleGoals;
-	ExecutionContext executionContext;
-	ChoicePointContext prevChoicePointContext;
-	
-	SubGoalId indexSubGoal;
-	OneWayList varsToDeunify;
-	
-	
-	public String toString(){
-		return "     ChoicePointId: "+executionContext.getId()+":"+indexSubGoal+"\n"+
-			   //"varsToDeunify: "+getVarsToDeunify()+"\n"+
-			   "     compGoals:     "+compatibleGoals+"\n";
-	}
-	
-	/*
-	 * Methods for spyListeners
-	 */
-	
-	public ClauseStore getCompatibleGoals() {
-		return compatibleGoals;
-	}
-	
-	public ExecutionContext getExecutionContext() {
-		return executionContext;
-	}
-	
-	public SubGoalId getIndexBack() {
-		return indexSubGoal;
-	}
-	
-	public List getVarsToDeunify() {
-		ArrayList l = new ArrayList();
-		OneWayList t = varsToDeunify;
-		while (t != null) {
-			l.add(t.getHead());
-			t = t.getTail();
-		}
-		return l;
-	}
+    
+    ClauseStore compatibleGoals;
+    ExecutionContext executionContext;
+    ChoicePointContext prevChoicePointContext;
+    
+    SubGoalId indexSubGoal;
+    OneWayList<List<Var>> varsToDeunify;
+    
+    
+    public String toString(){
+        return "     ChoicePointId: "+executionContext.getId()+":"+indexSubGoal+"\n"+
+               //"varsToDeunify: "+getVarsToDeunify()+"\n"+
+               "     compGoals:     "+compatibleGoals+"\n";
+    }
+    
+    /*
+     * Methods for spyListeners
+     */
+    
+    public ClauseStore getCompatibleGoals() {
+        return compatibleGoals;
+    }
+    
+    public ExecutionContext getExecutionContext() {
+        return executionContext;
+    }
+    
+    public SubGoalId getIndexBack() {
+        return indexSubGoal;
+    }
+    
+    public List<List<Var>> getVarsToDeunify() {
+        ArrayList<List<Var>> l = new ArrayList<List<Var>>();
+        OneWayList<List<Var>> t = varsToDeunify;
+        while (t != null) {
+            l.add(t.getHead());
+            t = t.getTail();
+        }
+        return l;
+    }
 }

@@ -26,6 +26,7 @@ import alice.tuprolog.Prolog;
  * @since 1.3
  * 
  */
+@SuppressWarnings("serial")
 public class LibraryEvent extends PrologEvent {
 
     private String libName;

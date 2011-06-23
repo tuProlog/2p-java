@@ -18,9 +18,7 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.*;
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.WarningEvent;
+import alice.tuprolog.event.*;
 
 import javax.swing.*;
 
@@ -31,19 +29,19 @@ import java.awt.event.*;
  * The tuProlog IDE to be run on a Java2 platform. Makes use of Thinlet and
  * Swing for advanced components, e.g. a more advanced edit area.
  * 
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - 14-nov-02
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.0 - 14-nov-02
  */
 
 public class JavaIDE
-	extends JFrame
+    extends JFrame
 {
-	
-	private static final long serialVersionUID = 1L;
+    
+    private static final long serialVersionUID = 1L;
 
-	//private Prolog engine;
+    //private Prolog engine;
     private ToolBar toolBar;
-	private TheoryTabbedPane tabbedPane;
+    private TheoryTabbedPane tabbedPane;
 
     public JavaIDE() {
         super("tuProlog IDE");
@@ -54,7 +52,7 @@ public class JavaIDE
      * Initialize the graphic components and set the dependencies among them.
      */
     private void initComponents() {
-    	System.out.println("tuProlog system - release " + Prolog.getVersion());
+        System.out.println("tuProlog system - release " + Prolog.getVersion());
 
         Prolog engine = new Prolog();
 
@@ -70,9 +68,9 @@ public class JavaIDE
         tabbedPane.setTheoryEditor(editor);
 
         JavaInputField inputField = new JavaInputField();
-		tabbedPane.setInputField(inputField);
+        tabbedPane.setInputField(inputField);
 
-		ConsoleManager consoleManager=new ConsoleManager(tabbedPane);
+        ConsoleManager consoleManager=new ConsoleManager(tabbedPane);
         ConsoleDialog consoleDialog = new ConsoleDialog(consoleManager);
         tabbedPane.setConsoleDialog(consoleDialog);
 
@@ -82,6 +80,9 @@ public class JavaIDE
         //set default value
         configFrame.setMillsStopEngine(5000);
         configFrame.setSelectDisplayModality(0);
+        /*Castagna 06/2011*/       
+        configFrame.setNotifyExceptionEvent(engine.isException());
+        /**/
 
         toolBar.setPrologConfig(configFrame);
 
@@ -99,11 +100,14 @@ public class JavaIDE
         consoleDialog.addPropertyChangeListener(statusBar);
         consoleDialog.setStatusMessage("Ready.");
         engine.addQueryListener(consoleManager);
-		engine.addOutputListener(consoleDialog);
-		consoleManager.addInformationToDisplayListener(consoleDialog);
-		consoleManager.setDialog(consoleDialog);
-		consoleDialog.setFileManager(new JavaIOManager(this));
-		consoleDialog.setFileManagerType("csv");
+        engine.addOutputListener(consoleDialog);
+        /*Castagna 06/2011*/
+		engine.addExceptionListener(consoleDialog);
+		/**/
+        consoleManager.addInformationToDisplayListener(consoleDialog);
+        consoleManager.setDialog(consoleDialog);
+        consoleDialog.setFileManager(new JavaIOManager(this));
+        consoleDialog.setFileManagerType("csv");
 
         inputField.setBackground(new Color(230, 230, 230));
         inputField.setConsole(consoleManager);
@@ -124,19 +128,19 @@ public class JavaIDE
         //insert component in the panels
         JPanel consolePanel = new JPanel();
         consolePanel.setLayout(new BorderLayout());
-		consolePanel.add(inputField, BorderLayout.NORTH);
+        consolePanel.add(inputField, BorderLayout.NORTH);
         consolePanel.add(consoleDialog, BorderLayout.CENTER);
 
-		JSplitPane splitPaneV = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
-		splitPaneV.setLeftComponent(tabbedPane);
-		splitPaneV.setRightComponent(consolePanel);
+        JSplitPane splitPaneV = new JSplitPane( JSplitPane.VERTICAL_SPLIT );
+        splitPaneV.setLeftComponent(tabbedPane);
+        splitPaneV.setRightComponent(consolePanel);
 
-		JPanel corePanel = new JPanel();
+        JPanel corePanel = new JPanel();
         corePanel.setLayout(new BorderLayout());
         corePanel.add(editor, BorderLayout.NORTH);
-		corePanel.add(splitPaneV, BorderLayout.CENTER);
+        corePanel.add(splitPaneV, BorderLayout.CENTER);
 
-		JPanel IDEPanel = new JPanel();
+        JPanel IDEPanel = new JPanel();
         IDEPanel.setLayout(new BorderLayout());
         IDEPanel.add(toolBar, BorderLayout.NORTH);
         IDEPanel.add(corePanel, BorderLayout.CENTER);
@@ -144,27 +148,27 @@ public class JavaIDE
 
         getContentPane().add(IDEPanel);
 
-		pack();
-		setSize(new Dimension(585,675));
-		splitPaneV.setResizeWeight(0.7);
+        pack();
+        setSize(new Dimension(585,675));
+        splitPaneV.setResizeWeight(0.7);
 
         // Set a title bar icon
         ImageIcon icon = new ImageIcon(getClass().getResource("img/tuProlog.gif"));
         setIconImage(icon.getImage());
     }
 
-	public void onOutput(OutputEvent e) {
-		System.out.print(e.getMsg());
-	}
-	public void onSpy(SpyEvent e) {
-		System.out.println(e.getMsg());
-	}
-	public void onWarning(WarningEvent e) {
-		System.out.println(e.getMsg());
-	}
+    public void onOutput(OutputEvent e) {
+        System.out.print(e.getMsg());
+    }
+    public void onSpy(SpyEvent e) {
+        System.out.println(e.getMsg());
+    }
+    public void onWarning(WarningEvent e) {
+        System.out.println(e.getMsg());
+    }
 
     public void enableTheoryCommands(boolean flag) {
-    	tabbedPane.enableTheoryCommands(flag);
+        tabbedPane.enableTheoryCommands(flag);
     }
 
     public boolean isFeededTheory() {
@@ -172,7 +176,7 @@ public class JavaIDE
     }
     
     public void setFeededTheory(boolean flag) {
-    	tabbedPane.setFeededTheory(flag);
+        tabbedPane.setFeededTheory(flag);
     }
 
     public String getEditorContent() {
@@ -180,29 +184,29 @@ public class JavaIDE
     }
     
     public void setEditorContent(String text) {
-    	tabbedPane.setEditorContent(text);
+        tabbedPane.setEditorContent(text);
     }
 
     public void onClose()
     {
-    	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-    	boolean isWindowClosable = true;
-    	for (int i=0;i<tabbedPane.getTabCount()&& isWindowClosable;i++)
-    	{
-   			isWindowClosable = tabbedPane.isClosable(i); 
-    	}
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        boolean isWindowClosable = true;
+        for (int i=0;i<tabbedPane.getTabCount()&& isWindowClosable;i++)
+        {
+               isWindowClosable = tabbedPane.isClosable(i); 
+        }
         if (isWindowClosable)
         {
-        	dispose();
-        	System.exit(0);
+            dispose();
+            System.exit(0);
         }
     }
 
     class WindowListener extends WindowAdapter
     {
-    	public void windowClosing(WindowEvent w)
-    	{
-    		onClose();
-    	}
+        public void windowClosing(WindowEvent w)
+        {
+            onClose();
+        }
     }
 } // end JavaIDE class

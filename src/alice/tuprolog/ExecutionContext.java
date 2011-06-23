@@ -21,7 +21,6 @@ import java.util.*;
 
 import alice.tuprolog.Struct;
 import alice.util.OneWayList;
-import utility.StaticCounter;
 
 
 /**
@@ -29,110 +28,110 @@ import utility.StaticCounter;
  * @author Alex Benini
  */
 public class ExecutionContext {
-	
-	private int id;
-	int depth;
-	
-	Struct currentGoal;
-	
-	ExecutionContext fatherCtx;
-	SubGoalId fatherGoalId;
-	
-	Struct clause;
-	Struct headClause;
-	SubGoalStore goalsToEval;
-	OneWayList trailingVars;
-	OneWayList fatherVarsList;
-	
-	ChoicePointContext choicePointAfterCut;
-		
-	boolean haveAlternatives;
-	
-	/**
-	 * 
-	 */
-	ExecutionContext(int id) {
-		this.id=id;
-	}
-	
-	
-	public int getId() { return id; }
-	
-	
-	public String toString(){
-		return "	     id: "+id+"\n"+
-		"     currentGoal:  "+currentGoal+"\n"+
-		"     clause:       "+clause+"\n"+
-		"     subGoalStore: "+goalsToEval+"\n"+
-		"     trailingVars: "+trailingVars+"\n"+
-		//((fatherCtx==null)?"":fatherCtx.toString());
-		"";
-	}
-	
-	
-	/*
-	 * Methods for spyListeners
-	 */
-	
-	public int getDepth() {
-		return depth;
-	}
-	
-	public Struct getCurrentGoal() {
-		return currentGoal;
-	}
-	
-	public SubGoalId getFatherGoalId() {
-		return fatherGoalId;
-	}
-	
-	public Struct getClause() {
-		return clause;
-	}
-	
-	public Struct getHeadClause() {
-		return headClause;
-	}
-	
-	public SubGoalStore getSubGoalStore() {
-		return goalsToEval;
-	}
-	
-	public List getTrailingVars() {
-		ArrayList l = new ArrayList();
-		OneWayList t = trailingVars;
-		while (t != null) {
-			l.add(t.getHead());
-			t = t.getTail();
-		}
-		return l;		
-	}
-	
-	/**
-	 * Save the state of the parent context to later bring the ExectutionContext
-	 * objects tree in a consistent state after a backtracking step.
-	 */
-	void saveParentState() {
-		if (fatherCtx != null) {
-			fatherGoalId = fatherCtx.goalsToEval.getCurrentGoalId();
-			fatherVarsList = fatherCtx.trailingVars;
-		}
-	}
-	
-	/**
-	 * If no open alternatives and no other term to execute ->
-	 * current context no more needed ->
-	 * reused to execute g subgoal =>
-	 * got TAIL RECURSION OPTIMIZATION!   «-- IT DOESN'T WORK!
-	 */
-	void performTailRecursionOptimization(Engine e) {
+    
+    private int id;
+    int depth;
+    
+    Struct currentGoal;
+    
+    ExecutionContext fatherCtx;
+    SubGoalId fatherGoalId;
+    
+    Struct clause;
+    Struct headClause;
+    SubGoalStore goalsToEval;
+    OneWayList<List<Var>> trailingVars;
+    OneWayList<List<Var>> fatherVarsList;
+    
+    ChoicePointContext choicePointAfterCut;
+        
+    boolean haveAlternatives;
+    
+    /**
+     * 
+     */
+    ExecutionContext(int id) {
+        this.id=id;
+    }
+    
+    
+    public int getId() { return id; }
+    
+    
+    public String toString(){
+        return "         id: "+id+"\n"+
+        "     currentGoal:  "+currentGoal+"\n"+
+        "     clause:       "+clause+"\n"+
+        "     subGoalStore: "+goalsToEval+"\n"+
+        "     trailingVars: "+trailingVars+"\n"+
+        //((fatherCtx==null)?"":fatherCtx.toString());
+        "";
+    }
+    
+    
+    /*
+     * Methods for spyListeners
+     */
+    
+    public int getDepth() {
+        return depth;
+    }
+    
+    public Struct getCurrentGoal() {
+        return currentGoal;
+    }
+    
+    public SubGoalId getFatherGoalId() {
+        return fatherGoalId;
+    }
+    
+    public Struct getClause() {
+        return clause;
+    }
+    
+    public Struct getHeadClause() {
+        return headClause;
+    }
+    
+    public SubGoalStore getSubGoalStore() {
+        return goalsToEval;
+    }
+    
+    public List<List<Var>> getTrailingVars() {
+        ArrayList<List<Var>> l = new ArrayList<List<Var>>();
+        OneWayList<List<Var>> t = trailingVars;
+        while (t != null) {
+            l.add(t.getHead());
+            t = t.getTail();
+        }
+        return l;        
+    }
+    
+    /**
+     * Save the state of the parent context to later bring the ExectutionContext
+     * objects tree in a consistent state after a backtracking step.
+     */
+    void saveParentState() {
+        if (fatherCtx != null) {
+            fatherGoalId = fatherCtx.goalsToEval.getCurrentGoalId();
+            fatherVarsList = fatherCtx.trailingVars;
+        }
+    }
+    
+    /**
+     * If no open alternatives and no other term to execute ->
+     * current context no more needed ->
+     * reused to execute g subgoal =>
+     * got TAIL RECURSION OPTIMIZATION!   «-- IT DOESN'T WORK!
+     */
+    void performTailRecursionOptimization(Engine e) {
             if (!haveAlternatives && !goalsToEval.haveSubGoals()){
                 fatherCtx = e.currentContext.fatherCtx;
              }
             else{
                 fatherCtx = e.currentContext;
             }
- 	}
+     }
         void performTailRecursionOptimization2(Engine e) {
             if (!haveAlternatives){
                 fatherCtx = e.currentContext.fatherCtx;
@@ -140,5 +139,5 @@ public class ExecutionContext {
             else{
                 fatherCtx = e.currentContext;
             }
- 	}
+     }
 }

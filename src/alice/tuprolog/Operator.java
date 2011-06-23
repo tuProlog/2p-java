@@ -23,20 +23,21 @@ import java.io.Serializable;
  * a type, and a  priority.
  *
  */
+@SuppressWarnings("serial")
 final public class Operator implements Serializable {
-	
-	/** operator name */
-	public String name;
-	
-	/** type(xf,yf,fx,fy,xfx,xfy,yfy,yfx */
-	public String type;
-	
-	/** priority */
-	public int prio;
-	
-	Operator(String name_,String type_,int prio_) {
-		name = name_;
-		type = type_;
-		prio = prio_;
-	}
+    
+    /** operator name */
+    public String name;
+    
+    /** type(xf,yf,fx,fy,xfx,xfy,yfy,yfx */
+    public String type;
+    
+    /** priority */
+    public int prio;
+    
+/*Castagna 06/2011*/public/**/ Operator(String name_,String type_,int prio_) {
+        name = name_;
+        type = type_;
+        prio = prio_;
+    }
 }

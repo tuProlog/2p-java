@@ -26,16 +26,16 @@ import java.net.URL;
 /**
  * An input field for the Java2 platform using Swing components.
  * 
- * @author	<a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version	1.0 - 29-nov-02
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.0 - 29-nov-02
  */
 
 public class JavaInputField
-	extends JPanel
-	implements InputField
+    extends JPanel
+    implements InputField
 {
     
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /** The input field used in the graphic interface. */
     private JTextField inputField;
@@ -59,9 +59,9 @@ public class JavaInputField
         });
         
         JButton solveButton = new JButton();
-    	URL urlImage = getClass().getResource("img/Solve18.png");
-    	solveButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-    	solveButton.setPreferredSize(new Dimension(18,18));
+        URL urlImage = getClass().getResource("img/Solve18.png");
+        solveButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        solveButton.setPreferredSize(new Dimension(18,18));
         solveButton.setToolTipText("Solve");
         solveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -70,9 +70,9 @@ public class JavaInputField
         });
 
         JButton solveAllButton = new JButton();
-    	urlImage = getClass().getResource("img/SolveAll18.png");
-    	solveAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-    	solveAllButton.setPreferredSize(new Dimension(18,18));
+        urlImage = getClass().getResource("img/SolveAll18.png");
+        solveAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        solveAllButton.setPreferredSize(new Dimension(18,18));
         solveAllButton.setToolTipText("Solve All");
         solveAllButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent event) {
@@ -112,10 +112,10 @@ public class JavaInputField
     private void inputFieldKeyReleased(KeyEvent event) {
         int code = event.getKeyCode();
         if (code == 38) // up arrow
-        	inputField.setText(history.previous());
+            inputField.setText(history.previous());
         else
-        	if (code == 40) // down arrow
-            	inputField.setText(history.next());
+            if (code == 40) // down arrow
+                inputField.setText(history.next());
     }
 
     /**
@@ -138,26 +138,26 @@ public class JavaInputField
      */
     public void solve()
     {
-    	if (getGoal().length()>0)//if the goal isn't empty
-    	{
-	        addGoalToHistory();
-	    	console.setSolveType(0);
-	        console.solve();
-    	}
-    	else
-    		console.setStatusMessage("Ready.");
+        if (getGoal().length()>0)//if the goal isn't empty
+        {
+            addGoalToHistory();
+            console.setSolveType(0);
+            console.solve();
+        }
+        else
+            console.setStatusMessage("Ready.");
     }
 
     public void solveAll()
     {
-    	if (getGoal().length()>0)//if the goal isn't empty
-    	{
-	    	addGoalToHistory();
-	    	console.setSolveType(1);
-	    	console.solveAll();
-    	}
-    	else
-    		console.setStatusMessage("Ready.");
+        if (getGoal().length()>0)//if the goal isn't empty
+        {
+            addGoalToHistory();
+            console.setSolveType(1);
+            console.solveAll();
+        }
+        else
+            console.setStatusMessage("Ready.");
     }
 
     public void addGoalToHistory() {
@@ -165,13 +165,13 @@ public class JavaInputField
     }
 
     public String getGoal() {
-		return inputField.getText();
+        return inputField.getText();
     }
 
-	public void setFontDimension(int dimension)
-	{
-		Font font = new Font(inputField.getFont().getName(),inputField.getFont().getStyle(),dimension);
-		inputField.setFont(font);
-	}
+    public void setFontDimension(int dimension)
+    {
+        Font font = new Font(inputField.getFont().getName(),inputField.getFont().getStyle(),dimension);
+        inputField.setFont(font);
+    }
 
 } // end JavaInputField class

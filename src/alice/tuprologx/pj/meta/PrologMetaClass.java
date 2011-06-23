@@ -19,16 +19,16 @@ import java.util.Vector;
  */
 public class PrologMetaClass {
     
-    private Class _theClass;
-    private PrologClass _annotation;
+    private Class<?> _theClass;
+    //private PrologClass _annotation;
     private PrologMetaField[] _fields;
     private PrologMetaMethod[] _methods;
     private Theory _theory;
     
     /** Creates a new instance of MetaPrologClass */
-    public PrologMetaClass(Class cl) {
+    public PrologMetaClass(Class<?> cl) {
         _theClass = cl.getSuperclass();
-        _annotation = (PrologClass)_theClass.getAnnotation(PrologClass.class);
+        //_annotation = (PrologClass)_theClass.getAnnotation(PrologClass.class);
         initTheory();
         initPrologFields();
         initPrologMethods();        
@@ -60,7 +60,7 @@ public class PrologMetaClass {
     
     public void initTheory() {
         String theory = "";
-        Class cl = _theClass;
+        Class<?> cl = _theClass;
         while (!cl.getName().equals("java.lang.Object")) {
             PrologClass pa = (PrologClass)cl.getAnnotation(PrologClass.class);
             if (pa != null) {
@@ -110,7 +110,7 @@ public class PrologMetaClass {
         }
     }
     
-    public Class getJavaClass() {
+    public Class<?> getJavaClass() {
         return _theClass;
     }
 }

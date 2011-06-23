@@ -16,7 +16,8 @@ package alice.tuprologx.pj.model;
 public class Bool extends Term<Bool> {
 	Boolean _theBool;        
         
-	public Boolean toJava() {return _theBool;}
+	public Boolean toJava() { return _theBool; }
+	
 	public Bool (Boolean b) {_theBool = b;}
         
         public alice.tuprolog.Term marshal() {

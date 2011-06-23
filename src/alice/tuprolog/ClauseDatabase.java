@@ -19,7 +19,6 @@ package alice.tuprolog;
 
 import alice.util.ReadOnlyLinkedList;
 import java.util.*;
-import java.util.logging.*;
 
 /**
  * Customized HashMap for storing clauses in the TheoryManager
@@ -28,17 +27,18 @@ import java.util.logging.*;
  *
  * Reviewed by Paolo Contessi
  */
-class ClauseDatabase extends HashMap {
+@SuppressWarnings("serial")
+class ClauseDatabase extends HashMap<String,FamilyClausesList> implements Iterable<ClauseInfo> {
 
     void addFirst(String key, ClauseInfo d) {
-        FamilyClausesList family = (FamilyClausesList) get(key);
+        FamilyClausesList family = get(key);
         if (family == null)
             put(key, family = new FamilyClausesList());
         family.addFirst(d);
     }
 
     void addLast(String key, ClauseInfo d) {
-        FamilyClausesList family = (FamilyClausesList) get(key);
+        FamilyClausesList family = get(key);
         if (family == null)
             put(key, family = new FamilyClausesList());
         family.addLast(d);
@@ -55,10 +55,10 @@ class ClauseDatabase extends HashMap {
      * @param headt The goal
      * @return  The list of matching-compatible predicates
      */
-    List getPredicates(Term headt) {
+    List<ClauseInfo> getPredicates(Term headt) {
         FamilyClausesList family = (FamilyClausesList) get(((Struct) headt).getPredicateIndicator());
         if (family == null){
-            return new ReadOnlyLinkedList();
+            return new ReadOnlyLinkedList<ClauseInfo>();
         }
         return family.get(headt);
     }
@@ -69,22 +69,22 @@ class ClauseDatabase extends HashMap {
      * @param key   Goal's Predicate Indicator
      * @return      The family clauses
      */
-    List getPredicates(String key){
+    List<ClauseInfo> getPredicates(String key){
         FamilyClausesList family = (FamilyClausesList) get(key);
         if(family == null){
-            return new ReadOnlyLinkedList();
+            return new ReadOnlyLinkedList<ClauseInfo>();
         }
-        return new ReadOnlyLinkedList(family);
+        return new ReadOnlyLinkedList<ClauseInfo>(family);
     }
 
-    public Iterator iterator() {
+    public Iterator<ClauseInfo> iterator() {
         return new CompleteIterator(this);
     }
 
-    private static class CompleteIterator implements Iterator {
-        Iterator values;
-        Iterator workingList;
-        private boolean busy=false;
+    private static class CompleteIterator implements Iterator<ClauseInfo> {
+        Iterator<FamilyClausesList> values;
+        Iterator<ClauseInfo> workingList;
+        //private boolean busy = false;
 
         public CompleteIterator(ClauseDatabase clauseDatabase) {
             values = clauseDatabase.values().iterator();
@@ -94,13 +94,13 @@ class ClauseDatabase extends HashMap {
             if (workingList != null && workingList.hasNext())
                 return true;
             if (values.hasNext()) {
-                workingList = ((List) values.next()).iterator();
+                workingList = values.next().iterator();
                 return hasNext(); //start again on next workingList
             }
             return false;
         }
 
-        public synchronized Object next() {
+        public synchronized ClauseInfo next() {
             if (workingList.hasNext())
                 return workingList.next();
             else return null;

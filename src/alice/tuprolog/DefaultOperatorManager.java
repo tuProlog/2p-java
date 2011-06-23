@@ -22,53 +22,54 @@ package alice.tuprolog;
  *  some standard operators defined
  *
  */
+@SuppressWarnings("serial")
 class DefaultOperatorManager extends OperatorManager {
-	
-	public DefaultOperatorManager() {
-		opNew(":-", "xfx", 1200);
-		opNew("-->", "xfx", 1200);
-		opNew(":-", "fx", 1200);
-		opNew("?-", "fx", 1200);
-		opNew(";", "xfy", 1100);
-		opNew("->", "xfy", 1050);
-		opNew(",", "xfy", 1000);
-		opNew("\\+", "fy", 900);
-		opNew("not", "fy", 900);
-		opNew("=", "xfx", 700);
-		opNew("\\=", "xfx", 700);
-		opNew("==", "xfx", 700);
-		opNew("\\==", "xfx", 700);
-		//opNew("@==","xfx",700);
-		//opNew("@\\==","xfx",700);
-		opNew("@>", "xfx", 700);
-		opNew("@<", "xfx", 700);
-		opNew("@=<", "xfx", 700);
-		opNew("@>=", "xfx", 700);
-		opNew("=:=", "xfx", 700);
-		opNew("=\\=", "xfx", 700);
-		opNew(">", "xfx", 700);
-		opNew("<", "xfx", 700);
-		opNew("=<", "xfx", 700);
-		opNew(">=", "xfx", 700);
-		opNew("is", "xfx", 700);
-		opNew("=..", "xfx", 700);
-		//opNew("?","xfx",600);
-		//opNew("@","xfx",550);
-		opNew("+", "yfx", 500);
-		opNew("-", "yfx", 500);
-		opNew("/\\", "yfx", 500);
-		opNew("\\/", "yfx", 500);
-		opNew("*", "yfx", 400);
-		opNew("/", "yfx", 400);
-		opNew("//", "yfx", 400);
-		opNew(">>", "yfx", 400);
-		opNew("<<", "yfx", 400);
-		opNew("rem", "yfx", 400);
-		opNew("mod", "yfx", 400);
-		opNew("**", "xfx", 200);
-		opNew("^", "xfy", 200);
-		opNew("\\", "fx", 200);
-		opNew("-", "fy", 200);
-	}
-	
+    
+    public DefaultOperatorManager() {
+        opNew(":-", "xfx", 1200);
+        opNew("-->", "xfx", 1200);
+        opNew(":-", "fx", 1200);
+        opNew("?-", "fx", 1200);
+        opNew(";", "xfy", 1100);
+        opNew("->", "xfy", 1050);
+        opNew(",", "xfy", 1000);
+        opNew("\\+", "fy", 900);
+        opNew("not", "fy", 900);
+        opNew("=", "xfx", 700);
+        opNew("\\=", "xfx", 700);
+        opNew("==", "xfx", 700);
+        opNew("\\==", "xfx", 700);
+        //opNew("@==","xfx",700);
+        //opNew("@\\==","xfx",700);
+        opNew("@>", "xfx", 700);
+        opNew("@<", "xfx", 700);
+        opNew("@=<", "xfx", 700);
+        opNew("@>=", "xfx", 700);
+        opNew("=:=", "xfx", 700);
+        opNew("=\\=", "xfx", 700);
+        opNew(">", "xfx", 700);
+        opNew("<", "xfx", 700);
+        opNew("=<", "xfx", 700);
+        opNew(">=", "xfx", 700);
+        opNew("is", "xfx", 700);
+        opNew("=..", "xfx", 700);
+        //opNew("?","xfx",600);
+        //opNew("@","xfx",550);
+        opNew("+", "yfx", 500);
+        opNew("-", "yfx", 500);
+        opNew("/\\", "yfx", 500);
+        opNew("\\/", "yfx", 500);
+        opNew("*", "yfx", 400);
+        opNew("/", "yfx", 400);
+        opNew("//", "yfx", 400);
+        opNew(">>", "yfx", 400);
+        opNew("<<", "yfx", 400);
+        opNew("rem", "yfx", 400);
+        opNew("mod", "yfx", 400);
+        opNew("**", "xfx", 200);
+        opNew("^", "xfy", 200);
+        opNew("\\", "fx", 200);
+        opNew("-", "fy", 200);
+    }
+    
 }

@@ -24,31 +24,32 @@ import java.util.NoSuchElementException;
  *
  * @see Struct
  */
-class StructIterator implements java.util.Iterator, java.io.Serializable {
-	
-	Struct list;
-	
-	StructIterator(Struct t) {
-		this.list = t;
-	}
-	
-	public boolean hasNext() {
-		return !list.isEmptyList();
-	}
-	
-	public Object next() {
-		if (list.isEmptyList())
-			throw new NoSuchElementException();
-		// Using Struct#getTerm(int) instead of Struct#listHead and Struct#listTail
-		// to avoid redundant Struct#isList calls since it is only possible to get
-		// a StructIterator on a Struct instance which is already a list.
-		Term head = list.getTerm(0);
-		list = (Struct) list.getTerm(1);
-		return head;
-	}
-	
-	public void remove() {
-		throw new UnsupportedOperationException();
-	}
-	
+@SuppressWarnings("serial")
+class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
+    
+    Struct list;
+    
+    StructIterator(Struct t) {
+        this.list = t;
+    }
+    
+    public boolean hasNext() {
+        return !list.isEmptyList();
+    }
+    
+    public Term next() {
+        if (list.isEmptyList())
+            throw new NoSuchElementException();
+        // Using Struct#getTerm(int) instead of Struct#listHead and Struct#listTail
+        // to avoid redundant Struct#isList calls since it is only possible to get
+        // a StructIterator on a Struct instance which is already a list.
+        Term head = list.getTerm(0);
+        list = (Struct) list.getTerm(1);
+        return head;
+    }
+    
+    public void remove() {
+        throw new UnsupportedOperationException();
+    }
+    
 }

@@ -26,94 +26,94 @@ import java.util.*;
  */
 class FlagManager {
 
-	/* flag list */
-	private ArrayList flags;
+    /* flag list */
+    private ArrayList<Flag> flags;
 
-	/** mediator owner of the manager */
-	protected Prolog mediator;
+    /** mediator owner of the manager */
+    protected Prolog mediator;
 
-	FlagManager() {
-		flags = new ArrayList();
-	}
+    FlagManager() {
+        flags = new ArrayList<Flag>();
+    }
 
-	/**
-	 * Config this Manager
-	 */
-	public void initialize(Prolog vm) {
-		mediator = vm;
-	}
+    /**
+     * Config this Manager
+     */
+    public void initialize(Prolog vm) {
+        mediator = vm;
+    }
 
-	/**
-	 * Defines a new flag
-	 */
-	public boolean defineFlag(String name, Struct valueList, Term defValue,
-			boolean modifiable, String libName) {
-		flags.add(new Flag(name, valueList, defValue, modifiable, libName));
-		return true;
-	}
+    /**
+     * Defines a new flag
+     */
+    public boolean defineFlag(String name, Struct valueList, Term defValue,
+            boolean modifiable, String libName) {
+        flags.add(new Flag(name, valueList, defValue, modifiable, libName));
+        return true;
+    }
 
-	public boolean setFlag(String name, Term value) {
-		java.util.Iterator it = flags.iterator();
-		while (it.hasNext()) {
-			Flag flag = (Flag) it.next();
-			if (flag.getName().equals(name)) {
-				if (flag.isModifiable() && flag.isValidValue(value)) {
-					flag.setValue(value);
-					return true;
-				} else {
-					return false;
-				}
-			}
-		}
-		return false;
-	}
+    public boolean setFlag(String name, Term value) {
+        java.util.Iterator<Flag> it = flags.iterator();
+        while (it.hasNext()) {
+            Flag flag = (Flag) it.next();
+            if (flag.getName().equals(name)) {
+                if (flag.isModifiable() && flag.isValidValue(value)) {
+                    flag.setValue(value);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 
-	public Struct getPrologFlagList() {
-		Struct flist = new Struct();
-		java.util.Iterator it = flags.iterator();
-		while (it.hasNext()) {
-			Flag fl = (Flag) it.next();
-			flist = new Struct(new Struct("flag", new Struct(fl.getName()), fl
-					.getValue()), flist);
-		}
-		return flist;
-	}
+    public Struct getPrologFlagList() {
+        Struct flist = new Struct();
+        java.util.Iterator<Flag> it = flags.iterator();
+        while (it.hasNext()) {
+            Flag fl = (Flag) it.next();
+            flist = new Struct(new Struct("flag", new Struct(fl.getName()), fl
+                    .getValue()), flist);
+        }
+        return flist;
+    }
 
-	public Term getFlag(String name) {
-		java.util.Iterator it = flags.iterator();
-		while (it.hasNext()) {
-			Flag fl = (Flag) it.next();
-			if (fl.getName().equals(name)) {
-				return fl.getValue();
-			}
-		}
-		return null;
-	}
+    public Term getFlag(String name) {
+        java.util.Iterator<Flag> it = flags.iterator();
+        while (it.hasNext()) {
+            Flag fl = (Flag) it.next();
+            if (fl.getName().equals(name)) {
+                return fl.getValue();
+            }
+        }
+        return null;
+    }
 
-	// restituisce true se esiste un flag di nome name, e tale flag ?
-	// modificabile
-	public boolean isModifiable(String name) {
-		java.util.Iterator it = flags.iterator();
-		while (it.hasNext()) {
-			Flag flag = (Flag) it.next();
-			if (flag.getName().equals(name)) {
-				return flag.isModifiable();
-			}
-		}
-		return false;
-	}
+    // restituisce true se esiste un flag di nome name, e tale flag ?
+    // modificabile
+    public boolean isModifiable(String name) {
+        java.util.Iterator<Flag> it = flags.iterator();
+        while (it.hasNext()) {
+            Flag flag = (Flag) it.next();
+            if (flag.getName().equals(name)) {
+                return flag.isModifiable();
+            }
+        }
+        return false;
+    }
 
-	// restituisce true se esiste un flag di nome name, e Value ? un valore
-	// ammissibile per tale flag
-	public boolean isValidValue(String name, Term value) {
-		java.util.Iterator it = flags.iterator();
-		while (it.hasNext()) {
-			Flag flag = (Flag) it.next();
-			if (flag.getName().equals(name)) {
-				return flag.isValidValue(value);
-			}
-		}
-		return false;
-	}
+    // restituisce true se esiste un flag di nome name, e Value ? un valore
+    // ammissibile per tale flag
+    public boolean isValidValue(String name, Term value) {
+        java.util.Iterator<Flag> it = flags.iterator();
+        while (it.hasNext()) {
+            Flag flag = (Flag) it.next();
+            if (flag.getName().equals(name)) {
+                return flag.isValidValue(value);
+            }
+        }
+        return false;
+    }
 
 }

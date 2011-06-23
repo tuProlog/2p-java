@@ -23,4 +23,5 @@ package alice.tuprolog;
  *
  *
  */
+@SuppressWarnings("serial")
 public class UnknownVarException extends PrologException {}

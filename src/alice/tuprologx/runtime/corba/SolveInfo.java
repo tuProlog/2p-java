@@ -8,6 +8,7 @@ package alice.tuprologx.runtime.corba;
 * venerd? 28 dicembre 2001 12.37.09 GMT+01:00
 */
 
+@SuppressWarnings("serial")
 public final class SolveInfo implements org.omg.CORBA.portable.IDLEntity
 {
   public boolean success = false;

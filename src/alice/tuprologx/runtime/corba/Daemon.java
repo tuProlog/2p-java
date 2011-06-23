@@ -1,11 +1,7 @@
 package alice.tuprologx.runtime.corba;
 
 import org.omg.CosNaming.*;
-import org.omg.CosNaming.NamingContextPackage.*;
 import org.omg.CORBA.*;
-
-import alice.tuprolog.*;
-
 
 public class Daemon{
     public static void main(String args[]){

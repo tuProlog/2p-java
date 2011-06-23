@@ -40,7 +40,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,22 +52,22 @@ import java.util.Map;
 public final class MethodFinder {
 
     /** The target class to look for methods and constructors in. */
-    private final Class clazz;
+    private final Class<?> clazz;
 
     /** Mapping from method name to the Methods in the target class with that name. */
-    private final Map methodMap = new HashMap();
+    private final Map<String,List<Member>> methodMap = new HashMap<String, List<Member>>();
 
     /** List of the Constructors in the target class. */
-    private final List ctorList = new ArrayList();
+    private final List<Member> ctorList = new ArrayList<Member>();
 
     /** Mapping from a Constructor or Method object to the Class objects representing its formal parameters. */
-    private final Map paramMap = new HashMap();
+    private final Map<Member,Class<?>[]> paramMap = new HashMap<Member, Class<?>[]>();
 
     /**
      * @param  clazz  Class in which I will look for methods and constructors
      * throws  IllegalArgumentException if clazz is null, or represents a primitive, or represents an array type
      */
-    public MethodFinder(final Class clazz) {
+    public MethodFinder(final Class<?> clazz) {
         if (clazz == null) {
             throw new IllegalArgumentException("null Class parameter");
         }
@@ -114,19 +113,18 @@ public final class MethodFinder {
      *                or if the reflective call is ambiguous based on the
      *                parameter types
      */
-    public Constructor findConstructor(final Class[] parameterTypes) throws NoSuchMethodException {
-        return (Constructor) findMemberIn(ctorList, parameterTypes == null ? new Class[0] : parameterTypes);
+    public Constructor<?> findConstructor(final Class<?>[] parameterTypes) throws NoSuchMethodException {
+        return (Constructor<?>) findMemberIn(ctorList, parameterTypes == null ? new Class[0] : parameterTypes);
     }
 
     /**
      * Basis of findConstructor() and findMethod(). The member list fed to this
      * method will be either all Constructor objects or all Method objects.
      */
-    private Member findMemberIn(final List memberList, final Class[] parameterTypes) throws NoSuchMethodException {
-        List matchingMembers = new ArrayList();
-        for (Iterator it = memberList.iterator(); it.hasNext();) {
-            Member member = (Member) it.next();
-            Class[] methodParamTypes = (Class[]) paramMap.get(member);
+    private Member findMemberIn(final List<Member> memberList, final Class<?>[] parameterTypes) throws NoSuchMethodException {
+        List<Member> matchingMembers = new ArrayList<Member>();
+        for (Member member: memberList) {
+            Class<?>[] methodParamTypes = paramMap.get(member);
 
             if (Arrays.equals(methodParamTypes, parameterTypes)) {
                 return member;
@@ -160,8 +158,8 @@ public final class MethodFinder {
      *                the reflective call is ambiguous based on the parameter
      *                types, or if methodName is null
      */
-    public Method findMethod(final String methodName, final Class[] parameterTypes) throws NoSuchMethodException {
-        List methodList = (List) methodMap.get(methodName);
+    public Method findMethod(final String methodName, final Class<?>[] parameterTypes) throws NoSuchMethodException {
+        List<Member> methodList = methodMap.get(methodName);
         if (methodList == null) {
             throw new NoSuchMethodException("no method named " + clazz.getName() + "." + methodName);
         }
@@ -174,11 +172,10 @@ public final class MethodFinder {
      * @throws NoSuchMethodException if there is an ambiguity as to which is
      *                most specific
      */
-    private Member findMostSpecificMemberIn(final List memberList) throws NoSuchMethodException {
-        List mostSpecificMembers = new ArrayList();
+    private Member findMostSpecificMemberIn(final List<Member> memberList) throws NoSuchMethodException {
+        List<Member> mostSpecificMembers = new ArrayList<Member>();
 
-        for (Iterator memberIt = memberList.iterator(); memberIt.hasNext();) {
-            Member member = (Member) memberIt.next();
+        for (Member member: memberList) {
 
             if (mostSpecificMembers.isEmpty()) {
                 // First guy in is the most specific so far.
@@ -189,8 +186,7 @@ public final class MethodFinder {
 
                 // Is member more specific than everyone in the most-specific
                 // set?
-                for (Iterator specificIt = mostSpecificMembers.iterator(); specificIt.hasNext();) {
-                    Member moreSpecificMember = (Member) specificIt.next();
+                for (Member moreSpecificMember: mostSpecificMembers) {
 
                     if (!memberIsMoreSpecific(member, moreSpecificMember)) {
                         /*
@@ -224,7 +220,7 @@ public final class MethodFinder {
             throw new NoSuchMethodException("Ambiguous request for member in " + this.clazz.getName() + " matching given args");
         }
 
-        return (Member) mostSpecificMembers.get(0);
+        return mostSpecificMembers.get(0);
     }
 
     /**
@@ -234,11 +230,11 @@ public final class MethodFinder {
      *         array is returned. If an element in args is null, then Void.TYPE
      *         is the corresponding Class in the return array.
      */
-    public static Class[] getParameterTypesFrom(final Object[] args) {
+    public static Class<?>[] getParameterTypesFrom(final Object[] args) {
         if (args == null) {
             return new Class[0];
         }
-        Class[] argTypes = new Class[args.length];
+        Class<?>[] argTypes = new Class[args.length];
         for (int i = 0; i < args.length; ++i) {
             argTypes[i] = (args[i] == null) ? Void.TYPE : args[i].getClass();
         }
@@ -262,7 +258,7 @@ public final class MethodFinder {
      * @throws ClassNotFoundException if any of the FQNs name an unknown
      *                class
      */
-    public static Class[] getParameterTypesFrom(final String[] classNames) throws ClassNotFoundException {
+    public static Class<?>[] getParameterTypesFrom(final String[] classNames) throws ClassNotFoundException {
         return getParameterTypesFrom(classNames, MethodFinder.class.getClassLoader());
     }
 
@@ -284,12 +280,12 @@ public final class MethodFinder {
      * @throws ClassNotFoundException if any of the FQNs name an unknown
      *                class
      */
-    public static Class[] getParameterTypesFrom(final String[] classNames, final java.lang.ClassLoader loader)
+    public static Class<?>[] getParameterTypesFrom(final String[] classNames, final java.lang.ClassLoader loader)
             throws ClassNotFoundException {
         if (classNames == null) {
             return new Class[0];
         }
-        Class[] types = new Class[classNames.length];
+        Class<?>[] types = new Class[classNames.length];
         for (int i = 0; i < classNames.length; ++i) {
             types[i] = ClassUtilities.classForNameOrPrimitive(classNames[i], loader);
         }
@@ -308,7 +304,7 @@ public final class MethodFinder {
      * Loads up the data structures for my target class's constructors.
      */
     private void loadConstructors() {
-        Constructor[] ctors = clazz.getConstructors();
+        Constructor<?>[] ctors = clazz.getConstructors();
         for (int i = 0; i < ctors.length; ++i) {
             ctorList.add(ctors[i]);
             paramMap.put(ctors[i], ctors[i].getParameterTypes());
@@ -320,15 +316,15 @@ public final class MethodFinder {
      */
     private void loadMethods() {
         // Method[] methods = clazz.getMethods();
-        List allMethods = getAllMethods();
-        Method[] methods = (Method[]) allMethods.toArray(new Method[allMethods.size()]);
+        List<Member> allMethods = getAllMethods();
+        Method[] methods = allMethods.toArray(new Method[allMethods.size()]);
         for (int i = 0; i < methods.length; ++i) {
             Method m = methods[i];
             String methodName = m.getName();
-            Class[] paramTypes = m.getParameterTypes();
-            List list = (List) methodMap.get(methodName);
+            Class<?>[] paramTypes = m.getParameterTypes();
+            List<Member> list = methodMap.get(methodName);
             if (list == null) {
-                list = new ArrayList();
+                list = new ArrayList<Member>();
                 methodMap.put(methodName, list);
             }
             if (!ClassUtilities.classIsAccessible(clazz)) {
@@ -341,12 +337,12 @@ public final class MethodFinder {
         }
     }
 
-    private List getAllMethods() {
-        List allMethods = new ArrayList();
-        Class c = clazz;
+    private List<Member> getAllMethods() {
+        List<Member> allMethods = new ArrayList<Member>();
+        Class<?> c = clazz;
         while ((c != null)) {
             Method[] methods = c.getDeclaredMethods();
-            List list = null;
+            List<? extends Member> list = null;
             if (methods != null) {
                 list = Arrays.asList(methods);
             }
@@ -366,8 +362,8 @@ public final class MethodFinder {
      * procedure in the Java Language Specification, section 15.12.2.
      */
     private boolean memberIsMoreSpecific(final Member first, final Member second) {
-        Class[] firstParamTypes = (Class[]) paramMap.get(first);
-        Class[] secondParamTypes = (Class[]) paramMap.get(second);
+        Class<?>[] firstParamTypes = (Class[]) paramMap.get(first);
+        Class<?>[] secondParamTypes = (Class[]) paramMap.get(second);
         return ClassUtilities.compatibleClasses(secondParamTypes, firstParamTypes);
     }
 }

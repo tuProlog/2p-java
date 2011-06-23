@@ -16,7 +16,7 @@ import alice.tuprolog.Prolog;
 public class ToolBar extends JPanel
 {
     
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /** The Prolog engine referenced by the toolbar. */
     private Prolog engine;
@@ -39,150 +39,150 @@ public class ToolBar extends JPanel
     /** Used for components interested in changes of console's properties. */
     private PropertyChangeSupport propertyChangeSupport;
     /**
-	 * The IDE the toolbar belongs to, necessary to manage editor-related
-	 * commands such as saving its content to the filesystem.
-	 */
-	private IDE ide;
-	
-	private JFrame parent;
-	
-	private JButton bNew;
-	private JButton bOpen;
-	private JButton bSave;
-	private JButton bSaveAs;
-	private JButton bLibMan;
-	private JButton bDebug;
-	private JButton bConfigure;
-	private JButton bAbout;
+     * The IDE the toolbar belongs to, necessary to manage editor-related
+     * commands such as saving its content to the filesystem.
+     */
+    private IDE ide;
+    
+    private JFrame parent;
+    
+    private JButton bNew;
+    private JButton bOpen;
+    private JButton bSave;
+    private JButton bSaveAs;
+    private JButton bLibMan;
+    private JButton bDebug;
+    private JButton bConfigure;
+    private JButton bAbout;
 
-	protected FileIDE fileIDE;
+    protected FileIDE fileIDE;
 
-	
+    
     public ToolBar(IDE ide, JFrame parent)
     {
         this.parent = parent;
         this.ide = ide;
-    	propertyChangeSupport = new PropertyChangeSupport(this);
+        propertyChangeSupport = new PropertyChangeSupport(this);
         initComponents();
         fileIDE=new FileIDE("",null);
     }
 
     private void initComponents()
     {
-    	bNew=new JButton();
-    	URL urlImage = getClass().getResource("img/New24.png");
-		bNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bNew.setToolTipText("New Theory");
-		bNew.setPreferredSize(new Dimension(32,32));
-		bNew.addActionListener(new ActionListener()
+        bNew=new JButton();
+        URL urlImage = getClass().getResource("img/New24.png");
+        bNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bNew.setToolTipText("New Theory");
+        bNew.setPreferredSize(new Dimension(32,32));
+        bNew.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	newTheory();
+                newTheory();
             }
         });
-    	bOpen=new JButton();
-    	urlImage = getClass().getResource("img/Open24.png");
-		bOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bOpen.setToolTipText("Load Theory");
-		bOpen.setPreferredSize(new Dimension(32,32));
-		bOpen.addActionListener(new ActionListener()
+        bOpen=new JButton();
+        urlImage = getClass().getResource("img/Open24.png");
+        bOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bOpen.setToolTipText("Load Theory");
+        bOpen.setPreferredSize(new Dimension(32,32));
+        bOpen.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	loadTheory();
+                loadTheory();
             }
         });
-    	bSave=new JButton();
-    	urlImage = getClass().getResource("img/Save24.png");
-		bSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bSave.setToolTipText("Save Theory");
-		bSave.setPreferredSize(new Dimension(32,32));
-		bSave.addActionListener(new ActionListener()
+        bSave=new JButton();
+        urlImage = getClass().getResource("img/Save24.png");
+        bSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bSave.setToolTipText("Save Theory");
+        bSave.setPreferredSize(new Dimension(32,32));
+        bSave.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	saveTheory();
+                saveTheory();
             }
         });
-    	bSaveAs=new JButton();
-    	urlImage = getClass().getResource("img/SaveAs24.png");
-		bSaveAs.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bSaveAs.setToolTipText("Save Theory As...");
-		bSaveAs.setPreferredSize(new Dimension(32,32));
-		bSaveAs.addActionListener(new ActionListener()
+        bSaveAs=new JButton();
+        urlImage = getClass().getResource("img/SaveAs24.png");
+        bSaveAs.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bSaveAs.setToolTipText("Save Theory As...");
+        bSaveAs.setPreferredSize(new Dimension(32,32));
+        bSaveAs.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	saveTheoryAs();
+                saveTheoryAs();
             }
         });
-    	bLibMan=new JButton();
-    	urlImage = getClass().getResource("img/Library24.png");
-		bLibMan.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bLibMan.setToolTipText("Open Library Manager");
-		bLibMan.setPreferredSize(new Dimension(32,32));
-		bLibMan.addActionListener(new ActionListener()
+        bLibMan=new JButton();
+        urlImage = getClass().getResource("img/Library24.png");
+        bLibMan.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bLibMan.setToolTipText("Open Library Manager");
+        bLibMan.setPreferredSize(new Dimension(32,32));
+        bLibMan.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	openLibraryManager();
+                openLibraryManager();
             }
         });
-    	bDebug=new JButton();
-    	urlImage = getClass().getResource("img/Debugger24.png");
-		bDebug.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bDebug.setToolTipText("Wiev Debug Information");
-		bDebug.setPreferredSize(new Dimension(32,32));
-		bDebug.addActionListener(new ActionListener()
+        bDebug=new JButton();
+        urlImage = getClass().getResource("img/Debugger24.png");
+        bDebug.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bDebug.setToolTipText("Wiev Debug Information");
+        bDebug.setPreferredSize(new Dimension(32,32));
+        bDebug.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	viewDebugInformation();
+                viewDebugInformation();
             }
         });
-		bConfigure=new JButton();
-    	urlImage = getClass().getResource("img/Configure24.png");
-    	bConfigure.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-    	bConfigure.setToolTipText("Configure tuProlog");
-    	bConfigure.setPreferredSize(new Dimension(32,32));
-    	bConfigure.addActionListener(new ActionListener()
+        bConfigure=new JButton();
+        urlImage = getClass().getResource("img/Configure24.png");
+        bConfigure.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bConfigure.setToolTipText("Configure tuProlog");
+        bConfigure.setPreferredSize(new Dimension(32,32));
+        bConfigure.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	configure();
+                configure();
             }
         });
-    	bAbout=new JButton();
-    	urlImage = getClass().getResource("img/About24.png");
-		bAbout.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-		bAbout.setToolTipText("About...");
-		bAbout.setPreferredSize(new Dimension(32,32));
-		bAbout.addActionListener(new ActionListener()
+        bAbout=new JButton();
+        urlImage = getClass().getResource("img/About24.png");
+        bAbout.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
+        bAbout.setToolTipText("About...");
+        bAbout.setPreferredSize(new Dimension(32,32));
+        bAbout.addActionListener(new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
-            	viewAboutInformation();
+                viewAboutInformation();
             }
         });
 
-		
+        
 
 
-		JPanel bottonsPanel = new JPanel();
-		bottonsPanel.add(bNew);
-		bottonsPanel.add(bOpen);
-		bottonsPanel.add(bSave);
-		bottonsPanel.add(bSaveAs);
-		bottonsPanel.add(bLibMan);
-		bottonsPanel.add(bDebug);
-		bottonsPanel.add(bConfigure);
-		bottonsPanel.add(bAbout);
+        JPanel bottonsPanel = new JPanel();
+        bottonsPanel.add(bNew);
+        bottonsPanel.add(bOpen);
+        bottonsPanel.add(bSave);
+        bottonsPanel.add(bSaveAs);
+        bottonsPanel.add(bLibMan);
+        bottonsPanel.add(bDebug);
+        bottonsPanel.add(bConfigure);
+        bottonsPanel.add(bAbout);
 
-		
-		setLayout(new BorderLayout());
-		add(bottonsPanel,BorderLayout.WEST);
-    	add(new JSeparator(),BorderLayout.SOUTH);
+        
+        setLayout(new BorderLayout());
+        add(bottonsPanel,BorderLayout.WEST);
+        add(new JSeparator(),BorderLayout.SOUTH);
     }
 
     /**
@@ -191,25 +191,25 @@ public class ToolBar extends JPanel
      * @return The Prolog engine referenced by the toolbar.
      */
     public Prolog getEngine() {
-		return engine;
-	}
+        return engine;
+    }
 
     /**
      * Set the Prolog engine referenced by the toolbar.
      *
      * @param engine an <code>alice.tuprolog.Prolog</code> engine.
      */
-	public void setEngine(Prolog engine) {
-		this.engine = engine;
-    	debugArea = new DebugAreaFrame();
-    	libraryDialog = new LibraryDialogFrame(libraryManager,parent);
-    	libraryDialog.setFileManager(new JavaIOManager(libraryDialog));
-    	libraryDialog.setFileManagerType("preferences");
-		this.engine.addSpyListener(debugArea);
-		this.engine.addWarningListener(debugArea);
-		this.engine.addLibraryListener(libraryDialog);
-		//this.engine.addPropertyChangeListener(debugArea);
-	}
+    public void setEngine(Prolog engine) {
+        this.engine = engine;
+        debugArea = new DebugAreaFrame();
+        libraryDialog = new LibraryDialogFrame(libraryManager,parent);
+        libraryDialog.setFileManager(new JavaIOManager(libraryDialog));
+        libraryDialog.setFileManagerType("preferences");
+        this.engine.addSpyListener(debugArea);
+        this.engine.addWarningListener(debugArea);
+        this.engine.addLibraryListener(libraryDialog);
+        //this.engine.addPropertyChangeListener(debugArea);
+    }
 
     /**
      * Get the library manager 
@@ -225,22 +225,22 @@ public class ToolBar extends JPanel
      *
      * @param libraryManager a libraryManager to associate to the libraryDialog 
      */
-	public void setLibraryManager(LibraryManager libraryManager)
-	{
-		this.libraryManager = libraryManager;
-	}
+    public void setLibraryManager(LibraryManager libraryManager)
+    {
+        this.libraryManager = libraryManager;
+    }
 
     /**
      * Set the tuProlog config frame
      *
      * @param libraryManager a libraryManager to associate to the libraryDialog 
      */
-	public void setPrologConfig(PrologConfigFrame configFrame)
-	{
-		this.configFrame = configFrame;
-	}
+    public void setPrologConfig(PrologConfigFrame configFrame)
+    {
+        this.configFrame = configFrame;
+    }
 
-	/**
+    /**
      * Get the toolbar status as a <code>java.lang.String</code> message.
      *
      * @return the current status of the toolbar as a <code>java.lang.String</code>
@@ -280,7 +280,7 @@ public class ToolBar extends JPanel
 
     public void setFileManagerType(String type)
     {
-    	this.fileManager.setTypeFileFilter(type);
+        this.fileManager.setTypeFileFilter(type);
     }
 
     /**
@@ -299,11 +299,11 @@ public class ToolBar extends JPanel
      */
     protected void enableTheoryCommands(boolean flag)
     {
-    	bNew.setEnabled(flag);
-    	bOpen.setEnabled(flag);
-    	bSave.setEnabled(flag);
-    	bSaveAs.setEnabled(flag);
-    	bLibMan.setEnabled(flag);
+        bNew.setEnabled(flag);
+        bOpen.setEnabled(flag);
+        bSave.setEnabled(flag);
+        bSaveAs.setEnabled(flag);
+        bLibMan.setEnabled(flag);
     }
   
     /**
@@ -324,12 +324,12 @@ public class ToolBar extends JPanel
         try {
             fileIDE = fileManager.loadFile();
             if (fileIDE.getFilePath() != null) {
-            	
-            	/** this isn't correct with the tabbed theory visualization*/
+                
+                /** this isn't correct with the tabbed theory visualization*/
                 //engine.setTheory(theory);
 
-            	//ide.setEditorContent(theoryIDE.getTheory().toString());
-            	ide.loadTheory();
+                //ide.setEditorContent(theoryIDE.getTheory().toString());
+                ide.loadTheory();
             }
             setStatusMessage("Ready.");
         } catch (Exception e) {
@@ -341,10 +341,10 @@ public class ToolBar extends JPanel
      * Save the engine's current theory to a default file.
      */
     public void saveTheory() {
-    	FileIDE oldValue = fileIDE;
+        FileIDE oldValue = fileIDE;
         try {
-        	fileIDE.setContent(ide.getEditorContent());
-        	fileIDE=fileManager.saveFile(fileIDE);
+            fileIDE.setContent(ide.getEditorContent());
+            fileIDE=fileManager.saveFile(fileIDE);
             if (fileIDE.getFilePath() != null)
             {
                 setStatusMessage("Theory saved to " + fileIDE.getFileName() + ".");
@@ -363,10 +363,10 @@ public class ToolBar extends JPanel
      */
     public void saveTheoryAs() {
         setStatusMessage("Save Theory As...");
-    	FileIDE oldValue = fileIDE;
+        FileIDE oldValue = fileIDE;
         try {
-        	fileIDE.setContent(ide.getEditorContent());
-        	fileIDE = fileManager.saveFileAs(fileIDE);
+            fileIDE.setContent(ide.getEditorContent());
+            fileIDE = fileManager.saveFileAs(fileIDE);
             if (fileIDE.getFilePath() != null)
             {
                 setStatusMessage("Theory saved to " + fileIDE.getFileName() + ".");
@@ -384,9 +384,9 @@ public class ToolBar extends JPanel
      * Opens the Library Manager dialog.
      */
     public void openLibraryManager() {
-    	parent.setEnabled(false);
-    	libraryDialog.setVisible(true);
-    	libraryDialog.setStatusMessage("Ready.");
+        parent.setEnabled(false);
+        libraryDialog.setVisible(true);
+        libraryDialog.setStatusMessage("Ready.");
     }
 
     /**
@@ -394,14 +394,14 @@ public class ToolBar extends JPanel
      * display debug informations.
      */
     public void viewDebugInformation() {
-    	debugArea.setVisible(true);
+        debugArea.setVisible(true);
     }
 
     public void configure()
     {
-    	parent.setEnabled(false);
-    	configFrame.setVisible(true);
-    	configFrame.reload();
+        parent.setEnabled(false);
+        configFrame.setVisible(true);
+        configFrame.reload();
     }
 
     /**
@@ -410,17 +410,17 @@ public class ToolBar extends JPanel
     public void viewAboutInformation() {
         about = new AboutFrame(parent);
         parent.setEnabled(false);
-    	about.pack();
-    	about.setVisible(true);
+        about.pack();
+        about.setVisible(true);
     }
 
 
     public void setFileIDE(FileIDE fileIDE)
     {
-    	this.fileIDE = fileIDE;
+        this.fileIDE = fileIDE;
     }
     public FileIDE getFileIDE()
     {
-    	return fileIDE;
+        return fileIDE;
     }
 }

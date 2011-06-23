@@ -17,6 +17,7 @@
  */
 package alice.tuprolog;
 
+import java.util.Map;
 import java.util.List;
 
 /**
@@ -24,10 +25,10 @@ import java.util.List;
  * @author Alex Benini
  */
 public interface IPrimitives {
-	
-	/**
-	 * gets the list of primitives defined in the library
-	 */
-	List[] getPrimitives();
-	
+    
+    /**
+     * gets the list of primitives defined in the library
+     */
+    Map<Integer,List<PrimitiveInfo>> getPrimitives();
+    
 }

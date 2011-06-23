@@ -1,8 +1,10 @@
 package alice.tuprologx.runtime.tcp;
+
 import alice.tuprolog.*;
 import  java.io.*;
 
-public class PrologImpl implements Serializable {
+@SuppressWarnings("serial")
+public class PrologImpl implements java.io.Serializable {
 
     alice.tuprolog.Prolog core;
     //Vector solutionListeners;

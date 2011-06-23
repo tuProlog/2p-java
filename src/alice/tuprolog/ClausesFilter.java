@@ -40,7 +40,7 @@ class ClausesFilter {
      *                      <code>familyClauses</code>) which more probably
      *                      match with <code>goal</code>
      */
-    public static OneWayList filterClauses(List familyClauses, Term goal){
+    public static OneWayList<ClauseInfo> filterClauses(List<ClauseInfo> familyClauses, Term goal){
         if(OPTIMIZATION_ENABLED && goal instanceof Struct){
             Struct g = (Struct) goal.getTerm();
 
@@ -84,7 +84,7 @@ class ClausesFilter {
     /*
      * Returns all the family clauses, no optimization performed.
      */
-    private static OneWayList returnAllClauses(List familyClauses){
+    private static OneWayList<ClauseInfo> returnAllClauses(List<ClauseInfo> familyClauses){
         return OneWayList.transform2(familyClauses);
     }
 
@@ -92,9 +92,9 @@ class ClausesFilter {
      * Returns only the clauses whose first argument is a number equal to
      * the given one (from goal's first argument)
      */
-    private static OneWayList selectNumeric(List familyClauses, Number t) {
-        OneWayList result = null;
-        OneWayList p = null;
+    private static OneWayList<ClauseInfo> selectNumeric(List<ClauseInfo> familyClauses, Number t) {
+        OneWayList<ClauseInfo> result = null;
+        OneWayList<ClauseInfo> p = null;
 
         for(Object obj : familyClauses){
             ClauseInfo clause = (ClauseInfo) obj;
@@ -102,7 +102,7 @@ class ClausesFilter {
 
             if((arg instanceof Var) ||
                     (arg instanceof Number && ((Number) arg).isEqual(t))){
-                OneWayList l = new OneWayList(clause, null);
+                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
             
                 if(result == null){
                     result = p = l;
@@ -120,9 +120,9 @@ class ClausesFilter {
      * Returns only the clauses whose first argument is a struct with a
      * predicate indicator equal to the given one (from goal's first argument)
      */
-    private static OneWayList selectStruct(List familyClauses, String predIndicator) {
-        OneWayList result = null;
-        OneWayList p = null;
+    private static OneWayList<ClauseInfo> selectStruct(List<ClauseInfo> familyClauses, String predIndicator) {
+        OneWayList<ClauseInfo> result = null;
+        OneWayList<ClauseInfo> p = null;
 
         for(Object obj : familyClauses){
             ClauseInfo clause = (ClauseInfo) obj;
@@ -130,7 +130,7 @@ class ClausesFilter {
 
             if(arg instanceof Var ||
                     ((Struct) arg).getPredicateIndicator().equals(predIndicator)){
-                OneWayList l = new OneWayList(clause, null);
+                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
 
                 if(result == null){
                     result = p = l;
@@ -163,16 +163,16 @@ class ClausesFilter {
      * Returns only the clauses whose first argument is a list
      * (as the goal's first argument)
      */
-    private static OneWayList selectList(List familyClauses) {
-        OneWayList result = null;
-        OneWayList p = null;
+    private static OneWayList<ClauseInfo> selectList(List<ClauseInfo> familyClauses) {
+        OneWayList<ClauseInfo> result = null;
+        OneWayList<ClauseInfo> p = null;
 
         for(Object obj : familyClauses){
             ClauseInfo clause = (ClauseInfo) obj;
             Term arg = clause.getHead().getArg(0).getTerm();
 
             if(arg instanceof Var || isAList(arg)){
-                OneWayList l = new OneWayList(clause, null);
+                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
 
                 if(result == null){
                     result = p = l;
@@ -190,16 +190,16 @@ class ClausesFilter {
      * Returns only the clauses whose first argument is a constant equals
      * to the given one (from goal's first argument)
      */
-    private static OneWayList selectConstant(List familyClauses, Term t) {
-        OneWayList result = null;
-        OneWayList p = null;
+    private static OneWayList<ClauseInfo> selectConstant(List<ClauseInfo> familyClauses, Term t) {
+        OneWayList<ClauseInfo> result = null;
+        OneWayList<ClauseInfo> p = null;
 
         for(Object obj : familyClauses){
             ClauseInfo clause = (ClauseInfo) obj;
             Term arg = clause.getHead().getArg(0).getTerm();
 
             if(arg instanceof Var || arg.isAtomic()){
-                OneWayList l = new OneWayList(clause, null);
+                OneWayList<ClauseInfo> l = new OneWayList<ClauseInfo>(clause, null);
 
                 if(result == null){
                     result = p = l;

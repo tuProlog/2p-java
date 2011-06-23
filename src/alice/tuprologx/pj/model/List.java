@@ -17,7 +17,7 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
 //public class List<X extends Term<?>> extends Compound<List<X>> {
 	protected java.util.Vector<X> _theList;
         
-        public final static List<?> NIL = new List<Term<?>>(new Vector());
+        public final static List<?> NIL = new List<Term<?>>(new Vector<Term<?>>());
         
         List(Vector<X> lt) {
 		_theList = lt;		
@@ -64,7 +64,7 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
         static <Z extends Term<?>> List<Z> unmarshal(alice.tuprolog.Struct s) {
             if (!matches(s))
                 throw new UnsupportedOperationException();
-            Iterator<alice.tuprolog.Term> listIt = s.listIterator();
+            Iterator<? extends alice.tuprolog.Term> listIt = s.listIterator();
             Vector<Term<?>> termList = new Vector<Term<?>>();
             while (listIt.hasNext())
                 termList.add(Term.unmarshal(listIt.next()));
