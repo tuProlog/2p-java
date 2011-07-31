@@ -15,13 +15,39 @@ import java.util.*;
  */
 public class PrologInvocationContext {    
     
+    /**
+	 * @uml.property  name="predicateName"
+	 */
     private String predicateName;
+    /**
+	 * @uml.property  name="variableNames"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="java.lang.String"
+	 */
     private Vector<String> variableNames;
+    /**
+	 * @uml.property  name="inputVariables"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="java.lang.String"
+	 */
     private Vector<String> inputVariables;
+    /**
+	 * @uml.property  name="outputVariables"
+	 */
     private Vector<String> outputVariables;
+    /**
+	 * @uml.property  name="multipleResult"
+	 */
     private boolean multipleResult;        
+    /**
+	 * @uml.property  name="exceptionOnFailure"
+	 */
     private boolean exceptionOnFailure;
+    /**
+	 * @uml.property  name="keepSubstitutions"
+	 */
     private boolean keepSubstitutions;
+    /**
+	 * @uml.property  name="trace"
+	 */
     private boolean trace;
     
     /** Creates a new instance of InvocationObject */

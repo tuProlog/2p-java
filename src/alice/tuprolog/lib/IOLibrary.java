@@ -34,10 +34,25 @@ import java.io.*;
 @SuppressWarnings("serial")
 public class IOLibrary extends Library {
 
+    /**
+	 * @uml.property  name="inputStreamName"
+	 */
     protected String inputStreamName = "stdin";
+    /**
+	 * @uml.property  name="inputStream"
+	 */
     protected InputStream inputStream = System.in;
+    /**
+	 * @uml.property  name="outputStreamName"
+	 */
     protected String outputStreamName = "stdout";
+    /**
+	 * @uml.property  name="outputStream"
+	 */
     protected OutputStream outputStream = System.out;
+    /**
+	 * @uml.property  name="gen"
+	 */
     private Random gen = new Random();
 
     public IOLibrary() {

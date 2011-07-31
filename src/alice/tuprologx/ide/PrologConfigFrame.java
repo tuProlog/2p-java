@@ -15,21 +15,61 @@ public class PrologConfigFrame
      */
     private static final long serialVersionUID = 1L;
 
+    /**
+	 * @uml.property  name="millsStopEngine"
+	 */
     private int millsStopEngine;
+    /**
+	 * @uml.property  name="selectDisplayModality"
+	 */
     private int selectDisplayModality;
     /*Castagna 06/2011*/	
+	/**
+	 * @uml.property  name="enableNotifyException"
+	 */
 	private boolean enableNotifyException;
 	/**/
+    /**
+	 * @uml.property  name="propertyChangeSupport"
+	 */
     private PropertyChangeSupport propertyChangeSupport;
+    /**
+	 * @uml.property  name="inColumnsRadioButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JRadioButton inColumnsRadioButton;
+    /**
+	 * @uml.property  name="inRowsRadioButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JRadioButton inRowsRadioButton;
+    /**
+	 * @uml.property  name="inRowsVariableSeparatedRadioButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JRadioButton inRowsVariableSeparatedRadioButton;
+    /**
+	 * @uml.property  name="millsStopEngineTextField"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JTextField millsStopEngineTextField;
+    /**
+	 * @uml.property  name="fontDimensionTextField"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JTextField fontDimensionTextField;
     /*Castagna 06/2011*/	
+	/**
+	 * @uml.property  name="notifyExceptionCheckBox"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private JCheckBox notifyExceptionCheckBox;
 	/**/
 	
+    /**
+	 * @uml.property  name="fontDimensionHandler"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private FontDimensionHandler fontDimensionHandler;
 
     public PrologConfigFrame(JFrame mainWindow,FontDimensionHandler fontDimensionHandler)
@@ -346,20 +386,36 @@ public class PrologConfigFrame
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    /**
+	 * @return
+	 * @uml.property  name="millsStopEngine"
+	 */
     public int getMillsStopEngine()
     {
         return millsStopEngine;
     }
+    /**
+	 * @param newValue
+	 * @uml.property  name="millsStopEngine"
+	 */
     public void setMillsStopEngine(int newValue)
     {
         int oldValue = millsStopEngine;
         millsStopEngine = newValue;
         propertyChangeSupport.firePropertyChange("millsStopEngine", oldValue, newValue);
     }
+    /**
+	 * @return
+	 * @uml.property  name="selectDisplayModality"
+	 */
     public int getSelectDisplayModality()
     {
         return selectDisplayModality;
     }
+    /**
+	 * @param newValue
+	 * @uml.property  name="selectDisplayModality"
+	 */
     public void setSelectDisplayModality(int newValue)
     {
         int oldValue = selectDisplayModality;

@@ -14,6 +14,9 @@ package alice.tuprologx.pj.model;
  * @author maurizio
  */
 public class Int extends Term<Int> {
+	/**
+	 * @uml.property  name="_theInt"
+	 */
 	Integer _theInt;
 
 	public <Z> Z/*Integer*/ toJava() {return (Z)_theInt;}

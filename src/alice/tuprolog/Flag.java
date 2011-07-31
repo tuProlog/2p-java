@@ -25,11 +25,32 @@ import java.util.*;
 @SuppressWarnings("serial")
 class Flag implements java.io.Serializable {
     
+    /**
+	 * @uml.property  name="name"
+	 */
     private String name;
+    /**
+	 * @uml.property  name="valueList"
+	 * @uml.associationEnd  
+	 */
     private Struct valueList;
+    /**
+	 * @uml.property  name="value"
+	 * @uml.associationEnd  
+	 */
     private Term   value;
+    /**
+	 * @uml.property  name="defaultValue"
+	 * @uml.associationEnd  
+	 */
     private Term   defaultValue;
+    /**
+	 * @uml.property  name="modifiable"
+	 */
     private boolean modifiable;
+    /**
+	 * @uml.property  name="libraryName"
+	 */
     private String  libraryName;
     
     /**
@@ -87,19 +108,19 @@ class Flag implements java.io.Serializable {
     }
     
     /**
-     * Gets the name of the flag
-     *
-     * @return the name
-     */
+	 * Gets the name of the flag
+	 * @return  the name
+	 * @uml.property  name="name"
+	 */
     public String getName() {
         return name;
     }
     
     /**
-     * Gets the list of flag possible values
-     *
-     * @return a Prolog list
-     */
+	 * Gets the list of flag possible values
+	 * @return  a Prolog list
+	 * @uml.property  name="valueList"
+	 */
     public Struct getValueList() {
         return valueList;
     }
@@ -120,28 +141,28 @@ class Flag implements java.io.Serializable {
     }
     
     /**
-     * Gets the current value of the flag
-     *
-     * @return flag current value
-     */
+	 * Gets the current value of the flag
+	 * @return  flag current value
+	 * @uml.property  name="value"
+	 */
     public Term getValue() {
         return value;
     }
     
     /**
-     * Checks if the value is modifiable
-     * @return
-     */
+	 * Checks if the value is modifiable
+	 * @return
+	 * @uml.property  name="modifiable"
+	 */
     public boolean isModifiable() {
         return modifiable;
     }
     
     /**
-     * Gets the name of the library where
-     * the flag has been defined
-     *
-     * @return the library name
-     */
+	 * Gets the name of the library where the flag has been defined
+	 * @return  the library name
+	 * @uml.property  name="libraryName"
+	 */
     public String getLibraryName() {
         return libraryName;
     }

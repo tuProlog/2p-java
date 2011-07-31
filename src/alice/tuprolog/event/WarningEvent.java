@@ -26,7 +26,10 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class WarningEvent extends EventObject {
 
-    /** event description */
+    /**
+	 * event description
+	 * @uml.property  name="msg"
+	 */
     private String msg;
 
     public WarningEvent(Object source,String msg_){

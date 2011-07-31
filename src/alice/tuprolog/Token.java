@@ -27,8 +27,14 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 class Token implements Serializable {
     // token textual representation
+    /**
+	 * @uml.property  name="seq"
+	 */
     String seq;
     // token type and attribute
+    /**
+	 * @uml.property  name="type"
+	 */
     int type;
     
     public Token(String seq_,int type_) {

@@ -18,7 +18,14 @@ package alice.util;
 @SuppressWarnings("serial")
 public class V2d implements java.io.Serializable {
 
-    public float x,y;
+    /**
+	 * @uml.property  name="x"
+	 */
+    public float x;
+	/**
+	 * @uml.property  name="y"
+	 */
+	public float y;
 
     public V2d(float x,float y){
         this.x=x;

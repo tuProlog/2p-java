@@ -19,12 +19,9 @@ package alice.tuprologx.ide;
 
 
 /**
- * A common interface to an IDE.
- * This interface is not public, since it is intended for internal use,
- * and could be subject to several changes in future releases.
- * 
- * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version    1.0 - 1-gen-03
+ * A common interface to an IDE. This interface is not public, since it is intended for internal use, and could be subject to several changes in future releases.
+ * @author     <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version     1.0 - 1-gen-03
  */
 
 interface IDE {
@@ -54,15 +51,16 @@ interface IDE {
     public void setFeededTheory(boolean flag);
 
     /**
-     * Get the content of the IDE's editor.
-     *
-     * @return the content of the edit area in the IDE's editor.
-     */
+	 * Get the content of the IDE's editor.
+	 * @return  the content of the edit area in the IDE's editor.
+	 * @uml.property  name="editorContent"
+	 */
     public String getEditorContent();
     
     /**
-     * Set the content of the IDE's editor.
-     */
+	 * Set the content of the IDE's editor.
+	 * @uml.property  name="editorContent"
+	 */
     public void setEditorContent(String text);
 
 

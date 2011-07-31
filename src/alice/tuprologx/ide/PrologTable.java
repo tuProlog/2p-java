@@ -7,7 +7,13 @@ import javax.swing.table.*;
 public class PrologTable
     extends JTable
 {
+    /**
+	 * @uml.property  name="isExpandedCellArray"
+	 */
     private boolean[] isExpandedCellArray;
+    /**
+	 * @uml.property  name="isBorderedCellArray"
+	 */
     private boolean[] isBorderedCellArray;
 
     public PrologTable()
@@ -81,21 +87,37 @@ public class PrologTable
         isExpandedCellArray[row]=!isExpandedCellArray[row];
     }
 
+    /**
+	 * @param isExpandedCellArray
+	 * @uml.property  name="isExpandedCellArray"
+	 */
     public void setIsExpandedCellArray(boolean[] isExpandedCellArray)
     {
         this.isExpandedCellArray = isExpandedCellArray;
         prepareCellRenderer();
     }
+    /**
+	 * @return
+	 * @uml.property  name="isExpandedCellArray"
+	 */
     public boolean[] getIsExpandedCellArray()
     {
         return isExpandedCellArray;
     }
 
+    /**
+	 * @param isBorderedCellArray
+	 * @uml.property  name="isBorderedCellArray"
+	 */
     public void setIsBorderedCellArray(boolean[] isBorderedCellArray)
     {
         this.isBorderedCellArray = isBorderedCellArray;
         prepareCellRenderer();
     }
+    /**
+	 * @return
+	 * @uml.property  name="isBorderedCellArray"
+	 */
     public boolean[] getIsBorderedCellArray()
     {
         return isBorderedCellArray;

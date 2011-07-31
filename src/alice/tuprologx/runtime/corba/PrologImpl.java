@@ -8,6 +8,10 @@ import  java.io.*;
 @SuppressWarnings("serial")
 public class PrologImpl extends _PrologImplBase {
 
+    /**
+	 * @uml.property  name="imp"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     alice.tuprolog.Prolog imp;
 
     /**

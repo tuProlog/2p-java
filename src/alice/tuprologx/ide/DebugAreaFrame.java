@@ -26,13 +26,45 @@ public class DebugAreaFrame extends GenericFrame implements SpyListener, Warning
     
     private static final long serialVersionUID = 1L;
     
+    /**
+	 * @uml.property  name="debug"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JTabbedPane debug;
+    /**
+	 * @uml.property  name="warningPane"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JTextPane warningPane;
+    /**
+	 * @uml.property  name="spyTree"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JTree spyTree;
+    /**
+	 * @uml.property  name="root"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private DefaultMutableTreeNode root;
+    /**
+	 * @uml.property  name="expandAllButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton expandAllButton;
+    /**
+	 * @uml.property  name="collapseAllButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton collapseAllButton;
+    /**
+	 * @uml.property  name="expandSelectedNodesButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton expandSelectedNodesButton;
+    /**
+	 * @uml.property  name="collapseSelectedNodesButton"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton collapseSelectedNodesButton;
 
     public DebugAreaFrame()

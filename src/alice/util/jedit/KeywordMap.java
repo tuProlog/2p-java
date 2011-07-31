@@ -93,16 +93,19 @@ public class KeywordMap
     }
 
     /**
-     * Sets if the keyword map should be case insensitive.
-     * @param ignoreCase True if the keyword map should be case
-     * insensitive, false otherwise
-     */
+	 * Sets if the keyword map should be case insensitive.
+	 * @param ignoreCase  True if the keyword map should be case  insensitive, false otherwise
+	 * @uml.property  name="ignoreCase"
+	 */
     public void setIgnoreCase(boolean ignoreCase)
     {
         this.ignoreCase = ignoreCase;
     }
 
     // protected members
+    /**
+	 * @uml.property  name="mapLength"
+	 */
     protected int mapLength;
 
     protected int getStringMapKey(String s)
@@ -120,6 +123,9 @@ public class KeywordMap
     }
 
     // private members
+    /**
+	 * @author  ale
+	 */
     class Keyword
     {
         public Keyword(char[] keyword, byte id, Keyword next)
@@ -131,9 +137,20 @@ public class KeywordMap
 
         public char[] keyword;
         public byte id;
+        /**
+		 * @uml.property  name="next"
+		 * @uml.associationEnd  
+		 */
         public Keyword next;
     }
 
+    /**
+	 * @uml.property  name="map"
+	 * @uml.associationEnd  multiplicity="(0 -1)" inverse="this$0:alice.util.jedit.KeywordMap$Keyword"
+	 */
     private Keyword[] map;
+    /**
+	 * @uml.property  name="ignoreCase"
+	 */
     private boolean ignoreCase;
 }

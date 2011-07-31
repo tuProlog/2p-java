@@ -24,13 +24,22 @@ package alice.util;
 @SuppressWarnings("serial")
 public abstract class Automaton implements Runnable, java.io.Serializable {
 
-    /** method name representing state behaviour */
+    /**
+	 * method name representing state behaviour
+	 * @uml.property  name="state"
+	 */
     protected String state="boot";
 
-    /** arguments value eventually associated to state transition */
+    /**
+	 * arguments value eventually associated to state transition
+	 * @uml.property  name="arguments" multiplicity="(0 -1)" dimension="1"
+	 */
     protected Object[] arguments=null;
 
-    /** arguments class eventually associated to state transition */
+    /**
+	 * arguments class eventually associated to state transition
+	 * @uml.property  name="argType" multiplicity="(0 -1)" dimension="1"
+	 */
     protected Class<?>[] argType;
 
     public Automaton(){

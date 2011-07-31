@@ -19,6 +19,10 @@ import static alice.tuprologx.pj.annotations.parser.Tokenizer.*;
 public class Parser {
     
     
+    /**
+	 * @uml.property  name="lexer"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private Tokenizer lexer;
     
     public Parser(String input) {

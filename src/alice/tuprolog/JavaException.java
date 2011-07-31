@@ -7,6 +7,9 @@ package alice.tuprolog;
 public class JavaException extends Throwable {
 
     // eccezione Java che rappresenta l'argomento di java_throw/1
+    /**
+	 * @uml.property  name="e"
+	 */
     private Throwable e;
 
     public JavaException(Throwable e) {

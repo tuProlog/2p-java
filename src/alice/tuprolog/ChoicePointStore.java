@@ -6,6 +6,10 @@ import java.util.List;
 
 public class ChoicePointStore {
     
+    /**
+	 * @uml.property  name="pointer"
+	 * @uml.associationEnd  
+	 */
     private ChoicePointContext pointer;
     
     public ChoicePointStore() {
@@ -34,9 +38,10 @@ public class ChoicePointStore {
     }
     
     /**
-     * Return the actual choice-point store
-     * @return
-     */
+	 * Return the actual choice-point store
+	 * @return
+	 * @uml.property  name="pointer"
+	 */
     public ChoicePointContext getPointer() {
         return pointer;
     }

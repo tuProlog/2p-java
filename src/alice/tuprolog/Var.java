@@ -34,11 +34,27 @@ public class Var extends Term {
     final static String ANY = "_";
     
     // the name identifying the var
+    /**
+	 * @uml.property  name="name"
+	 */
     private String name;
+    /**
+	 * @uml.property  name="completeName"
+	 */
     private StringBuilder completeName;     /* Reviewed by Paolo Contessi: String -> StringBuilder */
     
+    /**
+	 * @uml.property  name="link"
+	 * @uml.associationEnd  
+	 */
     private Term   link;            /* link is used for unification process */
+    /**
+	 * @uml.property  name="timestamp"
+	 */
     private long   timestamp;        /* timestamp is used for fix vars order */
+    /**
+	 * @uml.property  name="id"
+	 */
     private int    id;            /* id of ExecCtx owners of this var util for renaming*/
     
     
@@ -248,22 +264,25 @@ public class Var extends Term {
     
     
     /**
-     *  Gets the term which is direct referred by the variable.
-     */
+	 * Gets the term which is direct referred by the variable.
+	 * @uml.property  name="link"
+	 */
     Term getLink() {
         return link;
     }
     
     /**
-     * Set the term which is direct bound
-     */
+	 * Set the term which is direct bound
+	 * @uml.property  name="link"
+	 */
     void setLink(Term l) {
         link = l;
     }
     
     /**
-     * Set the timestamp
-     */
+	 * Set the timestamp
+	 * @uml.property  name="timestamp"
+	 */
     void setTimestamp(long t) {
         timestamp = t;
     }

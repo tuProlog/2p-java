@@ -21,28 +21,92 @@ public class TextAreaDefaults
 {
     private static TextAreaDefaults DEFAULTS;
 
+    /**
+	 * @uml.property  name="inputHandler"
+	 * @uml.associationEnd  
+	 */
     public InputHandler inputHandler;
+    /**
+	 * @uml.property  name="document"
+	 * @uml.associationEnd  
+	 */
     public SyntaxDocument document;
+    /**
+	 * @uml.property  name="editable"
+	 */
     public boolean editable;
 
+    /**
+	 * @uml.property  name="caretVisible"
+	 */
     public boolean caretVisible;
+    /**
+	 * @uml.property  name="caretBlinks"
+	 */
     public boolean caretBlinks;
+    /**
+	 * @uml.property  name="blockCaret"
+	 */
     public boolean blockCaret;
+    /**
+	 * @uml.property  name="electricScroll"
+	 */
     public int electricScroll;
 
+    /**
+	 * @uml.property  name="cols"
+	 */
     public int cols;
+    /**
+	 * @uml.property  name="rows"
+	 */
     public int rows;
+    /**
+	 * @uml.property  name="styles"
+	 * @uml.associationEnd  multiplicity="(0 -1)"
+	 */
     public SyntaxStyle[] styles;
+    /**
+	 * @uml.property  name="caretColor"
+	 */
     public Color caretColor;
+    /**
+	 * @uml.property  name="selectionColor"
+	 */
     public Color selectionColor;
+    /**
+	 * @uml.property  name="lineHighlightColor"
+	 */
     public Color lineHighlightColor;
+    /**
+	 * @uml.property  name="lineHighlight"
+	 */
     public boolean lineHighlight;
+    /**
+	 * @uml.property  name="bracketHighlightColor"
+	 */
     public Color bracketHighlightColor;
+    /**
+	 * @uml.property  name="bracketHighlight"
+	 */
     public boolean bracketHighlight;
+    /**
+	 * @uml.property  name="eolMarkerColor"
+	 */
     public Color eolMarkerColor;
+    /**
+	 * @uml.property  name="eolMarkers"
+	 */
     public boolean eolMarkers;
+    /**
+	 * @uml.property  name="paintInvalid"
+	 */
     public boolean paintInvalid;
 
+    /**
+	 * @uml.property  name="popup"
+	 * @uml.associationEnd  readOnly="true"
+	 */
     public JPopupMenu popup;
 
     /**

@@ -16,7 +16,14 @@ import java.io.*;
 @SuppressWarnings("serial")
 public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener/*Castagna 06/2011*/, ExceptionListener/**/{
 
+    /**
+	 * @uml.property  name="stdin"
+	 */
     BufferedReader  stdin;
+    /**
+	 * @uml.property  name="engine"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     Prolog          engine;
 
     static final String incipit =

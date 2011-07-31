@@ -29,7 +29,10 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class OutputEvent extends EventObject {
 
-    /** text produced */
+    /**
+	 * text produced
+	 * @uml.property  name="msg"
+	 */
     private String msg;
 
     public OutputEvent(Object source, String msg_){
@@ -37,6 +40,10 @@ public class OutputEvent extends EventObject {
         msg=msg_;
     }
 
+    /**
+	 * @return
+	 * @uml.property  name="msg"
+	 */
     public String getMsg(){
         return msg;
     }

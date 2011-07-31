@@ -2,6 +2,10 @@ package alice.tuprolog;
 
 public class SubGoalElement extends AbstractSubGoalTree {
     
+    /**
+	 * @uml.property  name="term"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private Term term;
     
     public SubGoalElement(Term t) {

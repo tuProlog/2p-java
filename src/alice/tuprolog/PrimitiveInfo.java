@@ -32,13 +32,29 @@ public class PrimitiveInfo {
     public final static int PREDICATE  = 1;
     public final static int FUNCTOR    = 2;
     
+    /**
+	 * @uml.property  name="type"
+	 */
     private int type;
-    /** method to be call when evaluating the built-in*/
+    /**
+	 * method to be call when evaluating the built-in
+	 * @uml.property  name="method"
+	 */
     private Method method;
-    /** lib object where the builtin is defined */
+    /**
+	 * lib object where the builtin is defined
+	 * @uml.property  name="source"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private IPrimitives source;
-    /** for optimization purposes */
+    /**
+	 * for optimization purposes
+	 * @uml.property  name="primitive_args" multiplicity="(0 -1)" dimension="1"
+	 */
     private Object[] primitive_args;
+    /**
+	 * @uml.property  name="primitive_key"
+	 */
     private String primitive_key;
     
     
@@ -81,10 +97,18 @@ public class PrimitiveInfo {
     }
     
     
+    /**
+	 * @return
+	 * @uml.property  name="type"
+	 */
     public int getType() {
         return type;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="source"
+	 */
     public IPrimitives getSource() {
         return source;
     }

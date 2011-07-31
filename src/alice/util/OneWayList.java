@@ -4,7 +4,14 @@ import java.util.*;
 
 public class OneWayList<E> {
     
+    /**
+	 * @uml.property  name="head"
+	 */
     private E head;
+    /**
+	 * @uml.property  name="tail"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private OneWayList<E> tail;
     
     public OneWayList(E head, OneWayList<E> tail){

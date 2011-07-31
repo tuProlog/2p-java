@@ -18,14 +18,42 @@ public class TheoryTabbedPane
 {
     private static final long serialVersionUID = 1L;
 
+    /**
+	 * @uml.property  name="engine"
+	 * @uml.associationEnd  
+	 */
     private Prolog engine;
 
+    /**
+	 * @uml.property  name="toolBar"
+	 * @uml.associationEnd  
+	 */
     private ToolBar toolBar;
+    /**
+	 * @uml.property  name="editor"
+	 * @uml.associationEnd  
+	 */
     private TheoryEditor editor;
+    /**
+	 * @uml.property  name="inputField"
+	 * @uml.associationEnd  
+	 */
     private JavaInputField inputField;
+    /**
+	 * @uml.property  name="consoleDialog"
+	 * @uml.associationEnd  
+	 */
     private ConsoleDialog consoleDialog;
+    /**
+	 * @uml.property  name="statusBar"
+	 * @uml.associationEnd  
+	 */
     private StatusBar statusBar;
 
+    /**
+	 * @uml.property  name="theoryFileNames"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.ide.FileIDE"
+	 */
     private ArrayList<FileIDE> theoryFileNames;
     
     public TheoryTabbedPane()
@@ -50,10 +78,18 @@ public class TheoryTabbedPane
         super.addTab(FileName, new CloseTabIcon(extraIcon), component);
     }
 
+    /**
+	 * @param engine
+	 * @uml.property  name="engine"
+	 */
     public void setEngine(Prolog engine)
     {
         this.engine = engine;
     }
+    /**
+	 * @param toolBar
+	 * @uml.property  name="toolBar"
+	 */
     public void setToolBar(ToolBar toolBar)
     {
         this.toolBar = toolBar;
@@ -62,14 +98,26 @@ public class TheoryTabbedPane
     {
         this.editor = editor;
     }
+    /**
+	 * @param inputField
+	 * @uml.property  name="inputField"
+	 */
     public void setInputField(JavaInputField inputField)
     {
         this.inputField = inputField;
     }
+    /**
+	 * @param consoleDialog
+	 * @uml.property  name="consoleDialog"
+	 */
     public void setConsoleDialog(ConsoleDialog consoleDialog)
     {
         this.consoleDialog = consoleDialog;
     }
+    /**
+	 * @param statusBar
+	 * @uml.property  name="statusBar"
+	 */
     public void setStatusBar(StatusBar statusBar)
     {
         this.statusBar = statusBar;

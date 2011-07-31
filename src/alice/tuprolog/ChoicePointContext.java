@@ -27,11 +27,31 @@ import alice.util.OneWayList;
  */
 public class ChoicePointContext {
     
+    /**
+	 * @uml.property  name="compatibleGoals"
+	 * @uml.associationEnd  
+	 */
     ClauseStore compatibleGoals;
+    /**
+	 * @uml.property  name="executionContext"
+	 * @uml.associationEnd  inverse="choicePointAfterCut:alice.tuprolog.ExecutionContext"
+	 */
     ExecutionContext executionContext;
+    /**
+	 * @uml.property  name="prevChoicePointContext"
+	 * @uml.associationEnd  
+	 */
     ChoicePointContext prevChoicePointContext;
     
+    /**
+	 * @uml.property  name="indexSubGoal"
+	 * @uml.associationEnd  
+	 */
     SubGoalId indexSubGoal;
+    /**
+	 * @uml.property  name="varsToDeunify"
+	 * @uml.associationEnd  
+	 */
     OneWayList<List<Var>> varsToDeunify;
     
     
@@ -45,10 +65,18 @@ public class ChoicePointContext {
      * Methods for spyListeners
      */
     
+    /**
+	 * @return
+	 * @uml.property  name="compatibleGoals"
+	 */
     public ClauseStore getCompatibleGoals() {
         return compatibleGoals;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="executionContext"
+	 */
     public ExecutionContext getExecutionContext() {
         return executionContext;
     }

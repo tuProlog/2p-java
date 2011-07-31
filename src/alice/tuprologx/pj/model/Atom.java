@@ -14,6 +14,9 @@ package alice.tuprologx.pj.model;
  * @author maurizio
  */
 public class Atom extends Term<Atom> {
+	/**
+	 * @uml.property  name="_theAtom"
+	 */
 	String _theAtom;
 
 	public Atom (String s) {_theAtom=s;}

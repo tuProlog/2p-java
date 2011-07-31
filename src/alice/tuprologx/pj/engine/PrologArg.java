@@ -7,7 +7,15 @@ import alice.tuprologx.pj.model.*;
  */
 public class PrologArg<X extends Term<X>> {
     
+    /**
+	 * @uml.property  name="_theArg"
+	 * @uml.associationEnd  
+	 */
     private Term<X> _theArg;
+    /**
+	 * @uml.property  name="_annotations"
+	 * @uml.associationEnd  multiplicity="(0 -1)"
+	 */
     private TermKind[] _annotations;    
     
     /** Creates a new instance of PrologArg */

@@ -18,28 +18,25 @@
 package alice.tuprologx.ide;
 
 /**
- * An interface to an edit area for Prolog theories.<br>
- * This interface is not public, since it is intended for internal use,
- * and could be subject to several changes in future releases.
- *
- * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version    1.0 - 13-nov-02
+ * An interface to an edit area for Prolog theories.<br> This interface is not public, since it is intended for internal use, and could be subject to several changes in future releases.
+ * @author     <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version     1.0 - 13-nov-02
  */
 
 interface TheoryEditArea {
 
     /**
-     * Display a theory in the edit area.
-     *
-     * @param theory The theory to be displayed in the edit area.
-     */
+	 * Display a theory in the edit area.
+	 * @param theory  The theory to be displayed in the edit area.
+	 * @uml.property  name="theory"
+	 */
     public void setTheory(String theory);
 
     /**
-     * Get the displayed theory as a <code>java.lang.String</code>.
-     *
-     * @return the displayed theory as a <code>java.lang.String</code>.
-     */
+	 * Get the displayed theory as a <code>java.lang.String</code>.
+	 * @return  the displayed theory as a <code>java.lang.String</code>.
+	 * @uml.property  name="theory"
+	 */
     public String getTheory();
 
     /**

@@ -14,6 +14,9 @@ package alice.tuprologx.pj.model;
  * @author maurizio
  */
 public class Double extends Term<Double> {
+	/**
+	 * @uml.property  name="_theDouble"
+	 */
 	java.lang.Double _theDouble;
 
 	public <Z> Z/*java.lang.Double*/ toJava() {return (Z)_theDouble;}

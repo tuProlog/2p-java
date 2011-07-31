@@ -48,11 +48,35 @@ import alice.util.Tools;
 @SuppressWarnings("serial")
 public class TheoryManager implements Serializable {
 
+	/**
+	 * @uml.property  name="dynamicDBase"
+	 * @uml.associationEnd  
+	 */
 	private ClauseDatabase dynamicDBase;
+	/**
+	 * @uml.property  name="staticDBase"
+	 * @uml.associationEnd  
+	 */
 	private ClauseDatabase staticDBase;
+	/**
+	 * @uml.property  name="engine"
+	 * @uml.associationEnd  inverse="theoryManager:alice.tuprolog.Prolog"
+	 */
 	private Prolog engine;
+	/**
+	 * @uml.property  name="primitiveManager"
+	 * @uml.associationEnd  
+	 */
 	private PrimitiveManager primitiveManager;
+	/**
+	 * @uml.property  name="startGoalStack"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Struct"
+	 */
 	private Stack<Term> startGoalStack;
+	/**
+	 * @uml.property  name="lastConsultedTheory"
+	 * @uml.associationEnd  
+	 */
 	Theory lastConsultedTheory;
 
 	public void initialize(Prolog vm) {
@@ -181,9 +205,9 @@ public class TheoryManager implements Serializable {
 			}
 		} catch (InvalidTermException e) {
 			/*Castagna 06/2011*/
-    		//throw new InvalidTheoryException(e.getMessage());
-    		throw new InvalidTheoryException(e.getMessage(), clause, e.line, e.pos);
-    		/**/
+			//throw new InvalidTheoryException(e.getMessage());
+			throw new InvalidTheoryException(e.getMessage(), clause, e.line, e.pos);
+			/**/
 		}
 
 		if (libName == null)
@@ -217,9 +241,20 @@ public class TheoryManager implements Serializable {
 	public void removeLibraryTheory(String libName) {
 		for (Iterator<ClauseInfo> allClauses = staticDBase.iterator(); allClauses.hasNext();) {
 			ClauseInfo d = allClauses.next();
-			if (d.libName != null && libName.equals(d.libName)){}
-			try {allClauses.remove();}
-			catch (Exception e){}
+			if (d.libName != null && libName.equals(d.libName))
+			{
+				try 
+				{
+					allClauses.remove();
+					
+					// Non si puà fare perchè l'iterator è fail-fast: si può modificare la lista solo dall'iterator stesso
+					// se si modifica la collezzione "sotto banco" viene lanciata un'eccezione "java.util.ConcurrentModificationException"
+					//staticDBase.abolish(d.getHead().getPredicateIndicator());
+					
+					// Rimuovendolo da allClauses si elimina solo il valore e non la chiave
+				}
+				catch (Exception e){}
+			}
 		}
 	}
 
@@ -306,8 +341,8 @@ public class TheoryManager implements Serializable {
 
 	/**
 	 * Gets last consulted theory
-	 *
-	 * @return last theory
+	 * @return  last theory
+	 * @uml.property  name="lastConsultedTheory"
 	 */
 	public Theory getLastConsultedTheory() {
 		return lastConsultedTheory;

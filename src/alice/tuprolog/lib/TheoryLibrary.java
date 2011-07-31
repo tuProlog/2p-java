@@ -25,7 +25,14 @@ import alice.tuprolog.*;
 @SuppressWarnings("serial")
 public class TheoryLibrary extends Library {
     
+    /**
+	 * @uml.property  name="th"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private Theory th;
+    /**
+	 * @uml.property  name="name"
+	 */
     private String name;
     
     public TheoryLibrary(String name, Theory theory){
@@ -37,6 +44,10 @@ public class TheoryLibrary extends Library {
         return th.toString();
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="name"
+	 */
     public String getName(){
         return name;
     }

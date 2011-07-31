@@ -11,8 +11,9 @@ public class PrologFileChooser extends JFileChooser
     private static final long serialVersionUID = 1L;
 
     /**
-     * dialog type to display, it's used to know when display a showConfirmDialog
-     */
+	 * dialog type to display, it's used to know when display a showConfirmDialog
+	 * @uml.property  name="type"
+	 */
     private String type=null;
 
     public PrologFileChooser(String file,String type)

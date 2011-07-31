@@ -402,10 +402,23 @@ loop:    for(int i = offset; i < length; i++)
     // private members
     private static KeywordMap libraryKeywords;
 
+    /**
+	 * @uml.property  name="cpp"
+	 */
     @SuppressWarnings("unused")
     private boolean cpp;
+    /**
+	 * @uml.property  name="keywords"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private KeywordMap keywords;
+    /**
+	 * @uml.property  name="lastOffset"
+	 */
     private int lastOffset;
+    /**
+	 * @uml.property  name="lastKeyword"
+	 */
     private int lastKeyword;
 
     private boolean doKeyword(Segment line, int i, char c)

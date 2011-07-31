@@ -36,15 +36,113 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
     
     
     //private DeclaredType compoundType,compound1Type,compound2Type,consType,varType,termType;
-    private DeclaredType nilType,iterableType,j2PExceptionType,boolType;
+    /**
+	 * @uml.property  name="nilType"
+	 * @uml.associationEnd  
+	 */
+    private DeclaredType nilType;
+
+
+	/**
+	 * @uml.property  name="iterableType"
+	 * @uml.associationEnd  
+	 */
+	private DeclaredType iterableType;
+
+
+	/**
+	 * @uml.property  name="j2PExceptionType"
+	 * @uml.associationEnd  
+	 */
+	private DeclaredType j2PExceptionType;
+
+
+	/**
+	 * @uml.property  name="boolType"
+	 * @uml.associationEnd  
+	 */
+	private DeclaredType boolType;
     //private PrimitiveType boolType;
     //private TypeElement teCompound,teCompound1;
-    private TypeElement teBool,teCompound2,teCons,teNil,teTerm,teVar,teIterable,teJ2PException;    
+    /**
+	 * @uml.property  name="teBool"
+	 * @uml.associationEnd  
+	 */
+    private TypeElement teBool;
+
+
+	/**
+	 * @uml.property  name="teCompound2"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teCompound2;
+
+
+	/**
+	 * @uml.property  name="teCons"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teCons;
+
+
+	/**
+	 * @uml.property  name="teNil"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teNil;
+
+
+	/**
+	 * @uml.property  name="teTerm"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teTerm;
+
+
+	/**
+	 * @uml.property  name="teVar"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teVar;
+
+
+	/**
+	 * @uml.property  name="teIterable"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teIterable;
+
+
+	/**
+	 * @uml.property  name="teJ2PException"
+	 * @uml.associationEnd  
+	 */
+	private TypeElement teJ2PException;    
+    /**
+	 * @uml.property  name="env"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="javax.lang.model.type.TypeMirror"
+	 */
     private ProcessingEnvironment env;
+    /**
+	 * @uml.property  name="classTheory"
+	 * @uml.associationEnd  
+	 */
     private Theory classTheory;
     //private Theory methodTheory;
+    /**
+	 * @uml.property  name="enclosingDeclaration"
+	 * @uml.associationEnd  
+	 */
     private TypeElement enclosingDeclaration;
+    /**
+	 * @uml.property  name="predicate"
+	 * @uml.associationEnd  
+	 */
     private PredicateExpr predicate;
+    /**
+	 * @uml.property  name="signature"
+	 * @uml.associationEnd  
+	 */
     private SignatureExpr signature;
     
 

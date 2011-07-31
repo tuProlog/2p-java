@@ -10,9 +10,23 @@ import alice.util.OneWayList;
  */
 public class ClauseStore {
     
+    /**
+	 * @uml.property  name="clauses"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private OneWayList<ClauseInfo> clauses;
+    /**
+	 * @uml.property  name="goal"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private Term goal;
+    /**
+	 * @uml.property  name="vars"
+	 */
     private List<Var> vars;
+    /**
+	 * @uml.property  name="haveAlternatives"
+	 */
     private boolean haveAlternatives;
     
     

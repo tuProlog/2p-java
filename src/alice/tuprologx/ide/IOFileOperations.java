@@ -31,9 +31,15 @@ import javax.swing.JFrame;
 @SuppressWarnings("serial")
 abstract class IOFileOperations extends JFrame 
 {
-    /** The current directory where to load theories. */
+    /**
+	 * The current directory where to load theories.
+	 * @uml.property  name="currentLoadDirectory"
+	 */
     protected String currentLoadDirectory;
-    /** The current directory where to save theories. */
+    /**
+	 * The current directory where to save theories.
+	 * @uml.property  name="currentSaveDirectory"
+	 */
     protected String currentSaveDirectory;
 
     IOFileOperations() {

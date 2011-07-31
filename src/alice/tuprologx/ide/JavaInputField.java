@@ -37,11 +37,23 @@ public class JavaInputField
     
     private static final long serialVersionUID = 1L;
 
-    /** The input field used in the graphic interface. */
+    /**
+	 * The input field used in the graphic interface.
+	 * @uml.property  name="inputField"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JTextField inputField;
-    /** A store for the history of the requested goals. */
+    /**
+	 * A store for the history of the requested goals.
+	 * @uml.property  name="history"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private History history;
-    /** The console referenced by this component. */
+    /**
+	 * The console referenced by this component.
+	 * @uml.property  name="console"
+	 * @uml.associationEnd  
+	 */
     private ConsoleManager console;
 
     
@@ -119,15 +131,9 @@ public class JavaInputField
     }
 
     /**
-     * Since the solve() method must be placed in this class, I need
-     * a reference to the Console where output, solveInfo, tuProlog
-     * engine and the ProcessInput thread are placed.
-     *
-     * This behaviour will change as soon as there will be no need of
-     * separate input components for .NET and Java2, i.e. as soon as
-     * the AltGr bug in Thinlet, preventing the use of italian keycombo
-     * AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
-     */
+	 * Since the solve() method must be placed in this class, I need a reference to the Console where output, solveInfo, tuProlog engine and the ProcessInput thread are placed. This behaviour will change as soon as there will be no need of separate input components for .NET and Java2, i.e. as soon as the AltGr bug in Thinlet, preventing the use of italian keycombo AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
+	 * @uml.property  name="console"
+	 */
     public void setConsole(ConsoleManager consoleManager)
     {
         this.console = consoleManager;

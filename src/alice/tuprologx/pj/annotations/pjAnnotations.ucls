@@ -1,0 +1,62 @@
+<class-diagram version="1.0.3" icons="true" always-add-relationships="true" generalizations="true" realizations="true" 
+  associations="false" dependencies="false" nesting-relationships="true">  
+  <annotation id="1" corner="BOTTOM_RIGHT" language="java" name="alice.tuprologx.pj.annotations.PrologClass" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/PrologClass.java" binary="false">    
+    <position height="66" width="143" x="41" y="37"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </annotation>  
+  <annotation id="2" corner="BOTTOM_RIGHT" language="java" name="alice.tuprologx.pj.annotations.WithTermifiable" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/WithTermifiable.java" binary="false">    
+    <position height="66" width="143" x="224" y="37"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </annotation>  
+  <annotation id="3" corner="BOTTOM_RIGHT" language="java" name="alice.tuprologx.pj.annotations.Termifiable" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/Termifiable.java" binary="false">    
+    <position height="66" width="143" x="407" y="37"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </annotation>  
+  <annotation id="4" corner="BOTTOM_RIGHT" language="java" name="alice.tuprologx.pj.annotations.PrologMethod" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/PrologMethod.java" binary="false">    
+    <position height="146" width="186" x="590" y="37"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </annotation>  
+  <annotation id="5" corner="BOTTOM_RIGHT" language="java" name="alice.tuprologx.pj.annotations.PrologField" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/PrologField.java" binary="false">    
+    <position height="82" width="143" x="816" y="37"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </annotation>  
+  <annotation id="6" corner="BOTTOM_RIGHT" language="java" name="alice.tuprologx.pj.annotations.TRACE" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/TRACE.java" binary="false">    
+    <position height="50" width="143" x="999" y="37"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </annotation>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="false" multiplicity="false"/>
+</class-diagram>

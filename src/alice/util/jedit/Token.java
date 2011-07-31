@@ -113,18 +113,22 @@ public class Token
     public static final byte END = 127;
 
     /**
-     * The length of this token.
-     */
+	 * The length of this token.
+	 * @uml.property  name="length"
+	 */
     public int length;
 
     /**
-     * The id of this token.
-     */
+	 * The id of this token.
+	 * @uml.property  name="id"
+	 */
     public byte id;
 
     /**
-     * The next token in the linked list.
-     */
+	 * The next token in the linked list.
+	 * @uml.property  name="next"
+	 * @uml.associationEnd  
+	 */
     public Token next;
 
     /**

@@ -18,32 +18,104 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("serial")
 public class EngineManager implements java.io.Serializable {
     
+    /**
+	 * @uml.property  name="mediator"
+	 * @uml.associationEnd  inverse="engineManager:alice.tuprolog.Prolog"
+	 */
     private Prolog   mediator;
+    /**
+	 * @uml.property  name="theoryManager"
+	 * @uml.associationEnd  
+	 */
     private TheoryManager    theoryManager;
+    /**
+	 * @uml.property  name="primitiveManager"
+	 * @uml.associationEnd  
+	 */
     private PrimitiveManager primitiveManager;
+    /**
+	 * @uml.property  name="libraryManager"
+	 * @uml.associationEnd  
+	 */
     private LibraryManager   libraryManager;
     
     
     /* Current environment */
+    /**
+	 * @uml.property  name="env"
+	 * @uml.associationEnd  
+	 */
     Engine env;
     /* Last environment used */
+    /**
+	 * @uml.property  name="last_env"
+	 * @uml.associationEnd  
+	 */
     private Engine last_env;
     /* Stack environments of nidicate solving */
+    /**
+	 * @uml.property  name="stackEnv"
+	 * @uml.associationEnd  multiplicity="(0 -1)" inverse="manager:alice.tuprolog.Engine"
+	 */
     private LinkedList<Engine> stackEnv = new LinkedList<Engine>();
     
+    /**
+	 * @uml.property  name="sinfo"
+	 * @uml.associationEnd  
+	 */
     private SolveInfo sinfo;
     
     
-    /** States */
+    /**
+	 * States
+	 * @uml.property  name="iNIT"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State INIT;
+    /**
+	 * @uml.property  name="gOAL_EVALUATION"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State GOAL_EVALUATION;
+    /**
+	 * @uml.property  name="eXCEPTION"
+	 * @uml.associationEnd  multiplicity="(1 1)" inverse="c:alice.tuprolog.State"
+	 */
     final State EXCEPTION;
+    /**
+	 * @uml.property  name="rULE_SELECTION"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State RULE_SELECTION;
+    /**
+	 * @uml.property  name="gOAL_SELECTION"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State GOAL_SELECTION;
+    /**
+	 * @uml.property  name="bACKTRACK"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State BACKTRACK;
+    /**
+	 * @uml.property  name="eND_FALSE"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State END_FALSE;
+    /**
+	 * @uml.property  name="eND_TRUE"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State END_TRUE;
+    /**
+	 * @uml.property  name="eND_TRUE_CP"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State END_TRUE_CP;
+    /**
+	 * @uml.property  name="eND_HALT"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final State END_HALT;
     
     public static final int HALT    = -1;

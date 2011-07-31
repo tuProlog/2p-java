@@ -27,6 +27,10 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("serial")
 class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
     
+    /**
+	 * @uml.property  name="list"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     Struct list;
     
     StructIterator(Struct t) {

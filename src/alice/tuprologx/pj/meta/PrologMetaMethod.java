@@ -14,12 +14,37 @@ import java.lang.reflect.*;
  */
 public class PrologMetaMethod {
     
+    /**
+	 * @uml.property  name="_theMethod"
+	 */
     private Method _theMethod;
+    /**
+	 * @uml.property  name="_enclosing"
+	 * @uml.associationEnd  multiplicity="(1 1)" inverse="_methods:alice.tuprologx.pj.meta.PrologMetaClass"
+	 */
     private PrologMetaClass _enclosing;
+    /**
+	 * @uml.property  name="_annotation"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private PrologMethod _annotation;
+    /**
+	 * @uml.property  name="_theory"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private Theory _theory;
+    /**
+	 * @uml.property  name="_arity"
+	 */
     private int _arity;
+    /**
+	 * @uml.property  name="_predicateName"
+	 */
     private String _predicateName;
+    /**
+	 * @uml.property  name="_clauses"
+	 * @uml.associationEnd  multiplicity="(0 -1)"
+	 */
     private Clause<?,?>[] _clauses; 
     /*
     private Vector<String> variableNames;

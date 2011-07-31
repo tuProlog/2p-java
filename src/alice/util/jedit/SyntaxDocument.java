@@ -23,21 +23,19 @@ import javax.swing.undo.UndoableEdit;
 public class SyntaxDocument extends PlainDocument
 {
     /**
-     * Returns the token marker that is to be used to split lines
-     * of this document up into tokens. May return null if this
-     * document is not to be colorized.
-     */
+	 * Returns the token marker that is to be used to split lines of this document up into tokens. May return null if this document is not to be colorized.
+	 * @uml.property  name="tokenMarker"
+	 */
     public TokenMarker getTokenMarker()
     {
         return tokenMarker;
     }
 
     /**
-     * Sets the token marker that is to be used to split lines of
-     * this document up into tokens. May throw an exception if
-     * this is not supported for this type of document.
-     * @param tm The new token marker
-     */
+	 * Sets the token marker that is to be used to split lines of this document up into tokens. May throw an exception if this is not supported for this type of document.
+	 * @param tm  The new token marker
+	 * @uml.property  name="tokenMarker"
+	 */
     public void setTokenMarker(TokenMarker tm)
     {
         tokenMarker = tm;
@@ -118,6 +116,10 @@ public class SyntaxDocument extends PlainDocument
     public void addUndoableEdit(UndoableEdit edit) {}
 
     // protected members
+    /**
+	 * @uml.property  name="tokenMarker"
+	 * @uml.associationEnd  
+	 */
     protected TokenMarker tokenMarker;
 
     /**

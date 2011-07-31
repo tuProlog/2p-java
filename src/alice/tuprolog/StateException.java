@@ -8,7 +8,15 @@ import java.util.List;
  */
 public class StateException extends State {
 
+    /**
+	 * @uml.property  name="catchTerm"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final Term catchTerm = Term.createTerm("catch(Goal, Catcher, Handler)");
+    /**
+	 * @uml.property  name="javaCatchTerm"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     final Term javaCatchTerm = Term
             .createTerm("java_catch(Goal, List, Finally)");
 

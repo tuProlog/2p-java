@@ -7,8 +7,15 @@ package alice.tuprolog;
 public class PrologError extends Throwable {
 
 	// termine Prolog che rappresenta l'argomento di throw/1
+	/**
+	 * @uml.property  name="error"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private Term error;
 	/*Castagna 06/2011*/
+	/**
+	 * @uml.property  name="descriptionError"
+	 */
 	private String descriptionError;
 	/**/
 
@@ -40,6 +47,10 @@ public class PrologError extends Throwable {
 	}
 	/**/
 
+	/**
+	 * @return
+	 * @uml.property  name="error"
+	 */
 	public Term getError() {
 		return error;
 	}

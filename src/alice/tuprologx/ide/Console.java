@@ -1,5 +1,8 @@
 package alice.tuprologx.ide;
 
+/**
+ * @author  ale
+ */
 public interface Console
 {
     public boolean hasOpenAlternatives();
@@ -7,5 +10,8 @@ public interface Console
     public void getNextSolution();
     public void acceptSolution();
     public void stopEngine();
+    /**
+	 * @uml.property  name="goal"
+	 */
     public String getGoal();
 }

@@ -25,8 +25,17 @@ package alice.tuprolog;
 @SuppressWarnings("serial")
 public class InvalidLibraryException extends PrologException {
     
+    /**
+	 * @uml.property  name="libraryName"
+	 */
     private String libraryName;
+    /**
+	 * @uml.property  name="line"
+	 */
     private int line;
+    /**
+	 * @uml.property  name="pos"
+	 */
     private int pos;
     
     public InvalidLibraryException() {}
@@ -37,14 +46,26 @@ public class InvalidLibraryException extends PrologException {
         this.line = line;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="libraryName"
+	 */
     public String getLibraryName() {
         return libraryName;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="line"
+	 */
     public int getLine() {
         return line;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="pos"
+	 */
     public int getPos() {
         return pos;
     }

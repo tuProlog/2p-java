@@ -34,7 +34,11 @@ import alice.tuprolog.interfaces.IOperatorManager;
 @SuppressWarnings("serial")
 /*Castagna 06/2911*/public/**/ class OperatorManager implements /*Castagna 06/2011*/IOperatorManager,/**/Serializable {
     
-    /** current known operators */
+    /**
+	 * current known operators
+	 * @uml.property  name="operatorList"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private OperatorRegister operatorList = new OperatorRegister();
     
     /** lowest operator priority */

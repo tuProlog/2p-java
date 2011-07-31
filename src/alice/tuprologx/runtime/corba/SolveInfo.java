@@ -11,10 +11,22 @@ package alice.tuprologx.runtime.corba;
 @SuppressWarnings("serial")
 public final class SolveInfo implements org.omg.CORBA.portable.IDLEntity
 {
-  public boolean success = false;
-  public String solution = null;
-  public boolean halt = false;
-  public int haltCode = (int)0;
+  /**
+ * @uml.property  name="success"
+ */
+public boolean success = false;
+  /**
+ * @uml.property  name="solution"
+ */
+public String solution = null;
+  /**
+ * @uml.property  name="halt"
+ */
+public boolean halt = false;
+  /**
+ * @uml.property  name="haltCode"
+ */
+public int haltCode = (int)0;
 
   public SolveInfo ()
   {

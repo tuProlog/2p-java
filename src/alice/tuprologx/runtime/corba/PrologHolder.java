@@ -9,7 +9,11 @@ package alice.tuprologx.runtime.corba;
 
 public final class PrologHolder implements org.omg.CORBA.portable.Streamable
 {
-  public alice.tuprologx.runtime.corba.Prolog value = null;
+  /**
+ * @uml.property  name="value"
+ * @uml.associationEnd  
+ */
+public alice.tuprologx.runtime.corba.Prolog value = null;
 
   public PrologHolder ()
   {

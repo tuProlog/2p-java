@@ -24,21 +24,39 @@ import alice.tuprolog.SolveInfo;
  */
 
 public class EngineStatus{
+    /**
+	 * @uml.property  name="info"
+	 * @uml.associationEnd  
+	 */
     private SolveInfo info = null;
+    /**
+	 * @uml.property  name="hasAlternatives"
+	 */
     private boolean hasAlternatives = false;
+    /**
+	 * @uml.property  name="error"
+	 */
     private String error = null;
     
+    /**
+	 * @uml.property  name="_isFirstSolution"
+	 */
     private boolean _isFirstSolution = false;
+    /**
+	 * @uml.property  name="_isAccepted"
+	 */
     private boolean _isAccepted = false;
     /**
-     * @return Returns the error.
-     */
+	 * @return  Returns the error.
+	 * @uml.property  name="error"
+	 */
     public String getError() {
         return error;
     }
     /**
-     * @param error The error to set.
-     */
+	 * @param error  The error to set.
+	 * @uml.property  name="error"
+	 */
     public void setError(String error) {
         this.error = error;
     }
@@ -71,14 +89,16 @@ public class EngineStatus{
         this.hasAlternatives = hasAlternatives;
     }
     /**
-     * @return Returns the info.
-     */
+	 * @return  Returns the info.
+	 * @uml.property  name="info"
+	 */
     public SolveInfo getInfo() {
         return info;
     }
     /**
-     * @param info The info to set.
-     */
+	 * @param info  The info to set.
+	 * @uml.property  name="info"
+	 */
     public void setInfo(SolveInfo info) {
         this.info = info;
     }

@@ -25,20 +25,57 @@ import alice.tuprolog.interfaces.IEngine;
  * @author Alex Benini
  */
 public class Engine /*Castagna 06/2011*/implements IEngine/**/{    
+    /**
+	 * @uml.property  name="nextState"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     State  nextState;
+    /**
+	 * @uml.property  name="query"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     Term   query;
+    /**
+	 * @uml.property  name="startGoal"
+	 * @uml.associationEnd  
+	 */
     Struct startGoal;
+    /**
+	 * @uml.property  name="goalVars" multiplicity="(0 -1)"
+	 */
     Collection<Var> goalVars;
     
+    /**
+	 * @uml.property  name="nDemoSteps"
+	 */
     int    nDemoSteps;
     
+    /**
+	 * @uml.property  name="currentContext"
+	 * @uml.associationEnd  
+	 */
     ExecutionContext currentContext; 
     //ClauseStore clauseSelector;
+    /**
+	 * @uml.property  name="currentAlternative"
+	 * @uml.associationEnd  
+	 */
     ChoicePointContext currentAlternative;
     
+    /**
+	 * @uml.property  name="choicePointSelector"
+	 * @uml.associationEnd  
+	 */
     ChoicePointStore choicePointSelector;
     
+    /**
+	 * @uml.property  name="mustStop"
+	 */
     boolean mustStop;
+    /**
+	 * @uml.property  name="manager"
+	 * @uml.associationEnd  multiplicity="(1 1)" inverse="stackEnv:alice.tuprolog.EngineManager"
+	 */
     EngineManager manager;
     
     
@@ -88,6 +125,10 @@ public class Engine /*Castagna 06/2011*/implements IEngine/**/{
      * Methods for spyListeners
      */
     
+    /**
+	 * @return
+	 * @uml.property  name="query"
+	 */
     public Term getQuery() {
         return query;
     }

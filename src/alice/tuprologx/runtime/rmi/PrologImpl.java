@@ -9,6 +9,10 @@ import java.rmi.server.UnicastRemoteObject;
 public class PrologImpl extends UnicastRemoteObject
     implements alice.tuprologx.runtime.rmi.Prolog, Serializable {
 
+    /**
+	 * @uml.property  name="imp"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private alice.tuprolog.Prolog imp;
 
     public PrologImpl() throws RemoteException {

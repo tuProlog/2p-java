@@ -17,6 +17,9 @@ import alice.tuprolog.Struct;
  */
 public class Clause<H extends Term<?>, B extends Term<?>> extends Compound2<H,B> {
     
+    /**
+	 * @uml.property  name="isFact"
+	 */
     private boolean isFact;
     
     /** Creates a new instance of Clause */
@@ -51,6 +54,10 @@ public class Clause<H extends Term<?>, B extends Term<?>> extends Compound2<H,B>
         return get1();
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="isFact"
+	 */
     public boolean isFact() {
         return isFact;
     }

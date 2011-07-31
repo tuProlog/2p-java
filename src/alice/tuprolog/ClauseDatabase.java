@@ -30,85 +30,86 @@ import java.util.*;
 @SuppressWarnings("serial")
 class ClauseDatabase extends HashMap<String,FamilyClausesList> implements Iterable<ClauseInfo> {
 
-    void addFirst(String key, ClauseInfo d) {
-        FamilyClausesList family = get(key);
-        if (family == null)
-            put(key, family = new FamilyClausesList());
-        family.addFirst(d);
-    }
+	void addFirst(String key, ClauseInfo d) {
+		FamilyClausesList family = get(key);
+		if (family == null)
+			put(key, family = new FamilyClausesList());
+		family.addFirst(d);
+	}
 
-    void addLast(String key, ClauseInfo d) {
-        FamilyClausesList family = get(key);
-        if (family == null)
-            put(key, family = new FamilyClausesList());
-        family.addLast(d);
-    }
+	void addLast(String key, ClauseInfo d) {
+		FamilyClausesList family = get(key);
+		if (family == null)
+			put(key, family = new FamilyClausesList());
+		family.addLast(d);
+	}
 
-    FamilyClausesList abolish(String key) {
-        return (FamilyClausesList) remove(key);
-    }
+	FamilyClausesList abolish(String key) 
+	{
+		return (FamilyClausesList) remove(key);
+	}
 
-    /**
-     * Retrieves a list of the predicates which has the same name and arity
-     * as the goal and which has a compatible first-arg for matching.
-     *
-     * @param headt The goal
-     * @return  The list of matching-compatible predicates
-     */
-    List<ClauseInfo> getPredicates(Term headt) {
-        FamilyClausesList family = (FamilyClausesList) get(((Struct) headt).getPredicateIndicator());
-        if (family == null){
-            return new ReadOnlyLinkedList<ClauseInfo>();
-        }
-        return family.get(headt);
-    }
+	/**
+	 * Retrieves a list of the predicates which has the same name and arity
+	 * as the goal and which has a compatible first-arg for matching.
+	 *
+	 * @param headt The goal
+	 * @return  The list of matching-compatible predicates
+	 */
+	List<ClauseInfo> getPredicates(Term headt) {
+		FamilyClausesList family = (FamilyClausesList) get(((Struct) headt).getPredicateIndicator());
+		if (family == null){
+			return new ReadOnlyLinkedList<ClauseInfo>();
+		}
+		return family.get(headt);
+	}
 
-    /**
-     * Retrieves the list of clauses of the requested family
-     *
-     * @param key   Goal's Predicate Indicator
-     * @return      The family clauses
-     */
-    List<ClauseInfo> getPredicates(String key){
-        FamilyClausesList family = (FamilyClausesList) get(key);
-        if(family == null){
-            return new ReadOnlyLinkedList<ClauseInfo>();
-        }
-        return new ReadOnlyLinkedList<ClauseInfo>(family);
-    }
+	/**
+	 * Retrieves the list of clauses of the requested family
+	 *
+	 * @param key   Goal's Predicate Indicator
+	 * @return      The family clauses
+	 */
+	List<ClauseInfo> getPredicates(String key){
+		FamilyClausesList family = (FamilyClausesList) get(key);
+		if(family == null){
+			return new ReadOnlyLinkedList<ClauseInfo>();
+		}
+		return new ReadOnlyLinkedList<ClauseInfo>(family);
+	}
 
-    public Iterator<ClauseInfo> iterator() {
-        return new CompleteIterator(this);
-    }
+	public Iterator<ClauseInfo> iterator() {
+		return new CompleteIterator(this);
+	}
 
-    private static class CompleteIterator implements Iterator<ClauseInfo> {
-        Iterator<FamilyClausesList> values;
-        Iterator<ClauseInfo> workingList;
-        //private boolean busy = false;
+	private static class CompleteIterator implements Iterator<ClauseInfo> {
+		Iterator<FamilyClausesList> values;
+		Iterator<ClauseInfo> workingList;
+		//private boolean busy = false;
 
-        public CompleteIterator(ClauseDatabase clauseDatabase) {
-            values = clauseDatabase.values().iterator();
-        }
+		public CompleteIterator(ClauseDatabase clauseDatabase) {
+			values = clauseDatabase.values().iterator();
+		}
 
-        public boolean hasNext() {
-            if (workingList != null && workingList.hasNext())
-                return true;
-            if (values.hasNext()) {
-                workingList = values.next().iterator();
-                return hasNext(); //start again on next workingList
-            }
-            return false;
-        }
+		public boolean hasNext() {
+			if (workingList != null && workingList.hasNext())
+				return true;
+			if (values.hasNext()) {
+				workingList = values.next().iterator();
+				return hasNext(); //start again on next workingList
+			}
+			return false;
+		}
 
-        public synchronized ClauseInfo next() {
-            if (workingList.hasNext())
-                return workingList.next();
-            else return null;
-        }
+		public synchronized ClauseInfo next() {
+			if (workingList.hasNext())
+				return workingList.next();
+			else return null;
+		}
 
-        public void remove() {
-            workingList.remove();
-        }
-    }
+		public void remove() {
+			workingList.remove();
+		}
+	}
 
 }

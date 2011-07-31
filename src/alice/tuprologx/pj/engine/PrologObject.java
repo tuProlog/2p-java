@@ -12,11 +12,22 @@ package alice.tuprologx.pj.engine;
 import alice.tuprologx.pj.meta.*;
 import alice.tuprologx.pj.model.*;
 /**
- *
- * @author maurizio
+ * @author  maurizio
  */
 public interface PrologObject {    
+    /**
+	 * @uml.property  name="metaPrologClass"
+	 * @uml.associationEnd  
+	 */
     PrologMetaClass getMetaPrologClass();
+    /**
+	 * @uml.property  name="theory"
+	 * @uml.associationEnd  
+	 */
     Theory getTheory();
+    /**
+	 * @param t
+	 * @uml.property  name="theory"
+	 */
     void setTheory(Theory t);
 }

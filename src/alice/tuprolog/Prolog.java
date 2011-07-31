@@ -34,45 +34,106 @@ import alice.tuprolog.interfaces.IProlog;
 public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
 	// 2P version
-	private static final String VERSION = "2.4.0 beta";
+	private static final String VERSION = "2.4.0 beta MONTANARI";
 
 	/*  manager of current theory */
+	/**
+	 * @uml.property  name="theoryManager"
+	 * @uml.associationEnd  inverse="engine:alice.tuprolog.TheoryManager"
+	 */
 	private TheoryManager theoryManager;
 	/*  component managing primitive  */
+	/**
+	 * @uml.property  name="primitiveManager"
+	 * @uml.associationEnd  
+	 */
 	private PrimitiveManager primitiveManager;    
 	/* component managing operators */
+	/**
+	 * @uml.property  name="opManager"
+	 * @uml.associationEnd  
+	 */
 	private OperatorManager opManager;    
 	/* component managing flags */
+	/**
+	 * @uml.property  name="flagManager"
+	 * @uml.associationEnd  inverse="mediator:alice.tuprolog.FlagManager"
+	 */
 	private FlagManager flagManager;
 	/* component managing libraries */
+	/**
+	 * @uml.property  name="libraryManager"
+	 * @uml.associationEnd  inverse="prolog:alice.tuprolog.LibraryManager"
+	 */
 	private LibraryManager libraryManager;
 	/* component managing engine */
+	/**
+	 * @uml.property  name="engineManager"
+	 * @uml.associationEnd  inverse="mediator:alice.tuprolog.EngineManager"
+	 */
 	private EngineManager engineManager;
 
 	/*  spying activated ?  */
+	/**
+	 * @uml.property  name="spy"
+	 */
 	private boolean spy;  
 	/*  warning activated ?  */
+	/**
+	 * @uml.property  name="warning"
+	 */
 	private boolean warning;
 	/* listeners registrated for virtual machine output events */
 	/*Castagna 06/2011*/	
 	/* exception activated ? */
+	/**
+	 * @uml.property  name="exception"
+	 */
 	private boolean exception;
 	/**/
+	/**
+	 * @uml.property  name="outputListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.OutputListener"
+	 */
 	private ArrayList<OutputListener> outputListeners;
 	/* listeners registrated for virtual machine internal events */
+	/**
+	 * @uml.property  name="spyListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.SpyListener"
+	 */
 	private ArrayList<SpyListener> spyListeners;
 	/* listeners registrated for virtual machine state change events */
+	/**
+	 * @uml.property  name="warningListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.WarningListener"
+	 */
 	private ArrayList<WarningListener> warningListeners;
 	/*Castagna 06/2011*/	
 	/* listeners registrated for virtual machine state exception events */
+	/**
+	 * @uml.property  name="exceptionListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.ExceptionListener"
+	 */
 	private ArrayList<ExceptionListener> exceptionListeners;
 	/**/
 
 	/* listeners to theory events */
+	/**
+	 * @uml.property  name="theoryListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.TheoryListener"
+	 */
 	private ArrayList<TheoryListener> theoryListeners;
 	/* listeners to library events */
+	/**
+	 * @uml.property  name="libraryListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.LibraryListener"
+	 */
 	private ArrayList<LibraryListener> libraryListeners;
 	/* listeners to query events */
+	/**
+	 * @uml.property  name="queryListeners"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.QueryListener"
+	 */
 	private ArrayList<QueryListener> queryListeners;
 
 
@@ -165,22 +226,34 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	}
 
 
-	/** Gets the component managing flags */
+	/**
+	 * Gets the component managing flags
+	 * @uml.property  name="flagManager"
+	 */
 	public FlagManager getFlagManager() {
 		return flagManager;
 	}
 
-	/** Gets the component managing theory */
+	/**
+	 * Gets the component managing theory
+	 * @uml.property  name="theoryManager"
+	 */
 	public TheoryManager getTheoryManager() {
 		return theoryManager;
 	}
 
-	/** Gets the component managing primitives */
+	/**
+	 * Gets the component managing primitives
+	 * @uml.property  name="primitiveManager"
+	 */
 	public PrimitiveManager getPrimitiveManager() {
 		return primitiveManager;
 	}
 
-	/** Gets the component managing libraries */
+	/**
+	 * Gets the component managing libraries
+	 * @uml.property  name="libraryManager"
+	 */
 	public LibraryManager getLibraryManager() {
 		return libraryManager;
 	}
@@ -190,7 +263,10 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 		return opManager; 
 	}
 
-	/** Gets the component managing engine */
+	/**
+	 * Gets the component managing engine
+	 * @uml.property  name="engineManager"
+	 */
 	public EngineManager getEngineManager() {
 		return engineManager; 
 	}
@@ -517,8 +593,8 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
 	/**
 	 * Switches on/off the notification of spy information events
-	 *
-	 * @param state - true for enabling the notification of spy event
+	 * @param state  - true for enabling the notification of spy event
+	 * @uml.property  name="spy"
 	 */
 	public synchronized void setSpy(boolean state) {
 		spy = state;
@@ -526,8 +602,8 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
 	/**
 	 * Checks the spy state of the engine
-	 *
-	 * @return true if the engine emits spy information
+	 * @return  true if the engine emits spy information
+	 * @uml.property  name="spy"
 	 */
 	public synchronized boolean isSpy() {
 		return spy;
@@ -564,8 +640,8 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
 	/**
 	 * Switches on/off the notification of warning information events
-	 *
-	 * @param state - true for enabling warning information notification
+	 * @param state  - true for enabling warning information notification
+	 * @uml.property  name="warning"
 	 */
 	public synchronized void setWarning(boolean state) {
 		warning = state;
@@ -573,8 +649,8 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
 	/**
 	 * Checks if warning information are notified
-	 *
-	 * @return true if the engine emits warning information
+	 * @return  true if the engine emits warning information
+	 * @uml.property  name="warning"
 	 */
 	public synchronized boolean isWarning() {
 		return warning;
@@ -610,8 +686,8 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/*Castagna 06/2011*/
 	/**
 	 * Checks if exception information are notified
-	 *
-	 * @return true if the engine emits exception information
+	 * @return  true if the engine emits exception information
+	 * @uml.property  name="exception"
 	 */
 	public synchronized boolean isException() {
 		return exception;
@@ -621,8 +697,8 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	/*Castagna 06/2011*/
 	/**
 	 * Switches on/off the notification of exception information events
-	 *
-	 * @param state - true for enabling exception information notification
+	 * @param state  - true for enabling exception information notification
+	 * @uml.property  name="exception"
 	 */
 	public synchronized void setException(boolean state) {
 		exception = state;

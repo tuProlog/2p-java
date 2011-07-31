@@ -39,25 +39,37 @@ import java.awt.event.*;
 @SuppressWarnings("serial")
 public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea {
 
-    /** The advanced Swing text area used by this edit area. */
+    /**
+	 * The advanced Swing text area used by this edit area.
+	 * @uml.property  name="inputTheory"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private alice.util.jedit.JEditTextArea inputTheory;
     /**
-     * The line number corresponding to the caret's current position in the
-     * text area.
-     */
+	 * The line number corresponding to the caret's current position in the text area.
+	 * @uml.property  name="caretLine"
+	 */
     private int caretLine;
     /**
-     * Indicate if the edit area is changed after the last Set Theory operation
-     * issued by the editor.
-     */
+	 * Indicate if the edit area is changed after the last Set Theory operation issued by the editor.
+	 * @uml.property  name="dirty"
+	 */
     private boolean dirty;
     /**
-     * Indicate if the edit area is changed after the last save operation
-     */
+	 * Indicate if the edit area is changed after the last save operation
+	 * @uml.property  name="saved"
+	 */
     private boolean saved;
-    /** Used for components interested in changes of console's properties. */
+    /**
+	 * Used for components interested in changes of console's properties.
+	 * @uml.property  name="propertyChangeSupport"
+	 */
     private PropertyChangeSupport propertyChangeSupport;
-    /** Undo Manager for the Document in the JEditTextArea. */
+    /**
+	 * Undo Manager for the Document in the JEditTextArea.
+	 * @uml.property  name="undoManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private UndoManager undoManager;
 
 
@@ -195,12 +207,20 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         });
     }
 
+    /**
+	 * @param caretLine
+	 * @uml.property  name="caretLine"
+	 */
     public void setCaretLine(int caretLine) {
         int oldCaretLine = getCaretLine();
         this.caretLine = caretLine;
         propertyChangeSupport.firePropertyChange("caretLine", oldCaretLine, caretLine);
     }
 
+    /**
+	 * @return
+	 * @uml.property  name="caretLine"
+	 */
     public int getCaretLine() {
         return caretLine;
     }
@@ -224,14 +244,26 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         return inputTheory.getText();
     }
 
+    /**
+	 * @param flag
+	 * @uml.property  name="dirty"
+	 */
     public void setDirty(boolean flag) {
         dirty = flag;
     }
 
+    /**
+	 * @return
+	 * @uml.property  name="dirty"
+	 */
     public boolean isDirty() {
         return dirty;
     }
 
+    /**
+	 * @param flag
+	 * @uml.property  name="saved"
+	 */
     public void setSaved(boolean flag) {
         if (inputTheory.isEditable())
         {
@@ -241,6 +273,10 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         }
     }
 
+    /**
+	 * @return
+	 * @uml.property  name="saved"
+	 */
     public boolean isSaved() {
         return saved;
     }

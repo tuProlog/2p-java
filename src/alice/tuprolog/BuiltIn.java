@@ -32,11 +32,35 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class BuiltIn extends Library {
 
+	/**
+	 * @uml.property  name="engineManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private EngineManager engineManager;
+	/**
+	 * @uml.property  name="theoryManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private TheoryManager theoryManager;
+	/**
+	 * @uml.property  name="libraryManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private LibraryManager libraryManager;
+	/**
+	 * @uml.property  name="flagManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private FlagManager flagManager;
+	/**
+	 * @uml.property  name="primitiveManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private PrimitiveManager primitiveManager;
+	/**
+	 * @uml.property  name="operatorManager"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
 	private OperatorManager operatorManager;
 
 	public BuiltIn(Prolog mediator) {

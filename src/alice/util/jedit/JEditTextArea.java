@@ -122,25 +122,28 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the object responsible for painting this text area.
-     */
+	 * Returns the object responsible for painting this text area.
+	 * @uml.property  name="painter"
+	 */
     public final TextAreaPainter getPainter()
     {
         return painter;
     }
 
     /**
-     * Returns the input handler.
-     */
+	 * Returns the input handler.
+	 * @uml.property  name="inputHandler"
+	 */
     public final InputHandler getInputHandler()
     {
         return inputHandler;
     }
 
     /**
-     * Sets the input handler.
-     * @param inputHandler The new input handler
-     */
+	 * Sets the input handler.
+	 * @param inputHandler  The new input handler
+	 * @uml.property  name="inputHandler"
+	 */
     public void setInputHandler(InputHandler inputHandler)
     {
         this.inputHandler = inputHandler;
@@ -176,10 +179,10 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Sets if the caret should be visible.
-     * @param caretVisible True if the caret should be visible, false
-     * otherwise
-     */
+	 * Sets if the caret should be visible.
+	 * @param caretVisible  True if the caret should be visible, false  otherwise
+	 * @uml.property  name="caretVisible"
+	 */
     public void setCaretVisible(boolean caretVisible)
     {
         this.caretVisible = caretVisible;
@@ -203,20 +206,19 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the number of lines from the top and button of the
-     * text area that are always visible.
-     */
+	 * Returns the number of lines from the top and button of the text area that are always visible.
+	 * @uml.property  name="electricScroll"
+	 */
     public final int getElectricScroll()
     {
         return electricScroll;
     }
 
     /**
-     * Sets the number of lines from the top and bottom of the text
-     * area that are always visible
-     * @param electricScroll The number of lines always visible from
-     * the top or bottom
-     */
+	 * Sets the number of lines from the top and bottom of the text area that are always visible
+	 * @param electricScroll  The number of lines always visible from  the top or bottom
+	 * @uml.property  name="electricScroll"
+	 */
     public final void setElectricScroll(int electricScroll)
     {
         this.electricScroll = electricScroll;
@@ -247,17 +249,18 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the line displayed at the text area's origin.
-     */
+	 * Returns the line displayed at the text area's origin.
+	 * @uml.property  name="firstLine"
+	 */
     public final int getFirstLine()
     {
         return firstLine;
     }
 
     /**
-     * Sets the line displayed at the text area's origin without
-     * updating the scroll bars.
-     */
+	 * Sets the line displayed at the text area's origin without updating the scroll bars.
+	 * @uml.property  name="firstLine"
+	 */
     public void setFirstLine(int firstLine)
     {
         if(firstLine == this.firstLine)
@@ -270,8 +273,9 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the number of lines visible in this text area.
-     */
+	 * Returns the number of lines visible in this text area.
+	 * @uml.property  name="visibleLines"
+	 */
     public final int getVisibleLines()
     {
         return visibleLines;
@@ -293,18 +297,19 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the horizontal offset of drawn lines.
-     */
+	 * Returns the horizontal offset of drawn lines.
+	 * @uml.property  name="horizontalOffset"
+	 */
     public final int getHorizontalOffset()
     {
         return horizontalOffset;
     }
 
     /**
-     * Sets the horizontal offset of drawn lines. This can be used to
-     * implement horizontal scrolling.
-     * @param horizontalOffset offset The new horizontal offset
-     */
+	 * Sets the horizontal offset of drawn lines. This can be used to implement horizontal scrolling.
+	 * @param horizontalOffset  offset The new horizontal offset
+	 * @uml.property  name="horizontalOffset"
+	 */
     public void setHorizontalOffset(int horizontalOffset)
     {
         if(horizontalOffset == this.horizontalOffset)
@@ -652,17 +657,19 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the document this text area is editing.
-     */
+	 * Returns the document this text area is editing.
+	 * @uml.property  name="document"
+	 */
     public final SyntaxDocument getDocument()
     {
         return document;
     }
 
     /**
-     * Sets the document this text area is editing.
-     * @param document The document
-     */
+	 * Sets the document this text area is editing.
+	 * @param document  The document
+	 * @uml.property  name="document"
+	 */
     public void setDocument(SyntaxDocument document)
     {
         if(this.document == document)
@@ -869,8 +876,9 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the selection start offset.
-     */
+	 * Returns the selection start offset.
+	 * @uml.property  name="selectionStart"
+	 */
     public final int getSelectionStart()
     {
         return selectionStart;
@@ -900,8 +908,9 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the selection start line.
-     */
+	 * Returns the selection start line.
+	 * @uml.property  name="selectionStartLine"
+	 */
     public final int getSelectionStartLine()
     {
         return selectionStartLine;
@@ -919,8 +928,9 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the selection end offset.
-     */
+	 * Returns the selection end offset.
+	 * @uml.property  name="selectionEnd"
+	 */
     public final int getSelectionEnd()
     {
         return selectionEnd;
@@ -950,8 +960,9 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the selection end line.
-     */
+	 * Returns the selection end line.
+	 * @uml.property  name="selectionEndLine"
+	 */
     public final int getSelectionEndLine()
     {
         return selectionEndLine;
@@ -1265,18 +1276,19 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns true if this text area is editable, false otherwise.
-     */
+	 * Returns true if this text area is editable, false otherwise.
+	 * @uml.property  name="editable"
+	 */
     public final boolean isEditable()
     {
         return editable;
     }
 
     /**
-     * Sets if this component is editable.
-     * @param editable True if this text area should be editable,
-     * false otherwise
-     */
+	 * Sets if this component is editable.
+	 * @param editable  True if this text area should be editable,  false otherwise
+	 * @uml.property  name="editable"
+	 */
     public final void setEditable(boolean editable)
     {
         this.editable = editable;
@@ -1400,18 +1412,18 @@ public class JEditTextArea extends JComponent
     }
 
     /**
-     * Returns the position of the highlighted bracket (the bracket
-     * matching the one before the caret)
-     */
+	 * Returns the position of the highlighted bracket (the bracket matching the one before the caret)
+	 * @uml.property  name="bracketPosition"
+	 */
     public final int getBracketPosition()
     {
         return bracketPosition;
     }
 
     /**
-     * Returns the line of the highlighted bracket (the bracket
-     * matching the one before the caret)
-     */
+	 * Returns the line of the highlighted bracket (the bracket matching the one before the caret)
+	 * @uml.property  name="bracketLine"
+	 */
     public final int getBracketLine()
     {
         return bracketLine;
@@ -1543,46 +1555,143 @@ public class JEditTextArea extends JComponent
     protected static JEditTextArea focusedComponent;
     protected static Timer caretTimer;
 
+    /**
+	 * @uml.property  name="painter"
+	 * @uml.associationEnd  multiplicity="(1 1)" inverse="textArea:alice.util.jedit.TextAreaPainter"
+	 */
     protected TextAreaPainter painter;
 
+    /**
+	 * @uml.property  name="popup"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     protected JPopupMenu popup;
 
+    /**
+	 * @uml.property  name="listenerList"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     protected EventListenerList listenerList;
+    /**
+	 * @uml.property  name="caretEvent"
+	 * @uml.associationEnd  multiplicity="(1 1)" inverse="this$0:alice.util.jedit.JEditTextArea$MutableCaretEvent"
+	 */
     protected MutableCaretEvent caretEvent;
 
+    /**
+	 * @uml.property  name="caretBlinks"
+	 */
     protected boolean caretBlinks;
+    /**
+	 * @uml.property  name="caretVisible"
+	 */
     protected boolean caretVisible;
+    /**
+	 * @uml.property  name="blink"
+	 */
     protected boolean blink;
 
+    /**
+	 * @uml.property  name="editable"
+	 */
     protected boolean editable;
 
+    /**
+	 * @uml.property  name="firstLine"
+	 */
     protected int firstLine;
+    /**
+	 * @uml.property  name="visibleLines"
+	 */
     protected int visibleLines;
+    /**
+	 * @uml.property  name="electricScroll"
+	 */
     protected int electricScroll;
 
+    /**
+	 * @uml.property  name="horizontalOffset"
+	 */
     protected int horizontalOffset;
 
+    /**
+	 * @uml.property  name="vertical"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     protected JScrollBar vertical;
+    /**
+	 * @uml.property  name="horizontal"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     protected JScrollBar horizontal;
+    /**
+	 * @uml.property  name="scrollBarsInitialized"
+	 */
     protected boolean scrollBarsInitialized;
 
+    /**
+	 * @uml.property  name="inputHandler"
+	 * @uml.associationEnd  
+	 */
     protected InputHandler inputHandler;
+    /**
+	 * @uml.property  name="document"
+	 * @uml.associationEnd  
+	 */
     protected SyntaxDocument document;
+    /**
+	 * @uml.property  name="documentHandler"
+	 * @uml.associationEnd  multiplicity="(1 1)" inverse="this$0:alice.util.jedit.JEditTextArea$DocumentHandler"
+	 */
     protected DocumentHandler documentHandler;
 
+    /**
+	 * @uml.property  name="lineSegment"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     protected Segment lineSegment;
 
+    /**
+	 * @uml.property  name="selectionStart"
+	 */
     protected int selectionStart;
+    /**
+	 * @uml.property  name="selectionStartLine"
+	 */
     protected int selectionStartLine;
+    /**
+	 * @uml.property  name="selectionEnd"
+	 */
     protected int selectionEnd;
+    /**
+	 * @uml.property  name="selectionEndLine"
+	 */
     protected int selectionEndLine;
+    /**
+	 * @uml.property  name="biasLeft"
+	 */
     protected boolean biasLeft;
 
+    /**
+	 * @uml.property  name="bracketPosition"
+	 */
     protected int bracketPosition;
+    /**
+	 * @uml.property  name="bracketLine"
+	 */
     protected int bracketLine;
 
+    /**
+	 * @uml.property  name="magicCaret"
+	 */
     protected int magicCaret;
+    /**
+	 * @uml.property  name="overwrite"
+	 */
     protected boolean overwrite;
+    /**
+	 * @uml.property  name="rectSelect"
+	 */
     protected boolean rectSelect;
 
     protected void fireCaretEvent()

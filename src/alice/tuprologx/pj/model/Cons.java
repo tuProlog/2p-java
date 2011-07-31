@@ -9,8 +9,20 @@ import java.util.*;
 public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Cons<H,R>> implements Iterable<Term<?>> {
         
     
+    /**
+	 * @uml.property  name="_theName"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.pj.model.Term"
+	 */
     String _theName;
+    /**
+	 * @uml.property  name="_theHead"
+	 * @uml.associationEnd  
+	 */
     H _theHead;	
+    /**
+	 * @uml.property  name="_theRest"
+	 * @uml.associationEnd  
+	 */
     R _theRest;
 
     public Cons(String name, H head) {

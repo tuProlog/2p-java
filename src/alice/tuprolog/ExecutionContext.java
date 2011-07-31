@@ -29,22 +29,67 @@ import alice.util.OneWayList;
  */
 public class ExecutionContext {
     
+    /**
+	 * @uml.property  name="id"
+	 */
     private int id;
+    /**
+	 * @uml.property  name="depth"
+	 */
     int depth;
     
+    /**
+	 * @uml.property  name="currentGoal"
+	 * @uml.associationEnd  
+	 */
     Struct currentGoal;
     
+    /**
+	 * @uml.property  name="fatherCtx"
+	 * @uml.associationEnd  
+	 */
     ExecutionContext fatherCtx;
+    /**
+	 * @uml.property  name="fatherGoalId"
+	 * @uml.associationEnd  
+	 */
     SubGoalId fatherGoalId;
     
+    /**
+	 * @uml.property  name="clause"
+	 * @uml.associationEnd  
+	 */
     Struct clause;
+    /**
+	 * @uml.property  name="headClause"
+	 * @uml.associationEnd  
+	 */
     Struct headClause;
+    /**
+	 * @uml.property  name="goalsToEval"
+	 * @uml.associationEnd  
+	 */
     SubGoalStore goalsToEval;
+    /**
+	 * @uml.property  name="trailingVars"
+	 * @uml.associationEnd  
+	 */
     OneWayList<List<Var>> trailingVars;
+    /**
+	 * @uml.property  name="fatherVarsList"
+	 * @uml.associationEnd  
+	 */
     OneWayList<List<Var>> fatherVarsList;
     
+    /**
+	 * @uml.property  name="choicePointAfterCut"
+	 * @uml.associationEnd  inverse="executionContext:alice.tuprolog.ChoicePointContext"
+	 */
     ChoicePointContext choicePointAfterCut;
         
+    /**
+	 * @uml.property  name="haveAlternatives"
+	 */
     boolean haveAlternatives;
     
     /**
@@ -55,6 +100,10 @@ public class ExecutionContext {
     }
     
     
+    /**
+	 * @return
+	 * @uml.property  name="id"
+	 */
     public int getId() { return id; }
     
     
@@ -73,22 +122,42 @@ public class ExecutionContext {
      * Methods for spyListeners
      */
     
+    /**
+	 * @return
+	 * @uml.property  name="depth"
+	 */
     public int getDepth() {
         return depth;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="currentGoal"
+	 */
     public Struct getCurrentGoal() {
         return currentGoal;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="fatherGoalId"
+	 */
     public SubGoalId getFatherGoalId() {
         return fatherGoalId;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="clause"
+	 */
     public Struct getClause() {
         return clause;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="headClause"
+	 */
     public Struct getHeadClause() {
         return headClause;
     }

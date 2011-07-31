@@ -29,6 +29,9 @@ import alice.tuprolog.Prolog;
 @SuppressWarnings("serial")
 public class LibraryEvent extends PrologEvent {
 
+    /**
+	 * @uml.property  name="libName"
+	 */
     private String libName;
     
     public LibraryEvent(Prolog source, String libName){

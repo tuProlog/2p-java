@@ -1,13 +1,26 @@
 package alice.tuprologx.runtime.rmi;
 import alice.tuprolog.*;
 
+/**
+ * @author  ale
+ */
 public interface Prolog extends java.rmi.Remote {
 
 
     public void clearTheory() throws java.rmi.RemoteException;
 
+    /**
+	 * @uml.property  name="theory"
+	 * @uml.associationEnd  
+	 */
     public Theory getTheory() throws java.rmi.RemoteException;
 
+    /**
+	 * @param theory
+	 * @throws InvalidTheoryException
+	 * @throws java.rmi.RemoteException
+	 * @uml.property  name="theory"
+	 */
     public void setTheory(Theory theory) throws InvalidTheoryException, java.rmi.RemoteException;
 
     public void addTheory(Theory theory) throws InvalidTheoryException, java.rmi.RemoteException;

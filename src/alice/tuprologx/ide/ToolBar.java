@@ -18,43 +18,117 @@ public class ToolBar extends JPanel
     
     private static final long serialVersionUID = 1L;
 
-    /** The Prolog engine referenced by the toolbar. */
+    /**
+	 * The Prolog engine referenced by the toolbar.
+	 * @uml.property  name="engine"
+	 * @uml.associationEnd  
+	 */
     private Prolog engine;
 
-    /** */
+    /**
+	 * @uml.property  name="libraryManager"
+	 * @uml.associationEnd  
+	 */
     private LibraryManager libraryManager;
-    /** The Library dialog launched by the toolbar. */
+    /**
+	 * The Library dialog launched by the toolbar.
+	 * @uml.property  name="libraryDialog"
+	 * @uml.associationEnd  
+	 */
     private LibraryDialogFrame libraryDialog;
-    /** The debug area launched by the toolbar. */
+    /**
+	 * The debug area launched by the toolbar.
+	 * @uml.property  name="debugArea"
+	 * @uml.associationEnd  
+	 */
     private DebugAreaFrame debugArea;
-    /** The tuProlog config dialog launched by the toolbar. */
+    /**
+	 * The tuProlog config dialog launched by the toolbar.
+	 * @uml.property  name="configFrame"
+	 * @uml.associationEnd  
+	 */
     private PrologConfigFrame configFrame;
-    /** The About window launched by the toolbar. */
+    /**
+	 * The About window launched by the toolbar.
+	 * @uml.property  name="about"
+	 * @uml.associationEnd  
+	 */
     private AboutFrame about;
 
-    /** The file manager launched by the toolbar. */
+    /**
+	 * The file manager launched by the toolbar.
+	 * @uml.property  name="fileManager"
+	 * @uml.associationEnd  
+	 */
     private IOFileOperations fileManager;
-    /** A message describing the status of the console. */
+    /**
+	 * A message describing the status of the console.
+	 * @uml.property  name="statusMessage"
+	 */
     private String statusMessage;
-    /** Used for components interested in changes of console's properties. */
+    /**
+	 * Used for components interested in changes of console's properties.
+	 * @uml.property  name="propertyChangeSupport"
+	 */
     private PropertyChangeSupport propertyChangeSupport;
     /**
-     * The IDE the toolbar belongs to, necessary to manage editor-related
-     * commands such as saving its content to the filesystem.
-     */
+	 * The IDE the toolbar belongs to, necessary to manage editor-related commands such as saving its content to the filesystem.
+	 * @uml.property  name="ide"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private IDE ide;
     
+    /**
+	 * @uml.property  name="parent"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JFrame parent;
     
+    /**
+	 * @uml.property  name="bNew"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bNew;
+    /**
+	 * @uml.property  name="bOpen"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bOpen;
+    /**
+	 * @uml.property  name="bSave"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bSave;
+    /**
+	 * @uml.property  name="bSaveAs"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bSaveAs;
+    /**
+	 * @uml.property  name="bLibMan"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bLibMan;
+    /**
+	 * @uml.property  name="bDebug"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bDebug;
+    /**
+	 * @uml.property  name="bConfigure"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bConfigure;
+    /**
+	 * @uml.property  name="bAbout"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private JButton bAbout;
 
+    /**
+	 * @uml.property  name="fileIDE"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     protected FileIDE fileIDE;
 
     
@@ -186,19 +260,19 @@ public class ToolBar extends JPanel
     }
 
     /**
-     * Get the Prolog engine referenced by the toolbar.
-     *
-     * @return The Prolog engine referenced by the toolbar.
-     */
+	 * Get the Prolog engine referenced by the toolbar.
+	 * @return  The Prolog engine referenced by the toolbar.
+	 * @uml.property  name="engine"
+	 */
     public Prolog getEngine() {
         return engine;
     }
 
     /**
-     * Set the Prolog engine referenced by the toolbar.
-     *
-     * @param engine an <code>alice.tuprolog.Prolog</code> engine.
-     */
+	 * Set the Prolog engine referenced by the toolbar.
+	 * @param engine  an <code>alice.tuprolog.Prolog</code> engine.
+	 * @uml.property  name="engine"
+	 */
     public void setEngine(Prolog engine) {
         this.engine = engine;
         debugArea = new DebugAreaFrame();
@@ -212,19 +286,19 @@ public class ToolBar extends JPanel
     }
 
     /**
-     * Get the library manager 
-     *
-     * @return the current library manager of the toolbar 
-     */
+	 * Get the library manager 
+	 * @return  the current library manager of the toolbar
+	 * @uml.property  name="libraryManager"
+	 */
     public LibraryManager getLibraryManager() {
         return libraryManager;
     }
 
     /**
-     * Set the library manager 
-     *
-     * @param libraryManager a libraryManager to associate to the libraryDialog 
-     */
+	 * Set the library manager 
+	 * @param libraryManager  a libraryManager to associate to the libraryDialog
+	 * @uml.property  name="libraryManager"
+	 */
     public void setLibraryManager(LibraryManager libraryManager)
     {
         this.libraryManager = libraryManager;
@@ -241,20 +315,19 @@ public class ToolBar extends JPanel
     }
 
     /**
-     * Get the toolbar status as a <code>java.lang.String</code> message.
-     *
-     * @return the current status of the toolbar as a <code>java.lang.String</code>
-     * message.
-     */
+	 * Get the toolbar status as a <code>java.lang.String</code> message.
+	 * @return  the current status of the toolbar as a <code>java.lang.String</code>  message.
+	 * @uml.property  name="statusMessage"
+	 */
     public String getStatusMessage() {
         return statusMessage;
     }
 
     /**
-     * Set the toolbar status.
-     *
-     * @param message The message describing the new status of the toolbar.
-     */
+	 * Set the toolbar status.
+	 * @param message  The message describing the new status of the toolbar.
+	 * @uml.property  name="statusMessage"
+	 */
     public void setStatusMessage(String message) {
         String oldStatusMessage = getStatusMessage();
         statusMessage = message;
@@ -270,10 +343,10 @@ public class ToolBar extends JPanel
     }
 
     /**
-     * Set the file manager referenced by the toolbar for use in Input/Output tasks.
-     *
-     * @param fileManager The file manager we want the toolbar to use.
-     */
+	 * Set the file manager referenced by the toolbar for use in Input/Output tasks.
+	 * @param fileManager  The file manager we want the toolbar to use.
+	 * @uml.property  name="fileManager"
+	 */
     public void setFileManager(IOFileOperations fileManager) {
         this.fileManager = fileManager;
     }
@@ -284,10 +357,10 @@ public class ToolBar extends JPanel
     }
 
     /**
-     * Get the file manager used by the toolbar.
-     *
-     * @return The file manager used by the toolbar.
-     */
+	 * Get the file manager used by the toolbar.
+	 * @return  The file manager used by the toolbar.
+	 * @uml.property  name="fileManager"
+	 */
     public IOFileOperations getFileManager() {
         return fileManager;
     }
@@ -415,10 +488,18 @@ public class ToolBar extends JPanel
     }
 
 
+    /**
+	 * @param fileIDE
+	 * @uml.property  name="fileIDE"
+	 */
     public void setFileIDE(FileIDE fileIDE)
     {
         this.fileIDE = fileIDE;
     }
+    /**
+	 * @return
+	 * @uml.property  name="fileIDE"
+	 */
     public FileIDE getFileIDE()
     {
         return fileIDE;

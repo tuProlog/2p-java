@@ -5,8 +5,18 @@ import  java.net.*;
 
 public class Proxy implements alice.tuprologx.runtime.tcp.Prolog {
 
+    /**
+	 * @uml.property  name="socket"
+	 */
     Socket socket;
+    /**
+	 * @uml.property  name="out"
+	 */
     ObjectOutputStream out;
+    /**
+	 * @uml.property  name="in"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="java.lang.Boolean"
+	 */
     ObjectInputStream  in;
 
     public Proxy(String host) throws UnknownHostException, IOException  {

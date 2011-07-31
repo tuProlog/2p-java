@@ -10,7 +10,14 @@ public class GenericFrame
     
     private static final long serialVersionUID = 1L;
 
+    /**
+	 * @uml.property  name="iconPathName"
+	 */
     private String iconPathName = "img/tuProlog.gif";
+    /**
+	 * @uml.property  name="mainWindow"
+	 * @uml.associationEnd  
+	 */
     private JFrame mainWindow=null;
 
 

@@ -27,6 +27,9 @@ import alice.tuprolog.Prolog;
  */
 @SuppressWarnings("serial")
 public abstract class PrologEvent extends java.util.EventObject {
+    /**
+	 * @uml.property  name="when"
+	 */
     private long when;
     
     public PrologEvent(Prolog source){

@@ -29,6 +29,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Float extends Number {
     
+    /**
+	 * @uml.property  name="value"
+	 */
     private float value;
     
     public Float(float v) {

@@ -26,13 +26,22 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 final public class Operator implements Serializable {
     
-    /** operator name */
+    /**
+	 * operator name
+	 * @uml.property  name="name"
+	 */
     public String name;
     
-    /** type(xf,yf,fx,fy,xfx,xfy,yfy,yfx */
+    /**
+	 * type(xf,yf,fx,fy,xfx,xfy,yfy,yfx
+	 * @uml.property  name="type"
+	 */
     public String type;
     
-    /** priority */
+    /**
+	 * priority
+	 * @uml.property  name="prio"
+	 */
     public int prio;
     
 /*Castagna 06/2011*/public/**/ Operator(String name_,String type_,int prio_) {

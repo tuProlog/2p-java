@@ -20,6 +20,10 @@ import java.util.Vector;
  */
 public class PrologSolution<Q extends Term<?>, S extends Term<?>> /*implements ISolution<Q,S,Term<?>>*/ {
     
+    /**
+	 * @uml.property  name="_solveInfo"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private alice.tuprolog.SolveInfo _solveInfo;
     
     /** Creates a new instance of SolveInfo */

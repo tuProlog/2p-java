@@ -1,0 +1,88 @@
+<class-diagram version="1.0.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" corner="BOTTOM_RIGHT" language="java" name="alice.tuprolog.Engine" 
+    project="2p - 2.4.0 - Castagna (06-2011)" file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog/Engine.java" 
+    binary="false">    
+    <position height="354" width="264" x="41" y="719"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="2" corner="BOTTOM_RIGHT" language="java" name="alice.tuprolog.EngineManager" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog/EngineManager.java" binary="false">    
+    <position height="-1" width="-1" x="436" y="338"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <class id="3" corner="BOTTOM_RIGHT" language="java" name="alice.tuprolog.Prolog" 
+    project="2p - 2.4.0 - Castagna (06-2011)" file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog/Prolog.java" 
+    binary="false">    
+    <position height="1602" width="317" x="345" y="719"/>    
+    <display autosize="true" package="true" initial-value="false" signature="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true"/>      
+      <operations public="true" package="true" protected="true" private="true"/>    
+    </display>  
+  </class>  
+  <association>    
+    <bendpoint x="215" y="630"/>    
+    <end type="SOURCE" nodeId="1" navigable="false">      
+      <attribute name="manager"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="2" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association>    
+    <bendpoint x="310" y="652"/>    
+    <end type="SOURCE" nodeId="2" navigable="false">      
+      <attribute name="stackEnv"/>      
+      <multiplicity minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" nodeId="1" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association>    
+    <bendpoint x="142" y="628"/>    
+    <end type="SOURCE" nodeId="2" navigable="false">      
+      <attribute name="env"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="1" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association>    
+    <bendpoint x="538" y="680"/>    
+    <end type="SOURCE" nodeId="2" navigable="false">      
+      <attribute name="mediator"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="3" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association>    
+    <end type="SOURCE" nodeId="3" navigable="false">      
+      <attribute name="engineManager"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="2" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <association>    
+    <bendpoint x="74" y="625"/>    
+    <end type="SOURCE" nodeId="2" navigable="false">      
+      <attribute name="last_env"/>      
+      <multiplicity minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" nodeId="1" navigable="true"/>    
+    <display labels="true" multiplicity="false"/>  
+  </association>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="false"/>
+</class-diagram>

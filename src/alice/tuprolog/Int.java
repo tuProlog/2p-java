@@ -27,6 +27,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Int extends Number {
     
+    /**
+	 * @uml.property  name="value"
+	 */
     private int      value;
     
     public Int(int v) {

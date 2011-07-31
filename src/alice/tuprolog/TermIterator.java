@@ -33,8 +33,19 @@ import java.util.NoSuchElementException;
 @SuppressWarnings("serial")
 class TermIterator implements Iterator<Term>, java.io.Serializable {
     
+    /**
+	 * @uml.property  name="parser"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private Parser parser;
+    /**
+	 * @uml.property  name="hasNext"
+	 */
     private boolean hasNext;
+    /**
+	 * @uml.property  name="next"
+	 * @uml.associationEnd  
+	 */
     private Term next;
     
     TermIterator(Parser p) {

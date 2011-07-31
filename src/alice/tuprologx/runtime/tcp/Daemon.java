@@ -4,10 +4,27 @@ import java.io.*;
 import java.lang.reflect.*;
 
 class Acceptor implements Runnable {
+    /**
+	 * @uml.property  name="outStream"
+	 */
     ObjectOutputStream outStream;
+    /**
+	 * @uml.property  name="inStream"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.runtime.tcp.NetMsg"
+	 */
     ObjectInputStream  inStream;
+    /**
+	 * @uml.property  name="socket"
+	 */
     Socket socket;
+    /**
+	 * @uml.property  name="core"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     PrologImpl core;
+    /**
+	 * @uml.property  name="initOk"
+	 */
     boolean  initOk=true;
 
     Acceptor(Socket s,   PrologImpl core_){
@@ -43,8 +60,19 @@ class Acceptor implements Runnable {
 
 public class Daemon implements Runnable {
     public static int DEFAULT_PORT = 3203;
+    /**
+	 * @uml.property  name="s"
+	 */
     ServerSocket s;
+    /**
+	 * @uml.property  name="core"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     alice.tuprolog.Prolog   core;
+    /**
+	 * @uml.property  name="coreTCP"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     PrologImpl coreTCP;
 
     public Daemon(alice.tuprolog.Prolog core_) throws IOException {

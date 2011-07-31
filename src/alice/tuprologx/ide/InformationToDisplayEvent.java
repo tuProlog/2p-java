@@ -16,7 +16,14 @@ import java.util.ArrayList;
 @SuppressWarnings("serial")
 public class InformationToDisplayEvent extends PrologEvent {
 
+    /**
+	 * @uml.property  name="queryEventList"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.QueryEvent"
+	 */
     private ArrayList<QueryEvent> queryEventList;
+    /**
+	 * @uml.property  name="solveType"
+	 */
     private int solveType;
 
     public InformationToDisplayEvent(Prolog source, ArrayList<QueryEvent> queryEventList, int solveType){
@@ -25,6 +32,10 @@ public class InformationToDisplayEvent extends PrologEvent {
         this.solveType=solveType;
     }
     
+    /**
+	 * @return
+	 * @uml.property  name="solveType"
+	 */
     public int getSolveType()
     {
         return solveType;

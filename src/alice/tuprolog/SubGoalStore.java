@@ -3,10 +3,28 @@ package alice.tuprolog;
 
 public class SubGoalStore {
 
+    /**
+	 * @uml.property  name="goals"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private SubGoalTree goals;
+    /**
+	 * @uml.property  name="commaStruct"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private SubGoalTree commaStruct;
+    /**
+	 * @uml.property  name="index"
+	 */
     private int index;
+    /**
+	 * @uml.property  name="curSGId"
+	 * @uml.associationEnd  
+	 */
     private DefaultSubGoalId curSGId;
+    /**
+	 * @uml.property  name="fetched"
+	 */
     private boolean fetched=false;
 
     public SubGoalStore() {

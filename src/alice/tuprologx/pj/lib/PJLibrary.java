@@ -65,17 +65,32 @@ public class PJLibrary extends Library {
 	
 	/**
 	 * java objects referenced by prolog terms (keys)
+	 * @uml.property  name="currentObjects"
+	 * @uml.associationEnd  multiplicity="(0 -1)" ordering="true" elementType="java.lang.Object" qualifier="objName:java.lang.String java.lang.Object"
 	 */
 	private HashMap<String,Object> currentObjects = new HashMap<String,Object>();
 	/**
 	 * inverse map useful for implementation issue
+	 * @uml.property  name="currentObjects_inverse"
+	 * @uml.associationEnd  qualifier="obj:java.lang.Object alice.tuprolog.Struct"
 	 */
 	private IdentityHashMap<Object,Struct> currentObjects_inverse = new IdentityHashMap<Object,Struct>();
 	
+	/**
+	 * @uml.property  name="staticObjects"
+	 * @uml.associationEnd  multiplicity="(0 -1)" ordering="true" elementType="java.lang.Object" qualifier="raw_name:java.lang.String java.lang.Object"
+	 */
 	private HashMap<String,Object> staticObjects = new HashMap<String, Object>();
+	/**
+	 * @uml.property  name="staticObjects_inverse"
+	 * @uml.associationEnd  qualifier="obj:java.lang.Object alice.tuprolog.Struct"
+	 */
 	private IdentityHashMap<Object,Struct> staticObjects_inverse = new IdentityHashMap<Object, Struct>();
 	
-	/** progressive conter used to identify registered objects */
+	/**
+	 * progressive conter used to identify registered objects
+	 * @uml.property  name="id"
+	 */
 	private int id = 0;
 	
 	
@@ -1545,7 +1560,13 @@ public class PJLibrary extends Library {
  */
 @SuppressWarnings("serial")
 class Signature implements Serializable {
+	/**
+	 * @uml.property  name="types" multiplicity="(0 -1)" dimension="1"
+	 */
 	Class<?>[] types;
+	/**
+	 * @uml.property  name="values"
+	 */
 	Object[] values;
 	
 	public Signature(Object[] v, Class<?>[] c) {
@@ -1557,6 +1578,10 @@ class Signature implements Serializable {
 		return types;
 	}
 	
+	/**
+	 * @return
+	 * @uml.property  name="values"
+	 */
 	Object[] getValues() {
 		return values;
 	}
@@ -1579,9 +1604,18 @@ class ClassLoader extends java.lang.ClassLoader {
  */
 @SuppressWarnings("serial")
 class ListenerInfo implements Serializable {
+	/**
+	 * @uml.property  name="listenerInterfaceName"
+	 */
 	public String listenerInterfaceName;
+	/**
+	 * @uml.property  name="listener"
+	 */
 	public EventListener listener;
 	//public String eventName;
+	/**
+	 * @uml.property  name="eventFullClass"
+	 */
 	public String eventFullClass;
 	
 	public ListenerInfo(EventListener l, String eventClass, String n) {

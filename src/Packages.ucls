@@ -1,0 +1,153 @@
+<class-diagram version="1.0.3" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <package id="1" language="java" name="alice.tuprolog" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog" binary="false">    
+    <position height="44" width="118" x="967" y="205"/>  
+  </package>  
+  <package id="2" language="java" name="alice.tuprolog.event" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog/event" binary="false">    
+    <position height="44" width="160" x="738" y="289"/>  
+  </package>  
+  <package id="3" language="java" name="alice.tuprolog.interfaces" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog/interfaces" binary="false">    
+    <position height="-1" width="-1" x="826" y="71"/>  
+  </package>  
+  <package id="4" language="java" name="alice.tuprolog.lib" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprolog/lib" binary="false">    
+    <position height="-1" width="-1" x="1025" y="95"/>  
+  </package>  
+  <package id="5" language="java" name="alice.tuprologx.ide" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/ide" binary="false">    
+    <position height="44" width="151" x="547" y="121"/>  
+  </package>  
+  <package id="6" language="java" name="alice.tuprologx.pj.annotations" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations" binary="false">    
+    <position height="44" width="230" x="1372" y="205"/>  
+  </package>  
+  <package id="7" language="java" name="alice.tuprologx.pj.annotations.parser" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/parser" binary="false">    
+    <position height="-1" width="-1" x="1435" y="381"/>  
+  </package>  
+  <package id="8" language="java" name="alice.tuprologx.pj.annotations.processing" 
+    project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/annotations/processing" binary="false">    
+    <position height="-1" width="-1" x="1439" y="296"/>  
+  </package>  
+  <package id="9" language="java" name="alice.tuprologx.pj.engine" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/engine" binary="false">    
+    <position height="44" width="194" x="1372" y="37"/>  
+  </package>  
+  <package id="10" language="java" name="alice.tuprologx.pj.lib" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/lib" binary="false">    
+    <position height="-1" width="-1" x="1265" y="56"/>  
+  </package>  
+  <package id="11" language="java" name="alice.tuprologx.pj.meta" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/meta" binary="false">    
+    <position height="-1" width="-1" x="1452" y="447"/>  
+  </package>  
+  <package id="12" language="java" name="alice.tuprologx.pj.model" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/pj/model" binary="false">    
+    <position height="44" width="189" x="1372" y="121"/>  
+  </package>  
+  <package id="13" language="java" name="alice.tuprologx.runtime.corba" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/runtime/corba" binary="false">    
+    <position height="-1" width="-1" x="989" y="469"/>  
+  </package>  
+  <package id="14" language="java" name="alice.tuprologx.runtime.rmi" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/runtime/rmi" binary="false">    
+    <position height="-1" width="-1" x="980" y="530"/>  
+  </package>  
+  <package id="15" language="java" name="alice.tuprologx.runtime.tcp" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/tuprologx/runtime/tcp" binary="false">    
+    <position height="-1" width="-1" x="981" y="593"/>  
+  </package>  
+  <package id="16" language="java" name="alice.util" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/util" binary="false">    
+    <position height="-1" width="-1" x="1027" y="344"/>  
+  </package>  
+  <package id="17" language="java" name="alice.util.jedit" project="2p - 2.4.0 - Castagna (06-2011)" 
+    file="/2p - 2.4.0 - Castagna (06-2011)/src/alice/util/jedit" binary="false">    
+    <position height="-1" width="-1" x="614" y="229"/>  
+  </package>  
+  <dependency>    
+    <bendpoint x="1341" y="121"/>    
+    <end type="SOURCE" nodeId="9"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="12"/>    
+    <end type="TARGET" nodeId="9"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="3"/>    
+    <end type="TARGET" nodeId="2"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="1"/>    
+    <end type="TARGET" nodeId="2"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="5"/>    
+    <end type="TARGET" nodeId="17"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="1"/>    
+    <end type="TARGET" nodeId="16"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="12"/>    
+    <end type="TARGET" nodeId="6"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="10"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="905" y="180"/>    
+    <end type="SOURCE" nodeId="3"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="692" y="205"/>    
+    <end type="SOURCE" nodeId="5"/>    
+    <end type="TARGET" nodeId="2"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="8"/>    
+    <end type="TARGET" nodeId="7"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="9"/>    
+    <end type="TARGET" nodeId="12"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="5"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="2"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <bendpoint x="1597" y="148"/>    
+    <end type="SOURCE" nodeId="9"/>    
+    <end type="TARGET" nodeId="6"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="4"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="12"/>    
+    <end type="TARGET" nodeId="1"/>  
+  </dependency>  
+  <dependency>    
+    <end type="SOURCE" nodeId="1"/>    
+    <end type="TARGET" nodeId="3"/>  
+  </dependency>  
+  <classifier-display autosize="true" package="true" initial-value="false" signature="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true"/>    
+    <operations public="true" package="true" protected="true" private="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

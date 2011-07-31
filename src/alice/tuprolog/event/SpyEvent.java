@@ -29,8 +29,15 @@ import alice.tuprolog.Engine;
 @SuppressWarnings("serial")
 public class SpyEvent extends EventObject {
 
-    /** event description */
+    /**
+	 * event description
+	 * @uml.property  name="msg"
+	 */
     private String msg;
+    /**
+	 * @uml.property  name="env"
+	 * @uml.associationEnd  
+	 */
     private Engine env;
 
     public SpyEvent(Object source, String msg_) {
@@ -45,6 +52,10 @@ public class SpyEvent extends EventObject {
         msg = msg_;
     }
 
+    /**
+	 * @return
+	 * @uml.property  name="msg"
+	 */
     public String getMsg() {
         return msg;
     }

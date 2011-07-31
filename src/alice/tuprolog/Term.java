@@ -28,10 +28,9 @@ import alice.util.OneWayList;
 
 /**
  * Term class is the root abstract class for prolog data type
- *
  * @see Struct
  * @see Var
- * @see Number
+ * @see  Number
  */
 @SuppressWarnings("serial")
 public abstract class Term implements Serializable {
@@ -105,11 +104,10 @@ public abstract class Term implements Serializable {
     public abstract boolean isEqual(Term t);
     
     /**
-     * Gets the actual term referred by this Term.
-     *
-     * if the Term is a bound variable, the method gets
-     * the Term linked to the variable
-     */
+	 * Gets the actual term referred by this Term. if the Term is a bound variable, the method gets the Term linked to the variable
+	 * @uml.property  name="term"
+	 * @uml.associationEnd  readOnly="true"
+	 */
     public abstract Term getTerm();
     
     

@@ -20,9 +20,25 @@ import java.util.ListIterator;
  */
 @SuppressWarnings("serial")
 class FamilyClausesList extends LinkedList<ClauseInfo> {
+    /**
+	 * @uml.property  name="numCompClausesIndex"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private FamilyClausesIndex<Number> numCompClausesIndex;
+    /**
+	 * @uml.property  name="constantCompClausesIndex"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private FamilyClausesIndex<String> constantCompClausesIndex;
+    /**
+	 * @uml.property  name="structCompClausesIndex"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     private FamilyClausesIndex<String> structCompClausesIndex;
+    /**
+	 * @uml.property  name="listCompClausesList"
+	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.ClauseInfo"
+	 */
     private LinkedList<ClauseInfo> listCompClausesList;
 
     //private LinkedList<ClauseInfo> clausesList;
@@ -132,7 +148,8 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
 
     @Override
     public boolean remove(Object ci){
-        if(super.remove((ClauseInfo) ci)){
+        if(super.remove((ClauseInfo) ci))
+        {
             unregister((ClauseInfo) ci);
 
             return true;
@@ -239,8 +256,11 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
 
     }
 
-    @SuppressWarnings("unused")
-    private class ListItr {
+    
+    private class ListItr implements ListIterator<ClauseInfo> {
+        /**
+		 * @uml.property  name="it"
+		 */
         private ListIterator<ClauseInfo> it;
         private LinkedList<ClauseInfo> l;
         
@@ -274,7 +294,11 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
         }
 
         public void remove() {
-        	ClauseInfo ci = l.removeFirst();
+        	// Problema se qualcuno chiama la previous() e poi chiama remove
+        	// Vedere se si pu˜ usare l.getFirst()
+        	ClauseInfo ci = it.previous();
+        	it.remove();
+
             unregister(ci);
         }
 
@@ -285,10 +309,13 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
 
         public void add(ClauseInfo o) {
             l.addLast(o);
+
         }
         
+       
         public ListIterator<ClauseInfo> getIt(){
-            return it;
+            //return it;
+        	return this;
         }
     }
 

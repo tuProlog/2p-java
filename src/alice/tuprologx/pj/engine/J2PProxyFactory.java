@@ -116,21 +116,33 @@ import javassist.util.proxy.*;
  * @since 3.1
  */
 public class J2PProxyFactory extends ProxyFactory {
+    /**
+	 * @uml.property  name="superClass"
+	 */
     private Class<?> superClass;
+    /**
+	 * @uml.property  name="interfaces" multiplicity="(0 -1)" dimension="1"
+	 */
     private Class<?>[] interfaces;
+    /**
+	 * @uml.property  name="methodFilter"
+	 * @uml.associationEnd  
+	 */
     private MethodFilter methodFilter;
+    /**
+	 * @uml.property  name="handler"
+	 * @uml.associationEnd  
+	 */
     private MethodHandler handler;
+    /**
+	 * @uml.property  name="thisClass"
+	 */
     private Class<?> thisClass;
 
     /**
-     * If the value of this variable is not null, the class file of
-     * the generated proxy class is written under the directory specified
-     * by this variable.  For example, if the value is 
-     * <code>"."</code>, then the class file is written under the current
-     * directory.  This method is for debugging.
-     *
-     * <p>The default value is null.
-     */
+	 * If the value of this variable is not null, the class file of the generated proxy class is written under the directory specified by this variable.  For example, if the value is  <code>"."</code>, then the class file is written under the current directory.  This method is for debugging. <p>The default value is null.
+	 * @uml.property  name="writeDirectory"
+	 */
     public String writeDirectory;
 
     private static final Class<?> OBJECT_TYPE = Object.class;
@@ -236,8 +248,9 @@ public class J2PProxyFactory extends ProxyFactory {
     public Class<?> getSuperclass() { return superClass; }
 
     /**
-     * Sets the interfaces of a proxy class.
-     */
+	 * Sets the interfaces of a proxy class.
+	 * @uml.property  name="interfaces"
+	 */
     public void setInterfaces(Class[] ifs) {
         interfaces = ifs;
     }
@@ -390,25 +403,11 @@ public class J2PProxyFactory extends ProxyFactory {
     }
 
     /**
-     * A provider used by <code>createClass()</code> for obtaining
-     * a class loader.
-     * <code>get()</code> on this <code>ClassLoaderProvider</code> object
-     * is called to obtain a class loader.
-     *
-     * <p>The value of this field can be updated for changing the default
-     * implementation.
-     *
-     * <p>Example:
-     * <ul><pre>
-     * ProxyFactory.classLoaderProvider = new ProxyFactory.ClassLoaderProvider() {
-     *     public ClassLoader get(ProxyFactory pf) {
-     *         return Thread.currentThread().getContextClassLoader();
-     *     }
-     * };
-     * </pre></ul>
-     *
-     * @since 3.4
-     */
+	 * A provider used by <code>createClass()</code> for obtaining a class loader. <code>get()</code> on this <code>ClassLoaderProvider</code> object is called to obtain a class loader. <p>The value of this field can be updated for changing the default implementation. <p>Example: <ul><pre> ProxyFactory.classLoaderProvider = new ProxyFactory.ClassLoaderProvider() { public ClassLoader get(ProxyFactory pf) { return Thread.currentThread().getContextClassLoader(); } }; </pre></ul>
+	 * @since   3.4
+	 * @uml.property  name="classLoaderProvider"
+	 * @uml.associationEnd  multiplicity="(1 1)"
+	 */
     public ClassLoaderProvider classLoaderProvider
         = new ClassLoaderProvider() {
               public ClassLoader get(ProxyFactory pf) {
@@ -485,10 +484,9 @@ public class J2PProxyFactory extends ProxyFactory {
     }
 
     /**
-     * Sets the default invocation handler.  This invocation handler is shared
-     * among all the instances of a proxy class unless another is explicitly
-     * specified.
-     */
+	 * Sets the default invocation handler.  This invocation handler is shared among all the instances of a proxy class unless another is explicitly specified.
+	 * @uml.property  name="handler"
+	 */
     public void setHandler(MethodHandler mi) {
         handler = mi;
         setField(DEFAULT_INTERCEPTOR, handler);

@@ -23,6 +23,9 @@ import java.util.ListIterator;
  * @since 2.2
  */
 public class ReadOnlyLinkedList<E> implements List<E>{
+    /**
+	 * @uml.property  name="list"
+	 */
     protected LinkedList<E> list;
 
     public ReadOnlyLinkedList(){

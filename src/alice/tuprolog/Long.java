@@ -29,6 +29,9 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Long extends Number {
     
+    /**
+	 * @uml.property  name="value"
+	 */
     private long value;
     
     public Long(long v) {
