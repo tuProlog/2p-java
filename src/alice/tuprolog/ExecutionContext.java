@@ -29,81 +29,23 @@ import alice.util.OneWayList;
  */
 public class ExecutionContext {
     
-    /**
-	 * @uml.property  name="id"
-	 */
     private int id;
-    /**
-	 * @uml.property  name="depth"
-	 */
     int depth;
-    
-    /**
-	 * @uml.property  name="currentGoal"
-	 * @uml.associationEnd  
-	 */
     Struct currentGoal;
-    
-    /**
-	 * @uml.property  name="fatherCtx"
-	 * @uml.associationEnd  
-	 */
     ExecutionContext fatherCtx;
-    /**
-	 * @uml.property  name="fatherGoalId"
-	 * @uml.associationEnd  
-	 */
     SubGoalId fatherGoalId;
-    
-    /**
-	 * @uml.property  name="clause"
-	 * @uml.associationEnd  
-	 */
     Struct clause;
-    /**
-	 * @uml.property  name="headClause"
-	 * @uml.associationEnd  
-	 */
     Struct headClause;
-    /**
-	 * @uml.property  name="goalsToEval"
-	 * @uml.associationEnd  
-	 */
     SubGoalStore goalsToEval;
-    /**
-	 * @uml.property  name="trailingVars"
-	 * @uml.associationEnd  
-	 */
     OneWayList<List<Var>> trailingVars;
-    /**
-	 * @uml.property  name="fatherVarsList"
-	 * @uml.associationEnd  
-	 */
     OneWayList<List<Var>> fatherVarsList;
-    
-    /**
-	 * @uml.property  name="choicePointAfterCut"
-	 * @uml.associationEnd  inverse="executionContext:alice.tuprolog.ChoicePointContext"
-	 */
     ChoicePointContext choicePointAfterCut;
-        
-    /**
-	 * @uml.property  name="haveAlternatives"
-	 */
     boolean haveAlternatives;
     
-    /**
-     * 
-     */
     ExecutionContext(int id) {
         this.id=id;
     }
     
-    
-    /**
-	 * @return
-	 * @uml.property  name="id"
-	 */
     public int getId() { return id; }
     
     
@@ -122,42 +64,22 @@ public class ExecutionContext {
      * Methods for spyListeners
      */
     
-    /**
-	 * @return
-	 * @uml.property  name="depth"
-	 */
     public int getDepth() {
         return depth;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="currentGoal"
-	 */
     public Struct getCurrentGoal() {
         return currentGoal;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="fatherGoalId"
-	 */
     public SubGoalId getFatherGoalId() {
         return fatherGoalId;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="clause"
-	 */
     public Struct getClause() {
         return clause;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="headClause"
-	 */
     public Struct getHeadClause() {
         return headClause;
     }
@@ -187,26 +109,28 @@ public class ExecutionContext {
         }
     }
     
+   
     /**
-     * If no open alternatives and no other term to execute ->
+     * If no open alternatives, no other term to execute and
+     * current context doesn't contain as current goal a catch or java_catch predicate ->
      * current context no more needed ->
      * reused to execute g subgoal =>
-     * got TAIL RECURSION OPTIMIZATION!   «-- IT DOESN'T WORK!
+     * got TAIL RECURSION OPTIMIZATION!   
      */
-    void performTailRecursionOptimization(Engine e) {
-            if (!haveAlternatives && !goalsToEval.haveSubGoals()){
-                fatherCtx = e.currentContext.fatherCtx;
-             }
-            else{
-                fatherCtx = e.currentContext;
-            }
-     }
-        void performTailRecursionOptimization2(Engine e) {
-            if (!haveAlternatives){
-                fatherCtx = e.currentContext.fatherCtx;
-             }
-            else{
-                fatherCtx = e.currentContext;
-            }
-     }
+   
+    void performTailRecursionOptimization(Engine e){
+        	
+    	 	if(!haveAlternatives && !e.currentContext.goalsToEval.haveSubGoals() && !(e.currentContext.currentGoal.getName().equalsIgnoreCase("catch") || e.currentContext.currentGoal.getName().equalsIgnoreCase("java_catch")))
+        		{
+    	 			fatherCtx = e.currentContext.fatherCtx;
+    	 			//position of the new context in the list
+    	 			depth = e.currentContext.depth;
+        		}
+        	
+        	else
+        		{
+        			fatherCtx = e.currentContext;
+        			depth = e.currentContext.depth +1; 
+        		}
+        }
 }

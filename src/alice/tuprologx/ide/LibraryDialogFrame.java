@@ -17,33 +17,21 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
     private static final long serialVersionUID = 1L;
     /**
 	 * The library manager associated with the interface.
-	 * @uml.property  name="libraryManager"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private LibraryManager libraryManager;
     /**
 	 * The statusbar associated with the dialog
-	 * @uml.property  name="sb"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private StatusBar sb;
     /**
 	 * The text field where it's possible digit library's classname
-	 * @uml.property  name="libraryClassnameField"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private JTextField libraryClassnameField;
     /**
 	 * The panel that contains components that reguard the displayed libraries
-	 * @uml.property  name="librariesDisplayPanel"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private JPanel librariesDisplayPanel;
 
-    /**
-	 * @uml.property  name="fileManager"
-	 * @uml.associationEnd  
-	 */
     private IOFileOperations fileManager;
 
     public LibraryDialogFrame(LibraryManager libraryManager, JFrame mainWindow)
@@ -376,7 +364,6 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
     /**
 	 * Set the file manager referenced by the library dialog for use in Input/Output tasks.
 	 * @param fileManager  The file manager we want the toolbar to use.
-	 * @uml.property  name="fileManager"
 	 */
     public void setFileManager(IOFileOperations fileManager) {
         this.fileManager = fileManager;

@@ -12,10 +12,6 @@ import java.util.LinkedList;
 class FamilyClausesIndex<K extends Comparable<? super K>>
         extends RBTree<K, LinkedList<ClauseInfo>> {
 
-    /**
-	 * @uml.property  name="varsClauses"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.ClauseInfo"
-	 */
     private LinkedList<ClauseInfo> varsClauses;
 
     public FamilyClausesIndex(){

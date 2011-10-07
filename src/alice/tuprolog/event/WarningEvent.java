@@ -28,7 +28,6 @@ public class WarningEvent extends EventObject {
 
     /**
 	 * event description
-	 * @uml.property  name="msg"
 	 */
     private String msg;
 

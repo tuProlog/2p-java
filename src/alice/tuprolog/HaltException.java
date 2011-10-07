@@ -27,9 +27,6 @@ package alice.tuprolog;
 @SuppressWarnings("serial")
 public class HaltException extends PrologException {
     
-    /**
-	 * @uml.property  name="value"
-	 */
     private int value;
     
     public HaltException() {
@@ -40,10 +37,6 @@ public class HaltException extends PrologException {
         value = haltType;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="value"
-	 */
     public int getValue() {
         return value;
     }

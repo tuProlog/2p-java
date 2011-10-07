@@ -4,17 +4,8 @@ import java.io.File;
 
 public class FileIDE
 {
-    /**
-	 * @uml.property  name="fileName"
-	 */
     private String fileName;
-    /**
-	 * @uml.property  name="filePath"
-	 */
     private String filePath;
-    /**
-	 * @uml.property  name="content"
-	 */
     private String content;
 
     public FileIDE(String content, String filePath)
@@ -30,50 +21,31 @@ public class FileIDE
         }
     }
 
-    /**
-	 * @return
-	 * @uml.property  name="fileName"
-	 */
     public String getFileName()
     {
         return fileName;
     }
-    /**
-	 * @param fileName
-	 * @uml.property  name="fileName"
-	 */
+    
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
     }
-    /**
-	 * @return
-	 * @uml.property  name="filePath"
-	 */
+    
     public String getFilePath()
     {
         return filePath;
     }
-    /**
-	 * @param filePath
-	 * @uml.property  name="filePath"
-	 */
+    
     public void setFilePath(String filePath)
     {
         this.filePath = filePath;
     }
-    /**
-	 * @return
-	 * @uml.property  name="content"
-	 */
+    
     public String getContent()
     {
         return content;
     }
-    /**
-	 * @param content
-	 * @uml.property  name="content"
-	 */
+    
     public void setContent(String content)
     {
         this.content = content;

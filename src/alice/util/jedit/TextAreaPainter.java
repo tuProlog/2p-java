@@ -76,7 +76,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
     /**
 	 * Returns the syntax styles used to paint colorized text. Entry <i>n</i> will be used to paint tokens with id = <i>n</i>.
 	 * @see  org.gjt.sp.jedit.syntax.Token
-	 * @uml.property  name="styles"
 	 */
     public final SyntaxStyle[] getStyles()
     {
@@ -87,7 +86,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 	 * Sets the syntax styles used to paint colorized text. Entry <i>n</i> will be used to paint tokens with id = <i>n</i>.
 	 * @param styles  The syntax styles
 	 * @see  org.gjt.sp.jedit.syntax.Token
-	 * @uml.property  name="styles"
 	 */
     public final void setStyles(SyntaxStyle[] styles)
     {
@@ -97,7 +95,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
     /**
 	 * Returns the caret color.
-	 * @uml.property  name="caretColor"
 	 */
     public final Color getCaretColor()
     {
@@ -107,7 +104,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
     /**
 	 * Sets the caret color.
 	 * @param caretColor  The caret color
-	 * @uml.property  name="caretColor"
 	 */
     public final void setCaretColor(Color caretColor)
     {
@@ -117,7 +113,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
     /**
 	 * Returns the selection color.
-	 * @uml.property  name="selectionColor"
 	 */
     public final Color getSelectionColor()
     {
@@ -127,7 +122,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
     /**
 	 * Sets the selection color.
 	 * @param selectionColor  The selection color
-	 * @uml.property  name="selectionColor"
 	 */
     public final void setSelectionColor(Color selectionColor)
     {
@@ -137,7 +131,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
     /**
 	 * Returns the line highlight color.
-	 * @uml.property  name="lineHighlightColor"
 	 */
     public final Color getLineHighlightColor()
     {
@@ -147,7 +140,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
     /**
 	 * Sets the line highlight color.
 	 * @param lineHighlightColor  The line highlight color
-	 * @uml.property  name="lineHighlightColor"
 	 */
     public final void setLineHighlightColor(Color lineHighlightColor)
     {
@@ -176,7 +168,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
 
     /**
 	 * Returns the bracket highlight color.
-	 * @uml.property  name="bracketHighlightColor"
 	 */
     public final Color getBracketHighlightColor()
     {
@@ -186,7 +177,6 @@ public class TextAreaPainter extends JComponent implements TabExpander
     /**
 	 * Sets the bracket highlight color.
 	 * @param bracketHighlightColor  The bracket highlight color
-	 * @uml.property  name="bracketHighlightColor"
 	 */
     public final void setBracketHighlightColor(Color bracketHighlightColor)
     {
@@ -480,96 +470,31 @@ public class TextAreaPainter extends JComponent implements TabExpander
     }
 
     // package-private members
-    /**
-	 * @uml.property  name="currentLineIndex"
-	 */
     int currentLineIndex;
-    /**
-	 * @uml.property  name="currentLineTokens"
-	 * @uml.associationEnd  
-	 */
     Token currentLineTokens;
-    /**
-	 * @uml.property  name="currentLine"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     Segment currentLine;
 
     // protected members
-    /**
-	 * @uml.property  name="textArea"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="painter:alice.util.jedit.JEditTextArea"
-	 */
     protected JEditTextArea textArea;
 
-    /**
-	 * @uml.property  name="styles"
-	 * @uml.associationEnd  multiplicity="(0 -1)"
-	 */
     protected SyntaxStyle[] styles;
-    /**
-	 * @uml.property  name="caretColor"
-	 */
     protected Color caretColor;
-    /**
-	 * @uml.property  name="selectionColor"
-	 */
     protected Color selectionColor;
-    /**
-	 * @uml.property  name="lineHighlightColor"
-	 */
     protected Color lineHighlightColor;
-    /**
-	 * @uml.property  name="bracketHighlightColor"
-	 */
     protected Color bracketHighlightColor;
-    /**
-	 * @uml.property  name="eolMarkerColor"
-	 */
     protected Color eolMarkerColor;
 
-    /**
-	 * @uml.property  name="blockCaret"
-	 */
     protected boolean blockCaret;
-    /**
-	 * @uml.property  name="lineHighlight"
-	 */
     protected boolean lineHighlight;
-    /**
-	 * @uml.property  name="bracketHighlight"
-	 */
     protected boolean bracketHighlight;
-    /**
-	 * @uml.property  name="paintInvalid"
-	 */
     protected boolean paintInvalid;
-    /**
-	 * @uml.property  name="eolMarkers"
-	 */
     protected boolean eolMarkers;
-    /**
-	 * @uml.property  name="cols"
-	 */
     protected int cols;
-    /**
-	 * @uml.property  name="rows"
-	 */
     protected int rows;
 
-    /**
-	 * @uml.property  name="tabSize"
-	 */
     protected int tabSize;
-    /**
-	 * @uml.property  name="fm"
-	 */
     protected FontMetrics fm;
 
-    /**
-	 * @uml.property  name="highlights"
-	 * @uml.associationEnd  
-	 */
     protected Highlight highlights;
 
     protected void paintLine(Graphics gfx, TokenMarker tokenMarker,

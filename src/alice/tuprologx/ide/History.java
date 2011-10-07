@@ -27,14 +27,7 @@ import java.util.ArrayList;
  */
 class History {
     
-    /**
-	 * @uml.property  name="history"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="java.lang.String"
-	 */
     private ArrayList<String> history;
-    /**
-	 * @uml.property  name="index"
-	 */
     private int index;
     
     public History() {

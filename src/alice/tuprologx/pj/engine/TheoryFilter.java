@@ -10,20 +10,8 @@ import java.util.Vector;
  */
 public class TheoryFilter {
     
-    /**
-	 * @uml.property  name="_theory"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
-    protected Theory _theory;
-    /**
-	 * @uml.property  name="_filter"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+	protected Theory _theory;
     protected Theory _filter;
-    /**
-	 * @uml.property  name="_engine"
-	 * @uml.associationEnd  readOnly="true"
-	 */
     protected PJProlog _engine;
     
     private static String base_filter_string = "filter(L,R):-filter(L,[],R).\n"+

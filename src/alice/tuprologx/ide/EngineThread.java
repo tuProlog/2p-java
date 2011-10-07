@@ -29,23 +29,9 @@ import alice.tuprolog.*;
  */
 public class EngineThread extends Thread {
  
-    /**
-	 * @uml.property  name="goal"
-	 */
     private String goal;
-    /**
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Prolog engine;
-    /**
-	 * @uml.property  name="console"
-	 * @uml.associationEnd  
-	 */
     private ConsoleManager console;
-    /**
-	 * @uml.property  name="actionToDo"
-	 */
     private int actionToDo;
     
     public EngineThread(Prolog engine, String goal, ConsoleManager c){

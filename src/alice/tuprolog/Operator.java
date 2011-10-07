@@ -28,19 +28,16 @@ final public class Operator implements Serializable {
     
     /**
 	 * operator name
-	 * @uml.property  name="name"
 	 */
     public String name;
     
     /**
 	 * type(xf,yf,fx,fy,xfx,xfy,yfy,yfx
-	 * @uml.property  name="type"
 	 */
     public String type;
     
     /**
 	 * priority
-	 * @uml.property  name="prio"
 	 */
     public int prio;
     

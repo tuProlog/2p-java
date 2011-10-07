@@ -14,14 +14,7 @@ package alice.tuprologx.pj.model;
  * @author maurizio
  */
 public class Var<X extends Term<?>> extends Term<X> {
-	/**
-	 * @uml.property  name="_theValue"
-	 * @uml.associationEnd  
-	 */
 	X _theValue;
-        /**
-		 * @uml.property  name="_theName"
-		 */
         String _theName;
         private static java.lang.reflect.Method _setLink = null;
         

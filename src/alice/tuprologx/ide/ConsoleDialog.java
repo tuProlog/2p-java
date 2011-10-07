@@ -39,101 +39,30 @@ public class ConsoleDialog
 	private static final int EXCEPTION_INDEX = 4;
 	/**/
     
-    /**
-	 * @uml.property  name="statusMessage"
-	 */
     private String statusMessage;
-    /**
-	 * @uml.property  name="propertyChangeSupport"
-	 */
     private PropertyChangeSupport propertyChangeSupport;
-    /**
-	 * @uml.property  name="consoleManager"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Console consoleManager;
-    /**
-	 * @uml.property  name="variables" multiplicity="(0 -1)" dimension="1"
-	 */
     private String[] variables = null;
-    /**
-	 * @uml.property  name="bindings"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Var"
-	 */
-    private java.util.List<Var> bindings = null;
-    /**
-	 * @uml.property  name="selectDisplayModality"
-	 */
+   private java.util.List<Var> bindings = null;
     private int selectDisplayModality = 0;
     /*Castagna 06/2011*/  
-	/**
-	 * @uml.property  name="exceptionEnabled"
-	 */
 	private boolean	exceptionEnabled;
 	/**/
 
-    /**
-	 * @uml.property  name="fileManager"
-	 * @uml.associationEnd  
-	 */
-    private IOFileOperations fileManager;
+   private IOFileOperations fileManager;
 
-    /**
-	 * @uml.property  name="tp"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JTabbedPane tp;
-    /**
-	 * @uml.property  name="solution"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JTextPane solution;
-    /**
-	 * @uml.property  name="tableSolve"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private PrologTable tableSolve;
-    /**
-	 * @uml.property  name="tableSolveAll"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private PrologTable tableSolveAll;
-    /**
-	 * @uml.property  name="output"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JTextPane output;
     /*Castagna 06/2011*/	
-	/**
-	 * @uml.property  name="exception"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
 	private JTextPane exception;
 	/**/
-    /**
-	 * @uml.property  name="bNext"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JButton bNext;
-    /**
-	 * @uml.property  name="bAccept"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JButton bAccept;
-    /**
-	 * @uml.property  name="bStop"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JButton bStop;
-    /**
-	 * @uml.property  name="bClear"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JButton bClear;
-    /**
-	 * @uml.property  name="bExport"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JButton bExport;
 
     public ConsoleDialog(Console consoleManager)
@@ -266,7 +195,6 @@ public class ConsoleDialog
     /**
 	 * Set the file manager referenced by the toolbar for use in Input/Output tasks.
 	 * @param fileManager  The file manager we want the toolbar to use.
-	 * @uml.property  name="fileManager"
 	 */
     public void setFileManager(IOFileOperations fileManager) {
         this.fileManager = fileManager;
@@ -391,20 +319,14 @@ public class ConsoleDialog
     }
 
     
-    /**
-	 * @param message
-	 * @uml.property  name="statusMessage"
-	 */
+
     public void setStatusMessage(String message)
     {
         String oldStatusMessage=getStatusMessage();
         statusMessage=message;
         propertyChangeSupport.firePropertyChange("StatusMessage",oldStatusMessage,statusMessage);
     }
-    /**
-	 * @return
-	 * @uml.property  name="statusMessage"
-	 */
+
     public String getStatusMessage(){return statusMessage;}
 
     public void addPropertyChangeListener(PropertyChangeListener listener){propertyChangeSupport.addPropertyChangeListener(listener);}
@@ -856,10 +778,6 @@ public class ConsoleDialog
     }
     
     /*Castagna 06/2011*/  
-	/**
-	 * @param enable
-	 * @uml.property  name="exceptionEnabled"
-	 */
 	public void setExceptionEnabled(boolean enable)
 	{
 		exception.setText("");

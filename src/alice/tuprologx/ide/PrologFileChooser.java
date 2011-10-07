@@ -12,7 +12,6 @@ public class PrologFileChooser extends JFileChooser
 
     /**
 	 * dialog type to display, it's used to know when display a showConfirmDialog
-	 * @uml.property  name="type"
 	 */
     private String type=null;
 

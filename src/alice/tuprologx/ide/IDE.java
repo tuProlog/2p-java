@@ -53,13 +53,11 @@ interface IDE {
     /**
 	 * Get the content of the IDE's editor.
 	 * @return  the content of the edit area in the IDE's editor.
-	 * @uml.property  name="editorContent"
 	 */
     public String getEditorContent();
     
     /**
 	 * Set the content of the IDE's editor.
-	 * @uml.property  name="editorContent"
 	 */
     public void setEditorContent(String text);
 

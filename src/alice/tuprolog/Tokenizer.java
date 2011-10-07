@@ -79,36 +79,16 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
      */
     
     //used to locate tokens in the parsed string
-    /**
-	 * @uml.property  name="tokenOffset"
-	 */
     private int tokenOffset;
-    /**
-	 * @uml.property  name="tokenStart"
-	 */
     private int tokenStart;
-    /**
-	 * @uml.property  name="tokenLength"
-	 */
     private int tokenLength;
-    /**
-	 * @uml.property  name="text"
-	 */
     private String text = null;
     /**/
     
     //used to enable pushback from the parser. Not in any way connected with pushBack2 and super.pushBack().
-    /**
-	 * @uml.property  name="tokenList"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Token"
-	 */
     private LinkedList<Token> tokenList = new LinkedList<Token>();
 
     //used in the double lookahead check that . following ints is a fraction marker or end marker (pushback() only works on one level)
-    /**
-	 * @uml.property  name="pushBack2"
-	 * @uml.associationEnd  
-	 */
     private PushBack pushBack2 = null;
 
     public Tokenizer(String text) {

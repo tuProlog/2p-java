@@ -27,9 +27,6 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Double extends Number {
     
-    /**
-	 * @uml.property  name="value"
-	 */
     private double value;
     
     public Double(double v) {

@@ -40,15 +40,7 @@ public class JavaIDE
     private static final long serialVersionUID = 1L;
 
     //private Prolog engine;
-    /**
-	 * @uml.property  name="toolBar"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private ToolBar toolBar;
-    /**
-	 * @uml.property  name="tabbedPane"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private TheoryTabbedPane tabbedPane;
 
     public JavaIDE() {

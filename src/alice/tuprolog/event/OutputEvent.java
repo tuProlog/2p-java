@@ -31,7 +31,6 @@ public class OutputEvent extends EventObject {
 
     /**
 	 * text produced
-	 * @uml.property  name="msg"
 	 */
     private String msg;
 
@@ -40,10 +39,6 @@ public class OutputEvent extends EventObject {
         msg=msg_;
     }
 
-    /**
-	 * @return
-	 * @uml.property  name="msg"
-	 */
     public String getMsg(){
         return msg;
     }

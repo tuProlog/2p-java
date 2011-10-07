@@ -22,50 +22,17 @@ import java.io.*;
 @SuppressWarnings("serial")
 public class ISOIOLibrary extends Library{
     
-    /**
-	 * @uml.property  name="files"
-	 */
     protected final int files = 1000; //numero casuale abbastanza alto per evitare eccezioni
-    /**
-	 * @uml.property  name="inputStreams"
-	 * @uml.associationEnd  qualifier="constant:java.lang.String alice.tuprolog.Term"
-	 */
     protected Hashtable<InputStream, Hashtable<String, Term>> inputStreams = new Hashtable<InputStream,Hashtable<String,Term>>(files);
-    /**
-	 * @uml.property  name="outputStreams"
-	 * @uml.associationEnd  qualifier="constant:java.lang.String alice.tuprolog.Term"
-	 */
     protected Hashtable<OutputStream, Hashtable<String, Term>> outputStreams = new Hashtable<OutputStream,Hashtable<String,Term>>(files);
     
-    /**
-	 * @uml.property  name="inputStream"
-	 */
     protected InputStream inputStream = null;
-    /**
-	 * @uml.property  name="outputStream"
-	 */
     protected OutputStream outputStream = null;
-    /**
-	 * @uml.property  name="inputStreamName"
-	 */
     protected String inputStreamName = null;
-    /**
-	 * @uml.property  name="outputStreamName"
-	 */
     protected String outputStreamName = null;
-    /**
-	 * @uml.property  name="iOLib"
-	 * @uml.associationEnd  
-	 */
     protected IOLibrary IOLib = null;
     
-    /**
-	 * @uml.property  name="flag"
-	 */
     private int flag = 0;
-    /**
-	 * @uml.property  name="write_flag"
-	 */
     private int write_flag = 1;
 
     public ISOIOLibrary(){

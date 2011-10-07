@@ -8,15 +8,8 @@ package alice.tuprologx.runtime.corba;
 public interface PrologOperations
 {
   void clearTheory ();
-  /**
- * @uml.property  name="theory"
- */
-String getTheory ();
-  /**
- * @param theory
- * @uml.property  name="theory"
- */
-void setTheory (String theory);
+  String getTheory ();
+  void setTheory (String theory);
   alice.tuprologx.runtime.corba.SolveInfo solve (String g);
   boolean hasOpenAlternatives ();
   alice.tuprologx.runtime.corba.SolveInfo solveNext ();

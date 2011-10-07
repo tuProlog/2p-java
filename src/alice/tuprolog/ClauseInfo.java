@@ -29,39 +29,25 @@ public class ClauseInfo {
     
     /**
 	 * referring clause
-	 * @uml.property  name="clause"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private Struct clause;
     
     /**
 	 * head of clause
-	 * @uml.property  name="head"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private Struct head;
     
     /**
 	 * body of clause
-	 * @uml.property  name="body"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private SubGoalTree body;
-
-    /**
-	 * @uml.property  name="headCopy"
-	 * @uml.associationEnd  
-	 */
+    
     private Struct headCopy;
-    /**
-	 * @uml.property  name="bodyCopy"
-	 * @uml.associationEnd  
-	 */
+    
     private SubGoalTree bodyCopy;
     
     /**
 	 * if the clause is part of a theory in a lib (null if not)
-	 * @uml.property  name="libName"
 	 */
     String libName;
     
@@ -147,26 +133,17 @@ public class ClauseInfo {
         return (clause.toString());
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="clause"
-	 */
+   
     Struct getClause() {
         return clause;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="head"
-	 */
+   
     Struct getHead() {
         return head;
     }    
     
-    /**
-	 * @return
-	 * @uml.property  name="body"
-	 */
+    
     SubGoalTree getBody() {
         return body;
     }    
@@ -212,18 +189,12 @@ public class ClauseInfo {
         }
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="headCopy"
-	 */
+    
     Struct getHeadCopy() {
         return headCopy;
     }
     
-    /**
-	 * @return
-	 * @uml.property  name="bodyCopy"
-	 */
+    
     SubGoalTree getBodyCopy() {
         return bodyCopy;
     }

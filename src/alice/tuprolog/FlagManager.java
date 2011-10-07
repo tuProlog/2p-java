@@ -27,16 +27,10 @@ import java.util.*;
 class FlagManager {
 
     /* flag list */
-    /**
-	 * @uml.property  name="flags"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Flag"
-	 */
     private ArrayList<Flag> flags;
 
     /**
 	 * mediator owner of the manager
-	 * @uml.property  name="mediator"
-	 * @uml.associationEnd  inverse="flagManager:alice.tuprolog.Prolog"
 	 */
     protected Prolog mediator;
 

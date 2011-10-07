@@ -26,18 +26,9 @@ package alice.tuprolog;
 @SuppressWarnings("serial")
 public class InvalidTheoryException extends PrologException {
     
-    /**
-	 * @uml.property  name="line"
-	 */
     public int line = -1;
-    /**
-	 * @uml.property  name="pos"
-	 */
     public int pos = -1;
     /*Castagna 06/2011*/	
-	/**
-	 * @uml.property  name="clause"
-	 */
 	public int clause = -1;
 	/**/
     

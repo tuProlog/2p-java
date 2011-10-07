@@ -15,10 +15,6 @@ import java.util.*;
  */
 public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X> {
 //public class List<X extends Term<?>> extends Compound<List<X>> {
-	/**
-	 * @uml.property  name="_theList"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.pj.model.Clause"
-	 */
 	protected java.util.Vector<X> _theList;
         
         public final static List<?> NIL = new List<Term<?>>(new Vector<Term<?>>());

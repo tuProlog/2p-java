@@ -14,9 +14,6 @@ package alice.tuprologx.pj.model;
  * @author maurizio
  */
 public class Bool extends Term<Bool> {
-	/**
-	 * @uml.property  name="_theBool"
-	 */
 	Boolean _theBool;        
         
 	public Boolean toJava() { return _theBool; }

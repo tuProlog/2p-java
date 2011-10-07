@@ -26,13 +26,7 @@ public class InvalidTermException extends IllegalArgumentException {
     private static final long serialVersionUID = -4416801118548866803L;
     
     /*Castagna 06/2011*/
-	/**
-	 * @uml.property  name="line"
-	 */
 	public int line = -1;
-	/**
-	 * @uml.property  name="pos"
-	 */
 	public int pos = -1;
 	/**/	
 

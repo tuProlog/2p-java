@@ -33,15 +33,10 @@ public class JavaIOManager extends IOFileOperations {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-	 * @uml.property  name="fileFilter"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="this$0:alice.tuprologx.ide.JavaIOManager$PrologFileFilter"
-	 */
     private PrologFileFilter fileFilter;
     
     /**
 	 * The parent component to open the JFileChooser against.
-	 * @uml.property  name="parent"
 	 */
     private java.awt.Component parent;
 
@@ -113,17 +108,8 @@ public class JavaIOManager extends IOFileOperations {
 	 */
     private class PrologFileFilter extends javax.swing.filechooser.FileFilter {
 
-        /**
-		 * @uml.property  name="extensions"
-		 */
         private String[] extensions;
-        /**
-		 * @uml.property  name="description"
-		 */
         private String description;
-        /**
-		 * @uml.property  name="defaultExtension"
-		 */
         private String defaultExtension;
 
         @SuppressWarnings("unused")
@@ -187,7 +173,6 @@ public class JavaIOManager extends IOFileOperations {
         /**
 		 * Returns the human readable description of this filter.
 		 * @return  A human readable description of this filter.
-		 * @uml.property  name="description"
 		 */
         public String getDescription() {
             return description;
@@ -217,19 +202,12 @@ public class JavaIOManager extends IOFileOperations {
             this.defaultExtension = "2p";
         }
 
-        /**
-		 * @return
-		 * @uml.property  name="defaultExtension"
-		 */
         public String getDefaultExtension()
         {
             return defaultExtension;
         }
 
-        /**
-		 * @return
-		 * @uml.property  name="extensions"
-		 */
+       
         @SuppressWarnings("unused")
         public String[] getExtensions()
         {

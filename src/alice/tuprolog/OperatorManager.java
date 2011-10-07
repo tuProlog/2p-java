@@ -36,8 +36,6 @@ import alice.tuprolog.interfaces.IOperatorManager;
     
     /**
 	 * current known operators
-	 * @uml.property  name="operatorList"
-	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
     private OperatorRegister operatorList = new OperatorRegister();
     

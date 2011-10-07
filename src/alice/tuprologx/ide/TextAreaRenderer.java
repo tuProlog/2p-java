@@ -10,25 +10,13 @@ public class TextAreaRenderer
     extends JTextArea
     implements TableCellRenderer
 {
-  /**
- * @uml.property  name="adaptee"
- * @uml.associationEnd  multiplicity="(1 1)"
- */
-private final DefaultTableCellRenderer adaptee = new DefaultTableCellRenderer();
+  private final DefaultTableCellRenderer adaptee = new DefaultTableCellRenderer();
   /**
  * map from table to map of rows to map of column heights
- * @uml.property  name="cellSizes"
- * @uml.associationEnd  qualifier="new:javax.swing.JTable java.util.Map"
  */
   private final Map<JTable,Map<Integer,Map<Integer,Integer>>> cellSizes = new HashMap<JTable, Map<Integer,Map<Integer,Integer>>>();
-  /**
- * @uml.property  name="isExpandedCellArray" multiplicity="(0 -1)" dimension="1"
- */
-private boolean[] isExpandedCellArray;
-  /**
- * @uml.property  name="isBorderedCellArray" multiplicity="(0 -1)" dimension="1"
- */
-private boolean[] isBorderedCellArray;
+  private boolean[] isExpandedCellArray;
+  private boolean[] isBorderedCellArray;
 
   public TextAreaRenderer(boolean[] isExpandedCellArray, boolean[] isBorderedCellArray)
   {

@@ -44,14 +44,11 @@ public abstract class Library implements Serializable, IPrimitives {
     
     /**
 	 * prolog core which loaded the library
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  
 	 */
     protected Prolog engine;
     
     /**
 	 * operator mapping
-	 * @uml.property  name="opMappingCached" multiplicity="(0 -1)" dimension="2"
 	 */
     private String[][] opMappingCached;
     
@@ -90,7 +87,6 @@ public abstract class Library implements Serializable, IPrimitives {
     /**
 	 * Gets the engine to which the library is bound
 	 * @return  the engine
-	 * @uml.property  name="engine"
 	 */
     public Prolog getEngine() {
         return engine;
@@ -98,7 +94,6 @@ public abstract class Library implements Serializable, IPrimitives {
     
     /**
 	 * @param en
-	 * @uml.property  name="engine"
 	 */
     void setEngine(Prolog en) {
         engine = en;

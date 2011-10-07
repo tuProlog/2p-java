@@ -1,0 +1,179 @@
+<html>
+
+<head>
+<title>ISO Acceptance Tests</title>
+</head>
+
+<body>
+
+<h1>ISO Acceptance Tests</h1>
+
+<table border="1" cellspacing="0" cellpadding="3">
+  <tr>
+    <td colspan="5">alice.tuprolog.IsoAcceptanceFixture</td>
+  </tr>
+  <tr>
+    <td>section</td><td>right()</td><td>wrong()</td><td>ignores()</td><td>exceptions()</td>
+  </tr>
+  <tr>
+    <td>1. Term unification[!]</td>
+    <td bgcolor="#ffffcf">39<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">5 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#ffcfcf">5 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+  </tr>
+  <tr>
+    <td>2. Type testing</td>
+    <td bgcolor="#ffffcf">44<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>3. Term comparison[!]</td>
+    <td bgcolor="#ffffcf">14<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#ffcfcf">1 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+  </tr>
+  <tr>
+    <td>4. Term creation and decomposition[!]</td>
+    <td bgcolor="#ffffcf">67<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">2 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">19 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>5. Arithmetic evaluation[!]</td>
+    <td bgcolor="#ffffcf">9<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#ffcfcf">1 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>6. Arithmetic comparison[!]</td>
+    <td bgcolor="#ffffcf">23<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">1 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">6 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>7. Clause retrival and information[!]</td>
+    <td bgcolor="#ffffcf">17<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">7 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">5 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">3 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+  </tr>
+  <tr>
+    <td>8. Clause creation and destruction[!]</td>
+    <td bgcolor="#ffffcf">37<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">13 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">15 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>9. All solutions[!]</td>
+    <td bgcolor="#ffffcf">80<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">26 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">4 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">4 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+  </tr>
+  <tr>
+    <td>10. Stream selection and control[!]</td>
+    <td bgcolor="#ffffcf">0<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">7 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>11. Character input and output</td>
+    <td> <font color="#808080">error</font></td>
+    <td> <font color="#808080">0</font></td>
+    <td> <font color="#808080">0</font></td>
+    <td> <font color="#808080">0</font></td>
+  </tr>
+  <tr>
+    <td>12. Byte input and output</td>
+    <td> <font color="#808080">error</font></td>
+    <td> <font color="#808080">0</font></td>
+    <td> <font color="#808080">0</font></td>
+    <td> <font color="#808080">0</font></td>
+  </tr>
+  <tr>
+    <td>13. Term input and output</td>
+    <td> <font color="#808080">error</font></td>
+    <td> <font color="#808080">0</font></td>
+    <td> <font color="#808080">0</font></td>
+    <td> <font color="#808080">0</font></td>
+  </tr>
+  <tr>
+    <td>14. Logic and control[!]</td>
+    <td bgcolor="#ffffcf">16<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">2 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">2 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>15. Atomic term processing[!]</td>
+    <td bgcolor="#ffffcf">144<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">9 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">9 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">8 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+  </tr>
+  <tr>
+    <td>16. Implementation defined hooks[!]</td>
+    <td bgcolor="#ffffcf">8<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)<br />	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">1 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">5 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>17. Simple arithmetic functors[!]</td>
+    <td bgcolor="#ffffcf">30<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">6 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">25 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>18. Other arithmetic functors[!]</td>
+    <td bgcolor="#ffffcf">21<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#ffcfcf">6 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">17 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#cfffcf">0</td>
+  </tr>
+  <tr>
+    <td>19. Bitwise functors[!]</td>
+    <td bgcolor="#ffffcf">5<hr><pre>java.text.ParseException: Can't find tag: table<br />	at fit.Parse.findMatchingEndTag(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at fit.Parse.&lt;init>(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.run(IsoAcceptanceFixture.java:28)<br />	at alice.tuprolog.IsoAcceptanceFixture.right(IsoAcceptanceFixture.java:40)<br />	at sun.reflect.GeneratedMethodAccessor1.invoke(Unknown Source)<br />	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)<br />	at java.lang.reflect.Method.invoke(Unknown Source)<br />	at fit.TypeAdapter.invoke(Unknown Source)<br />	at fit.TypeAdapter.get(Unknown Source)<br />	at fit.Fixture.check(Unknown Source)<br />	at fit.ColumnFixture.check(Unknown Source)<br />	at fit.ColumnFixture.doCell(Unknown Source)<br />	at fit.Fixture.doCells(Unknown Source)<br />	at fit.Fixture.doRow(Unknown Source)<br />	at fit.ColumnFixture.doRow(Unknown Source)<br />	at alice.tuprolog.IsoAcceptanceFixture.doRow(IsoAcceptanceFixture.java:77)<br />	at fit.Fixture.doRows(Unknown Source)<br />	at fit.ColumnFixture.doRows(Unknown Source)<br />	at fit.Fixture.doTable(Unknown Source)<br />	at fit.Fixture.interpretTables(Unknown Source)<br />	at fit.Fixture.doTables(Unknown Source)<br />	at fit.FileRunner.process(Unknown Source)<br />	at fit.FileRunner.run(Unknown Source)<br />	at fit.FileRunner.main(Unknown Source)<br /></pre></td>
+    <td bgcolor="#cfffcf">0</td>
+    <td bgcolor="#ffcfcf">10 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+    <td bgcolor="#ffcfcf">7 <font size=-1 color="#c08080"><i>expected</i></font><hr>0 <font size=-1 color="#c08080"><i>actual</i></font></td>
+  </tr>
+</table>
+
+<p>How many sections were successful?</p>
+
+<p><a href="../cgi-bin/fit.cgi">Run</a> the tests!</p>
+
+<table border="1" cellspacing="0" cellpadding="3">
+  <tr><td>fit.Summary</td></tr>
+<tr>
+<td> <font color="#808080">counts</font></td>
+<td bgcolor="#ffcfcf">18 right, 30 wrong, 0 ignored, 16 exceptions</td></tr>
+<tr>
+<td> <font color="#808080">input file</font></td>
+<td> <font color="#808080">D:\Silvia\Merge_Tesi\Tesi\test\isoAcceptanceTests.html</font></td></tr>
+<tr>
+<td> <font color="#808080">input update</font></td>
+<td> <font color="#808080">Tue Dec 23 03:02:00 CET 2008</font></td></tr>
+<tr>
+<td> <font color="#808080">output file</font></td>
+<td> <font color="#808080">D:\Silvia\Merge_Tesi\Tesi\test\report_Montanari\isoAcceptanceTests.html</font></td></tr>
+<tr>
+<td> <font color="#808080">run date</font></td>
+<td> <font color="#808080">Wed Sep 28 12:47:45 CEST 2011</font></td></tr>
+<tr>
+<td> <font color="#808080">run elapsed time</font></td>
+<td> <font color="#808080">0:00.12</font></td></tr></table>
+
+</body>
+</html>

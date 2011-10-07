@@ -20,10 +20,6 @@ import java.util.*;
  */
 public class PJProlog /*extends alice.tuprolog.Prolog*/ {
     
-    /**
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     protected alice.tuprolog.Prolog engine;
     
     public PJProlog() {
@@ -82,15 +78,7 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
 	 */
     class SolutionIterator<G extends Term<?>, S extends Term<?>> implements Iterator<PrologSolution<G,S>> {
 
-        /**
-		 * @uml.property  name="current"
-		 * @uml.associationEnd  
-		 */
         PrologSolution<G,S> current = null;
-        /**
-		 * @uml.property  name="next"
-		 * @uml.associationEnd  
-		 */
         PrologSolution<G,S> next = null;
 
         SolutionIterator(PrologSolution<G,S> first) {            

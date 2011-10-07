@@ -18,13 +18,7 @@ package alice.util;
 @SuppressWarnings("serial")
 public class P2d implements java.io.Serializable {
 
-    /**
-	 * @uml.property  name="x"
-	 */
     public float x;
-	/**
-	 * @uml.property  name="y"
-	 */
 	public float y;
 
     public P2d(float x,float y){

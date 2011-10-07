@@ -9,11 +9,7 @@ package alice.tuprologx.runtime.corba;
 
 public final class SolveInfoHolder implements org.omg.CORBA.portable.Streamable
 {
-  /**
- * @uml.property  name="value"
- * @uml.associationEnd  
- */
-public alice.tuprologx.runtime.corba.SolveInfo value = null;
+  public alice.tuprologx.runtime.corba.SolveInfo value = null;
 
   public SolveInfoHolder ()
   {

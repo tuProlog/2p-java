@@ -17,27 +17,11 @@ import alice.tuprolog.event.WarningEvent;
 class LibraryManager {
     
     /* dynamically loaded built-in libraries */
-    /**
-	 * @uml.property  name="currentLibraries"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Library"
-	 */
     private ArrayList<Library> currentLibraries;
     
     /*  */
-    /**
-	 * @uml.property  name="prolog"
-	 * @uml.associationEnd  inverse="libraryManager:alice.tuprolog.Prolog"
-	 */
     private Prolog prolog;
-    /**
-	 * @uml.property  name="theoryManager"
-	 * @uml.associationEnd  
-	 */
     private TheoryManager theoryManager;
-    /**
-	 * @uml.property  name="primitiveManager"
-	 * @uml.associationEnd  
-	 */
     private PrimitiveManager primitiveManager;
     
     

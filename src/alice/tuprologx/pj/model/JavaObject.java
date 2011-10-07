@@ -17,9 +17,6 @@ import alice.tuprologx.pj.engine.PJ;
  */
 public class JavaObject<O> extends Term<JavaObject<O>> {
     
-    /**
-	 * @uml.property  name="_theObject"
-	 */
     O _theObject;
     
     /** Creates a new instance of JavaObject */

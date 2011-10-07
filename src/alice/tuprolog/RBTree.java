@@ -41,33 +41,11 @@ enum Color { RED, BLACK }
  */
 class Node<K extends Comparable<? super K>,V>
 {
-    /**
-	 * @uml.property  name="key"
-	 */
     public K key;
-    /**
-	 * @uml.property  name="value"
-	 */
-    public V value;
-    /**
-	 * @uml.property  name="left"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="parent:alice.tuprolog.Node"
-	 */
-    public Node<K,V> left;
-    /**
-	 * @uml.property  name="right"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
-    public Node<K,V> right;
-    /**
-	 * @uml.property  name="parent"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="left:alice.tuprolog.Node"
-	 */
+   public V value;
+   public Node<K,V> left;
+   public Node<K,V> right;
     public Node<K,V> parent;
-    /**
-	 * @uml.property  name="color"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     public Color color;
 
     public Node(K key, V value, Color nodeColor, Node<K,V> left, Node<K,V> right) {
@@ -117,10 +95,6 @@ public class RBTree<K extends Comparable<? super K>,V>
     public static final boolean VERIFY_RBTREE = false;
     private static final int INDENT_STEP = 4;
 
-    /**
-	 * @uml.property  name="root"
-	 * @uml.associationEnd  
-	 */
     public Node<K,V> root;
 
     public RBTree() {

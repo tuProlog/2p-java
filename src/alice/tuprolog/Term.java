@@ -105,8 +105,6 @@ public abstract class Term implements Serializable {
     
     /**
 	 * Gets the actual term referred by this Term. if the Term is a bound variable, the method gets the Term linked to the variable
-	 * @uml.property  name="term"
-	 * @uml.associationEnd  readOnly="true"
 	 */
     public abstract Term getTerm();
     

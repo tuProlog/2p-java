@@ -24,14 +24,7 @@ package alice.tuprolog;
  */
 abstract class State {
     
-    /**
-	 * @uml.property  name="c"
-	 * @uml.associationEnd  inverse="eXCEPTION:alice.tuprolog.EngineManager"
-	 */
     protected EngineManager c;
-    /**
-	 * @uml.property  name="stateName"
-	 */
     protected String stateName;
     
     abstract void doJob(Engine e);

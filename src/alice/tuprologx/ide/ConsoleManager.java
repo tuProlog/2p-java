@@ -11,49 +11,16 @@ import java.util.ArrayList;
 public class ConsoleManager
     implements QueryListener, Console, PropertyChangeListener
 {
-    /**
-	 * @uml.property  name="dialog"
-	 * @uml.associationEnd  
-	 */
     private ConsoleDialog dialog;
-    /**
-	 * @uml.property  name="inputField"
-	 * @uml.associationEnd  
-	 */
     private InputField inputField;
-    /**
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  
-	 */
-    private Prolog engine;
+   private Prolog engine;
     //private PJProlog pjengine;
-    /**
-	 * @uml.property  name="ide"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private IDE ide;
-    /**
-	 * @uml.property  name="queryEventList"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.event.QueryEvent"
-	 */
     private ArrayList<QueryEvent> queryEventList;
-    /**
-	 * @uml.property  name="solveType"
-	 */
     private int solveType;
-    /**
-	 * @uml.property  name="timeFromBeginSolving"
-	 */
     private long timeFromBeginSolving=-1;
-    /**
-	 * @uml.property  name="millsStopEngine"
-	 */
     private int millsStopEngine;
     /* listeners registrated for virtual machine information to display events */
-    /**
-	 * @uml.property  name="informationToDisplayListeners"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.ide.InformationToDisplayListener"
-	 */
     private ArrayList<InformationToDisplayListener> informationToDisplayListeners;
 
     public ConsoleManager(IDE ide)
@@ -63,40 +30,16 @@ public class ConsoleManager
         queryEventList = new ArrayList<QueryEvent>();
     }
 
-    /**
-	 * @param dialog
-	 * @uml.property  name="dialog"
-	 */
     public void setDialog(ConsoleDialog dialog){this.dialog = dialog;}
 
-    /**
-	 * @param solveType
-	 * @uml.property  name="solveType"
-	 */
     public void setSolveType(int solveType){this.solveType = solveType;}
 
-    /**
-	 * @return
-	 * @uml.property  name="solveType"
-	 */
     public int getSolveType(){return solveType;}
 
-    /**
-	 * @param engine
-	 * @uml.property  name="engine"
-	 */
     public void setEngine(Prolog engine){this.engine = engine;}
 
-    /**
-	 * @param inputField
-	 * @uml.property  name="inputField"
-	 */
     public void setInputField(InputField inputField){this.inputField = inputField;}
 
-    /**
-	 * @return
-	 * @uml.property  name="dialog"
-	 */
     public ConsoleDialog getDialog(){return dialog;}
 
     public void solve()

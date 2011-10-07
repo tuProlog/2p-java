@@ -59,20 +59,9 @@ public abstract class PrologTree {
         }
     }
     
-    /**
-	 * @author  ale
-	 */
     public static class SignatureExpr extends PrologTree {
         
-        /**
-		 * @uml.property  name="inputTree"
-		 * @uml.associationEnd  
-		 */
         public PredicateExpr inputTree;
-        /**
-		 * @uml.property  name="outputTree"
-		 * @uml.associationEnd  
-		 */
         public PredicateExpr outputTree;
         public boolean multipleResult;
         

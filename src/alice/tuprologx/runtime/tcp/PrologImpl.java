@@ -6,10 +6,6 @@ import  java.io.*;
 @SuppressWarnings("serial")
 public class PrologImpl implements java.io.Serializable {
 
-    /**
-	 * @uml.property  name="core"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     alice.tuprolog.Prolog core;
     //Vector solutionListeners;
 

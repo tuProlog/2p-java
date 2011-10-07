@@ -19,25 +19,10 @@ import java.util.Vector;
  */
 public class PrologMetaClass {
     
-    /**
-	 * @uml.property  name="_theClass"
-	 */
     private Class<?> _theClass;
     //private PrologClass _annotation;
-    /**
-	 * @uml.property  name="_fields"
-	 * @uml.associationEnd  multiplicity="(0 -1)" inverse="_enclosing:alice.tuprologx.pj.meta.PrologMetaField"
-	 */
     private PrologMetaField[] _fields;
-    /**
-	 * @uml.property  name="_methods"
-	 * @uml.associationEnd  multiplicity="(0 -1)" inverse="_enclosing:alice.tuprologx.pj.meta.PrologMetaMethod"
-	 */
     private PrologMetaMethod[] _methods;
-    /**
-	 * @uml.property  name="_theory"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Theory _theory;
     
     /** Creates a new instance of MetaPrologClass */

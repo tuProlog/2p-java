@@ -6,9 +6,6 @@ import java.util.*;
 @SuppressWarnings("serial")
 public class ExceptionEvent extends EventObject{
 
-	/**
-	 * @uml.property  name="msg"
-	 */
 	private String msg;
 
 	public ExceptionEvent(Object source, String msg_) {
@@ -16,10 +13,6 @@ public class ExceptionEvent extends EventObject{
 		msg=msg_;
 	}
 
-	/**
-	 * @return
-	 * @uml.property  name="msg"
-	 */
 	public String getMsg(){
 		return msg;
 	}

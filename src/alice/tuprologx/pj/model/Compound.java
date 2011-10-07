@@ -7,8 +7,5 @@ public abstract class Compound<X extends Compound<?>> extends Term<X> {
 //public abstract class Compound<X extends Term<?>> extends Term<Compound<X>> {
     public abstract int arity();
     
-    /**
-	 * @uml.property  name="name"
-	 */
     public abstract String getName();
 }

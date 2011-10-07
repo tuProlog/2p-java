@@ -45,6 +45,8 @@ public class StateInit extends State {
         eCtx.goalsToEval.load(ClauseInfo.extractBody(e.startGoal));
         eCtx.clause = (Struct)e.query;
         eCtx.depth = 0;
+        eCtx.fatherCtx = null;
+       	eCtx.haveAlternatives = false;
         
         /* Initialize VM environment */
         e.initialize(eCtx);

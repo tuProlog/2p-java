@@ -40,7 +40,6 @@ interface InputField {
     /**
 	 * Get the goal displayed in the input field.
 	 * @return  The goal displayed in the input field.
-	 * @uml.property  name="goal"
 	 */
     public String getGoal();
 

@@ -25,147 +25,103 @@ import alice.tuprolog.interfaces.IEngine;
  * @author Alex Benini
  */
 public class Engine /*Castagna 06/2011*/implements IEngine/**/{    
-    /**
-	 * @uml.property  name="nextState"
-	 * @uml.associationEnd  multiplicity="(1 1)"
+
+	State  nextState;
+	Term   query;
+	Struct startGoal;
+	Collection<Var> goalVars;
+	int    nDemoSteps;
+	ExecutionContext currentContext; 
+	//ClauseStore clauseSelector;
+	ChoicePointContext currentAlternative;
+	ChoicePointStore choicePointSelector;
+	boolean mustStop;
+	EngineManager manager;
+
+
+	public Engine(EngineManager manager, Term query) {
+		this.manager = manager;        
+		this.nextState = manager.INIT;
+		this.query = query;
+		this.mustStop = false;
+	}
+
+
+	public String toString() {
+		try {
+			return
+					"ExecutionStack: \n"+currentContext+"\n"+
+					"ChoicePointStore: \n"+choicePointSelector+"\n\n";
+		} catch(Exception ex) { return ""; }
+	}
+
+	void mustStop() {
+		mustStop = true;
+	}
+
+	/**
+	 * Core of engine. Finite State Machine
 	 */
-    State  nextState;
-    /**
-	 * @uml.property  name="query"
-	 * @uml.associationEnd  multiplicity="(1 1)"
+	StateEnd run() {
+		String action;
+		do {
+			if (mustStop) {
+				nextState = manager.END_FALSE;
+				break;
+			}
+			action = nextState.toString();
+
+			nextState.doJob(this);
+
+			manager.spy(action, this);
+
+		} while (!(nextState instanceof StateEnd));
+		nextState.doJob(this);
+		return (StateEnd)(nextState);
+	}
+
+
+	/*
+	 * Methods for spyListeners
 	 */
-    Term   query;
-    /**
-	 * @uml.property  name="startGoal"
-	 * @uml.associationEnd  
-	 */
-    Struct startGoal;
-    /**
-	 * @uml.property  name="goalVars" multiplicity="(0 -1)"
-	 */
-    Collection<Var> goalVars;
-    
-    /**
-	 * @uml.property  name="nDemoSteps"
-	 */
-    int    nDemoSteps;
-    
-    /**
-	 * @uml.property  name="currentContext"
-	 * @uml.associationEnd  
-	 */
-    ExecutionContext currentContext; 
-    //ClauseStore clauseSelector;
-    /**
-	 * @uml.property  name="currentAlternative"
-	 * @uml.associationEnd  
-	 */
-    ChoicePointContext currentAlternative;
-    
-    /**
-	 * @uml.property  name="choicePointSelector"
-	 * @uml.associationEnd  
-	 */
-    ChoicePointStore choicePointSelector;
-    
-    /**
-	 * @uml.property  name="mustStop"
-	 */
-    boolean mustStop;
-    /**
-	 * @uml.property  name="manager"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="stackEnv:alice.tuprolog.EngineManager"
-	 */
-    EngineManager manager;
-    
-    
-    public Engine(EngineManager manager, Term query) {
-        this.manager = manager;        
-        this.nextState = manager.INIT;
-        this.query = query;
-        this.mustStop = false;
-    }
-    
-    
-    public String toString() {
-        try {
-            return
-            "ExecutionStack: \n"+currentContext+"\n"+
-            "ChoicePointStore: \n"+choicePointSelector+"\n\n";
-        } catch(Exception ex) { return ""; }
-    }
-    
-    void mustStop() {
-        mustStop = true;
-    }
-    
-    /**
-     * Core of engine. Finite State Machine
-     */
-    StateEnd run() {
-        String action;
-        do {
-            if (mustStop) {
-                nextState = manager.END_FALSE;
-                break;
-            }
-            action = nextState.toString();
-            
-            nextState.doJob(this);
-            
-            manager.spy(action, this);
-            
-        } while (!(nextState instanceof StateEnd));
-        nextState.doJob(this);
-        return (StateEnd)(nextState);
-    }
-    
-    
-    /*
-     * Methods for spyListeners
-     */
-    
-    /**
-	 * @return
-	 * @uml.property  name="query"
-	 */
-    public Term getQuery() {
-        return query;
-    }
-    
-    public int getNumDemoSteps() {
-        return nDemoSteps;
-    }
-    
-    public List<ExecutionContext> getExecutionStack() {
-        ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
-        ExecutionContext t = currentContext;
-        while (t != null) {
-            l.add(t);
-            t = t.fatherCtx;
-        }
-        return l;
-    }
-    
-    public ChoicePointStore getChoicePointStore() {
-        return choicePointSelector;
-    }
-    
-    void prepareGoal() {
-        LinkedHashMap<Var,Var> goalVars = new LinkedHashMap<Var, Var>();
-        startGoal = (Struct)(query).copyGoal(goalVars,0);
-        this.goalVars = goalVars.values();
-    }
-    
-//    void cut() {
-//        choicePointSelector.cut(currentContext.depth -1);
-//    }
-    
-    void initialize(ExecutionContext eCtx) {
-        currentContext = eCtx;
-        choicePointSelector = new ChoicePointStore();
-        nDemoSteps = 1;
-        currentAlternative = null;
-    }
-    
+
+	public Term getQuery() {
+		return query;
+	}
+
+	public int getNumDemoSteps() {
+		return nDemoSteps;
+	}
+
+	public List<ExecutionContext> getExecutionStack() {
+		ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
+		ExecutionContext t = currentContext;
+		while (t != null) {
+			l.add(t);
+			t = t.fatherCtx;
+		}
+		return l;
+	}
+
+	public ChoicePointStore getChoicePointStore() {
+		return choicePointSelector;
+	}
+
+	void prepareGoal() {
+		LinkedHashMap<Var,Var> goalVars = new LinkedHashMap<Var, Var>();
+		startGoal = (Struct)(query).copyGoal(goalVars,0);
+		this.goalVars = goalVars.values();
+	}
+
+	//    void cut() {
+		//        choicePointSelector.cut(currentContext.depth -1);
+		//    }
+
+	void initialize(ExecutionContext eCtx) {
+		currentContext = eCtx;
+		choicePointSelector = new ChoicePointStore();
+		nDemoSteps = 1;
+		currentAlternative = null;
+	}
+
 }

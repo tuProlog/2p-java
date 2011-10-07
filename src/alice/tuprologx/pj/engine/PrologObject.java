@@ -15,19 +15,7 @@ import alice.tuprologx.pj.model.*;
  * @author  maurizio
  */
 public interface PrologObject {    
-    /**
-	 * @uml.property  name="metaPrologClass"
-	 * @uml.associationEnd  
-	 */
     PrologMetaClass getMetaPrologClass();
-    /**
-	 * @uml.property  name="theory"
-	 * @uml.associationEnd  
-	 */
     Theory getTheory();
-    /**
-	 * @param t
-	 * @uml.property  name="theory"
-	 */
     void setTheory(Theory t);
 }

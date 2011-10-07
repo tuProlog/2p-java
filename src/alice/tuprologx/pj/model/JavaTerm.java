@@ -19,15 +19,8 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
 
     public static HashMap<String, Class<?>> hashtable = new HashMap<String, Class<?>>();
 
-    /**
-	 * @author  ale
-	 */
     @SuppressWarnings("serial")
 	static class TermifiableStruct<O> extends alice.tuprolog.Struct {
-        /**
-		 * @uml.property  name="_term"
-		 * @uml.associationEnd  
-		 */
         JavaTerm<O> _term;
 
         TermifiableStruct(String name, alice.tuprolog.Term[] arr) {
@@ -44,15 +37,7 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
         }
     }
 
-    /**
-	 * @uml.property  name="_class"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.pj.model.Term"
-	 */
     Class<?> _class;
-    /**
-	 * @uml.property  name="_properties"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprologx.pj.model.Term"
-	 */
     java.util.Collection<Term<?>> _properties;
 
     public JavaTerm(O o) {        

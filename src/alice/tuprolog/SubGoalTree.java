@@ -4,10 +4,6 @@ import java.util.*;
 
 public class SubGoalTree extends AbstractSubGoalTree implements Iterable<AbstractSubGoalTree> {
     
-    /**
-	 * @uml.property  name="terms"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.AbstractSubGoalTree"
-	 */
     private ArrayList<AbstractSubGoalTree> terms;
         //private LinkedList terms;
     

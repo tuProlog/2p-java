@@ -40,29 +40,11 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     static final int TRUE    = EngineManager.TRUE;
     static final int TRUE_CP = EngineManager.TRUE_CP;
     
-    /**
-	 * @uml.property  name="endState"
-	 */
     private int     endState;
-    /**
-	 * @uml.property  name="isSuccess"
-	 */
     private boolean isSuccess;
     
-    /**
-	 * @uml.property  name="query"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Term query;
-    /**
-	 * @uml.property  name="goal"
-	 * @uml.associationEnd  
-	 */
     private Struct goal;
-    /**
-	 * @uml.property  name="bindings"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Var"
-	 */
     private List<Var>   bindings;
     
     
@@ -94,7 +76,6 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     /**
 	 * Checks if the solve request was successful
 	 * @return  true if the solve was successful
-	 * @uml.property  name="isSuccess"
 	 */
     public boolean isSuccess() {
         return isSuccess;
@@ -124,7 +105,6 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     /**
 	 * Gets the query
 	 * @return  the query
-	 * @uml.property  name="query"
 	 */
     public Term getQuery() {
         return query;

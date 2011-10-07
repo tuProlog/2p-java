@@ -32,14 +32,7 @@ import java.util.Iterator;
 @SuppressWarnings("serial")
 public class Theory implements Serializable {
 
-    /**
-	 * @uml.property  name="theory"
-	 */
     private String theory;
-    /**
-	 * @uml.property  name="clauseList"
-	 * @uml.associationEnd  
-	 */
     private Struct clauseList;
 
     /**

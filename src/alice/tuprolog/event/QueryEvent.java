@@ -29,11 +29,7 @@ import alice.tuprolog.SolveInfo;
 @SuppressWarnings("serial")
 public class QueryEvent extends PrologEvent {
 
-    /**
-	 * @uml.property  name="info"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
-    private SolveInfo info;
+   private SolveInfo info;
     
     public QueryEvent(Prolog source, SolveInfo info){
         super(source);

@@ -33,15 +33,11 @@ public final class LibraryManager
 {
 
     /**
-	 * The Prolog engine referenced by the Library Manager.
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  
+	 * The Prolog engine referenced by the Library Manager. 
 	 */
     private Prolog engine;
     /**
 	 * Stores classnames for managed libraries.
-	 * @uml.property  name="libraries"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="java.lang.String"
 	 */
     private ArrayList<String> libraries;
 
@@ -52,7 +48,6 @@ public final class LibraryManager
     /**
 	 * Set the engine to be referenced by the library manager.
 	 * @param engine  The engine to be referenced by the library manager.
-	 * @uml.property  name="engine"
 	 */
     public void setEngine(Prolog engine) {
         this.engine = engine;
@@ -72,7 +67,6 @@ public final class LibraryManager
     /**
 	 * Get the engine referenced by the library manager.
 	 * @return  the engine referenced by the library manager.
-	 * @uml.property  name="engine"
 	 */
     public Prolog getEngine() {
         return engine;

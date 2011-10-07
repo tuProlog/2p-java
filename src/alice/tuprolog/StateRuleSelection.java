@@ -131,7 +131,6 @@ public class StateRuleSelection extends State {
         ec.performTailRecursionOptimization(e);
         
         ec.saveParentState();
-        ec.depth = e.currentContext.depth + 1;
         e.currentContext = ec;
         e.nextState = c.GOAL_SELECTION;
     }

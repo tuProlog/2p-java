@@ -19,37 +19,20 @@ public class TheoryEditor
 
     /**
 	 * The Prolog engine referenced by the editor.
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  
 	 */
     private Prolog engine;
     /**
 	 * The edit area used by the editor.
-	 * @uml.property  name="editArea"
-	 * @uml.associationEnd  
 	 */
     private TheoryEditArea editArea;
     /**
 	 * Used for components interested in changes of console's properties.
-	 * @uml.property  name="propertyChangeSupport"
 	 */
     private PropertyChangeSupport propertyChangeSupport;
 
-    /**
-	 * @uml.property  name="ide"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
-    private IDE ide;
+   private IDE ide;
 
-    /**
-	 * @uml.property  name="caretLineLabel"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JLabel caretLineLabel;
-    /**
-	 * @uml.property  name="bSetTheory"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private JButton bSetTheory;
 
     public TheoryEditor(IDE ide)
@@ -128,7 +111,6 @@ public class TheoryEditor
     /**
 	 * Get the Prolog engine referenced by the editor.
 	 * @return  The Prolog engine referenced by the editor.
-	 * @uml.property  name="engine"
 	 */
     public Prolog getEngine() {
         return engine;
@@ -137,7 +119,6 @@ public class TheoryEditor
     /**
 	 * Set the Prolog engine referenced by the editor.
 	 * @param engine  an <code>alice.tuprolog.Prolog</code> engine.
-	 * @uml.property  name="engine"
 	 */
     public void setEngine(Prolog engine) {
         this.engine = engine;
@@ -163,7 +144,6 @@ public class TheoryEditor
     /**
 	 * Set the edit area used by the editor to manipulate the text of Prolog theories.
 	 * @param editArea  The edit area we want the editor to use.
-	 * @uml.property  name="editArea"
 	 */
     public void setEditArea(TheoryEditArea editArea) {
         this.editArea = editArea;

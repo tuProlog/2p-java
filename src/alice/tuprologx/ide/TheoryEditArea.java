@@ -28,14 +28,12 @@ interface TheoryEditArea {
     /**
 	 * Display a theory in the edit area.
 	 * @param theory  The theory to be displayed in the edit area.
-	 * @uml.property  name="theory"
 	 */
     public void setTheory(String theory);
 
     /**
 	 * Get the displayed theory as a <code>java.lang.String</code>.
 	 * @return  the displayed theory as a <code>java.lang.String</code>.
-	 * @uml.property  name="theory"
 	 */
     public String getTheory();
 

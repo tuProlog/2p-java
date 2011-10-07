@@ -31,7 +31,6 @@ public class SpyEvent extends EventObject {
 
     /**
 	 * event description
-	 * @uml.property  name="msg"
 	 */
     private String msg;
     /**
@@ -52,10 +51,6 @@ public class SpyEvent extends EventObject {
         msg = msg_;
     }
 
-    /**
-	 * @return
-	 * @uml.property  name="msg"
-	 */
     public String getMsg() {
         return msg;
     }

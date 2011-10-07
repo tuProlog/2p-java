@@ -53,15 +53,8 @@ import alice.tuprolog.interfaces.IParser;
 @SuppressWarnings("serial")
 public class Parser implements /*Castagna 06/2011*/IParser,/**/ Serializable
 {
-	/**
-	 * @author  ale
-	 */
 	private static class IdentifiedTerm {
 		private int priority;
-		/**
-		 * @uml.property  name="result"
-		 * @uml.associationEnd  
-		 */
 		private Term result;
 		public IdentifiedTerm(int priority, Term result) {
 			this.priority = priority;
@@ -71,25 +64,10 @@ public class Parser implements /*Castagna 06/2011*/IParser,/**/ Serializable
 
 	private static OperatorManager defaultOperatorManager = new DefaultOperatorManager();
 
-	/**
-	 * @uml.property  name="tokenizer"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
 	private Tokenizer tokenizer;
-	/**
-	 * @uml.property  name="opManager"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
 	private OperatorManager opManager = defaultOperatorManager;
 	/*Castagna 06/2011*/
-	/**
-	 * @uml.property  name="offsetsMap"
-	 * @uml.associationEnd  qualifier="term:alice.tuprolog.Term java.lang.Integer"
-	 */
 	private HashMap<Term, Integer> offsetsMap;		 
-	/**
-	 * @uml.property  name="tokenStart"
-	 */
 	private int tokenStart;
 	/**/    
 

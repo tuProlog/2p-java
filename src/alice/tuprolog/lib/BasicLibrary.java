@@ -213,7 +213,17 @@ public class BasicLibrary extends Library {
         getEngine().setSpy(false);
         return true;
     }
+    
+    /*Castagna 16/09*/
+    public boolean trace_0() {
+        return this.spy_0();
+    }
 
+    public boolean notrace_0() {
+        return nospy_0();
+    }
+    /**/
+    
     public boolean warning_0() {
         getEngine().setWarning(true);
         return true;

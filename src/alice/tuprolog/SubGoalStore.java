@@ -3,28 +3,10 @@ package alice.tuprolog;
 
 public class SubGoalStore {
 
-    /**
-	 * @uml.property  name="goals"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private SubGoalTree goals;
-    /**
-	 * @uml.property  name="commaStruct"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private SubGoalTree commaStruct;
-    /**
-	 * @uml.property  name="index"
-	 */
     private int index;
-    /**
-	 * @uml.property  name="curSGId"
-	 * @uml.associationEnd  
-	 */
     private DefaultSubGoalId curSGId;
-    /**
-	 * @uml.property  name="fetched"
-	 */
     private boolean fetched=false;
 
     public SubGoalStore() {
@@ -55,11 +37,13 @@ public class SubGoalStore {
     public void pushSubGoal(SubGoalTree subGoals) {
         curSGId = new DefaultSubGoalId(curSGId, commaStruct, index);
         commaStruct = subGoals;
+        goals = commaStruct.copy();
         index = 0;
     }
 
     private void popSubGoal(DefaultSubGoalId id) {
         commaStruct = id.getRoot();
+        goals = commaStruct.copy();
         index = id.getIndex();
         curSGId = id.getParent();
     }
@@ -98,8 +82,7 @@ public class SubGoalStore {
     }
 
     public boolean haveSubGoals() {
-        //System.out.println (getFetched());
-        return (index <= goals.size());
+        return (index < goals.size());
     }
 
     public String toString() {

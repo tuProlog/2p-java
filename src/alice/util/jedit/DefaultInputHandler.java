@@ -343,15 +343,7 @@ public class DefaultInputHandler extends InputHandler
     }
 
     // private members
-    /**
-	 * @uml.property  name="bindings"
-	 * @uml.associationEnd  qualifier="keyStroke:javax.swing.KeyStroke java.util.Hashtable"
-	 */
     private Hashtable<KeyStroke,Object> bindings;
-    /**
-	 * @uml.property  name="currentBindings"
-	 * @uml.associationEnd  qualifier="keyStroke:javax.swing.KeyStroke java.util.Hashtable"
-	 */
     private Hashtable<KeyStroke,Object> currentBindings;
 
     private DefaultInputHandler(DefaultInputHandler copy)

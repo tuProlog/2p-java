@@ -31,34 +31,26 @@ public class Struct extends Term {
     
     /**
 	 * name of the structure
-	 * @uml.property  name="name"
 	 */
     private String name;
     /**
 	 * args array
-	 * @uml.property  name="arg"
-	 * @uml.associationEnd  multiplicity="(0 -1)"
 	 */
     private Term[] arg;
     /**
 	 * arity
-	 * @uml.property  name="arity"
 	 */
     private int arity;
     /**
 	 * to speedup hash map operation
-	 * @uml.property  name="predicateIndicator"
 	 */
     private String predicateIndicator;
     /**
 	 * primitive behaviour
-	 * @uml.property  name="primitive"
-	 * @uml.associationEnd  
 	 */
     private transient PrimitiveInfo primitive;
     /**
 	 * it indicates if the term is resolved
-	 * @uml.property  name="resolved"
 	 */
     private boolean resolved=false;
     
@@ -210,7 +202,6 @@ public class Struct extends Term {
     
     /**
 	 * @return
-	 * @uml.property  name="predicateIndicator"
 	 */
     String getPredicateIndicator() {
         return predicateIndicator;
@@ -218,7 +209,6 @@ public class Struct extends Term {
     
     /**
 	 * Gets the number of elements of this structure
-	 * @uml.property  name="arity"
 	 */
     public int getArity() {
         return arity;
@@ -226,7 +216,6 @@ public class Struct extends Term {
     
     /**
 	 * Gets the functor name  of this structure
-	 * @uml.property  name="name"
 	 */
     public String getName() {
         return name;
@@ -676,7 +665,6 @@ public class Struct extends Term {
     
     /**
 	 * Set primitive behaviour associated at structure
-	 * @uml.property  name="primitive"
 	 */
     void setPrimitive(PrimitiveInfo b) {
         primitive = b;
@@ -684,7 +672,6 @@ public class Struct extends Term {
     
     /**
 	 * Get primitive behaviour associated at structure
-	 * @uml.property  name="primitive"
 	 */
     public PrimitiveInfo getPrimitive() {
         return primitive;

@@ -29,15 +29,7 @@ import alice.tuprolog.Theory;
 @SuppressWarnings("serial")
 public class TheoryEvent extends PrologEvent {
 
-    /**
-	 * @uml.property  name="oldTh"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Theory oldTh;
-    /**
-	 * @uml.property  name="newTh"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Theory newTh;
     
     public TheoryEvent(Prolog source, Theory oldth,Theory newth){

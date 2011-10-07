@@ -188,7 +188,6 @@ public abstract class TokenMarker
 
     /**
 	 * Returns true if the next line should be repainted. This will return true after a line has been tokenized that starts a multiline token that continues onto the next line.
-	 * @uml.property  name="nextLineRequested"
 	 */
     public boolean isNextLineRequested()
     {
@@ -198,41 +197,32 @@ public abstract class TokenMarker
     // protected members
 
     /**
-	 * The first token in the list. This should be used as the return value from <code>markTokens()</code>.
-	 * @uml.property  name="firstToken"
-	 * @uml.associationEnd  
+	 * The first token in the list. This should be used as the return value from <code>markTokens()</code>. 
 	 */
     protected Token firstToken;
 
     /**
 	 * The last token in the list. New tokens are added here. This should be set to null before a new line is to be tokenized.
-	 * @uml.property  name="lastToken"
-	 * @uml.associationEnd  
 	 */
     protected Token lastToken;
 
     /**
 	 * An array for storing information about lines. It is enlarged and shrunk automatically by the <code>insertLines()</code> and <code>deleteLines()</code> methods.
-	 * @uml.property  name="lineInfo"
-	 * @uml.associationEnd  multiplicity="(0 -1)" inverse="this$0:alice.util.jedit.TokenMarker$LineInfo"
 	 */
     protected LineInfo[] lineInfo;
 
     /**
 	 * The number of lines in the model being tokenized. This can be less than the length of the <code>lineInfo</code> array.
-	 * @uml.property  name="length"
 	 */
     protected int length;
 
     /**
 	 * The last tokenized line.
-	 * @uml.property  name="lastLine"
 	 */
     protected int lastLine;
 
     /**
 	 * True if the next line should be painted.
-	 * @uml.property  name="nextLineRequested"
 	 */
     protected boolean nextLineRequested;
 

@@ -33,12 +33,10 @@ abstract class IOFileOperations extends JFrame
 {
     /**
 	 * The current directory where to load theories.
-	 * @uml.property  name="currentLoadDirectory"
 	 */
     protected String currentLoadDirectory;
     /**
 	 * The current directory where to save theories.
-	 * @uml.property  name="currentSaveDirectory"
 	 */
     protected String currentSaveDirectory;
 

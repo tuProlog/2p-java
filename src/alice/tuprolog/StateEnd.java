@@ -28,18 +28,8 @@ import alice.tuprolog.Struct;
  */
 public class StateEnd extends State {
     
-    /**
-	 * @uml.property  name="endState"
-	 */
     private int endState;    
-    /**
-	 * @uml.property  name="goal"
-	 * @uml.associationEnd  
-	 */
     private Struct goal;
-    /**
-	 * @uml.property  name="vars"
-	 */
     private List<Var> vars;
     
     /**

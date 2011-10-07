@@ -29,25 +29,9 @@ import alice.tuprolog.interfaces.IPrimitiveManager;
  */
 public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/**/{
     
-    /**
-	 * @uml.property  name="libHashMap"
-	 * @uml.associationEnd  qualifier="src:alice.tuprolog.IPrimitives java.util.List"
-	 */
     private IdentityHashMap<IPrimitives,List<PrimitiveInfo>> libHashMap;
-    /**
-	 * @uml.property  name="directiveHashMap"
-	 * @uml.associationEnd  qualifier="k:java.lang.String alice.tuprolog.PrimitiveInfo"
-	 */
     private HashMap<String,PrimitiveInfo> directiveHashMap;
-    /**
-	 * @uml.property  name="predicateHashMap"
-	 * @uml.associationEnd  qualifier="toString:java.lang.String alice.tuprolog.PrimitiveInfo"
-	 */
     private HashMap<String,PrimitiveInfo> predicateHashMap;
-    /**
-	 * @uml.property  name="functorHashMap"
-	 * @uml.associationEnd  qualifier="toString:java.lang.String alice.tuprolog.PrimitiveInfo"
-	 */
     private HashMap<String,PrimitiveInfo> functorHashMap;
     
     public PrimitiveManager() {

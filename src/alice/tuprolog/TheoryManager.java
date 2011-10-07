@@ -48,35 +48,11 @@ import alice.util.Tools;
 @SuppressWarnings("serial")
 public class TheoryManager implements Serializable {
 
-	/**
-	 * @uml.property  name="dynamicDBase"
-	 * @uml.associationEnd  
-	 */
 	private ClauseDatabase dynamicDBase;
-	/**
-	 * @uml.property  name="staticDBase"
-	 * @uml.associationEnd  
-	 */
 	private ClauseDatabase staticDBase;
-	/**
-	 * @uml.property  name="engine"
-	 * @uml.associationEnd  inverse="theoryManager:alice.tuprolog.Prolog"
-	 */
 	private Prolog engine;
-	/**
-	 * @uml.property  name="primitiveManager"
-	 * @uml.associationEnd  
-	 */
 	private PrimitiveManager primitiveManager;
-	/**
-	 * @uml.property  name="startGoalStack"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="alice.tuprolog.Struct"
-	 */
 	private Stack<Term> startGoalStack;
-	/**
-	 * @uml.property  name="lastConsultedTheory"
-	 * @uml.associationEnd  
-	 */
 	Theory lastConsultedTheory;
 
 	public void initialize(Prolog vm) {
@@ -132,7 +108,7 @@ public class TheoryManager implements Serializable {
 			ClauseInfo d = it.next();
 			if (clause.match(d.getClause())) {
 				it.remove();
-				family.unregister(d);
+//				family.unregister(d);
 				engine.spy("DELETE: " + d.getClause() + "\n");
 				return new ClauseInfo(d.getClause(), null);
 			}
@@ -245,13 +221,8 @@ public class TheoryManager implements Serializable {
 			{
 				try 
 				{
-					allClauses.remove();
-					
-					// Non si puà fare perchè l'iterator è fail-fast: si può modificare la lista solo dall'iterator stesso
-					// se si modifica la collezzione "sotto banco" viene lanciata un'eccezione "java.util.ConcurrentModificationException"
-					//staticDBase.abolish(d.getHead().getPredicateIndicator());
-					
 					// Rimuovendolo da allClauses si elimina solo il valore e non la chiave
+					allClauses.remove();
 				}
 				catch (Exception e){}
 			}
@@ -342,7 +313,6 @@ public class TheoryManager implements Serializable {
 	/**
 	 * Gets last consulted theory
 	 * @return  last theory
-	 * @uml.property  name="lastConsultedTheory"
 	 */
 	public Theory getLastConsultedTheory() {
 		return lastConsultedTheory;

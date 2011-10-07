@@ -1,0 +1,9 @@
+#Thu Jul 21 19:18:35 CEST 2011
+libdir=/Users/ale/Documents/workspace/2p-2.4.0-Montanari/lib
+command.open=cmd /c start "Start..." "${outfile}"
+command.edit=cmd /c start "Start..." winword /n "${infile}"
+outdir=/Users/ale/Documents/workspace/2p-2.4.0-Montanari/test/doc/results
+indir=/Users/ale/Documents/workspace/2p-2.4.0-Montanari/test/doc
+pattern=*.html
+command.runner=java -cp ${classpath} fit.FileRunner ${infile} ${outfile}
+runner.workingDir=/Users/ale/Documents/workspace/2p-2.4.0-Montanari/lib

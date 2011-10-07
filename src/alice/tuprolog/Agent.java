@@ -33,28 +33,12 @@ import alice.tuprolog.event.OutputListener;
  */
 public class Agent {
     
-    /**
-	 * @uml.property  name="core"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Prolog core;
-    /**
-	 * @uml.property  name="theoryText"
-	 */
     private String theoryText;
-    /**
-	 * @uml.property  name="theoryInputStream"
-	 */
     private InputStream theoryInputStream;
-    /**
-	 * @uml.property  name="goalText"
-	 */
     private String goalText;
     
-    /**
-	 * @uml.property  name="defaultOutputListener"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+  
     private OutputListener defaultOutputListener = new OutputListener() {
         public void onOutput(OutputEvent ev) {
             System.out.print(ev.getMsg());
@@ -154,14 +138,7 @@ public class Agent {
     }
     
     
-    /**
-	 * @author  ale
-	 */
     final class AgentThread extends Thread {
-        /**
-		 * @uml.property  name="agent"
-		 * @uml.associationEnd  
-		 */
         Agent agent;
         AgentThread(Agent agent){
             this.agent=agent;

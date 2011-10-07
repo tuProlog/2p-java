@@ -16,19 +16,8 @@ import java.util.Stack;
  * @author maurizio
  */
 public class Tokenizer {
-    /**
-	 * @uml.property  name="charBuffer"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="java.lang.Character"
-	 */
     private Stack<Character> charBuffer;    
-    /**
-	 * @uml.property  name="value"
-	 */
     private String value;    
-    /**
-	 * @uml.property  name="lastToken"
-	 * @uml.associationEnd  
-	 */
     private Token lastToken;    
     
     Tokenizer(String s) {

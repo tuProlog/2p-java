@@ -53,27 +53,21 @@ public final class MethodFinder {
 
     /**
 	 * The target class to look for methods and constructors in.
-	 * @uml.property  name="clazz"
 	 */
     private final Class<?> clazz;
 
     /**
 	 * Mapping from method name to the Methods in the target class with that name.
-	 * @uml.property  name="methodMap"
-	 * @uml.associationEnd  multiplicity="(0 -1)" ordering="true" elementType="java.lang.reflect.Method" qualifier="methodName:java.lang.String java.util.List"
 	 */
     private final Map<String,List<Member>> methodMap = new HashMap<String, List<Member>>();
 
     /**
 	 * List of the Constructors in the target class.
-	 * @uml.property  name="ctorList"
 	 */
     private final List<Member> ctorList = new ArrayList<Member>();
 
     /**
 	 * Mapping from a Constructor or Method object to the Class objects representing its formal parameters.
-	 * @uml.property  name="paramMap"
-	 * @uml.associationEnd  qualifier="m:java.lang.reflect.Method java.lang.Class"
 	 */
     private final Map<Member,Class<?>[]> paramMap = new HashMap<Member, Class<?>[]>();
 

@@ -2,21 +2,13 @@ package alice.tuprologx.runtime.tcp;
 
 import alice.tuprolog.*;
 
-/**
- * @author  ale
- */
 public interface Prolog {
 
     public void clearTheory() throws Exception;
-    /**
-	 * @uml.property  name="theory"
-	 * @uml.associationEnd  
-	 */
     public Theory getTheory() throws Exception;
     /**
 	 * @param theory
 	 * @throws Exception
-	 * @uml.property  name="theory"
 	 */
     void setTheory(Theory theory) throws Exception;
     void addTheory(Theory theory) throws Exception;

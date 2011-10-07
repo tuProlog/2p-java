@@ -225,7 +225,6 @@ public abstract class InputHandler extends KeyAdapter
     /**
 	 * Sets the number of times the next action will be repeated.
 	 * @param repeatCount  The repeat count
-	 * @uml.property  name="repeatCount"
 	 */
     public void setRepeatCount(int repeatCount)
     {
@@ -371,22 +370,9 @@ public abstract class InputHandler extends KeyAdapter
     }
 
     // protected members
-    /**
-	 * @uml.property  name="grabAction"
-	 */
     protected ActionListener grabAction;
-    /**
-	 * @uml.property  name="repeat"
-	 */
     protected boolean repeat;
-    /**
-	 * @uml.property  name="repeatCount"
-	 */
     protected int repeatCount;
-    /**
-	 * @uml.property  name="recorder"
-	 * @uml.associationEnd  
-	 */
     protected InputHandler.MacroRecorder recorder;
 
     /**

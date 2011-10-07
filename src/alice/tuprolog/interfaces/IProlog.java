@@ -15,23 +15,17 @@ public interface IProlog {
 	
 	/**
 	 * Gets the component managing operators
-	 * @uml.property  name="operatorManager"
-	 * @uml.associationEnd  
 	 */
 	IOperatorManager getOperatorManager();
 		
 	/**
 	 * Gets the component managing primitives
-	 * @uml.property  name="primitiveManager"
-	 * @uml.associationEnd  
 	 */
 	IPrimitiveManager getPrimitiveManager();
 	
 	/**
 	 * Gets current theory
 	 * @return   current(dynamic) theory
-	 * @uml.property  name="theory"
-	 * @uml.associationEnd  
 	 */
 	Theory getTheory();
 	

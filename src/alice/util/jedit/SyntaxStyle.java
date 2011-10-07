@@ -33,7 +33,6 @@ public class SyntaxStyle
 
     /**
 	 * Returns the color specified in this style.
-	 * @uml.property  name="color"
 	 */
     public Color getColor()
     {
@@ -50,7 +49,6 @@ public class SyntaxStyle
 
     /**
 	 * Returns true if italics is enabled for this style.
-	 * @uml.property  name="italic"
 	 */
     public boolean isItalic()
     {
@@ -59,7 +57,6 @@ public class SyntaxStyle
 
     /**
 	 * Returns true if boldface is enabled for this style.
-	 * @uml.property  name="bold"
 	 */
     public boolean isBold()
     {
@@ -129,28 +126,10 @@ public class SyntaxStyle
     }
 
     // private members
-    /**
-	 * @uml.property  name="color"
-	 */
     private Color color;
-    /**
-	 * @uml.property  name="italic"
-	 */
     private boolean italic;
-    /**
-	 * @uml.property  name="bold"
-	 */
     private boolean bold;
-    /**
-	 * @uml.property  name="lastFont"
-	 */
     private Font lastFont;
-    /**
-	 * @uml.property  name="lastStyledFont"
-	 */
     private Font lastStyledFont;
-    /**
-	 * @uml.property  name="fontMetrics"
-	 */
     private FontMetrics fontMetrics;
 }

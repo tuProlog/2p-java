@@ -11,25 +11,9 @@ import alice.tuprologx.pj.engine.*;
  */
 public class PrologMetaField {
     
-    /**
-	 * @uml.property  name="_theField"
-	 * @uml.associationEnd  qualifier="o:alice.tuprologx.pj.engine.PrologObject alice.tuprologx.pj.model.Term"
-	 */
     private Field _theField;
-    /**
-	 * @uml.property  name="_enclosing"
-	 * @uml.associationEnd  multiplicity="(1 1)" inverse="_fields:alice.tuprologx.pj.meta.PrologMetaClass"
-	 */
     private PrologMetaClass _enclosing;
-    /**
-	 * @uml.property  name="_annotation"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private PrologField _annotation;
-    /**
-	 * @uml.property  name="_template"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
     private Theory _template;
     
     /** Creates a new instance of MetaPrologClass */
