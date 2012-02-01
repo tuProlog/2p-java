@@ -170,8 +170,8 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
     private JLabel createLabel(Object library)
     {
         String libraryClassname = library.toString();
-        String libraryName = libraryClassname.substring(libraryClassname.lastIndexOf('.') + 1, libraryClassname.length());
-        return new JLabel(libraryName);
+        //String libraryName = libraryClassname.substring(libraryClassname.lastIndexOf('.') + 1, libraryClassname.length());
+        return new JLabel(libraryClassname);
     }
 
     /**

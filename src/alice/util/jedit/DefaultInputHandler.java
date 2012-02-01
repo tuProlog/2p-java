@@ -23,12 +23,16 @@ import java.util.StringTokenizer;
 @SuppressWarnings("unchecked")
 public class DefaultInputHandler extends InputHandler
 {
+	private boolean isMacOSX;
     /**
      * Creates a new input handler with no key bindings defined.
      */
     public DefaultInputHandler()
     {
         bindings = currentBindings = new Hashtable<KeyStroke, Object>();
+        //checks if the os is macosx
+        String os = System.getProperty("os.name").toLowerCase();
+        isMacOSX = "mac os x".equals(os);
     }
 
     /**
@@ -76,9 +80,19 @@ public class DefaultInputHandler extends InputHandler
 
         addKeyBinding("C+ENTER",REPEAT);
 
-                addKeyBinding("C+C",COPY);
-                addKeyBinding("C+V",PASTE);
-                addKeyBinding("C+X",CUT);
+        if(isMacOSX)
+        {
+        	//mac osx bindings, they use the Meta key(cmd)
+        	addKeyBinding("M+C",COPY);
+        	addKeyBinding("M+V",PASTE);
+        	addKeyBinding("M+X",CUT);
+        }
+        else
+        {
+        	addKeyBinding("C+C",COPY);
+        	addKeyBinding("C+V",PASTE);
+        	addKeyBinding("C+X",CUT);
+        }
 
     }
 
@@ -223,8 +237,16 @@ public class DefaultInputHandler extends InputHandler
     {
         int modifiers = evt.getModifiers();
         char c = evt.getKeyChar();
-        if(c != KeyEvent.CHAR_UNDEFINED &&
-            (modifiers & KeyEvent.ALT_MASK) == 0)
+        /*
+         * Previous implementation:
+         * if(c != KeyEvent.CHAR_UNDEFINED && (modifiers & KeyEvent.ALT_MASK) == 0)
+         */
+        if(c != KeyEvent.CHAR_UNDEFINED 
+        		&& ( !isMacOSX && (modifiers & KeyEvent.ALT_MASK) == 0 ) 
+        		//this is used when not on osx
+        		|| ( isMacOSX && (modifiers & KeyEvent.META_MASK) == 0 ) 
+        		//this is needed on osx to filter characters when using the meta key
+        	)
         {
             if(c >= 0x20 && c != 0x7f)
             {
@@ -350,4 +372,5 @@ public class DefaultInputHandler extends InputHandler
     {
         bindings = currentBindings = copy.bindings;
     }
+
 }

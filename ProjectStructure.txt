@@ -1,0 +1,19 @@
+Structure of the project:
+2p
+|---ant					Ant tasks and properties file
+|---build					
+	|---archives		Jar files of the application
+		|---net			.NET files of the application (exe, libs, test)
+	|---classes			Application’s .class files
+	|---reports			Reports of the tests
+		|---fit
+		|---unit
+	|---tests			Tests’ .class files
+	|---release			Destination for task "11.release.bin". Folder and zip.
+|---doc					Documentation (guide + javadoc)
+|---lib					
+|---src
+|---test
+	|---fit
+	|---unit
+|---tmp					Temporary directory used during the compilation

@@ -91,7 +91,7 @@ public class PrologConfigFrame
         fontDimensionHandlingPanel.add(fontDimensionTextField);
         fontDimensionHandlingPanel.add(bInc);
         
-        JLabel selectDisplayModalityLabel = new JLabel(" Select the display modality for query Solve solutions:");ù
+        JLabel selectDisplayModalityLabel = new JLabel(" Select the display modality for query Solve solutions:");
         */
         /**/
         inColumnsRadioButton = new JRadioButton("Variables in columns");

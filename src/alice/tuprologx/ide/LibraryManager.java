@@ -112,7 +112,7 @@ public final class LibraryManager
         try
         {
         	lib = (Library) Class.forName(libraryClassname).newInstance();
-        	libraries.add(libraryClassname);
+        	libraries.add(lib.getName());
         }
         catch(Exception ex)
         {
