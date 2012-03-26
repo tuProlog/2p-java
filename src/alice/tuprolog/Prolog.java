@@ -34,7 +34,7 @@ import alice.tuprolog.interfaces.IProlog;
 public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
 	// 2P version
-	private static final String VERSION = "Development";
+	private static final String VERSION = "@version@";
 
 	/*  manager of current theory */
 	private TheoryManager theoryManager;

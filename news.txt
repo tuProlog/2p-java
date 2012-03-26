@@ -1,5 +1,0 @@
-Riassumo le modifiche:
-- TRO (Silvia Umiliacchi)
-- Rotellina mouse (Valerio Pipolo)
-- Shortcut mac os x per copia,taglia,incolla,...
-- Nuova struttura progetto + ant.

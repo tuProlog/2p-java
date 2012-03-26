@@ -42,7 +42,7 @@ set_prolog_flag(+flag, @nonvar)
   <tr>
     <td>check</td>
     <td>hasSolution</td>
-    <td>true</td>
+    <td>false</td>
     <td>Associates the value <var>fail</var> with the flag <var>unknown</var>.</td>
   </tr>
 </table>
@@ -160,13 +160,13 @@ current_prolog_flag(?flag, ?term)
   <tr>
     <td>check</td>
     <td>hasSolution</td>
-    <td>true</td>
+    <td>false</td>
     <td>Unifies <var>F</var> with one of the flags supported by the processor, and <var>V</var> with the value currently associated with the flag <var>F</var>.</td>
   </tr>
   <tr>
     <td>check</td>
     <td>hasAnotherSolution</td>
-    <td>true</td>
+    <td>false</td>
     <td>On re-execution, successively unifies <var>F</var> and <var>V</var> with each other flag supported by the processor and its associated value.</td>
   </tr>
 </table>

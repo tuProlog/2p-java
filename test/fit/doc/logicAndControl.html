@@ -13,11 +13,11 @@
 
 <h2>1. <code>\+/1</code> (not provable)</h2>
 
-<p><code>'\\+'(Term)</code> is true iff <code>call(Term)</code> is false.</p>
+<p><code>'\+'(Term)</code> is true iff <code>call(Term)</code> is false.</p>
 
 <p>Templates and modes for the predicate are as follows:</p>
 <pre>
-'\\+'(@callable_term)
+'\+'(@callable_term)
 </pre>
 
 <p>Note that <code>\+</code> is a predefined operator.</p>
@@ -34,7 +34,7 @@
     <td>goal</td><td>success()</td>
   </tr>
   <tr>
-    <td>'\\+'(true).</td>
+    <td>'\+'(true).</td>
     <td>false</td>
   </tr>
   <tr>
@@ -42,16 +42,16 @@
     <td>false</td>
   </tr>
   <tr>
-    <td>'\\+'((!, false)).</td>
+    <td>'\+'((!, false)).</td>
     <td>true</td>
   </tr>
   <tr>
-    <td>'\\+'(4 = 5).</td>
+    <td>'\+'(4 = 5).</td>
     <td>true</td>
   </tr>
   <tr>
-    <td>\+(X = f(X)).</td>
-    <td></td>
+    <td>'\+'(X = f(X)).</td>
+    <td>true</td>
   </tr>
 </table>
 
@@ -137,7 +137,7 @@
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>'\\+'(X).</td>
+    <td>'\+'(X).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -187,7 +187,7 @@ once(+callable_term)
   </tr>
   <tr>
     <td>once(X = f(X)).</td>
-    <td></td>
+    <td>flase</td>
   </tr>
 </table>
 

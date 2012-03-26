@@ -24,6 +24,7 @@ public class TuPrologTestSuite {
 		suite.addTestSuite(ParserTestCase.class);
 		suite.addTestSuite(SpyEventTestCase.class);
 		suite.addTestSuite(VarTestCase.class);
+		suite.addTestSuite(TestVarIsEqual.class);
 		return suite;
 	}
 

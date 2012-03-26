@@ -5,7 +5,8 @@
 	<taskdef name="fit" classname="com.cmdev.fit.ant.FitTask">
 		<classpath>
 			<fileset dir="lib">
-				<include name="*.jar"/>
+				<include name="fit.jar"/>
+				<include name="antfit.jar"/> 
 			</fileset>
 		</classpath>
 	</taskdef>
@@ -22,6 +23,131 @@
 	      resource="org/tigris/subversion/svnant/svnantlib.xml" 
 	      classpathref="path.svnant"	
 	/>
+	
+	
+	<macrodef name="build">
+	    <attribute name="debug"/>
+		<attribute name="optimize"/>
+	    <sequential>
+	    	
+	    	<echo>Building...</echo>
+	    	
+	    	<delete includeemptydirs="true">
+				<fileset dir="${build.classes.dir}" includes="**/*"/>
+			</delete>
+			
+	    	<!-- Set the version in file Prolog.java from the version specified in file environment.properties -->
+			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="@version@" value="${project.version}"/>
+			
+			<javac destdir="${build.classes.dir}" debug="@{debug}"
+			deprecation="false" optimize="@{optimize}" failonerror="true">
+	            <src path="${src.dir}"/>
+	            <classpath refid="ant-classpath"/>
+	        </javac>
+			
+			<copy todir="${build.classes.dir}/alice/tuprologx/ide/img">
+				<fileset dir="${src.dir}/alice/tuprologx/ide/img"/>
+			</copy>
+			
+	    	<!-- Set the keyword @version@ back into file Prolog.java so no modification is seen from subversion -->
+			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="${project.version}" value="@version@"/>	
+	    	
+	    </sequential>
+	</macrodef>
+	
+	<macrodef name="build-tests">
+		    <attribute name="debug"/>
+			<attribute name="optimize"/>
+		    <sequential>
+		    	
+		    	<echo>Building tests...</echo>
+		    	
+		    	<delete includeemptydirs="true">
+    				<fileset dir="${build.tests.dir}" includes="**/*"/>
+    			</delete>
+    			
+    			<mkdir dir="${build.tests.dir}"/>
+    			<mkdir dir="${build.tests.dir}/unit"/>
+    			<mkdir dir="${build.tests.dir}/fixtures"/>
+    			
+    			<javac destdir="${build.tests.dir}/unit" debug="@{debug}" 
+    				deprecation="false" optimize="@{optimize}" failonerror="true">
+    	            <src path="${test.dir}/unit"/>
+    	            <classpath refid="ant-classpath"/>
+    	        	<classpath location="${build.classes.dir}"/>
+    	        </javac>
+    			
+    			<javac destdir="${build.tests.dir}/fixtures" debug="@{debug}"
+    				deprecation="false" optimize="@{optimize}" failonerror="true">
+    		        <src path="${test.dir}/fit/fixtures"/>
+    		        <classpath refid="ant-classpath"/>
+    		    	<classpath location="${build.classes.dir}"/>
+    			</javac>
+		    	
+	 		</sequential>
+	</macrodef>
+	
+	
+	<macrodef name="package">
+		<sequential>
+			
+			<delete includeemptydirs="true">
+	    		<fileset dir="${build.archives.dir}" includes="**/*"/>
+	    	</delete>
+	    	
+	    	<jar destfile="${build.archives.dir}/2p.jar" basedir="${build.classes.dir}">
+	    	    <manifest>
+	    	      	<!-- Who is building this jar? -->
+	    	      	<attribute name="Built-By" value="${user.name}"/>
+	    	      	<!-- Information about the program itself -->
+	    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
+	    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
+	    	      	<attribute name="Implementation-Version" value="${project.version}"/>
+	    	      	<!-- details -->
+	    	   		<attribute name="Main-Class" value="alice.tuprologx.ide.GUILauncher"/>
+	    	    </manifest>
+	    	  </jar>
+	    	
+	    	<jar destfile="${build.archives.dir}/tuprolog.jar" 	basedir="${build.classes.dir}" 
+	    														includes="alice/tuprolog/**, alice/util/**"
+	    	       												excludes="alice/tuprologx/**, alice/util/jedit/**">
+	    	    <manifest>
+	    	      	<!-- Who is building this jar? -->
+	    	      	<attribute name="Built-By" value="${user.name}"/>
+	    	      	<!-- Information about the program itself -->
+	    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
+	    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
+	    	      	<attribute name="Implementation-Version" value="${project.version}"/>
+	    	      	<!-- details -->
+	    	    	
+	    	    </manifest>
+	    	 </jar>
+	    	
+	    	<jar destfile="${build.tests.dir}/unit-tests.jar" basedir="${build.tests.dir}/unit">
+		    	<manifest>
+			      	<!-- Who is building this jar? -->
+			      	<attribute name="Built-By" value="${user.name}"/>
+			      	<!-- Information about the program itself -->
+			      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
+			      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
+			      	<attribute name="Implementation-Version" value="${project.version}"/>
+			    </manifest>
+		 	</jar>
+	    	
+	    	<jar destfile="${build.tests.dir}/fixtures.jar" basedir="${build.tests.dir}/fixtures">
+		    	<manifest>
+			      	<!-- Who is building this jar? -->
+			      	<attribute name="Built-By" value="${user.name}"/>
+			      	<!-- Information about the program itself -->
+			      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
+			      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
+			      	<attribute name="Implementation-Version" value="${project.version}"/>
+			    </manifest>
+	    	</jar>
+	    	
+	    	<echo>Look directories ${build.archives.dir} and ${build.tests.dir}</echo>
+		</sequential>
+	</macrodef>
 	
 	<!-- ================ -->
 	<!-- Properties setup -->
@@ -115,45 +241,11 @@
 	</target>
     
 	<target name="05.build" depends="01.set.classpath, 04.prepare" description="Compile main source tree java files">
-		
-		<delete includeemptydirs="true">
-			<fileset dir="${build.classes.dir}" includes="**/*"/>
-		</delete>
-		
-		<javac destdir="${build.classes.dir}" debug="true"
-		deprecation="false" optimize="false" failonerror="true">
-            <src path="${src.dir}"/>
-            <classpath refid="ant-classpath"/>
-        </javac>
-		
-		<copy todir="${build.classes.dir}/alice/tuprologx/ide/img">
-			<fileset dir="${src.dir}/alice/tuprologx/ide/img"/>
-		</copy>
+		<build debug="true" optimize="false"/>
 	</target>
 
 	<target name="05.build.tests" depends="05.build" description="Compile test java files">
-		
-		<delete includeemptydirs="true">
-			<fileset dir="${build.tests.dir}" includes="**/*"/>
-		</delete>
-		
-		<mkdir dir="${build.tests.dir}"/>
-		<mkdir dir="${build.tests.dir}/unit"/>
-		<mkdir dir="${build.tests.dir}/fixtures"/>
-		
-		<javac destdir="${build.tests.dir}/unit" 
-			deprecation="false" optimize="false" failonerror="true">
-            <src path="${test.dir}/unit"/>
-            <classpath refid="ant-classpath"/>
-        	<classpath location="${build.classes.dir}"/>
-        </javac>
-		
-		<javac destdir="${build.tests.dir}/fixtures" 
-			deprecation="false" optimize="false" failonerror="true">
-	        <src path="${test.dir}/fit/fixtures"/>
-	        <classpath refid="ant-classpath"/>
-	    	<classpath location="${build.classes.dir}"/>
-		</javac>
+		<build-tests debug="true" optimize="false"/>
     </target>
 
 	<target name="06.unit.test" depends="05.build.tests">
@@ -195,10 +287,7 @@
 			<classpath path="${build.tests.dir}/fixtures"/>
 		
 			<fileset dir="${test.dir}/fit/doc">
-				<exclude name="isoAcceptanceTests.html"/>
-				<exclude name="termCreationAndDecomposition.html"/>
-				<exclude name="atomicTermProcessing.html"/> 
-		    	<include name="*.html"/>
+				<include name="AcceptanceTests.html"/> 
 		    </fileset>
 			
 		</fit>
@@ -206,159 +295,22 @@
 		<echo>Look directory ${build.fit.reports.dir}</echo>
 	</target>
     
-    <target name="08.package" depends="01.set.classpath, 04.prepare, 05.build.tests" description="Create runnable Jar" >
-    	<!--
-    	<input
-    		message="tuProlog version (n.n.n):"
-    		addproperty="version"
-    	/>
-    	-->
+    <target name="08.package" depends="01.set.classpath, 04.prepare" description="Create runnable Jar" >
+    
+    	<build debug="false" optimize="true"/>
+    	<build-tests debug="false" optimize="true"/>
     	
-    	<delete includeemptydirs="true">
-    		<fileset dir="${build.archives.dir}" includes="**/*"/>
-    	</delete>
-    	<mkdir dir="${build.archives.dir}/tmp"/>
+    	<package/>
     	
-   		<javac destdir="${build.archives.dir}/tmp" debug="false" deprecation="false" 
-   				optimize="true" failonerror="true">
-    		<src path="${src.dir}"/>
-    	   	<classpath refid="ant-classpath"/>
-    	</javac>
-    	
-    	<copy todir="${build.archives.dir}/tmp/alice/tuprologx/ide/img">
-    		<fileset dir="${src.dir}/alice/tuprologx/ide/img"/>
-    	</copy>
-    	
-    	<jar destfile="${build.archives.dir}/2p.jar" basedir="${build.archives.dir}/tmp">
-    	    <manifest>
-    	      	<!-- Who is building this jar? -->
-    	      	<attribute name="Built-By" value="${user.name}"/>
-    	      	<!-- Information about the program itself -->
-    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-    	      	<attribute name="Implementation-Version" value="${project.version}"/>
-    	      	<!-- details -->
-    	   		<attribute name="Main-Class" value="alice.tuprologx.ide.GUILauncher"/>
-    	    </manifest>
-    	  </jar>
-    	
-    	<jar destfile="${build.archives.dir}/tuprolog.jar" 	basedir="${build.archives.dir}/tmp" 
-    														includes="alice/tuprolog/**, alice/util/**"
-    	       												excludes="alice/tuprologx/**, alice/util/jedit/**">
-    	    	    <manifest>
-    	    	      	<!-- Who is building this jar? -->
-    	    	      	<attribute name="Built-By" value="${user.name}"/>
-    	    	      	<!-- Information about the program itself -->
-    	    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-    	    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-    	    	      	<attribute name="Implementation-Version" value="${project.version}"/>
-    	    	      	<!-- details -->
-    	    	    	
-    	    	    </manifest>
-    	 </jar>
-    	
-    	<jar destfile="${build.tests.dir}/unit-tests.jar" basedir="${build.tests.dir}/unit">
-	    	<manifest>
-		      	<!-- Who is building this jar? -->
-		      	<attribute name="Built-By" value="${user.name}"/>
-		      	<!-- Information about the program itself -->
-		      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-		      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-		      	<attribute name="Implementation-Version" value="${project.version}"/>
-		    </manifest>
-	 	</jar>
-    	
-    	<jar destfile="${build.tests.dir}/fixtures.jar" basedir="${build.tests.dir}/fixtures">
-	    	<manifest>
-		      	<!-- Who is building this jar? -->
-		      	<attribute name="Built-By" value="${user.name}"/>
-		      	<!-- Information about the program itself -->
-		      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-		      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-		      	<attribute name="Implementation-Version" value="${project.version}"/>
-		    </manifest>
-    	</jar>
-    	
-    	<delete dir="${build.archives.dir}/tmp"/>
-    	
-    	<echo>Look directories ${build.archives.dir} and ${build.tests.dir}</echo>
     </target>
 	
-	<target name="08.package.debug" depends="01.set.classpath, 04.prepare, 05.build.tests" description="Create runnable Jar" >
-    	<!--
-    	<input
-    		message="tuProlog version (n.n.n):"
-    		addproperty="version"
-    	/>
-    	-->
-		<delete includeemptydirs="true">
-			<fileset dir="${build.archives.dir}" includes="**/*"/>
-		</delete>
-		<mkdir dir="${build.archives.dir}/tmp"/>
+	<target name="08.package.debug" depends="01.set.classpath, 04.prepare" description="Create runnable Jar" >
+    
+		<build debug="true" optimize="false"/>
+		<build-tests debug="true" optimize="false"/>
     	
-   		<javac destdir="${build.archives.dir}/tmp" debug="true" deprecation="false" 
-   				optimize="false" failonerror="true">
-    		<src path="${src.dir}"/>
-    	   	<classpath refid="ant-classpath"/>
-    	</javac>
-    	
-    	<copy todir="${build.archives.dir}/tmp/alice/tuprologx/ide/img">
-    		<fileset dir="${src.dir}/alice/tuprologx/ide/img"/>
-    	</copy>
-    	
-    	<jar destfile="${build.archives.dir}/2p.jar" basedir="${build.archives.dir}/tmp">
-    	    <manifest>
-    	      	<!-- Who is building this jar? -->
-    	      	<attribute name="Built-By" value="${user.name}"/>
-    	      	<!-- Information about the program itself -->
-    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-    	      	<attribute name="Implementation-Version" value="${project.version}"/>
-    	      	<!-- details -->
-    	   		<attribute name="Main-Class" value="alice.tuprologx.ide.GUILauncher"/>
-    	    </manifest>
-    	  </jar>
-    	
-    	<jar destfile="${build.archives.dir}/tuprolog.jar" 	basedir="${build.archives.dir}/tmp" 
-    														includes="alice/tuprolog/**, alice/util/**"
-    	       												excludes="alice/tuprologx/**, alice/util/jedit/**">
-		    <manifest>
-		      	<!-- Who is building this jar? -->
-		      	<attribute name="Built-By" value="${user.name}"/>
-		      	<!-- Information about the program itself -->
-		      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-		      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-		      	<attribute name="Implementation-Version" value="${project.version}"/>
-		      	<!-- details -->
-
-		    </manifest>
-    	 </jar>
-    	
-    	<jar destfile="${build.tests.dir}/unit-tests.jar" basedir="${build.tests.dir}/unit">
-	    	<manifest>
-		      	<!-- Who is building this jar? -->
-		      	<attribute name="Built-By" value="${user.name}"/>
-		      	<!-- Information about the program itself -->
-		      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-		      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-		      	<attribute name="Implementation-Version" value="${project.version}"/>
-		    </manifest>
-	 	</jar>
-    	
-    	<jar destfile="${build.tests.dir}/fixtures.jar" basedir="${build.tests.dir}/fixtures">
-	    	<manifest>
-		      	<!-- Who is building this jar? -->
-		      	<attribute name="Built-By" value="${user.name}"/>
-		      	<!-- Information about the program itself -->
-		      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
-		      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-		      	<attribute name="Implementation-Version" value="${project.version}"/>
-		    </manifest>
-    	</jar>
-    	
-    	<delete dir="${build.archives.dir}/tmp"/>
+		<package/>
 		
-		<echo>Look directories ${build.archives.dir} and ${build.tests.dir}</echo>
 	 </target>
 	
 	 <target name="09.build.NET" depends="08.package" description="Build.NET files">
@@ -416,6 +368,7 @@
  		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
 	 				<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.SwingAWT.dll" />
 	 				<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Tools.dll" />
+	 				<arg value="-debug"/>
  		            <arg value="-target:library" />
  		            <arg value="-compressresources" />
  		            <arg value="-out:${build.archives.net.dir}/archives/javassist.dll" />
@@ -431,6 +384,8 @@
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Misc.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.SwingAWT.dll" />
 	            <arg value="-reference:${build.archives.net.dir}/archives/javassist.dll" />
+				<arg value="-debug"/>
+		 		<arg value="-classloader:ikvm.runtime.ClassPathAssemblyClassLoader"/>
 	            <arg value="-target:winexe" />
 	            <arg value="-compressresources" />
 	            <arg value="-version:${project.version}" />
@@ -590,7 +545,7 @@
 			addproperty="project.version"
 		/>
 		<input
-			message="Password for ${username}:"
+			message="You are tagging the project with version ${project.version}, if it is OK insert password for ${username}:"
 			addproperty="password"
 		/>
 		

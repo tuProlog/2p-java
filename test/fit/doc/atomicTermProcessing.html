@@ -244,13 +244,32 @@ atom_concat(+atom, +atom, -atom)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>'hello world'</td>
+    <td>'helloworld'</td>
   </tr>
-  
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>atom_concat(T, 'world', 'small world').</td>
+    <td>atom_concat('small', T, 'smallworld').</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>hasSolution</td>
+    <td>true</td>
+  </tr>
+  <tr>
+    <td>enter</td>
+    <td>variable</td>
+    <td>T</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>binding</td>
+    <td>'world'</td>
+  </tr>
+  <tr>
+    <td>enter</td>
+    <td>query</td>
+    <td>atom_concat(T, 'world', 'smallworld').</td>
   </tr>
   <tr>
     <td>check</td>
@@ -1225,7 +1244,7 @@ atom_codes(-atom, +character_code_list)
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>atom_chars('''', L).</td>
+    <td>atom_codes('''', L).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -1458,7 +1477,7 @@ char_code(-character, +character_code)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td></td>
+    <td>'£'</td>
   </tr>
 </table>
 
@@ -1639,7 +1658,7 @@ number_chars(-number, +character_list)
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>number_chars(A, ['\n', ' ', '3']).</td>
+    <td>number_chars(A, ['\t','\n', ' ', '3']).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -1681,7 +1700,7 @@ number_chars(-number, +character_list)
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>number_chars(A, ['0', '''', a]).</td>
+    <td>number_chars(A, ['0', '''''', a]).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -1751,7 +1770,52 @@ number_chars(-number, +character_list)
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>number_chars(A, ['3', ' ']).</td>
+    <td>number_chars(A, ['\t','3', 'g',' ']).</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>hasSolution</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>exception</td>
+    <td>syntax_error</td>
+  </tr>
+   <tr>
+    <td>enter</td>
+    <td>query</td>
+    <td>number_chars(A, ['\t','3', 'g','4']).</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>hasSolution</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>exception</td>
+    <td>syntax_error</td>
+  </tr>
+   <tr>
+    <td>enter</td>
+    <td>query</td>
+    <td>number_chars(A, ['\t','3', '4','g', '5']).</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>hasSolution</td>
+    <td>false</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>exception</td>
+    <td>syntax_error</td>
+  </tr>
+   <tr>
+    <td>enter</td>
+    <td>query</td>
+    <td>number_chars(A, ['\t', '3', '5', '-', '6']).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -1924,7 +1988,7 @@ number_codes(-number, +character_code_list)
   <tr>
     <td>enter</td>
     <td>query</td>
-    <td>number_codes(A, [0'0, 0''', 0'a]).</td>
+    <td>number_codes(A, [0'0, 0''''', 0'a]).</td>
   </tr>
   <tr>
     <td>check</td>

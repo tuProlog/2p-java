@@ -189,7 +189,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
             Iterator<Var> it = bindings.iterator();
             while(it.hasNext()) {
                 Var v = (Var) it.next();
-                if (v != null && !v.isAnonymous() && v.isBound() &&
+                if (v != null && !v.isAnonymous() && v.isBound() && 
                         (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
                     st.append(v);
                     st.append("  ");

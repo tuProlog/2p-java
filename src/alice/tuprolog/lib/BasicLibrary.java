@@ -248,7 +248,7 @@ public class BasicLibrary extends Library {
     }
 
     public boolean integer_1(Term t) {
-        if (!(t instanceof Number))
+        if (!(t.getTerm()  instanceof Number))
             return false;
         alice.tuprolog.Number n = (alice.tuprolog.Number) t.getTerm();
         return (n.isInteger());
@@ -338,7 +338,7 @@ public class BasicLibrary extends Library {
         alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
         alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
         if (val0n.isInteger() && val1n.isInteger()) {
-            // return (val0n.intValue() == val1n.intValue()) ? true : false;
+            //return (val0n.intValue() == val1n.intValue()) ? true : false;
             // by ED: note that this would work also with intValue, even with Long args,
             // because in that case both values would be wrong, but 'equally wrong' :)
             // However, it is much better to always operate consistently on long values
@@ -781,8 +781,10 @@ public class BasicLibrary extends Library {
     public boolean text_term_2(Term arg0, Term arg1) {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        System.out.println(arg0);
-        System.out.println(arg1);
+        /*System.out.println(arg0);
+        System.out.println(arg1);*/
+        getEngine().stdOutput(arg0.toString() + 
+        "\n" + arg1.toString());
         if (!arg0.isGround()) {
             return unify(arg0, new Struct(arg1.toString()));
         } else {
@@ -826,12 +828,8 @@ public class BasicLibrary extends Library {
             String st = null;
             if (n0.isInteger()) {
                 st = new java.lang.Integer(n0.intValue()).toString();
-            } /*
-             * else if (arg0.isLong()){ st=new Long(arg0.getLong()).toString();
-             * } else if (arg0.isFloat()){ st=new
-             * Float(arg0.getFloat()).toString(); } else if (arg0.isDouble()){
-             * st=new Double(arg0.doubleValue()).toString(); }
-             */else {
+            } 
+            else {
                 st = new java.lang.Double(n0.doubleValue()).toString();
             }
             return (unify(arg1, new Struct(st)));
@@ -841,22 +839,107 @@ public class BasicLibrary extends Library {
                         "atom", arg1);
             }
             String st = ((Struct) arg1).getName();
-            try {
-                if (st.startsWith("'") && st.endsWith("'")) {
-                    st = st.substring(1, st.length() - 1);
-                }
-            } catch (Exception ex) {
+            String st2="";
+            for(int i=0; i<st.length(); i++)
+            {
+            	st2+=st.charAt(i);
+            	
+            	if (st.charAt(0)=='0' && st.charAt(1)==39 && st.charAt(2)==39 && st.length()==4)
+            	{
+            		String sti=""+st.charAt(3);
+            		byte[] b= sti.getBytes();
+            		st2=""+b[0];
+            	}
+            	if (st.charAt(0)=='0' && st.charAt(1)=='x' && st.charAt(2)>='a' && st.charAt(2)<='f' && st.length()==3)
+            	{
+            		String sti=""+st.charAt(2);
+            		int dec=java.lang.Integer.parseInt(sti, 16);
+            		st2=""+dec;
+            	}
             }
+            boolean before=true;
+            boolean after=false;
+            boolean between=false;
+            int numBefore=0;
+            int numAfter=0;
+            int numBetween=0;
+            String st3=null;
+            String iBetween="";
+            for(int i=0; i<st2.length(); i++)
+            {
+            	if((st2.charAt(i)<'0' || st2.charAt(i)>'9') && before) // find non number at first
+            		numBefore++;
+            	
+            	between=false;
+            	if(st2.charAt(i)>='0' && st2.charAt(i)<='9') //found a number
+            	{
+            		int k=0;
+            		for(int j=i+1; j<st2.length(); j++) //into the rest of the string
+            		{
+            			if(st2.charAt(j)>='0' && st2.charAt(j)<='9' && j-i>1) // control if there is another numbers
+            			{
+            				k+=i+1;
+            				numBetween+=2; 
+            				iBetween=""+k+j;
+            				i+=j;
+            				j=st2.length();
+            				between=true;
+            			}
+            			else if(st2.charAt(j)>='0' && st2.charAt(j)<='9' && j-i==1)
+            				k++;
+            		}
+            		
+            		if (!between)
+            		{
+            			before=false;
+            			after=true;
+            		}
+            		else
+            			before=false;
+            	}
+            	
+            	if((st2.charAt(i)<'0' || st2.charAt(i)>'9') && after)
+            		numAfter++;
+            }
+            for(int i=0; i<numBefore; i++)
+            {
+            	if (st2.charAt(i)==' ')
+            		st3=st2.substring(i+1, st2.length());
+            	else if (st2.charAt(i)=='\\' && (st2.charAt(i+1)=='n' || st2.charAt(i+1)=='t'))
+            	{
+            		st3=st2.substring(i+2, st2.length());
+            		i++;
+            	}
+            	else if (st2.charAt(i)!='-' && st2.charAt(i)!='+')
+            		st3="";
+            }
+            for(int i=0; i<numBetween; i+=2)
+            {
+            	for(int j=java.lang.Integer.parseInt(""+iBetween.charAt(i)); j<java.lang.Integer.parseInt(""+iBetween.charAt(i+1)); j++)
+            	{
+            		if (st2.charAt(j)!='.' && (st2.charAt(i)!='E' || (st2.charAt(i)!='E' && (st2.charAt(i+1)!='+' || st2.charAt(i+1)!='-'))) && (st2.charAt(i)!='e' || (st2.charAt(i)!='e' && (st2.charAt(i+1)!='+' || st2.charAt(i+1)!='-'))))
+            		{
+            			st3="";
+            		}
+            	}
+            }
+            for(int i=0; i<numAfter; i++)
+            {
+            	if ((st2.charAt(i)!='E' || (st2.charAt(i)!='E' && (st2.charAt(i+1)!='+' || st2.charAt(i+1)!='-'))) && st2.charAt(i)!='.' && (st2.charAt(i)!='e' || (st2.charAt(i)!='e' && (st2.charAt(i+1)!='+' || st2.charAt(i+1)!='-'))))
+            		st3="";
+            }
+            if (st3!=null)
+            	st2=st3;
             ;
             Term term = null;
             try {
-                term = new alice.tuprolog.Int(java.lang.Integer.parseInt(st));
+                term = new alice.tuprolog.Int(java.lang.Integer.parseInt(st2));
             } catch (Exception ex) {
             }
             if (term == null) {
                 try {
                     term = new alice.tuprolog.Double(java.lang.Double
-                            .parseDouble(((Struct) arg1).getName()));
+                            .parseDouble(st2));
                 } catch (Exception ex) {
                 }
             }
@@ -923,11 +1006,11 @@ public class BasicLibrary extends Library {
                 + ":- op(  200, xfy,  '^'). \n"
                 + ":- op(  200, fy,   '\\'). \n"
                 + ":- op(  200, fy,   '-'). \n"
-                +
+                
                 //
                 // flag management
                 //
-                "current_prolog_flag(Name,Value) :- catch(get_prolog_flag(Name,Value), Error, false),!.\n"
+                + "current_prolog_flag(Name,Value) :- catch(get_prolog_flag(Name,Value), Error, false),!.\n"
                 + "current_prolog_flag(Name,Value) :- flag_list(L), member(flag(Name,Value),L).\n"
                 +
                 //
@@ -952,13 +1035,12 @@ public class BasicLibrary extends Library {
                 "'=..'(T, [T]) :- atomic(T), !. \n                                                          "
                 + "'=..'(T,L)  :- compound(T),!, '$tolist'(T,L). \n                                                          "
                 + "'=..'(T,L)  :- nonvar(L), catch('$fromlist'(T,L),Error,false). \n                                                          "
+                
                 + "functor(Term, Name, Arity) :- atomic(Term), !, Name = Term, Arity = 0. \n"
                 + "functor(Term, Name, Arity) :- compound(Term), !, Term =.. [Name | Args], length(Args, Arity). \n"
                 + "functor(Term, Name, Arity) :- var(Term), atomic(Name), Arity == 0, !, Term = Name. \n"
-                //Original Line
-                //+ "functor(Term, Name, Arity) :- var(Term), atom(Name), I is Arity, integer(I), I > 0, newlist([], I, L), Term =.. [Name | L]. \n"
-                // integer() predicate remove due to recognition bug, I seems not to be a number even if it is.
-                + "functor(Term, Name, Arity) :- var(Term), atom(Name), I is Arity, I > 0, newlist([], I, L), !, Term =.. [Name | L]. \n"
+                + "functor(Term, Name, Arity) :- var(Term), atom(Name), integer(Arity), Arity > 0, current_prolog_flag(max_arity, Max), Arity=<Max, !, newlist([], Arity, L), Term =.. [Name | L]. \n"
+                
                 + "arg(N,C,T):- arg_guard(N,C,T), C =.. [_|Args], element(N,Args,T).\n"
                 + "clause(H, B) :- clause_guard(H,B), L = [], '$find'(H, L), copy_term(L, LC), member((':-'(H, B)), LC). \n"
                 +
@@ -979,7 +1061,14 @@ public class BasicLibrary extends Library {
                 + "A ; B :- A =.. ['->', C, T], !, ('$call'(C), !, '$call'(T) ; '$call'(B)). \n"
                 + "A ; B :- '$call'(A). \n"
                 + "A ; B :- '$call'(B). \n "
-                + "unify_with_occurs_check(X,Y):-X=Y.\n                                                                     "
+                
+                + "unify_with_occurs_check(X,Y):- "+ /*not_occurs_in(X,Y),*/"!,X=Y.\n" 
+                /*+ "not_occurs_in(X,Y) :- var(Y), X \\== Y.\n"
+                + "not_occurs_in(X,Y) :- nonvar(Y), constant(Y).\n"
+                + "not_occurs_in(X,Y) :- nonvar(Y), compound(Y), functor(Y,F,N), not_occurs_in(N,X,Y).\n"
+                + "not_occurs_in(N,X,Y) :-	N > 0, arg(N,Y,Arg), not_occurs_in(X,Arg), N1 is N-1, not_occurs_in(N1,X,Y).\n"
+                + "not_occurs_in(0,X,Y).\n"*/
+                
                 + "current_op(Pri,Type,Name):-get_operators_list(L),member(op(Pri,Type,Name),L).\n                          "
                 + "once(X) :- myonce(X).\n                                                                                  "
                 + "myonce(X):-X,!.\n                                                                                        "
@@ -990,11 +1079,11 @@ public class BasicLibrary extends Library {
                 +
                 // catch/3
                 "catch(Goal, Catcher, Handler) :- call(Goal).\n"
-                +
                 //
                 // All solutions predicates
                 //
-                "findall(Template, Goal, Instances) :- \n"
+               
+                + "findall(Template, Goal, Instances) :- \n"
                 + "all_solutions_predicates_guard(Template, Goal, Instances), \n"
                 + "L = [], \n"
                 + "'$findall0'(Template, Goal, L), \n"
@@ -1005,6 +1094,7 @@ public class BasicLibrary extends Library {
                 + "'$append'(CL, L), \n"
                 + "fail. \n"
                 + "'$findall0'(_, _, _). \n"
+                
                 + "variable_set(T, []) :- atomic(T), !. \n"
                 + "variable_set(T, [T]) :- var(T), !. \n"
                 + "variable_set([H | T], [SH | ST]) :- \n"
@@ -1042,6 +1132,7 @@ public class BasicLibrary extends Library {
                 + "'$wt_list'([], []). \n"
                 + "'$wt_list'([W + T | STail], [WW + T | WTTail]) :- copy_term(W, WW), '$wt_list'(STail, WTTail). \n"
                 + "'$s_next'(Witness, WT_List, S_Next) :- copy_term(Witness, W2), '$s_next0'(W2, WT_List, S_Next), !. \n"
+                
                 + "bagof(Template, Goal, Instances) :- \n"
                 + "all_solutions_predicates_guard(Template, Goal, Instances), \n"
                 + "free_variables_set(Goal, Template, Set), \n"
@@ -1058,6 +1149,7 @@ public class BasicLibrary extends Library {
                 + "'$wt_list'(S, WT_List), \n"
                 + "'$s_next'(Witness, WT_List, S_Next), \n"
                 + "'$bagof0'(Witness, S_Next, Instances). \n"
+                
                 + "setof(Template, Goal, Instances) :- \n"
                 + "all_solutions_predicates_guard(Template, Goal, Instances), \n"
                 + "bagof(Template, Goal, List), \n"

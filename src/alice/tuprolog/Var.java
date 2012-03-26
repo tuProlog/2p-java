@@ -483,7 +483,7 @@ public class Var extends Term {
         Term tt = getTerm();
         if(tt == this) {
             t = t.getTerm();
-            return (t instanceof Var && timestamp == ((Var)t).timestamp);
+            	return (t instanceof Var && timestamp == ((Var)t).timestamp );
         } else {
             return tt.isEqual(t);
         }
@@ -505,7 +505,7 @@ public class Var extends Term {
             }
         } else {
             if (tt == this) {
-                return ANY + hashCode();
+                return " " + ANY /*+ hashCode()*/;
             } else {
                 return tt.toString();
             }
@@ -529,7 +529,7 @@ public class Var extends Term {
             }
         } else {
             if (tt == this) {
-                return ANY + hashCode();
+                return " " + ANY /*+ hashCode()*/;
             } else {
                 return tt.toString();
             }

@@ -84,13 +84,18 @@
   <tr>
     <td>check</td>
     <td>value</td>
-    <td></td>
+    <td>-4</td>
   </tr>
   
   <tr>
     <td>enter</td>
     <td>evaluable</td>
     <td>'>>'(77, N).</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>value</td>
+    <td></td>
   </tr>
   <tr>
     <td>check</td>
@@ -102,6 +107,11 @@
     <td>enter</td>
     <td>evaluable</td>
     <td>'>>'(foo, 2).</td>
+  </tr>
+  <tr>
+    <td>check</td>
+    <td>value</td>
+    <td></td>
   </tr>
   <tr>
     <td>check</td>
@@ -173,7 +183,7 @@
   <tr>
     <td>check</td>
     <td>value</td>
-    <td></td>
+    <td>-64</td>
   </tr>
   
   <tr>
@@ -201,13 +211,13 @@
 
 <h2>3. <code>(/\)/2</code> (bitwise and)</h2>
 
-<p><code>'/\\'(B1, B2)</code> evaluates the expressions <var>B1</var> and <var>B2</var> with values <var>VB1</var> and <var>VB2</var> and has the value such that each bit is set iff each of the corresponding bits in <var>VB1</var> and <var>VB2</var> is set.</p>
+<p><code>'/\'(B1, B2)</code> evaluates the expressions <var>B1</var> and <var>B2</var> with values <var>VB1</var> and <var>VB2</var> and has the value such that each bit is set iff each of the corresponding bits in <var>VB1</var> and <var>VB2</var> is set.</p>
 
 <p>The value shall be implementation defined if <var>VB1</var> or <var>VB2</var> is negative.</p>
 
 <p>Templates and modes for the predicate are as follows:</p>
 <pre>
-'/\\'(int-exp, int-exp) = integer
+'/\'(int-exp, int-exp) = integer
 </pre>
 
 <p>Note that <code>/\</code> is an infix predefined operator.</p>
@@ -235,7 +245,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'/\\'(10, 12).</td>
+    <td>'/\'(10, 12).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -246,7 +256,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>/\(10, 12).</td>
+    <td>'/\'(10, 12).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -257,7 +267,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'/\\'(17 * 256 + 125, 255).</td>
+    <td>'/\'(17 * 256 + 125, 255).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -268,18 +278,18 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>/\(-10, 12).</td>
+    <td>'/\'(-10, 12).</td>
   </tr>
   <tr>
     <td>check</td>
     <td>value</td>
-    <td></td>
+    <td>4</td>
   </tr>
   
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'/\\'(77, N).</td>
+    <td>'/\'(77, N).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -290,7 +300,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'/\\'(foo, 2).</td>
+    <td>'/\'(foo, 2).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -301,13 +311,13 @@
 
 <h2>4. <code>(\/)/2</code> (bitwise or)</h2>
 
-<p><code>'\\/'(B1, B2)</code> evaluates the expressions <var>B1</var> and <var>B2</var> with values <var>VB1</var> and <var>VB2</var> and has the value such that each bit is set iff at least one of the corresponding bits in <var>VB1</var> and <var>VB2</var> is set.</p>
+<p><code>'\/'(B1, B2)</code> evaluates the expressions <var>B1</var> and <var>B2</var> with values <var>VB1</var> and <var>VB2</var> and has the value such that each bit is set iff at least one of the corresponding bits in <var>VB1</var> and <var>VB2</var> is set.</p>
 
 <p>The value shall be implementation defined if <var>VB1</var> or <var>VB2</var> is negative.</p>
 
 <p>Templates and modes for the predicate are as follows:</p>
 <pre>
-'\\/'(int-exp, int-exp) = integer
+'\/'(int-exp, int-exp) = integer
 </pre>
 
 <p>Note that <code>\/</code> is an infix predefined operator.</p>
@@ -335,7 +345,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\/'(10, 12).</td>
+    <td>'\/'(10, 12).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -346,7 +356,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>\/(10, 12).</td>
+    <td>'\/'(10, 12).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -357,7 +367,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\/'(125, 255).</td>
+    <td>'\/'(125, 255).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -368,18 +378,18 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>\/(-10, 12).</td>
+    <td>'\/'(-10, 12).</td>
   </tr>
   <tr>
     <td>check</td>
     <td>value</td>
-    <td></td>
+    <td>-2</td>
   </tr>
   
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\/'(77, N).</td>
+    <td>'\/'(77, N).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -390,7 +400,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\/'(foo, 2).</td>
+    <td>'\/'(foo, 2).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -401,13 +411,13 @@
 
 <h2>5. <code>(\)/1</code> (bitwise complement)</h2>
 
-<p><code>'\\'(B1)</code> evaluates the expression <var>B1</var> with value <var>VB1</var> and has the value such that each bit is set iff the corresponding bit in <var>VB1</var> is not set.</p>
+<p><code>'\'(B1)</code> evaluates the expression <var>B1</var> with value <var>VB1</var> and has the value such that each bit is set iff the corresponding bit in <var>VB1</var> is not set.</p>
 
 <p>The value shall be implementation defined.</p>
 
 <p>Templates and modes for the predicate are as follows:</p>
 <pre>
-'\\'(int-exp, int-exp) = integer
+'\'(int-exp, int-exp) = integer
 </pre>
 
 <p>Note that <code>\</code> is an prefix predefined operator.</p>
@@ -435,7 +445,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\'('\\'(10)).</td>
+    <td>'\'('\'(10)).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -462,13 +472,13 @@
   <tr>
     <td>check</td>
     <td>value</td>
-    <td></td>
+    <td>-11</td>
   </tr>
   
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\'(N).</td>
+    <td>'\'(N).</td>
   </tr>
   <tr>
     <td>check</td>
@@ -479,7 +489,7 @@
   <tr>
     <td>enter</td>
     <td>evaluable</td>
-    <td>'\\'(2.5).</td>
+    <td>'\'(2.5).</td>
   </tr>
   <tr>
     <td>check</td>

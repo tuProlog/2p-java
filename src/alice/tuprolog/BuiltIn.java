@@ -95,7 +95,22 @@ public class BuiltIn extends Library {
 
 	 public boolean asserta_1(Term arg0) throws PrologError {
 		 arg0 = arg0.getTerm();
-		 if (arg0 instanceof Struct) {
+		 if (arg0 instanceof Struct ) {
+			
+			 if (((Struct) arg0).getName().equals(":-"))
+			 {
+				 for(int i=0; i<(((Struct) arg0).toList().listSize())-1; i++)
+				 {
+					 Term argi=((Struct) arg0).getArg(i);
+					 if (!(argi instanceof Struct) )
+					 {
+						 if (argi instanceof Var)
+							 throw PrologError.instantiation_error(engineManager, 1);
+						 else
+							 throw PrologError.type_error(engineManager, 1, "clause", arg0); 
+					 }
+				 }
+			 }
 			 theoryManager.assertA((Struct) arg0, true, null, false);
 			 return true;
 		 }
@@ -108,6 +123,20 @@ public class BuiltIn extends Library {
 	 public boolean assertz_1(Term arg0) throws PrologError {
 		 arg0 = arg0.getTerm();
 		 if (arg0 instanceof Struct) {
+			 if (((Struct) arg0).getName().equals(":-"))
+			 {
+				 for(int i=0; i<(((Struct) arg0).toList().listSize())-1; i++)
+				 {
+					 Term argi=((Struct) arg0).getArg(i);
+					 if (!(argi instanceof Struct) )
+					 {
+						 if (argi instanceof Var)
+							 throw PrologError.instantiation_error(engineManager, 1);
+						 else
+							 throw PrologError.type_error(engineManager, 1, "clause", arg0); 
+					 }
+				 }
+			 }
 			 theoryManager.assertZ((Struct) arg0, true, null, false);
 			 return true;
 		 }

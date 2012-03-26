@@ -12,7 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-public class IsoAcceptanceFixture extends ColumnFixture {
+public class AcceptanceFixture extends ColumnFixture {
 
 	public String section;
 
@@ -80,22 +80,45 @@ public class IsoAcceptanceFixture extends ColumnFixture {
     public void wrong(Parse cell) {
         super.wrong(cell);
         if (footnote == null) {
-            // footnote = tables.footnote();
-            footnote = footnote(tables);
+            //footnote = tables.footnote();
+            footnote = footnote(tables, section);
             fileCell.addToBody(footnote);
+            printDetailedInfo(section, fixture.counts);
         }
+    }
+    
+    @Override
+    public void right(Parse cell) 
+    {
+    	super.right(cell);
+    	if (footnote == null) {
+            //footnote = tables.footnote();
+            footnote = footnote(tables, section);
+            fileCell.addToBody(footnote);
+            printDetailedInfo(section, fixture.counts);
+        }
+    }
+    
+    private void printDetailedInfo(String testName, Counts counts)
+    {
+    	String name = testName.substring(testName.indexOf(" ")).trim();
+    	String line1 = name + " results:";
+    	String line2 = counts.right + " right, " + counts.wrong + " wrong, " + counts.ignores + " ignored, " + counts.exceptions + " exceptions"; 
+    	System.out.println(line1);
+    	System.out.println("\t"+line2);
     }
 
     public static int footnoteFiles = 0;
-    private static String reportDir = "src/test/java/report/";
+    private static String reportDir = "build/reports/fit/";
 
-    public String footnote(Parse tables) {
+    public String footnote(Parse tables, String testName) {
+    	
         if (footnoteFiles >= 25) {
             return "[-]";
         } else {
 			int thisFootnote = ++footnoteFiles;
-			String footnoteDir = "footnotes/";
-            String html = reportDir + footnoteDir + thisFootnote + ".html";
+			String footnoteDir = "details/";
+            String html = reportDir + footnoteDir + testName + ".html";
             try {
 				File dir = new File(reportDir + footnoteDir);
 				dir.mkdir();
@@ -104,7 +127,7 @@ public class IsoAcceptanceFixture extends ColumnFixture {
                 PrintWriter output = new PrintWriter(new BufferedWriter(new FileWriter(file)));
                 tables.print(output);
                 output.close();
-                return " <a href=\"" + footnoteDir + thisFootnote + ".html" + "\">[" + thisFootnote + "]</a>";
+                return " <a href=\"" + footnoteDir + testName + ".html" + "\">[" + thisFootnote + "]</a>";
             } catch (IOException e) {
 				System.out.println(e.getMessage());
                 return "[!]";

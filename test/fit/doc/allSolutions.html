@@ -402,7 +402,7 @@ bagof(?term, +callable_term, ?list)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>[f(a, _), f(_, b)]</td>
+    <td>[f(a, _),f( _,b)]</td>
   </tr>
   
   <tr>
@@ -446,7 +446,7 @@ bagof(?term, +callable_term, ?list)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>[1, _, 2]</td>
+    <td>[1, _,2]</td>
   </tr>
   
   <tr>
@@ -572,7 +572,7 @@ bagof(?term, +callable_term, ?list)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>f(_)</td>
+    <td>f( _)</td>
   </tr>
   
   <tr>
@@ -921,7 +921,7 @@ setof(?term, +callable_term, ?list)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>[f(_, b), f(a, _)]</td>
+    <td>[f( _,b),f(a, _)]</td>
   </tr>
   
   <tr>
@@ -965,7 +965,7 @@ setof(?term, +callable_term, ?list)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>[_, 1, 2]</td>
+    <td>[ _,1,2]</td>
   </tr>
   
   <tr>
@@ -1236,7 +1236,7 @@ member(X, [_ | L]) :- member(X, L).
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>f(_)</td>
+    <td>f( _)</td>
   </tr>  
   
   <tr>

@@ -116,5 +116,5 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
 		Int culprit = (Int) info.getTerm("Culprit");
 		assertTrue(culprit.intValue() == 1);
 	}
-	
+
 }

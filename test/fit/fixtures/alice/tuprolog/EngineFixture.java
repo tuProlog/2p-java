@@ -90,7 +90,7 @@ public class EngineFixture extends Fixture {
     
     public Term binding() throws NoSolutionException, UnknownVarException {
         Term t = result.getVarValue(variable);
-		// t.resolveVariables();
+		//t.resolveTerm();
 		return t;
     }
     

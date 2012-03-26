@@ -127,7 +127,7 @@ functor(+nonvar, ?atomic, ?integer)
   <tr>
     <td>check</td>
     <td>binding</td>
-    <td>foo(_, _, _)</td>
+    <td>foo( _, _, _)</td>
   </tr>
 
   <tr>
@@ -392,7 +392,7 @@ arg(+integer, +compound_term, ?term)
   </tr>
   <tr>
     <td>arg(1, foo(X), u(X)).</td>
-    <td></td>
+    <td>false</td>
   </tr>
 </table>
 
@@ -592,7 +592,7 @@ arg(+integer, +compound_term, ?term)
   </tr>
   <tr>
     <td>'=..'(f(X), [f, u(X)]).</td>
-    <td></td>
+    <td>false</td>
   </tr>
 </table>
 
@@ -871,7 +871,7 @@ copy_term(?term, ?term)
   </tr>
   <tr>
     <td>copy_term(demoen(X, X), demoen(Y, f(Y))).</td>
-    <td></td>
+    <td>false</td>
   </tr>
 </table>
 
