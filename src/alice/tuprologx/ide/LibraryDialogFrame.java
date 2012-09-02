@@ -36,7 +36,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 
     public LibraryDialogFrame(LibraryManager libraryManager, JFrame mainWindow)
     {
-        super("Library Manager", mainWindow, 325, 275, true);
+        super("Library Manager", mainWindow, 395, 275, true);
         initComponents();
 
         this.libraryManager = libraryManager;
@@ -210,7 +210,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
            {
                removeLibrary(libraryClassname);
                pack();
-               setSize(325,getSize().height);
+               setSize(395,getSize().height);
            }
        });
        return remove;
@@ -249,7 +249,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
                 setStatusMessage("Ready.");
             }
             pack();
-            setSize(325,getSize().height);
+            setSize(395,getSize().height);
         }
         catch (ClassNotFoundException e)
         {
@@ -389,7 +389,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
                     addLibrary(libraries[i].toString());
                 }
                 pack();
-                setSize(325,getSize().height);
+                setSize(395,getSize().height);
             }
             setStatusMessage("Ready.");
         } catch (Exception e) {

@@ -2,13 +2,12 @@ package alice.tuprologx.ide;
 
 import javax.swing.*;
 
+
 import java.awt.*;
 import java.net.URL;
 
-public class AboutFrame
-    extends GenericFrame
+public class AboutFrame extends GenericFrame
 {
-    
     private static final long serialVersionUID = 1L;
 
     public AboutFrame(JFrame mainWindow)
@@ -23,8 +22,14 @@ public class AboutFrame
         JLabel icon=new JLabel();
         URL urlImage = getClass().getResource("img/tuProlog.gif");
         icon.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-        JLabel versionSystem=new JLabel(" tuProlog version " + alice.tuprolog.Prolog.getVersion());
-        JLabel versionIDE=new JLabel(" tuProlog IDE version 3.0");
+        
+        JLabel versionSystem=new JLabel(" tuProlog engine version " + alice.tuprolog.Prolog.getVersion());
+        
+        String platformMessage = alice.util.VersionInfo.getPlatform();
+        platformMessage += " platform version ";
+        platformMessage += alice.util.VersionInfo.getCompleteVersion();
+        JLabel versionIDE=new JLabel(platformMessage);
+        
         JLabel copyright=new JLabel(" tuProlog is (C) Copyright 2001-2011 aliCE team");
         JLabel deis=new JLabel(" DEIS, Universita' di Bologna, Italy.");
         JLabel url=new JLabel(" URL: http://tuprolog.alice.unibo.it");

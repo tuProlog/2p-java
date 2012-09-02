@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 	
-<project name="tuProlog build file" basedir=".." default="02.print.properties">
+<project name="tuProlog build file" basedir=".." default="help">
 
 	<taskdef name="fit" classname="com.cmdev.fit.ant.FitTask">
 		<classpath>
@@ -36,8 +36,10 @@
 				<fileset dir="${build.classes.dir}" includes="**/*"/>
 			</delete>
 			
-	    	<!-- Set the version in file Prolog.java from the version specified in file environment.properties -->
-			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="@version@" value="${project.version}"/>
+	    	<!-- Set the version in file Prolog.java from the version specified in file environment.properties 
+			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="@engine.version@" value="${engine.version}"/>
+	    	<replace file="${src.dir}/alice/util/JavaVersionInfo.java" token="@JavaSpecific.version@" value="${JavaSpecific.version}"/>
+	    	<replace file="${src.dir}/alice/util/NetVersionInfo.java" token="@NETSpecific.version@" value="${NETSpecific.version}"/> -->
 			
 			<javac destdir="${build.classes.dir}" debug="@{debug}"
 			deprecation="false" optimize="@{optimize}" failonerror="true">
@@ -49,8 +51,10 @@
 				<fileset dir="${src.dir}/alice/tuprologx/ide/img"/>
 			</copy>
 			
-	    	<!-- Set the keyword @version@ back into file Prolog.java so no modification is seen from subversion -->
-			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="${project.version}" value="@version@"/>	
+	    	<!-- Set the keyword @version@ back into file Prolog.java so no modification is seen from subversion 
+			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="${engine.version}" value="@engine.version@"/>	
+	    	<replace file="${src.dir}/alice/util/JavaVersionInfo.java" token="${JavaSpecific.version}" value="@JavaSpecific.version@"/>
+	    	<replace file="${src.dir}/alice/util/NetVersionInfo.java" token="${NETSpecific.version}" value="@NETSpecific.version@"/> -->
 	    	
 	    </sequential>
 	</macrodef>
@@ -102,7 +106,7 @@
 	    	      	<!-- Information about the program itself -->
 	    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
 	    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-	    	      	<attribute name="Implementation-Version" value="${project.version}"/>
+	    	      	<attribute name="Implementation-Version" value="${engine.version}.${JavaSpecific.version}"/>
 	    	      	<!-- details -->
 	    	   		<attribute name="Main-Class" value="alice.tuprologx.ide.GUILauncher"/>
 	    	    </manifest>
@@ -117,7 +121,7 @@
 	    	      	<!-- Information about the program itself -->
 	    	      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
 	    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-	    	      	<attribute name="Implementation-Version" value="${project.version}"/>
+	    	      	<attribute name="Implementation-Version" value="${engine.version}"/>
 	    	      	<!-- details -->
 	    	    	
 	    	    </manifest>
@@ -130,7 +134,7 @@
 			      	<!-- Information about the program itself -->
 			      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
 			      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-			      	<attribute name="Implementation-Version" value="${project.version}"/>
+			      	<attribute name="Implementation-Version" value="${engine.version}.${JavaSpecific.version}"/>
 			    </manifest>
 		 	</jar>
 	    	
@@ -141,7 +145,7 @@
 			      	<!-- Information about the program itself -->
 			      	<attribute name="Implementation-Vendor" value="tuProlog team"/>
 			      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
-			      	<attribute name="Implementation-Version" value="${project.version}"/>
+			      	<attribute name="Implementation-Version" value="${engine.version}.${JavaSpecific.version}"/>
 			    </manifest>
 	    	</jar>
 	    	
@@ -178,6 +182,47 @@
 		
 		<property name="lib.dir" value="lib"/>
 		<property name="tmp.dir" value="tmp"/>
+
+		
+		<loadfile srcfile="${src.dir}/alice/util/VersionInfo.java" property="engine.version">
+			<filterchain>
+		    	<linecontains>
+		        	<contains value="String ENGINE_VERSION"/>
+		        </linecontains>
+				<deletecharacters chars="\n\r"/>	<!-- Do not get a number with a new line at the end -->
+		        <tokenfilter>
+		        	<replaceregex pattern="[^0-9]+&quot;" replace=""/>
+		        	<replaceregex pattern="&quot;.*" replace=""/>
+		        </tokenfilter>
+		    </filterchain>
+		 </loadfile>
+		
+		<loadfile srcfile="${src.dir}/alice/util/VersionInfo.java" property="JavaSpecific.version">
+			<filterchain>
+		    	<linecontains>
+		        	<contains value="String JAVA_SPECIFIC_VERSION"/>
+		        </linecontains>
+				<deletecharacters chars="\n\r"/>	<!-- Do not get a number with a new line at the end -->
+		        <tokenfilter>
+		        	<replaceregex pattern="[^0-9]+&quot;" replace=""/>
+		        	<replaceregex pattern="&quot;.*" replace=""/>
+		        </tokenfilter>
+		    </filterchain>
+		 </loadfile>
+		
+		<loadfile srcfile="${src.dir}/alice/util/VersionInfo.java" property="NETSpecific.version">
+			<filterchain>
+		    	<linecontains>
+		        	<contains value="String NET_SPECIFIC_VERSION"/>
+		        </linecontains>
+				<deletecharacters chars="\n\r"/>	<!-- Do not get a number with a new line at the end -->
+		        <tokenfilter>
+		        	<replaceregex pattern="[^0-9]+&quot;" replace=""/>
+		        	<replaceregex pattern="&quot;.*" replace=""/>
+		        </tokenfilter>
+		    </filterchain>
+		 </loadfile>
+		
 	</target>
 
 	<target name="01.set.classpath" depends="00.init.properties" description="Sets up classpath properties for other tasks">
@@ -209,7 +254,9 @@
 		<echo message="{lib.dir} is '${lib.dir}'"/>
 		<echo message="{tmp.dir} is '${tmp.dir}'"/>
 		<echo message="{test.dir} is '${test.dir}'"/>
-		<echo message="{project.version} is '${project.version}'"/>
+		<echo message="{engine.version} is '${engine.version}'"/>
+		<echo message="{JavaSpecific.version} is '${JavaSpecific.version}'"/>
+		<echo message="{NETSpecific.version} is '${NETSpecific.version}'"/>
         <echo message="..................................."/>
 		<echo message="{java.home} is '${java.home}'"/>
         <echo message="..................................."/>
@@ -217,16 +264,64 @@
        	<echo message="{ikvmc} is '${ikvmc}'"/>
         <echo message=" "/>
 	</target>
+	
+	<target name="help" depends="00.init.properties">
+			<echo>The following targets are available with this build file:
+		
+			05.build     		compile classes
+								Destination: ${build.classes.dir}
+				
+			05.build.test		compile test classes
+								Destination: ${build.tests.dir}
+		
+			06.unit.test		run unit tests (junit) and save the report in xml format
+								Destination: ${build.unit.reports.dir}
+				
+			06.unit.test.report	run unit tests (junit) and save the report in html format
+								Destination: ${build.unit.reports.dir}
+		
+			07.fit.test   		run acceptance tests (FIT) and save the report in html format
+								Destination: ${build.fit.reports.dir}
+		
+			08.package        	create the application jar files
+								Destination: ${build.archives.dir}
+				
+			08.package.debug	create the application jar files with debug informations. 
+								(-g option in javac)
+								Destination: ${build.archives.dir}
+		
+			09.build.NET		compile the application in .NET using ikvm.NET. 
+								Set the path of the ikvm binaries in "ant/environment.properties" to use this target.
+								Destination: ${build.archives.net.dir}
+				
+			10.javadoc			generate the javadoc of the application
+								Destination: ${doc.dir}
+				
+			11.release.bin		generate the package of the application ready for the distribution.
+								The package contains the binaries of 2p (2p.jar and tuprolog.jar), the javadoc, 
+								the guide and the results of tests (unit and acceptance).
+								Destination: ${build.release.dir}
+			 
+			12.tag				Tag the working copy into the googlecode repository (http://code.google.com/p/tuprolog/).
+								Set the username and project version in "ant/environment.properties" to use this target.
+								Your password will be prompted.
+				
+			help       	 		print this help
+			</echo>
+	 </target>
+
 
 	<!-- ============= -->
 	<!-- Project tasks -->
 	<!-- ============= -->
 
+	<!--
 	<target name="03.clean" depends="00.init.properties" description="Creates project structure, if needed">
-        <!-- <delete dir="${build.dir}"/>
-        <delete dir="${tmp.dir}" includes="**"/> -->
+        <delete dir="${build.dir}"/>
+        <delete dir="${tmp.dir}" includes="**"/> 
 	</target>
-
+	-->
+	
 	<target name="04.prepare" description="Creates project structure, if needed">
         <mkdir dir="${src.dir}"/>
         <mkdir dir="${lib.dir}"/>
@@ -388,7 +483,7 @@
 		 		<arg value="-classloader:ikvm.runtime.ClassPathAssemblyClassLoader"/>
 	            <arg value="-target:winexe" />
 	            <arg value="-compressresources" />
-	            <arg value="-version:${project.version}" />
+	            <arg value="-version:${engine.version}.${NETSpecific.version}" />
 	            <arg value="-out:${build.archives.net.dir}/archives/2p.exe" />
 	            <arg value="${build.archives.dir}/2p.jar" />
 	        </exec>
@@ -500,52 +595,49 @@
 				<fileset dir="${build.release.dir}" includes="**/*"/>
 			</delete>
 			
-			<mkdir dir="${build.release.dir}/2p-${project.version}"/>
-			<mkdir dir="${build.release.dir}/2p-${project.version}/bin"/>
-			<mkdir dir="${build.release.dir}/2p-${project.version}/lib"/>
-			<mkdir dir="${build.release.dir}/2p-${project.version}/reports"/>
-			<mkdir dir="${build.release.dir}/2p-${project.version}/doc"/>
+			<mkdir dir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}"/>
+			<mkdir dir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/bin"/>
+			<mkdir dir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/lib"/>
+			<mkdir dir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/reports"/>
+			<mkdir dir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/doc"/>
 			
-				<copy todir="${build.release.dir}/2p-${project.version}/reports">
-			    	<fileset dir="${build.dir}/reports"/>
-			  	</copy>
-			
-				<copy todir="${build.release.dir}/2p-${project.version}/bin">
-			   		<fileset dir="${build.archives.dir}">
-			      		<include name="*.jar"/>
-			    	</fileset>
-			  	</copy>
-			
-				<copy todir="${build.release.dir}/2p-${project.version}/lib">
-					<fileset dir="${lib.dir}">
-						<include name="javassist.jar"/>
-					</fileset>
-				</copy>
-			
-				<copy todir="${build.release.dir}/2p-${project.version}/doc">
-					<fileset dir="${doc.dir}"/>
-				</copy>
-			
-				<copy todir="${build.release.dir}/2p-${project.version}">
-					<fileset dir=".">
-						<include name="LICENSE.txt"/>
-					</fileset>
-				</copy>
-			
-				<zip destfile="${build.release.dir}/2p-${project.version}.zip"
-			       	 basedir="${build.release.dir}/2p-${project.version}"
-			 	 	/>
+			<copy todir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/reports">
+		    	<fileset dir="${build.dir}/reports"/>
+		  	</copy>
+		
+			<copy todir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/bin">
+		   		<fileset dir="${build.archives.dir}">
+		      		<include name="*.jar"/>
+		    	</fileset>
+		  	</copy>
+		
+			<copy todir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/lib">
+				<fileset dir="${lib.dir}">
+					<include name="javassist.jar"/>
+				</fileset>
+			</copy>
+		
+			<copy todir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}/doc">
+				<fileset dir="${doc.dir}"/>
+			</copy>
+		
+			<copy todir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}">
+				<fileset dir=".">
+					<include name="LICENSE.txt"/>
+				</fileset>
+			</copy>
+		
+			<zip destfile="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}.zip"
+		       	 basedir="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}"
+		 	 	/>
 			
 			<echo>Look directory ${build.release.dir}</echo>
 		</target>
 	
 	<target name="12.tag" depends="01.set.classpath, 04.prepare, 08.package" description="Tags the code">
+		
 		<input
-			message="tuProlog version (n.n.n):"
-			addproperty="project.version"
-		/>
-		<input
-			message="You are tagging the project with version ${project.version}, if it is OK insert password for ${username}:"
+			message="You are tagging the project with version ${engine.version}.${JavaSpecific.version}, if it is OK insert password for ${username}:"
 			addproperty="password"
 		/>
 		
@@ -560,22 +652,22 @@
 		<svn refid="settings">
 			<copy
 				srcPath="." 
-				destUrl="https://tuprolog.googlecode.com/svn/2p/tags/REL-${project.version}"
-				message="Tag ${project.version}"
+				destUrl="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}"
+				message="Tag ${engine.version}.${JavaSpecific.version}"
 				makeParents="true" >
 			</copy> 
 			
 			<import
 				path="./build/archives/2p.jar" 
-				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${project.version}/build/archives/2p.jar"
-				message="Tag ${project.version}"
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/2p.jar"
+				message="Tag ${engine.version}.${JavaSpecific.version}"
 				recurse="false" >
 			</import> 
 			
 			<import
 				path="./build/archives/tuprolog.jar" 
-				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${project.version}/build/archives/tuprolog.jar"
-				message="Tag ${project.version}"
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/tuprolog.jar"
+				message="Tag ${engine.version}.${JavaSpecific.version}"
 				recurse="false" >
 			</import> 
 		</svn>
