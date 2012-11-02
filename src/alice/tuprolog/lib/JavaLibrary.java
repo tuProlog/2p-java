@@ -17,6 +17,7 @@
  */
 package alice.tuprolog.lib;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
@@ -25,12 +26,16 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
+
 import java.util.Map;
 import java.util.Vector;
+
 
 import alice.tuprolog.Int;
 import alice.tuprolog.JavaException;
@@ -39,6 +44,8 @@ import alice.tuprolog.Number;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
+import alice.util.DynamicURLClassLoader;
+import alice.util.InspectionUtils;
 
 /**
  * 
@@ -61,25 +68,36 @@ import alice.tuprolog.Var;
 public class JavaLibrary extends Library {
 
     /**
-	 * java objects referenced by prolog terms (keys)
-	 */
+         * java objects referenced by prolog terms (keys)
+         */
     private HashMap<String,Object> currentObjects = new HashMap<String, Object>();
     /**
-	 * inverse map useful for implementation issue
-	 */
+         * inverse map useful for implementation issue
+         */
     private IdentityHashMap<Object,Struct> currentObjects_inverse = new IdentityHashMap<Object, Struct>();
 
     private HashMap<String,Object> staticObjects = new HashMap<String, Object>();
     private IdentityHashMap<Object,Struct> staticObjects_inverse = new IdentityHashMap<Object, Struct>();
 
     /**
-	 * progressive conter used to identify registered objects
-	 */
+         * progressive conter used to identify registered objects
+         */
     private int id = 0;
-
+    
+    /**
+	 * ClassLoader at default configuration without URLs loaded.
+	 */
+    
+    private DynamicURLClassLoader classLoader = null;
     /**
      * library theory
      */
+    
+    public JavaLibrary()
+    {
+    	classLoader = new DynamicURLClassLoader(new URL[]{}, this.getClass().getClassLoader());
+    }
+    
     public String getTheory() {
         return
         //
@@ -104,16 +122,18 @@ public class JavaLibrary extends Library {
 
                 "java_object_bt(ClassName,Args,Id):- java_object(ClassName,Args,Id).\n"
                 + "java_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
+                //+ "class(Path,Class) <- What :- !, java_call(Path, Class, What, Res), Res \\== false.\n"
+				//+ "class(Path,Class) <- What returns Res :- !,  java_call(Path, Class, What, Res).\n"
                 + "Obj <- What :- java_call(Obj,What,Res), Res \\== false.\n"
                 + "Obj <- What returns Res :- java_call(Obj,What,Res).\n"
                 + "java_array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
                 + "java_array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
                 + "java_array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
                 + "java_array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
-                +
+                
 
-                "java_array_length(Array,Length):-              class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
-                + "java_object_string(Object,String):-    Object <- toString returns String.    \n"
+                + "java_array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
+                + "java_object_string(Object,String):- Object <- toString returns String.    \n"
                 +
                 // java_catch/3
                 "java_catch(JavaGoal, List, Finally) :- call(JavaGoal), call(Finally).\n";
@@ -165,6 +185,8 @@ public class JavaLibrary extends Library {
     // ----------------------------------------------------------------------------
 
     /**
+     * @author Michele Mannino
+     * 
      * Creates of a java object - not backtrackable case
      * 
      * @throws JavaException
@@ -196,7 +218,7 @@ public class JavaLibrary extends Library {
             }
             // object creation with argument described in args
             try {
-                Class<?> cl = Class.forName(clName);
+            	Class<?> cl = Class.forName(clName, true, classLoader);
                 Object[] args_value = args.getValues();
                 //
                 // Constructor co=cl.getConstructor(args.getTypes());
@@ -238,7 +260,45 @@ public class JavaLibrary extends Library {
             throw new JavaException(ex);
         }
     }
-
+    
+    /**
+     * @author Michele Mannino
+     * Creates of a java object - not backtrackable case
+     * @param className The name of the class 
+     * @oaram path The list of the paths where the class may be contained
+     * @param argl The list of the arguments used by the constructor
+     * @param id The name of the prolog term
+     * @throws JavaException
+     */
+    public boolean java_object_4(Term className, Term argl, Term id, Term paths)
+            throws JavaException {
+        paths = paths.getTerm();
+        try
+        {
+        	if(!paths.isList())
+        		throw new IllegalArgumentException();
+        	String[] listOfPaths = getStringArrayFromStruct((Struct) paths);
+        	URL[] urls = getURLsFromStringArray(listOfPaths);
+        	// Update the list of paths of the URLClassLoader
+        	classLoader.addURLs(urls);
+        	
+        	// Delegation to java_object_3 method used to load the class
+        	boolean result = java_object_3(className, argl, id);
+        	
+        	// Reset the URLClassLoader at default configuration
+        	classLoader.removeURLs(urls);
+        	
+        	return result;
+        }catch(IllegalArgumentException e)
+        {
+        	getEngine().warn("Illegal list of paths " + paths);
+            throw new JavaException(e);
+        }
+        catch (Exception e) {
+        	throw new JavaException(e);
+		}
+    }
+    
     /**
      * Destroy the link to a java object - called not directly, but from
      * predicate java_object (as second choice, for backtracking)
@@ -339,153 +399,301 @@ public class JavaLibrary extends Library {
     }
 
     /**
+	 * 
+	 * Calls a method of a Java object
+	 * 
+	 * @throws JavaException
+	 * 
+	 */
+	public boolean java_call_3(Term objId, Term method_name, Term idResult)
+			throws JavaException {
+		objId = objId.getTerm();
+		idResult = idResult.getTerm();
+		Struct method = (Struct) method_name.getTerm();
+		Object obj = null;
+		Signature args = null;
+		String methodName = null;
+		try {
+			methodName = method.getName();
+			// check for accessing field Obj.Field <- set/get(X)
+			// in that case: objId is '.'(Obj, Field)
+
+			if (!objId.isAtom()) {
+				if (objId instanceof Var) {
+					throw new JavaException(new IllegalArgumentException(objId
+							.toString()));
+				}
+				Struct sel = (Struct) objId;
+				if (sel.getName().equals(".") && sel.getArity() == 2
+						&& method.getArity() == 1) {
+					if (methodName.equals("set")) {
+						return java_set(sel.getTerm(0), sel.getTerm(1), method
+								.getTerm(0));
+					} else if (methodName.equals("get")) {
+						return java_get(sel.getTerm(0), sel.getTerm(1), method
+								.getTerm(0));
+					}
+				}
+			}
+			args = parseArg(method);
+			// object and argument must be instantiated
+			if (objId instanceof Var)
+				throw new JavaException(new IllegalArgumentException(objId
+						.toString()));
+			if (args == null) {
+				throw new JavaException(new IllegalArgumentException());
+			}
+			// System.out.println(args);
+			String objName = alice.util.Tools.removeApices(objId.toString());
+			obj = staticObjects.containsKey(objName) ? staticObjects.get(objName) : currentObjects.get(objName);
+			Object res = null;
+
+			if (obj != null) {
+				Class<?> cl = obj.getClass();
+				//
+				//
+				Object[] args_values = args.getValues();
+				Method m = lookupMethod(cl, methodName, args.getTypes(),
+						args_values);
+				//
+				//
+				if (m != null) {
+					try {
+						// works only with JDK 1.2, NOT in Sun Application
+						// Server!
+						// m.setAccessible(true);
+
+						res = m.invoke(obj, args_values);
+
+					} catch (IllegalAccessException ex) {
+						getEngine().warn(
+								"Method invocation failed: " + methodName
+								+ "( signature: " + args + " )");
+						// ex.printStackTrace();
+						throw new JavaException(ex);
+					}
+				} else {
+					getEngine().warn(
+							"Method not found: " + methodName + "( signature: "
+									+ args + " )");
+					throw new JavaException(new NoSuchMethodException(
+							"Method not found: " + methodName + "( signature: "
+									+ args + " )"));
+				}
+			} else {
+				if (objId.isCompound()) {
+					Struct id = (Struct) objId;
+
+					if (id.getArity() == 1 && id.getName().equals("class")) {
+						try {
+							String clName = alice.util.Tools
+									.removeApices(id.getArg(0).toString());
+							Class<?> cl = Class.forName(clName, true, classLoader);
+							
+							
+//							Method m = cl.getMethod(methodName, args.getTypes());
+							
+							Method m = InspectionUtils.searchForMethod(cl, methodName, args.getTypes());
+							m.setAccessible(true);
+							res = m.invoke(null, args.getValues());
+						} catch (ClassNotFoundException ex) {
+							// if not found even as a class id -> consider as a
+							// String object value
+							getEngine().warn("Unknown class.");
+							// ex.printStackTrace();
+							throw new JavaException(ex);
+						}
+					}
+					else if (id.getArity() == 2 && id.getName().equals("class")) {
+
+						String clName = alice.util.Tools.removeApices(((Struct) objId).getArg(1).toString());
+						Struct paths = (Struct) ((Struct) objId).getArg(0);
+
+						String[] listOfPaths = getStringArrayFromStruct((Struct) paths);
+
+						classLoader.addURLs(getURLsFromStringArray(listOfPaths));
+
+						try {
+							Class<?> cl = Class.forName(clName, true, classLoader);
+
+//							Method m = cl.getMethod(methodName, args.getTypes());
+							Method m = InspectionUtils.searchForMethod(cl, methodName, args.getTypes());
+							m.setAccessible(true);
+							res = m.invoke(null, args.getValues());
+						} catch (ClassNotFoundException ex) {
+							// if not found even as a class id -> consider as a
+							// String object value
+							getEngine().warn("Unknown class.");
+							// ex.printStackTrace();
+							throw new JavaException(ex);
+						}
+						finally
+						{
+							// Pulisco il class loader (solo gli URL inseriti)
+							classLoader.removeURLs(getURLsFromStringArray(listOfPaths));
+						}
+
+					} else {
+						// the object is the string itself
+						Method m = java.lang.String.class.getMethod(methodName, args.getTypes());
+						m.setAccessible(true);
+						res = m.invoke(objName, args.getValues());
+					}
+				} else {
+					// the object is the string itself
+					Method m = java.lang.String.class.getMethod(methodName,
+							args.getTypes());
+					m.setAccessible(true);
+					res = m.invoke(objName, args.getValues());
+				}
+			}
+			if (parseResult(idResult, res))
+				return true;
+			else
+				throw new JavaException(new Exception());
+		} catch (InvocationTargetException ex) {
+			getEngine().warn(
+					"Method failed: " + methodName + " - ( signature: " + args
+					+ " ) - Original Exception: "
+					+ ex.getTargetException());
+			// ex.printStackTrace();
+			throw new JavaException(new IllegalArgumentException());
+		} catch (NoSuchMethodException ex) {
+			// ex.printStackTrace();
+			getEngine().warn(
+					"Method not found: " + methodName + " - ( signature: "
+							+ args + " )");
+			throw new JavaException(ex);
+		} catch (IllegalArgumentException ex) {
+			// ex.printStackTrace();
+			getEngine().warn(
+					"Invalid arguments " + args + " - ( method: " + methodName
+					+ " )");
+			// ex.printStackTrace();
+			throw new JavaException(ex);
+		} catch (Exception ex) {
+			// ex.printStackTrace();
+			getEngine()
+			.warn("Generic error in method invocation " + methodName);
+			throw new JavaException(ex);
+		}
+	}
+	
+    /**
+     * @author Michele Mannino
      * 
-     * Calls a method of a Java object
+     * Set global classpath
      * 
      * @throws JavaException
      * 
      */
-    public boolean java_call_3(Term objId, Term method_name, Term idResult)
-            throws JavaException {
-        objId = objId.getTerm();
-        idResult = idResult.getTerm();
-        Struct method = (Struct) method_name.getTerm();
-        Object obj = null;
-        Signature args = null;
-        String methodName = null;
-        try {
-            methodName = method.getName();
-            // check for accessing field Obj.Field <- set/get(X)
-            // in that case: objId is '.'(Obj, Field)
-
-            if (!objId.isAtom()) {
-                if (objId instanceof Var) {
-                    throw new JavaException(new IllegalArgumentException(objId
-                            .toString()));
-                }
-                Struct sel = (Struct) objId;
-                if (sel.getName().equals(".") && sel.getArity() == 2
-                        && method.getArity() == 1) {
-                    if (methodName.equals("set")) {
-                        return java_set(sel.getTerm(0), sel.getTerm(1), method
-                                .getTerm(0));
-                    } else if (methodName.equals("get")) {
-                        return java_get(sel.getTerm(0), sel.getTerm(1), method
-                                .getTerm(0));
-                    }
-                }
-            }
-            args = parseArg(method);
-            // object and argument must be instantiated
-            if (objId instanceof Var)
-                throw new JavaException(new IllegalArgumentException(objId
-                        .toString()));
-            if (args == null) {
-                throw new JavaException(new IllegalArgumentException());
-            }
-            // System.out.println(args);
-            String objName = alice.util.Tools.removeApices(objId.toString());
-            obj = currentObjects.get(objName);
-            Object res = null;
-
-            if (obj != null) {
-                Class<?> cl = obj.getClass();
-                //
-                //
-                Object[] args_values = args.getValues();
-                Method m = lookupMethod(cl, methodName, args.getTypes(),
-                        args_values);
-                //
-                //
-                if (m != null) {
-                    try {
-                        // works only with JDK 1.2, NOT in Sun Application
-                        // Server!
-                        // m.setAccessible(true);
-
-                        res = m.invoke(obj, args_values);
-
-                    } catch (IllegalAccessException ex) {
-                        getEngine().warn(
-                                "Method invocation failed: " + methodName
-                                        + "( signature: " + args + " )");
-                        // ex.printStackTrace();
-                        throw new JavaException(ex);
-                    }
-                } else {
-                    getEngine().warn(
-                            "Method not found: " + methodName + "( signature: "
-                                    + args + " )");
-                    throw new JavaException(new NoSuchMethodException(
-                            "Method not found: " + methodName + "( signature: "
-                                    + args + " )"));
-                }
-            } else {
-                if (objId.isCompound()) {
-                    Struct id = (Struct) objId;
-                    if (id.getArity() == 1 && id.getName().equals("class")) {
-                        try {
-                            Class<?> cl = Class.forName(alice.util.Tools
-                                    .removeApices(id.getArg(0).toString()));
-                            Method m = cl
-                                    .getMethod(methodName, args.getTypes());
-                            m.setAccessible(true);
-                            res = m.invoke(null, args.getValues());
-                        } catch (ClassNotFoundException ex) {
-                            // if not found even as a class id -> consider as a
-                            // String object value
-                            getEngine().warn("Unknown class.");
-                            // ex.printStackTrace();
-                            throw new JavaException(ex);
-                        }
-                    } else {
-                        // the object is the string itself
-                        Method m = java.lang.String.class.getMethod(methodName,
-                                args.getTypes());
-                        m.setAccessible(true);
-                        res = m.invoke(objName, args.getValues());
-                    }
-                } else {
-                    // the object is the string itself
-                    Method m = java.lang.String.class.getMethod(methodName,
-                            args.getTypes());
-                    m.setAccessible(true);
-                    res = m.invoke(objName, args.getValues());
-                }
-            }
-            if (parseResult(idResult, res))
-                return true;
-            else
-                throw new JavaException(new Exception());
-        } catch (InvocationTargetException ex) {
-            getEngine().warn(
-                    "Method failed: " + methodName + " - ( signature: " + args
-                            + " ) - Original Exception: "
-                            + ex.getTargetException());
-            // ex.printStackTrace();
-            throw new JavaException(new IllegalArgumentException());
-        } catch (NoSuchMethodException ex) {
-            // ex.printStackTrace();
-            getEngine().warn(
-                    "Method not found: " + methodName + " - ( signature: "
-                            + args + " )");
-            throw new JavaException(ex);
-        } catch (IllegalArgumentException ex) {
-            // ex.printStackTrace();
-            getEngine().warn(
-                    "Invalid arguments " + args + " - ( method: " + methodName
-                            + " )");
-            // ex.printStackTrace();
-            throw new JavaException(ex);
-        } catch (Exception ex) {
-            // ex.printStackTrace();
-            getEngine()
-                    .warn("Generic error in method invocation " + methodName);
-            throw new JavaException(ex);
+    public boolean set_classpath_1(Term paths) throws JavaException
+    {
+    	try {
+    		paths = paths.getTerm();
+        	if(!paths.isList())
+        		throw new IllegalArgumentException();
+        	String[] listOfPaths = getStringArrayFromStruct((Struct) paths);
+        	classLoader.removeAllURLs();
+        	classLoader.addURLs(getURLsFromStringArray(listOfPaths));
+        	return true;
+    	}catch(IllegalArgumentException e)
+        {
+        	getEngine().warn("Illegal list of paths " + paths);
+            throw new JavaException(e);
         }
+        catch (Exception e) {
+        	throw new JavaException(e);
+		}
     }
-
-    /*
+    
+    /**
+     * @author Michele Mannino
+     * 
+     * Get global classpath
+     * 
+     * @throws JavaException
+     * 
+     */
+    
+	public boolean get_classpath_1(Term paths) throws JavaException
+    {
+    	try {
+    		paths = paths.getTerm();
+    		if(!(paths instanceof Var))
+    			throw new IllegalArgumentException();
+    		URL[] urls = classLoader.getURLs();
+        	String stringURLs = null;
+        	Term pathTerm = null;
+        	if(urls.length > 0)
+        	{
+	        	stringURLs = "[";
+	     
+	        	for (URL url : urls) {
+	        		File file = new File(java.net.URLDecoder.decode(url.getFile(), "UTF-8"));
+	        		stringURLs = stringURLs + "'" + file.getPath() + "',";
+				}
+	        	
+	        	stringURLs = stringURLs.substring(0, stringURLs.length() - 1);
+	        	stringURLs = stringURLs + "]";
+        	}
+        	else
+        		stringURLs = "[]";
+//        	pathTerm = orderPathList(Term.createTerm(stringURLs));
+        	pathTerm = Term.createTerm(stringURLs);
+//        	if(paths.isList())
+//          		paths = orderPathList(paths);
+        	return unify(paths, pathTerm);
+    	}catch(IllegalArgumentException e)
+        {
+        	getEngine().warn("Illegal list of paths " + paths);
+            throw new JavaException(e);
+        }
+        catch (Exception e) {
+        	throw new JavaException(e);
+		}
+    }
+	
+//	private Term orderPathList(Term path)
+//	{
+//		Term result = null;
+//		if(path == null)
+//			return result;
+//		if(path.isList())
+//		{
+//			path = path.getTerm();
+//			List<String> list = new ArrayList<String>();
+//			Struct str = (Struct) path.getTerm();
+//			if(!str.isEmptyList())
+//			{
+//				for (Iterator<?> iterator = str.listIterator();iterator.hasNext();) {
+//					list.add(((Term)iterator.next()).toString());
+//				}
+//				Collections.sort(list);
+//				result = getStructFromStringList(list);
+//			}
+//			else
+//				result = path;
+//		}
+//		return result;
+//	}
+//	
+//	
+//	private Struct getStructFromStringList(List<String> paths)
+//	{
+//		Term[] array = null;
+//		if(paths == null)
+//			return null;
+//		array = new Term[paths.size()];
+//		int i = 0;
+//		for (String string : paths) {
+//			array[i++] = Term.createTerm(string);
+//		}
+//		return new Struct(array);
+//	}
+	
+	
+    /**
      * set the field value of an object
      */
     private boolean java_set(Term objId, Term fieldTerm, Term what) {
@@ -497,26 +705,48 @@ public class JavaLibrary extends Library {
         Object obj = null;
         try {
             Class<?> cl = null;
-            if (objId.isCompound() && ((Struct) objId).getArity() == 1
-                    && ((Struct) objId).getName().equals("class")) {
-                String clName = alice.util.Tools.removeApices(((Struct) objId)
-                        .getArg(0).toString());
-                try {
-                    cl = Class.forName(clName);
-                } catch (ClassNotFoundException ex) {
-                    getEngine().warn("Java class not found: " + clName);
-                    return false;
-                } catch (Exception ex) {
-                    getEngine().warn(
-                            "Static field "
-                                    + fieldName
-                                    + " not found in class "
-                                    + alice.util.Tools
-                                            .removeApices(((Struct) objId)
-                                                    .getArg(0).toString()));
-                    return false;
-                }
-            } else {
+            if(objId.isCompound() && ((Struct) objId).getName().equals("class"))
+            {
+            	String clName = null;
+            	String[] listOfPaths = null;
+            	// Case: class(className)
+            	if(((Struct) objId).getArity() == 1)         	
+            		 clName = alice.util.Tools.removeApices(((Struct) objId)
+                             .getArg(0).toString());
+            	// Case: class(paths, className)
+            	else if(((Struct) objId).getArity() == 2)
+            	{
+            		clName = alice.util.Tools.removeApices(((Struct) objId)
+                            .getArg(1).toString());
+                	Struct paths = (Struct) ((Struct) objId).getArg(0);
+                	
+                	listOfPaths = getStringArrayFromStruct((Struct) paths);
+                	
+                	classLoader.addURLs(getURLsFromStringArray(listOfPaths));
+            	}
+            	if(clName != null)
+            	{
+            		try {
+                        cl = Class.forName(clName, true, classLoader);
+                    } catch (ClassNotFoundException ex) {
+                        getEngine().warn("Java class not found: " + clName);
+                        return false;
+                    } catch (Exception ex) {
+                        getEngine().warn(
+                                "Static field "
+                                        + fieldName
+                                        + " not found in class "
+                                        + alice.util.Tools
+                                                .removeApices(((Struct) objId)
+                                                        .getArg(0).toString()));
+                        return false;
+                    } finally{
+                    	if(((Struct) objId).getArity() == 2)
+                    		classLoader.removeURLs(getURLsFromStringArray(listOfPaths));
+                    }
+            	}
+            }
+            else {
                 String objName = alice.util.Tools
                         .removeApices(objId.toString());
                 obj = currentObjects.get(objName);
@@ -576,26 +806,48 @@ public class JavaLibrary extends Library {
         Object obj = null;
         try {
             Class<?> cl = null;
-            if (objId.isCompound() && ((Struct) objId).getArity() == 1
-                    && ((Struct) objId).getName().equals("class")) {
-                String clName = alice.util.Tools.removeApices(((Struct) objId)
-                        .getArg(0).toString());
-                try {
-                    cl = Class.forName(clName);
-                } catch (ClassNotFoundException ex) {
-                    getEngine().warn("Java class not found: " + clName);
-                    return false;
-                } catch (Exception ex) {
-                    getEngine().warn(
-                            "Static field "
-                                    + fieldName
-                                    + " not found in class "
-                                    + alice.util.Tools
-                                            .removeApices(((Struct) objId)
-                                                    .getArg(0).toString()));
-                    return false;
-                }
-            } else {
+            if(objId.isCompound() && ((Struct) objId).getName().equals("class"))
+            {
+            	String clName = null;
+            	String[] listOfPaths = null;
+            	// Case: class(className)
+            	if(((Struct) objId).getArity() == 1)         	
+            		 clName = alice.util.Tools.removeApices(((Struct) objId)
+                             .getArg(0).toString());
+            	// Case: class(paths, className)
+            	else if(((Struct) objId).getArity() == 2)
+            	{
+            		clName = alice.util.Tools.removeApices(((Struct) objId)
+                            .getArg(1).toString());
+                	Struct paths = (Struct) ((Struct) objId).getArg(0);
+                	
+                	listOfPaths = getStringArrayFromStruct((Struct) paths);
+                	
+                	classLoader.addURLs(getURLsFromStringArray(listOfPaths));
+            	}
+            	if(clName != null)
+            	{
+            		try {
+                        cl = Class.forName(clName, true, classLoader);
+                    } catch (ClassNotFoundException ex) {
+                        getEngine().warn("Java class not found: " + clName);
+                        return false;
+                    } catch (Exception ex) {
+                        getEngine().warn(
+                                "Static field "
+                                        + fieldName
+                                        + " not found in class "
+                                        + alice.util.Tools
+                                                .removeApices(((Struct) objId)
+                                                        .getArg(0).toString()));
+                        return false;
+                    } finally{
+                    	if(((Struct) objId).getArity() == 2)
+                    		classLoader.removeURLs(getURLsFromStringArray(listOfPaths));
+                    }
+            	}
+            }
+            else {
                 String objName = alice.util.Tools
                         .removeApices(objId.toString());
                 obj = currentObjects.get(objName);
@@ -632,6 +884,8 @@ public class JavaLibrary extends Library {
             // getEngine().warn("object of unknown class "+objId);
             // ex.printStackTrace();
             // return false;
+            
+            
         } catch (NoSuchFieldException ex) {
             getEngine().warn(
                     "Field " + fieldName + " not found in class " + objId);
@@ -847,9 +1101,10 @@ public class JavaLibrary extends Library {
         try {
             Object array = null;
             String obtype = type.substring(0, type.length() - 2);
-            if (obtype.equals("boolean")) {
+          
+            if (obtype.equals("boolean")) { 
                 array = new boolean[nargs];
-            } else if (obtype.equals("byte")) {
+            } else if (obtype.equals("byte")) { 
                 array = new byte[nargs];
             } else if (obtype.equals("char")) {
                 array = new char[nargs];
@@ -864,7 +1119,7 @@ public class JavaLibrary extends Library {
             } else if (obtype.equals("double")) {
                 array = new double[nargs];
             } else {
-                Class<?> cl = Class.forName(obtype);
+                Class<?> cl = Class.forName(obtype, true, classLoader);
                 array = Array.newInstance(cl, nargs);
             }
             return bindDynamicObject(id, array);
@@ -874,6 +1129,51 @@ public class JavaLibrary extends Library {
         }
     }
 
+    /**
+     * Returns an URL array from a String array
+     *
+     * @throws JavaException
+     */
+    private URL[] getURLsFromStringArray(String[] paths) throws MalformedURLException  
+    {
+    	URL[] urls = null;
+    	if(paths != null)
+    	{
+	    	urls = new URL[paths.length];
+			
+			for (int i = 0; i < paths.length; i++) 
+			{
+				if(paths[i] == null)
+					continue;
+				if(paths[i].contains("http") || paths[i].contains("https") || paths[i].contains("ftp"))
+					urls[i] = new URL(paths[i]);
+				else{
+					File file = new File(paths[i]);
+					urls[i] = (file.toURI().toURL());
+				}
+			}
+    	}
+		return urls;
+    }
+    
+    /**
+     * Returns a String array from a Struct contains a list
+     *
+     * @throws JavaException
+     */
+    
+    private String[] getStringArrayFromStruct(Struct list) {
+        String args[] = new String[list.listSize()];
+        Iterator<? extends Term> it = list.listIterator();
+        int count = 0;
+        while (it.hasNext()) {
+        	String path = alice.util.Tools.removeApices(it.next().toString());
+            args[count++] = path;
+        }
+        return args;
+    }
+    
+    
     /**
      * creation of method signature from prolog data
      */
@@ -1030,7 +1330,7 @@ public class JavaLibrary extends Library {
                     } else {
                         values[i] = obj_to_cast;
                         try {
-                            types[i] = (Class.forName(castTo_name));
+                            types[i] = Class.forName(castTo_name, true, classLoader);
                         } catch (ClassNotFoundException ex) {
                             getEngine().warn(
                                     "Java class not found: " + castTo_name);
@@ -1057,7 +1357,7 @@ public class JavaLibrary extends Library {
                         types[i] = java.lang.Boolean.TYPE;
                     } else {
                         try {
-                            types[i] = (Class.forName(castTo_name));
+                            types[i] = Class.forName(castTo_name, true, classLoader);
                         } catch (ClassNotFoundException ex) {
                             getEngine().warn(
                                     "Java class not found: " + castTo_name);
@@ -1155,7 +1455,6 @@ public class JavaLibrary extends Library {
      * Register an object with the specified id. The life-time of the link to
      * the object is engine life-time, available besides the individual query.
      * 
-     * The identifier must be a ground object.
      * 
      * @param id
      *            object identifier
@@ -1190,7 +1489,60 @@ public class JavaLibrary extends Library {
             }
         }
     }
-
+    
+    /**
+     * Register an object with the specified id. The life-time of the link to
+     * the object is engine life-time, available besides the individual query.
+     * 
+     * The identifier must be a ground object.
+     * 
+     * @param id
+     *            object identifier
+     *            
+     * @return true if the operation is successful
+     * @throws JavaException
+     *             if the object id is not valid
+     */
+    public boolean register_1(Term id) throws JavaException
+    {
+    	id = id.getTerm();
+    	Object obj =  null; 
+    	try
+        {
+        	obj = getRegisteredDynamicObject((Struct) id);
+        	return register((Struct)id, obj);
+        }catch(InvalidObjectIdException e)
+        {
+        	getEngine().warn("Illegal object id " + id.toString());
+            throw new JavaException(e);
+        }
+    }
+    
+    /**
+     * Unregister an object with the specified id.
+     * 
+     * The identifier must be a ground object.
+     * 
+     * @param id
+     *            object identifier
+     *            
+     * @return true if the operation is successful
+     * @throws JavaException
+     *             if the object id is not valid
+     */
+    public boolean unregister_1(Term id) throws JavaException
+    {
+    	id = id.getTerm(); 
+    	try
+        {
+        	return unregister((Struct)id);
+        }catch(InvalidObjectIdException e)
+        {
+        	getEngine().warn("Illegal object id " + id.toString());
+            throw new JavaException(e);
+        }
+    }
+    
     /**
      * Registers an object, with automatic creation of the identifier.
      * 

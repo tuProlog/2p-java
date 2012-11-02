@@ -1,31 +1,29 @@
 package alice.tuprolog;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-public class TuPrologTestSuite {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for alice.tuprolog");
-		suite.addTestSuite(BuiltInTestCase.class);
-		suite.addTestSuite(PrologTestCase.class);
-		suite.addTestSuite(IntTestCase.class);
-		suite.addTestSuite(IOLibraryTestCase.class);
-		suite.addTestSuite(DoubleTestCase.class);
-		suite.addTestSuite(SolveInfoTestCase.class);
-		suite.addTestSuite(StateRuleSelectionTestCase.class);
-		suite.addTestSuite(StructIteratorTestCase.class);
-		suite.addTestSuite(StructTestCase.class);
-		suite.addTestSuite(TermIteratorTestCase.class);
-		suite.addTestSuite(TheoryTestCase.class);
-		suite.addTestSuite(TheoryManagerTestCase.class);
-		suite.addTestSuite(LibraryTestCase.class);
-		suite.addTestSuite(JavaLibraryTestCase.class);
-		suite.addTestSuite(ParserTestCase.class);
-		suite.addTestSuite(SpyEventTestCase.class);
-		suite.addTestSuite(VarTestCase.class);
-		suite.addTestSuite(TestVarIsEqual.class);
-		return suite;
-	}
-
-}
+@RunWith(Suite.class)
+@SuiteClasses({	BuiltInTestCase.class,
+				PrologTestCase.class, 
+				IntTestCase.class, 
+				IOLibraryTestCase.class, 
+				DoubleTestCase.class, 
+				SolveInfoTestCase.class,
+				StateRuleSelectionTestCase.class, 
+				StructIteratorTestCase.class, 
+				StructTestCase.class, 
+				TermIteratorTestCase.class,
+				TheoryTestCase.class, 
+				TheoryManagerTestCase.class, 
+				LibraryTestCase.class, 
+				JavaLibraryTestCase.class, 
+				ParserTestCase.class,
+				SpyEventTestCase.class, 
+				VarTestCase.class, 
+				TestVarIsEqual.class, 
+				DynamicURLClassLoaderTestCase.class,
+				ISOIOLibraryTestCase.class
+})
+public class TuPrologTestSuite {}

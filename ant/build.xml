@@ -42,7 +42,7 @@
 	    	<replace file="${src.dir}/alice/util/NetVersionInfo.java" token="@NETSpecific.version@" value="${NETSpecific.version}"/> -->
 			
 			<javac destdir="${build.classes.dir}" debug="@{debug}"
-			deprecation="false" optimize="@{optimize}" failonerror="true">
+			deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false">
 	            <src path="${src.dir}"/>
 	            <classpath refid="ant-classpath"/>
 	        </javac>
@@ -75,7 +75,7 @@
     			<mkdir dir="${build.tests.dir}/fixtures"/>
     			
     			<javac destdir="${build.tests.dir}/unit" debug="@{debug}" 
-    				deprecation="false" optimize="@{optimize}" failonerror="true">
+    				deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false">
     	            <src path="${test.dir}/unit"/>
     	            <classpath refid="ant-classpath"/>
     	        	<classpath location="${build.classes.dir}"/>
@@ -123,7 +123,6 @@
 	    	      	<attribute name="Implementation-Title" value="tuProlog Engine"/>
 	    	      	<attribute name="Implementation-Version" value="${engine.version}"/>
 	    	      	<!-- details -->
-	    	    	
 	    	    </manifest>
 	    	 </jar>
 	    	
@@ -349,7 +348,9 @@
 			<fileset dir="${build.unit.reports.dir}" includes="**/*"/>
 		</delete>
 		
-		<junit fork="yes" printsummary="yes" dir="${tmp.dir}">
+		<!-- We have to set the "dir" attribute in order to start the JVM from the root of the project,
+		in this way the paths used in DynamicURLClassLoaderTestCase.java and JavaLibraryTestCase.java are correct -->
+		<junit fork="yes" printsummary="yes" tempdir="${tmp.dir}" dir="">
 			<formatter type="xml" />
 			<!--<test name="${suite}" />-->
 			<test name="alice.tuprolog.TuPrologTestSuite" todir="${build.unit.reports.dir}"/>
@@ -432,7 +433,8 @@
 	 				<include name="IKVM.OpenJDK.Misc.dll"/>
 	 				<include name="IKVM.OpenJDK.Tools.dll"/>
 	 				<include name="IKVM.OpenJDK.SwingAWT.dll"/>
-	 				<include name="IKVM.Runtime.dll"/>
+	 				<include name="IKVM.Runtime.dll"/> 
+	 				<include name="IKVM.Reflection.dll"/> <!-- Added by Mannino-->
 	 			</fileset>
 	 		</copy>
 
@@ -456,14 +458,14 @@
 	            <arg value="-out:${build.archives.net.dir}/lib/fit.dll" />
 	            <arg value="${lib.dir}/fit.jar" />
 	 		 </exec>
-	 	
 	 		<echo>Building Javassist...</echo>
 	 		<exec executable="${ikvmc}">
+	 				<arg value="-reference:${ikvm.dir}/bin/IKVM.Reflection.dll" />
  	 		    	<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Util.dll" />
  		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
 	 				<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.SwingAWT.dll" />
 	 				<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Tools.dll" />
-	 				<arg value="-debug"/>
+	 				<!-- <arg value="-debug"/> -->
  		            <arg value="-target:library" />
  		            <arg value="-compressresources" />
  		            <arg value="-out:${build.archives.net.dir}/archives/javassist.dll" />
@@ -472,14 +474,17 @@
 	        
 	        <echo>Building 2p...</echo>
 	 		<exec executable="${ikvmc}">
+	 			<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
+	 			<arg value="-reference:mscorlib.dll" /><!-- Added by Mannino-->
+	 			<arg value="-reference:${ikvm.dir}/bin/IKVM.Reflection.dll" /> <!-- Added by Mannino-->
+	 			<arg value="-reference:${ikvm.dir}/bin/IKVM.Runtime.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Beans.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Corba.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Remoting.dll" />
-	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Misc.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.SwingAWT.dll" />
 	            <arg value="-reference:${build.archives.net.dir}/archives/javassist.dll" />
-				<arg value="-debug"/>
+				<!-- <arg value="-debug"/> -->
 		 		<arg value="-classloader:ikvm.runtime.ClassPathAssemblyClassLoader"/>
 	            <arg value="-target:winexe" />
 	            <arg value="-compressresources" />
@@ -487,24 +492,21 @@
 	            <arg value="-out:${build.archives.net.dir}/archives/2p.exe" />
 	            <arg value="${build.archives.dir}/2p.jar" />
 	        </exec>
-	 	
-	 		<!--
+	
 	 		<echo>Building tuprolog...</echo>
 	 		<exec executable="${ikvmc}">
-					<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Beans.dll" />
-		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Corba.dll" />
-		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Remoting.dll" />
-		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
-		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Misc.dll" />
-		            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.SwingAWT.dll" />
-		            <arg value="-reference:${build.archives.net.dir}/archives/javassist.dll" />
+	 			  	<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
+	 				<arg value="-reference:mscorlib.dll" />
+	 				<arg value="-reference:${ikvm.dir}/bin/IKVM.Reflection.dll" />
+	 				<arg value="-classloader:ikvm.runtime.ClassPathAssemblyClassLoader"/>
  		            <arg value="-target:library" />
  		            <arg value="-compressresources" />
- 		            <arg value="-version:${project.version}" />
+ 		            <arg value="-version:${engine.version}.${NETSpecific.version}" />
  		            <arg value="-out:${build.archives.net.dir}/archives/tuprolog.dll" />
  		            <arg value="${build.archives.dir}/tuprolog.jar" />
 	 		</exec>
 	 	
+	 	<!--
 	 		<echo>Building tuprolog extensions...</echo>
 	 		<exec executable="${ikvmc}">
 					<arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Beans.dll" />

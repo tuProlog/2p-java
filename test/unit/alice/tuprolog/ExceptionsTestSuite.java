@@ -1,21 +1,17 @@
 package alice.tuprolog;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-public class ExceptionsTestSuite {
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for exceptions");
-		suite.addTestSuite(BasicLibraryExceptionsTestCase.class);
-		suite.addTestSuite(BuiltInExceptionsTestCase.class);
-		suite.addTestSuite(DCGLibraryExceptionsTestCase.class);
-		suite.addTestSuite(IOLibraryExceptionsTestCase.class);
-		suite.addTestSuite(ISOLibraryExceptionsTestCase.class);
-		suite.addTestSuite(JavaLibraryExceptionsTestCase.class);
-		suite.addTestSuite(JavaThrowCatchTestCase.class);
-		suite.addTestSuite(ThrowCatchTestCase.class);
-		return suite;
-	}
-
-}
+@RunWith(Suite.class)
+@SuiteClasses({	BasicLibraryExceptionsTestCase.class, 
+				BuiltInExceptionsTestCase.class, 
+				DCGLibraryExceptionsTestCase.class,
+				IOLibraryExceptionsTestCase.class, 
+				ISOLibraryExceptionsTestCase.class, 
+				JavaLibraryExceptionsTestCase.class, 
+				JavaThrowCatchTestCase.class,
+				ThrowCatchTestCase.class
+})
+public class ExceptionsTestSuite {}

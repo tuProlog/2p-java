@@ -224,7 +224,47 @@ public class BuiltIn extends Library {
 					 new Struct(ex.getMessage()));
 		 }
 	 }
+	 
+	 /*
+	  * loads a tuprolog library, given its java class name and the list of the paths where may be contained
+	  */
+	 public boolean load_library_2(Term arg0, Term arg1) throws PrologError {
+		 arg0 = arg0.getTerm();
+		 arg1 = arg1.getTerm();
+		 if (!arg0.isAtom()) {
+			 if (arg0 instanceof Var)
+				 throw PrologError.instantiation_error(engineManager, 1);
+			 else
+				 throw PrologError.type_error(engineManager, 1, "atom", arg0);
+		 }
+		 if(!arg1.isList())
+		 {
+			 throw PrologError.type_error(engineManager, 2, "list", arg1);
+		 }
+		 
+		 try {
+			 String[] paths = getStringArrayFromStruct((Struct) arg1);
+			 if(paths == null || paths.length == 0)
+				 throw PrologError.existence_error(engineManager, 2, "paths", arg1, new Struct("Invalid paths' list."));
+			 libraryManager.loadLibrary(((Struct) arg0).getName(), paths);
+			 return true;
+			
+		 } catch (Exception ex) {
+			 throw PrologError.existence_error(engineManager, 1, "class", arg0,
+					 new Struct(ex.getMessage()));
+		 }
+	 }
 
+	 private String[] getStringArrayFromStruct(Struct list) {
+	        String args[] = new String[list.listSize()];
+	        Iterator<? extends Term> it = list.listIterator();
+	        int count = 0;
+	        while (it.hasNext()) {
+	        	String path = alice.util.Tools.removeApices(it.next().toString());
+	            args[count++] = path;
+	        }
+	        return args;
+	 }
 	 /*
 	  * unloads a tuprolog library, given its java class name
 	  */

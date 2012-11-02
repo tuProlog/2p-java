@@ -99,17 +99,19 @@ public class BasicLibrary extends Library {
         }
     }
 
-    public boolean load_library_2(Term className, Term libName) {
-        Struct clName = (Struct) className.getTerm();
-        libName = libName.getTerm();
-        try {
-            Library lib = getEngine().loadLibrary(
-                    alice.util.Tools.removeApices(clName.getName()));
-            return unify(libName, new Struct(lib.getName()));
-        } catch (Exception ex) {
-            return false;
-        }
-    }
+// 	  MANNINO 14/09/2012
+    
+//    public boolean load_library_2(Term className, Term libName) {
+//        Struct clName = (Struct) className.getTerm();
+//        libName = libName.getTerm();
+//        try {
+//            Library lib = getEngine().loadLibrary(
+//                    alice.util.Tools.removeApices(clName.getName()));
+//            return unify(libName, new Struct(lib.getName()));
+//        } catch (Exception ex) {
+//            return false;
+//        }
+//    }
 
     /**
      * Loads a library constructed from a theory.

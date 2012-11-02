@@ -18,9 +18,15 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.*;
-import java.util.ArrayList;
-import java.util.StringTokenizer;
+import alice.util.AssemblyCustomClassLoader;
 
+import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
+import cli.System.Reflection.Assembly;
 
 /**
  * A dynamic manager for tuProlog libraries.
@@ -40,9 +46,10 @@ public final class LibraryManager
 	 * Stores classnames for managed libraries.
 	 */
     private ArrayList<String> libraries;
+    private Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
 
     public LibraryManager() {
-            libraries = new ArrayList<String>();
+    	libraries = new ArrayList<String>();
     }
 
     /**
@@ -120,6 +127,57 @@ public final class LibraryManager
         }
     }
 
+        /**
+	     * Add a library to the manager.
+	     *
+	     * @param libraryClassname The name of the .class of the library to be added.
+	     * @param path The path where is contained the library.
+	     * @throws ClassNotFoundException if the library class cannot be found.
+	     * @throws InvalidLibraryException if the library is not a valid tuProlog library.
+	     */
+	    public void addLibrary(String libraryClassname, File file) throws ClassNotFoundException, InvalidLibraryException {
+	        if (libraryClassname.equals(""))
+	            throw new ClassNotFoundException();
+	        /** 
+	         * check for classpath without uppercase at the first char of the last word
+	         */
+	        Library lib = null;
+	        try
+	        {
+	        	String path = file.getPath();
+	        	
+	        	if(path.contains(".class"))
+	        		file = new File(file.getPath().substring(0, file.getPath().lastIndexOf(File.separator) + 1));
+	        	
+	        	URL url = file.toURI().toURL();
+	        	ClassLoader loader = null;
+	        	
+	        	// .NET
+	        	if(System.getProperty("java.vm.name").equals("IKVM.NET"))
+	        	{
+	        		Assembly asm = Assembly.LoadFrom(file.getPath());
+	        		loader = new AssemblyCustomClassLoader(asm, new URL[]{url});
+	        		libraryClassname = "cli." + libraryClassname.substring(0, 
+	        				libraryClassname.indexOf(",")).trim();
+	        	}
+	        	// JVM
+	        	else
+	        	{
+	        		loader = URLClassLoader.newInstance(
+	        				new URL[]{ url } ,
+	        				getClass().getClassLoader());
+	        	}	
+	        	
+				lib = (Library) Class.forName(libraryClassname, true, loader).newInstance();
+				libraries.add(lib.getName());
+				externalLibraries.put(libraryClassname, getClassResource(lib.getClass()));
+	        }
+	        catch(Exception ex)
+	        {
+	        	throw new InvalidLibraryException(libraryClassname,-1,-1);
+	        }
+	    }
+    
     /**
      * Remove a library to the manager.
      *
@@ -172,6 +230,19 @@ public final class LibraryManager
     public void loadLibrary(String library) throws InvalidLibraryException {
         engine.loadLibrary(library);
     }
+    
+    /**
+     * Load a library from the Library Manager into the engine.
+     *
+     * @param library The library to be loaded into the engine.
+     * @param path The library path where is contained the library.
+     * @throws InvalidLibraryException
+     */
+    public void loadLibrary(String library, File file) throws InvalidLibraryException {
+        engine.loadLibrary(library, new String[] { file.toPath().toString()});
+    }
+    
+    
 
     /**
      * Unload a library from the Library Manager out of the engine.
@@ -184,6 +255,13 @@ public final class LibraryManager
         engine.unloadLibrary(library);
     }
     
+    public void unloadExternalLibrary(String library) throws InvalidLibraryException {
+    	if(externalLibraries.containsKey(library))
+			externalLibraries.remove(library);
+    	if(engine.getLibrary(library) != null)
+    		engine.unloadLibrary(library);
+    }
+    
     /**
      * Check if a library is contained in the manager.
      * 
@@ -193,5 +271,23 @@ public final class LibraryManager
     public boolean contains(String library) {
             return libraries.contains(library);
     }
+    
+    public synchronized URL getExternalLibraryURL(String name)
+	{
+		return isExternalLibrary(name) ? externalLibraries.get(name) : null;
+	}
+	
+	public synchronized boolean isExternalLibrary(String name)
+	{
+		return externalLibraries.containsKey(name);
+	}
+    
+    private static URL getClassResource(Class<?> klass) 
+	{
+		if(klass == null)
+			return null;
+		return klass.getClassLoader().getResource(
+				klass.getName().replace('.', '/') + ".class");
+	}
 
 } // end LibraryManager class

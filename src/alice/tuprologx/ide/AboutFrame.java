@@ -25,7 +25,7 @@ public class AboutFrame extends GenericFrame
         
         JLabel versionSystem=new JLabel(" tuProlog engine version " + alice.tuprolog.Prolog.getVersion());
         
-        String platformMessage = alice.util.VersionInfo.getPlatform();
+        String platformMessage = " " + alice.util.VersionInfo.getPlatform();
         platformMessage += " platform version ";
         platformMessage += alice.util.VersionInfo.getCompleteVersion();
         JLabel versionIDE=new JLabel(platformMessage);

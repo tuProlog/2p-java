@@ -1,9 +1,17 @@
 package alice.tuprologx.ide;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
@@ -31,12 +39,16 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 	 * The panel that contains components that reguard the displayed libraries
 	 */
     private JPanel librariesDisplayPanel;
-
+    
+    private JPanel addLibraryPanel;
+    
+    private JButton browseButton;
+    
     private IOFileOperations fileManager;
 
     public LibraryDialogFrame(LibraryManager libraryManager, JFrame mainWindow)
     {
-        super("Library Manager", mainWindow, 395, 275, true);
+        super("Library Manager", mainWindow, 395, 390, true);
         initComponents();
 
         this.libraryManager = libraryManager;
@@ -47,21 +59,51 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 
     private void initComponents()
     {
-        Container c=this.getContentPane();
+        Container c = this.getContentPane();
         JPanel northPanel = new JPanel();
         JPanel loadSavePanel = new JPanel();
-        JPanel addLibraryPanel = new JPanel();
+        JPanel libraryLoadedPanel = new JPanel();
+        addLibraryPanel = new JPanel();
         librariesDisplayPanel = new JPanel();
         JPanel okCancelStatusBarPanel = new JPanel();
         JPanel okCancelPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
-        northPanel.add(loadSavePanel,BorderLayout.NORTH);
-        northPanel.add(addLibraryPanel,BorderLayout.SOUTH);
+        northPanel.add(addLibraryPanel,BorderLayout.NORTH);
+        northPanel.add(libraryLoadedPanel,BorderLayout.SOUTH);
         c.setLayout(new BorderLayout());
         c.add(northPanel,BorderLayout.NORTH);
         c.add(librariesDisplayPanel,BorderLayout.CENTER);
         c.add(okCancelStatusBarPanel,BorderLayout.SOUTH);
 
+        // Display Library Panel 
+        libraryClassnameField = new JTextField();
+        Document textFieldDoc = libraryClassnameField.getDocument();
+        textFieldDoc.addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				updated(e);
+				
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				updated(e);
+				
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				updated(e);
+			}
+			private void updated(DocumentEvent e) {
+		        boolean enable = e.getDocument().getLength() > 0;
+		        browseButton.setEnabled(enable);
+		        }
+		      });
+       
+        displayLibraryPanel();
+        
         JButton bOpen=new JButton();
         URL urlImage = getClass().getResource("img/Open24.png");
         bOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
@@ -90,21 +132,12 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         buttonsPanel.add(bOpen);
         buttonsPanel.add(bSave);
         loadSavePanel.setLayout(new BorderLayout());
+        loadSavePanel.add(new JLabel("Load preferences:"), BorderLayout.NORTH);
         loadSavePanel.add(buttonsPanel,BorderLayout.WEST);
-
-        libraryClassnameField = new JTextField();
-        JButton add = new JButton("add");
-        add.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent event)
-            {
-                   addLibrary(libraryClassnameField.getText());
-            }
-        });
-        addLibraryPanel.setLayout(new BorderLayout());
-        addLibraryPanel.add(libraryClassnameField,BorderLayout.CENTER);
-        addLibraryPanel.add(add,BorderLayout.EAST);
-
+      
+        libraryLoadedPanel.setLayout(new BorderLayout());
+        JLabel loadedLibrariesLabel = new JLabel("Currently loaded libraries:");
+        libraryLoadedPanel.add(loadedLibrariesLabel);
         librariesDisplayPanel.setLayout(new GridBagLayout());
 
         JButton ok = new JButton("OK");
@@ -126,11 +159,85 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         sb = new StatusBar();
         okCancelStatusBarPanel.setLayout(new BorderLayout());
         okCancelStatusBarPanel.add(okCancelPanel,BorderLayout.NORTH);
+        okCancelStatusBarPanel.add(loadSavePanel,BorderLayout.CENTER);
         okCancelStatusBarPanel.add(sb,BorderLayout.SOUTH);
         okCancelPanel.add(ok);
         okCancelPanel.add(cancel);
     }
 
+    /**
+     * Build the library panel used to add by full name or by path a library
+     */
+    
+    private void displayLibraryPanel()
+    {
+    	browseButton = new JButton("Browse");
+    	browseButton.setEnabled(false);
+        JLabel libraryFileLabel = new JLabel("Library file:");
+        JLabel libraryFullNameLabel = new JLabel("Library full name:");
+        JButton add = new JButton("add");
+        
+        add.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                   addLibrary(libraryClassnameField.getText());
+            }
+        });
+        
+        browseButton.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+            	JFileChooser fc = new JFileChooser();
+            	fc.showOpenDialog(LibraryDialogFrame.this);
+            	File file = fc.getSelectedFile();
+            	try
+            	{
+            		addLibrary(libraryClassnameField.getText(), file);
+            	}catch(Exception e)
+            	{
+            		setStatusMessage("Loading library error!");
+            	}
+            }
+        });
+        
+        javax.swing.GroupLayout addLibraryPanelLayout = new javax.swing.GroupLayout(addLibraryPanel);
+        addLibraryPanel.setLayout(addLibraryPanelLayout);
+        addLibraryPanelLayout.setHorizontalGroup(
+            addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addLibraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(add)
+                        .addComponent(libraryClassnameField, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(libraryFullNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addGroup(addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(libraryFileLabel)
+                    .addGroup(addLibraryPanelLayout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(browseButton)))
+                .addGap(35, 35, 35))
+        );
+        addLibraryPanelLayout.setVerticalGroup(
+            addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addLibraryPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(libraryFullNameLabel)
+                    .addComponent(libraryFileLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(addLibraryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(libraryClassnameField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(browseButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(add)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+        
+    }
     /**
      * Build the dialog displaying the name of the managed libraries and
      * the status for each of the managed libraries.
@@ -160,7 +267,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         }
         librariesDisplayPanel.add(new JLabel(" "),constraints);
     }
-
+        
     /**
      * Create a label to display the name of a
      * library managed by the Library Manager.
@@ -236,10 +343,8 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         try
         {
             /** check to avod that it's possible add more times the same library */
-            if (libraryManager.contains(libraryClassname))
-            {
-                setStatusMessage(libraryClassname + ": Library already loaded");
-            }
+        	if(libraryManager.contains(libraryClassname))
+        			setStatusMessage(libraryClassname + ": Library already loaded");
             else
             {
                 libraryManager.addLibrary(libraryClassname);
@@ -262,6 +367,48 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
     }
 
     /**
+     * Add a library from file chooser path.
+     *
+     * @param libraryClassname The name of the .class of the library to be added.
+     * @param path from file chooser.
+     */
+    public void addLibrary(String libraryClassname, File file)
+    {
+        try
+        {
+            /** check to avod that it's possible add more times the same library */
+        	String libName = libraryClassname;
+        	if(System.getProperty("java.vm.name").equals("IKVM.NET"))
+        	{
+        		libName = "cli." + libraryClassname.substring(0, 
+        				libraryClassname.indexOf(",")).trim();
+        	}
+            if (libraryManager.contains(libName))
+            {
+                setStatusMessage(libraryClassname + ": Library already loaded");
+            }
+            else
+            {
+            	libraryManager.addLibrary(libraryClassname, file);
+                libraryManager.loadLibrary(libraryClassname, file);
+                librariesDisplayPanel.removeAll();
+                displayLibraryManagerStatus();
+                setStatusMessage("Ready.");
+            }
+            pack();
+            setSize(395,getSize().height);
+        }
+        catch (ClassNotFoundException e)
+        {
+            setStatusMessage(libraryClassname + ": Class Not Found");
+        }
+        catch (InvalidLibraryException e)
+        {
+            setStatusMessage(libraryClassname + ": Not a Library");
+        }
+    }
+    
+    /**
      * Remove a library from the dialog to the manager.
      *
      * @param libraryClassname The name of the .class of the library to be removed.
@@ -274,7 +421,9 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
              * without this "if" if a library is unloaded
              * an InvalidLibraryException is always catched 
              */
-            if (libraryManager.isLibraryLoaded(libraryClassname))
+        	if(libraryManager.isExternalLibrary(libraryClassname))
+        		libraryManager.unloadExternalLibrary(libraryClassname);
+        	if (libraryManager.isLibraryLoaded(libraryClassname))
                 libraryManager.unloadLibrary(libraryClassname);
             libraryManager.removeLibrary(libraryClassname);
             setStatusMessage("Ready.");
@@ -311,9 +460,33 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
                 //JOptionPane.showMessageDialog(this, libraryClassname);
 
                 if (((JComboBox)librariesDisplayPanel.getComponent(3*i+2)).getSelectedItem().equals("Loaded"))
-                    libraryManager.loadLibrary(libraryClassname);
+                {
+                	if(libraryManager.isExternalLibrary(libraryClassname))
+                	{
+                		try {
+                			URL url = libraryManager.getExternalLibraryURL(libraryClassname);
+                    		if(url.getProtocol().equals("jar"))
+                    		{
+        	            		JarURLConnection connection =
+        	            		        (JarURLConnection) url.openConnection();
+        	            		    url = connection.getJarFileURL();
+                    		}
+                    		    
+                    		libraryManager.loadLibrary(libraryClassname, new File(URLDecoder.decode(url.getFile(), "UTF-8")));
+                		}
+                		catch (InvalidLibraryException e){
+                        	setStatusMessage(libraryClassname + ": Not a Library");
+                        }
+                		catch (Exception e) {
+                			setStatusMessage(libraryClassname + ": Class Not Found");
+						}
+                	}
+                	else
+                		libraryManager.loadLibrary(libraryClassname);
+                }
                 else
-                    libraryManager.unloadLibrary(libraryClassname);
+                	libraryManager.unloadLibrary(libraryClassname);
+                
             }
             catch (InvalidLibraryException e)
             {
@@ -339,7 +512,23 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
         {
             try
             {
-                libraryManager.addLibrary(libraryName);
+            	alice.tuprolog.LibraryManager mainLibraryManager = libraryManager.getEngine().getLibraryManager();
+            	if(mainLibraryManager.isExternalLibrary(libraryName))
+            	{
+            		URL url = mainLibraryManager.getExternalLibraryURL(libraryName);
+            		if(url.getProtocol().equals("jar"))
+            		{
+	            		JarURLConnection connection =
+	            		        (JarURLConnection) url.openConnection();
+	            		    url = connection.getJarFileURL();
+            		}
+            		    
+            		libraryManager.addLibrary(libraryName, new File(URLDecoder.decode(url.getFile(), "UTF-8")));
+            		pack();
+                    setSize(395,getSize().height);
+            	}
+            	else
+            		libraryManager.addLibrary(libraryName);
             }
             catch (ClassNotFoundException e)
             {
@@ -348,7 +537,9 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
             catch (InvalidLibraryException e)
             {
                 setStatusMessage(libraryName + ": Not a Library");
-            }
+            } catch (IOException e) {
+            	e.printStackTrace();
+			}
         }
         librariesDisplayPanel.removeAll();
         displayLibraryManagerStatus();
