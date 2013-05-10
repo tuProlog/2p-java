@@ -26,6 +26,7 @@ import alice.tuprolog.interfaces.IEngine;
  */
 public class Engine /*Castagna 06/2011*/implements IEngine/**/{    
 
+	//PrintStream log;
 	State  nextState;
 	Term   query;
 	Struct startGoal;
@@ -36,14 +37,25 @@ public class Engine /*Castagna 06/2011*/implements IEngine/**/{
 	ChoicePointContext currentAlternative;
 	ChoicePointStore choicePointSelector;
 	boolean mustStop;
-	EngineManager manager;
+	EngineRunner manager;
 
 
-	public Engine(EngineManager manager, Term query) {
+	public Engine(EngineRunner manager, Term query) {
 		this.manager = manager;        
 		this.nextState = manager.INIT;
 		this.query = query;
 		this.mustStop = false;
+		
+		/*long l = Thread.currentThread().getId();
+		String s= "Esecuzione"+l+"_"+Integer.toHexString(this.hashCode())+".txt";
+		File file= new File(s);
+		try {
+			file.createNewFile();
+			log=new PrintStream(file);
+		} catch (Exception e) {
+			System.err.println(s);
+			e.printStackTrace();
+		} */
 	}
 
 
@@ -64,19 +76,29 @@ public class Engine /*Castagna 06/2011*/implements IEngine/**/{
 	 */
 	StateEnd run() {
 		String action;
+		//log.println("Siamo in engine.run, thread "+Thread.currentThread().getId());
+		//log.println(currentContext);
+		
 		do {
 			if (mustStop) {
 				nextState = manager.END_FALSE;
 				break;
 			}
+			//log.println(Thread.currentThread().getId()+" - IL PROSSIMO STATO :");
 			action = nextState.toString();
+			//log.println(nextState);
 
 			nextState.doJob(this);
+			//log.println("Abbiamo eseguito l'azione dello stato, il contesto di esecuzione");
+			//log.println(currentContext);
 
 			manager.spy(action, this);
+			
 
 		} while (!(nextState instanceof StateEnd));
 		nextState.doJob(this);
+		//log.println("Abbiamo eseguito l'azione dello stato, il contesto di esecuzione");
+		//log.println(currentContext);
 		return (StateEnd)(nextState);
 	}
 

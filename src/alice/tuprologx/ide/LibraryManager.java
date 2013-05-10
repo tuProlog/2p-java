@@ -239,7 +239,7 @@ public final class LibraryManager
      * @throws InvalidLibraryException
      */
     public void loadLibrary(String library, File file) throws InvalidLibraryException {
-        engine.loadLibrary(library, new String[] { file.toPath().toString()});
+        engine.loadLibrary(library, new String[] { file.getAbsolutePath()});
     }
     
     

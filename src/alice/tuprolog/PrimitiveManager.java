@@ -29,16 +29,16 @@ import alice.tuprolog.interfaces.IPrimitiveManager;
  */
 public class PrimitiveManager /*Castagna 06/2011*/implements IPrimitiveManager/**/{
     
-    private IdentityHashMap<IPrimitives,List<PrimitiveInfo>> libHashMap;
-    private HashMap<String,PrimitiveInfo> directiveHashMap;
-    private HashMap<String,PrimitiveInfo> predicateHashMap;
-    private HashMap<String,PrimitiveInfo> functorHashMap;
+    private Map<IPrimitives,List<PrimitiveInfo>> libHashMap;
+    private Map<String,PrimitiveInfo> directiveHashMap;
+    private Map<String,PrimitiveInfo> predicateHashMap;
+    private Map<String,PrimitiveInfo> functorHashMap;
     
     public PrimitiveManager() {
-        libHashMap        = new IdentityHashMap<IPrimitives, List<PrimitiveInfo>>();
-        directiveHashMap  = new HashMap<String,PrimitiveInfo>();
-        predicateHashMap  = new HashMap<String,PrimitiveInfo>();
-        functorHashMap    = new HashMap<String,PrimitiveInfo>();
+        libHashMap        = Collections.synchronizedMap(new IdentityHashMap<IPrimitives, List<PrimitiveInfo>>());
+        directiveHashMap  = Collections.synchronizedMap(new HashMap<String,PrimitiveInfo>());
+        predicateHashMap  = Collections.synchronizedMap(new HashMap<String,PrimitiveInfo>());
+        functorHashMap    = Collections.synchronizedMap(new HashMap<String,PrimitiveInfo>());
     }
     
     /**

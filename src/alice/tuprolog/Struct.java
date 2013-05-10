@@ -26,8 +26,8 @@ import java.util.List;
  * Struct class represents both compound prolog term
  * and atom term (considered as 0-arity compound).
  */
-@SuppressWarnings("serial")
 public class Struct extends Term {
+	private static final long serialVersionUID = 1L;
     
     /**
 	 * name of the structure

@@ -23,7 +23,8 @@ package alice.tuprolog;
 import alice.tuprolog.Number;
 
 public class TestLibrary extends StringLibrary {
-	
+	private static final long serialVersionUID = 1L;
+
 	public String getName() {
 		return "TestLibraryName";
 	}

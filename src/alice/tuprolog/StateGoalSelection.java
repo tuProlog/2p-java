@@ -28,7 +28,7 @@ public class StateGoalSelection extends State {
     
     
     
-    public StateGoalSelection(EngineManager c) {
+    public StateGoalSelection(EngineRunner c) {
         this.c = c;
         stateName = "Call";
     }

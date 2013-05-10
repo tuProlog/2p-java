@@ -27,7 +27,7 @@ import alice.tuprolog.Struct;
 public class StateInit extends State {
     
     
-    public StateInit(EngineManager c) {
+    public StateInit(EngineRunner c) {
         this.c = c;
         stateName = "Goal";
     }

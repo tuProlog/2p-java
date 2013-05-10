@@ -385,6 +385,7 @@ class FamilyClausesList extends LinkedList<ClauseInfo> {
 
 	// Short test about the new implementation of the ListItr
 	// Alessandro Montanari - alessandro.montanar5@studio.unibo.it
+	@SuppressWarnings("unused")
 	private static class ListItrTest{
 
 		private static FamilyClausesList clauseList = new FamilyClausesList();

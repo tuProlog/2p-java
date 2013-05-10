@@ -30,7 +30,7 @@ public class StateBacktrack extends State {
     
 
     
-    public StateBacktrack(EngineManager c) {
+    public StateBacktrack(EngineRunner c) {
         this.c = c;
         stateName = "Back";
     }

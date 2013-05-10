@@ -12,7 +12,7 @@ public class StateException extends State {
     final Term javaCatchTerm = Term
             .createTerm("java_catch(Goal, List, Finally)");
 
-    public StateException(EngineManager c) {
+    public StateException(EngineRunner c) {
         this.c = c;
         stateName = "Exception";
     }

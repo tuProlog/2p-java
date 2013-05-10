@@ -36,7 +36,7 @@ public class StateEnd extends State {
      * Constructor
      * @param end Terminal state of computation
      */
-    public StateEnd(EngineManager c, int end) {
+    public StateEnd(EngineRunner c, int end) {
         endState = end;
     }
     
@@ -61,9 +61,9 @@ public class StateEnd extends State {
     
     public String toString() {
         switch(endState){
-        case EngineManager.FALSE  : return "FALSE";
-        case EngineManager.TRUE   : return "TRUE";
-        case EngineManager.TRUE_CP: return "TRUE_CP";
+        case EngineRunner.FALSE  : return "FALSE";
+        case EngineRunner.TRUE   : return "TRUE";
+        case EngineRunner.TRUE_CP: return "TRUE_CP";
         default                   : return "HALT";
         }
     }

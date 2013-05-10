@@ -42,7 +42,7 @@
 	    	<replace file="${src.dir}/alice/util/NetVersionInfo.java" token="@NETSpecific.version@" value="${NETSpecific.version}"/> -->
 			
 			<javac destdir="${build.classes.dir}" debug="@{debug}"
-			deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false">
+			deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false" target="${target}" source="${target}">
 	            <src path="${src.dir}"/>
 	            <classpath refid="ant-classpath"/>
 	        </javac>
@@ -75,14 +75,14 @@
     			<mkdir dir="${build.tests.dir}/fixtures"/>
     			
     			<javac destdir="${build.tests.dir}/unit" debug="@{debug}" 
-    				deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false">
+    				deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false" target="${target}" source="${target}">
     	            <src path="${test.dir}/unit"/>
     	            <classpath refid="ant-classpath"/>
     	        	<classpath location="${build.classes.dir}"/>
     	        </javac>
     			
     			<javac destdir="${build.tests.dir}/fixtures" debug="@{debug}"
-    				deprecation="false" optimize="@{optimize}" failonerror="true">
+    				deprecation="false" optimize="@{optimize}" failonerror="true" target="${target}" source="${target}">
     		        <src path="${test.dir}/fit/fixtures"/>
     		        <classpath refid="ant-classpath"/>
     		    	<classpath location="${build.classes.dir}"/>
@@ -321,7 +321,7 @@
 	</target>
 	-->
 	
-	<target name="04.prepare" description="Creates project structure, if needed">
+	<target name="04.prepare" depends="00.init.properties" description="Creates project structure, if needed">
         <mkdir dir="${src.dir}"/>
         <mkdir dir="${lib.dir}"/>
         <mkdir dir="${build.classes.dir}"/>
@@ -366,7 +366,7 @@
 			<fileset dir="${build.unit.reports.dir}">
 				<include name="TEST-*.xml"/>
 			</fileset>
-			<report format="frames" todir="${build.unit.reports.dir}/html-report"/>
+			<report styledir="ant" format="frames" todir="${build.unit.reports.dir}/html-report"/>
 		</junitreport>
 		<echo>Look directory ${build.unit.reports.dir}/html-report</echo>
 	</target>
@@ -413,11 +413,11 @@
 	 	
 	 		<delete dir="${build.archives.net.dir}"/>
  			<mkdir dir="${build.archives.net.dir}"/>
-	 		<mkdir dir="${build.archives.net.dir}/archives"/>
+	 		<!-- <mkdir dir="${build.archives.net.dir}/archives"/> -->
 	 		<mkdir dir="${build.archives.net.dir}/lib"/>
 	 		<mkdir dir="${build.archives.net.dir}/test"/>
 	 	
-	 		<copy todir="${build.archives.net.dir}/archives">
+	 		<copy todir="${build.archives.net.dir}">
 	 			<fileset dir="${ikvm.dir}/bin/">
 	 				<include name="IKVM.OpenJDK.XML.API.dll"/>
 	 				<include name="IKVM.OpenJDK.Security.dll"/>
@@ -442,9 +442,10 @@
 			<exec executable="${ikvmc}">
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Text.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
-	            <arg value="-target:library" />
+	            <arg value="-target:exe" />
 	            <arg value="-compressresources" />
-	            <arg value="-out:${build.archives.net.dir}/lib/junit.dll" />
+	            <arg value="-out:${build.archives.net.dir}/lib/junit.exe" />
+				<arg value="-main:org.junit.runner.JUnitCore" />
 	            <arg value="${lib.dir}/junit.jar" />
 	        </exec>
 	 	
@@ -452,7 +453,8 @@
 	 		<exec executable="${ikvmc}">
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Text.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
-	 			<arg value="-reference:${build.archives.net.dir}/lib/junit.dll" />
+	 			<arg value="-reference:${build.archives.net.dir}/lib/junit.exe" />
+	 			<arg value="-classloader:ikvm.runtime.AppDomainAssemblyClassLoader" />	<!-- See Appendix E Alessandro Montanari's thesis -->
 	            <arg value="-target:library" />
 	            <arg value="-compressresources" />
 	            <arg value="-out:${build.archives.net.dir}/lib/fit.dll" />
@@ -468,7 +470,7 @@
 	 				<!-- <arg value="-debug"/> -->
  		            <arg value="-target:library" />
  		            <arg value="-compressresources" />
- 		            <arg value="-out:${build.archives.net.dir}/archives/javassist.dll" />
+ 		            <arg value="-out:${build.archives.net.dir}/javassist.dll" />
  		            <arg value="${lib.dir}/javassist.jar" />
 	 		</exec>
 	        
@@ -483,13 +485,13 @@
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Remoting.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Misc.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.SwingAWT.dll" />
-	            <arg value="-reference:${build.archives.net.dir}/archives/javassist.dll" />
+	            <arg value="-reference:${build.archives.net.dir}/javassist.dll" />
 				<!-- <arg value="-debug"/> -->
 		 		<arg value="-classloader:ikvm.runtime.ClassPathAssemblyClassLoader"/>
 	            <arg value="-target:winexe" />
 	            <arg value="-compressresources" />
 	            <arg value="-version:${engine.version}.${NETSpecific.version}" />
-	            <arg value="-out:${build.archives.net.dir}/archives/2p.exe" />
+	            <arg value="-out:${build.archives.net.dir}/2p.exe" />
 	            <arg value="${build.archives.dir}/2p.jar" />
 	        </exec>
 	
@@ -502,7 +504,7 @@
  		            <arg value="-target:library" />
  		            <arg value="-compressresources" />
  		            <arg value="-version:${engine.version}.${NETSpecific.version}" />
- 		            <arg value="-out:${build.archives.net.dir}/archives/tuprolog.dll" />
+ 		            <arg value="-out:${build.archives.net.dir}/tuprolog.dll" />
  		            <arg value="${build.archives.dir}/tuprolog.jar" />
 	 		</exec>
 	 	
@@ -545,11 +547,14 @@
 			<exec executable="${ikvmc}">
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Text.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
-				<arg value="-reference:${build.archives.net.dir}/lib/junit.dll" />
-				<arg value="-reference:${build.archives.net.dir}/archives/2p.exe" />
+				<arg value="-reference:${build.archives.net.dir}/lib/junit.exe" />
+	            <arg value="-reference:${build.archives.net.dir}/javassist.dll" />
+				<arg value="-reference:mscorlib.dll" />							<!-- Added by Mannino-->
+				<arg value="-reference:${ikvm.dir}/bin/IKVM.Reflection.dll" />	<!-- Added by Mannino-->
 	            <arg value="-target:library" />
 	            <arg value="-compressresources" />
-	            <arg value="-out:${build.archives.net.dir}/test/unit-tests.dll" />
+	            <arg value="-out:${build.archives.net.dir}/test/2pWithUnitTests.dll" />
+				<arg value="${build.archives.dir}/2p.jar"/>
 	            <arg value="${build.tests.dir}/unit-tests.jar"/>
 	        </exec>
 	 	
@@ -557,9 +562,9 @@
 			<exec executable="${ikvmc}">
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Text.dll" />
 	            <arg value="-reference:${ikvm.dir}/bin/IKVM.OpenJDK.Core.dll" />
-				<arg value="-reference:${build.archives.net.dir}/lib/junit.dll" />
+				<arg value="-reference:${build.archives.net.dir}/lib/junit.exe" />
 				<arg value="-reference:${build.archives.net.dir}/lib/fit.dll" />
-				<arg value="-reference:${build.archives.net.dir}/archives/2p.exe" />
+				<arg value="-reference:${build.archives.net.dir}/2p.exe" />
 	            <arg value="-target:library" />
 	            <arg value="-compressresources" />
 	            <arg value="-out:${build.archives.net.dir}/test/fixtures.dll" />
@@ -636,7 +641,9 @@
 			<echo>Look directory ${build.release.dir}</echo>
 		</target>
 	
-	<target name="12.tag" depends="01.set.classpath, 04.prepare, 08.package" description="Tags the code">
+	<target name="12.tag" depends="01.set.classpath, 04.prepare, 08.package, 09.build.NET" description="Tags the code">
+		
+		<property name="TagMessage" value="Tag Java ${engine.version}.${JavaSpecific.version}"/>
 		
 		<input
 			message="You are tagging the project with version ${engine.version}.${JavaSpecific.version}, if it is OK insert password for ${username}:"
@@ -650,28 +657,65 @@
 			svnkit="true" 
 			javahl="false" />
 		
-		
+		<!-- DOC: http://subclipse.tigris.org/svnant/svntask.html -->
 		<svn refid="settings">
 			<copy
-				srcPath="." 
+				srcUrl="https://tuprolog.googlecode.com/svn/2p/trunk" 
 				destUrl="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}"
-				message="Tag ${engine.version}.${JavaSpecific.version}"
+				revision="HEAD"
+				message="${TagMessage}" 
 				makeParents="true" >
 			</copy> 
 			
 			<import
-				path="./build/archives/2p.jar" 
+				path="${build.archives.dir}/2p.jar" 
 				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/2p.jar"
-				message="Tag ${engine.version}.${JavaSpecific.version}"
+				message="${TagMessage}" 
 				recurse="false" >
 			</import> 
 			
 			<import
-				path="./build/archives/tuprolog.jar" 
+				path="${build.archives.dir}/tuprolog.jar" 
 				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/tuprolog.jar"
-				message="Tag ${engine.version}.${JavaSpecific.version}"
+				message="${TagMessage}" 
+				recurse="false" > 
+			</import>
+			
+			<import
+				path="${build.archives.net.dir}/tuprolog.dll" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/tuprolog.dll"
+				message="${TagMessage}" 
+				recurse="false" >
+			</import>
+			
+			<import
+				path="${build.archives.net.dir}/2p.exe" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/2p.exe"
+				message="${TagMessage}" 
+				recurse="false" >
+			</import>  
+			
+			<import
+				path="${build.archives.net.dir}/javassist.dll" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/javassist.dll"
+				message="${TagMessage}" 
+				recurse="false" >
+			</import>  
+			
+			<import
+				path="${build.archives.net.dir}/lib" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/lib"
+				message="${TagMessage}" 
 				recurse="false" >
 			</import> 
+			
+			<import
+				path="${build.archives.net.dir}/test" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/test"
+				message="${TagMessage}" 
+				recurse="false" >
+			</import> 
+
 		</svn>
 	</target>
 </project>

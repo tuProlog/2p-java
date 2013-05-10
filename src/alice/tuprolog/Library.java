@@ -76,6 +76,10 @@ public abstract class Library implements Serializable, IPrimitives {
         return "";
     }
     
+    public String getTheory(int a) {
+    	return "";
+    }
+    
     /**
      * Gets the synonym mapping, as array of
      * elements like  { synonym, original name}
@@ -95,7 +99,7 @@ public abstract class Library implements Serializable, IPrimitives {
     /**
 	 * @param en
 	 */
-    void setEngine(Prolog en) {
+    public void setEngine(Prolog en) {	
         engine = en;
     }
     
@@ -166,6 +170,9 @@ public abstract class Library implements Serializable, IPrimitives {
      * method invoked when the engine has
      * finished a demostration
      */
+    
+    public void onSolveHalt(){}
+    
     public void onSolveEnd() {}
     
     /**

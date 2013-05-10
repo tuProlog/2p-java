@@ -22,7 +22,7 @@ package alice.tuprolog;
  */
 public class StateGoalEvaluation extends State {
 
-	public StateGoalEvaluation(EngineManager c) {
+	public StateGoalEvaluation(EngineRunner c) {
 		this.c = c;
 		stateName = "Eval";
 	}

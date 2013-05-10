@@ -701,14 +701,14 @@ public class ISOIOLibrary extends Library{
             throw PrologError.permission_error(engine.getEngineManager(), "input", "binary_stream", stream_or_alias, new Struct("The target stream is associated with a binary stream."));
         }
         
-        //se lo stream è stdin, leggo il carattere esattamente come fa get0 di IOLib
-        //stdin lo scrivo come stringa, non posso usare inputStreamName, perchè in quel campo ci deve rimanere lo stream corrente, e se è stato cambiato, non ho più sdtin
+        //se lo stream e' stdin, leggo il carattere esattamente come fa get0 di IOLib
+        //stdin lo scrivo come stringa, non posso usare inputStreamName, perche' in quel campo ci deve rimanere lo stream corrente, e se e' stato cambiato, non ho piu' sdtin
         if(file_name.equals("stdin")){ 
         	IOLib.get0_1(arg);
         	return true;
         }
         
-        //se è un file invece devo effettuare tutti i controlli sullo stream.
+        //se e' un file invece devo effettuare tutti i controlli sullo stream.
         try{        
         	Number position  = (Number) (element.get("position"));
         	Struct eof = (Struct) element.get("end_of_stream");
@@ -792,7 +792,7 @@ public class ISOIOLibrary extends Library{
             throw PrologError.permission_error(engine.getEngineManager(), "input", "binary_stream", stream_or_alias, new Struct("The target stream is associated with a binary stream."));
         }
         
-        //se file_name è stdin leggo il codice del carattere normalmente
+        //se file_name e' stdin leggo il codice del carattere normalmente
         //senza preoccuparmi di controllare tutte le opzioni dello stream. 
         Struct struct_name = (Struct) element.get("file_name");
         String file_name = struct_name.toString();
@@ -813,7 +813,7 @@ public class ISOIOLibrary extends Library{
                 }
         }
         
-        //se invece lo stream è un normale file, devo controllare tutte le opzioni decise in apertura.
+        //se invece lo stream e' un normale file, devo controllare tutte le opzioni decise in apertura.
         try{    
                 Number position  = (Number) (element.get("position"));
                 Struct eof = (Struct) element.get("end_of_stream");
@@ -1296,7 +1296,7 @@ public class ISOIOLibrary extends Library{
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         
         if (stream.equals("stdout")) {
-        		//lo standard output non è uno stream binario, 
+        		//lo standard output non e' uno stream binario, 
         		//se si tenta di scrivere su std output questo mi restituisce soltanto la stringa.
                getEngine().stdOutput(out_byte.toString()); //da riguardare!!
         } 
@@ -1610,7 +1610,7 @@ public class ISOIOLibrary extends Library{
             	if (output_name.equals("stdout")) {
                      if(quoted == true){ //per scrivere sull'output devo richiamare l'output dell'Engine nel caso di stdio,
                     	 				//altrimenti utilizzando write() il risultato lo stampa sulla console Java.
-                    	 				//Nel caso in cui l'output è un file write è corretto.
+                    	 				//Nel caso in cui l'output e' un file write e' corretto.
                     	 getEngine().stdOutput((alice.util.Tools.removeApices(out_term.toString())));
                      }
                      else{
@@ -2003,7 +2003,7 @@ public class ISOIOLibrary extends Library{
         for(Map.Entry<InputStream, Hashtable<String, Term>> currentElement : inputStreams.entrySet()){
             for(Map.Entry<String, Term> currentElement2 : currentElement.getValue().entrySet()){
 
-            	//Può anche essere che l'utente inserisca il nome della variabile a cui è associato lo stream che gli serve
+            	//Puo' anche essere che l'utente inserisca il nome della variabile a cui e' associato lo stream che gli serve
             	//in quel caso basta confrontare il nome dello stream con la chiave dell'elemento che sto analizzando (currentElement)
             	if((currentElement.getKey().toString()).equals(stream_name)){
                     result = currentElement.getKey();
@@ -2021,7 +2021,7 @@ public class ISOIOLibrary extends Library{
             	else if(currentElement2.getKey().equals("alias")){ 
             		Struct alias = (Struct)currentElement2.getValue();
                     int arity = alias.getArity();
-                    //Ci posso essere anche più di un alias associti a quello stream, percio' devo controllare l'arita'
+                    //Ci posso essere anche piu' di un alias associti a quello stream, percio' devo controllare l'arita'
                     //della struttura che contiene tutti gli alias.
                     if(arity > 1){
                     	for(int k = 0; k< alias.getArity();k++){
@@ -2033,7 +2033,7 @@ public class ISOIOLibrary extends Library{
                         }
                     }
                     else{
-                    	//se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' è sufficiente fare alias.getName()
+                    	//se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' e' sufficiente fare alias.getName()
                         if(alias.getName().equals(stream_name)){
                         	result = currentElement.getKey();
                         	flag =1;
@@ -2089,7 +2089,7 @@ public class ISOIOLibrary extends Library{
             	else if(currentElement2.getKey().equals("alias")){ 
             		Struct alias = (Struct)currentElement2.getValue();
                     int arity = alias.getArity();
-                    //Ci posso essere anche più di un alias associti a quello stream, percio' devo controllare l'arita'
+                    //Ci posso essere anche piu' di un alias associti a quello stream, percio' devo controllare l'arita'
                     //della struttura che contiene tutti gli alias.
                     if(arity > 1){
                     	for(int k = 0; k< alias.getArity();k++){
@@ -2101,7 +2101,7 @@ public class ISOIOLibrary extends Library{
                         }
                     }
                     else{
-                    	//se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' è sufficiente fare alias.getName()
+                    	//se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' e' sufficiente fare alias.getName()
                         if(alias.getName().equals(stream_name)){
                         	result = currentElement.getKey();
                         	flag =1;

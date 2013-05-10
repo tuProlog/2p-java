@@ -16,8 +16,9 @@ import java.io.*;
 @SuppressWarnings("serial")
 public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener/*Castagna 06/2011*/, ExceptionListener/**/{
 
-   BufferedReader  stdin;
+	BufferedReader  stdin;
     Prolog          engine;
+
 
     static final String incipit =
         "tuProlog " + Prolog.getVersion() + " - DEIS,  University of Bologna at Cesena \n"+
@@ -30,6 +31,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
             System.exit(-1);
         }
         
+
         engine = new Prolog();
         stdin = new BufferedReader(new InputStreamReader(System.in));
         engine.addWarningListener(this);
@@ -68,10 +70,13 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         }
         solveGoal(goal);
     }
+    
 
     void solveGoal(String goal){
+
         try {
-            SolveInfo info = engine.solve(goal);
+        	SolveInfo info = engine.solve(goal);
+   
             /*Castagna 06/2011*/        	
         	//if (engine.isHalted())
         	//	System.exit(0);
@@ -130,8 +135,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
                 else
                     break;
             }
-        } catch (IOException ex){
-        }
+        } catch (IOException ex){}
         if (!choice.equals(";")) {
             System.out.println("yes.");
             engine.solveEnd();
@@ -144,10 +148,10 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
                     System.out.println("no.");
                     become("goalRequest");
                 } else {
-                    System.out.print(solveInfoToString(info) + " ? ");
-                    become("getChoice");
+                	System.out.print(solveInfoToString(info) + " ? ");
+                	become("getChoice");
                 }
-            } catch (Exception ex){
+            }catch (Exception ex){
                 System.out.println("no.");
                 become("goalRequest");
             }

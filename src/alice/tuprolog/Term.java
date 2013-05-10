@@ -32,8 +32,8 @@ import alice.util.OneWayList;
  * @see Var
  * @see  Number
  */
-@SuppressWarnings("serial")
 public abstract class Term implements Serializable {
+	private static final long serialVersionUID = 1L;
 
     // true and false constants
     public static final Term TRUE  = new Struct("true");
@@ -181,7 +181,7 @@ public abstract class Term implements Serializable {
      * @return true if the term is unifiable with this one
      */
     public boolean unify(Prolog mediator, Term t1) {
-               EngineManager engine = mediator.getEngineManager();
+        EngineManager engine = mediator.getEngineManager();
         resolveTerm();
         t1.resolveTerm();
         List<Var> v1 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
@@ -190,7 +190,7 @@ public abstract class Term implements Serializable {
         if (ok) {
             ExecutionContext ec = engine.getCurrentContext();
             if (ec != null) {
-                int id = (engine.env==null)? Var.PROGRESSIVE : engine.env.nDemoSteps;
+                int id = (engine.getEnv()==null)? Var.PROGRESSIVE : engine.getEnv().nDemoSteps;
                 // Update trailingVars
                 ec.trailingVars = new OneWayList<List<Var>>(v1,ec.trailingVars);
                 // Renaming after unify because its utility regards not the engine but the user

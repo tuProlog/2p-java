@@ -32,7 +32,7 @@ public class StateRuleSelection extends State {
     
     
     
-    public StateRuleSelection(EngineManager c) {
+    public StateRuleSelection(EngineRunner c) {
         this.c = c;
         stateName = "Init";
     }

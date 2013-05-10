@@ -48,13 +48,13 @@ class FlagManager {
     /**
      * Defines a new flag
      */
-    public boolean defineFlag(String name, Struct valueList, Term defValue,
+    public synchronized boolean defineFlag(String name, Struct valueList, Term defValue,
             boolean modifiable, String libName) {
         flags.add(new Flag(name, valueList, defValue, modifiable, libName));
         return true;
     }
 
-    public boolean setFlag(String name, Term value) {
+    public synchronized boolean setFlag(String name, Term value) {
         java.util.Iterator<Flag> it = flags.iterator();
         while (it.hasNext()) {
             Flag flag = (Flag) it.next();
@@ -70,7 +70,7 @@ class FlagManager {
         return false;
     }
 
-    public Struct getPrologFlagList() {
+    public synchronized Struct getPrologFlagList() {
         Struct flist = new Struct();
         java.util.Iterator<Flag> it = flags.iterator();
         while (it.hasNext()) {
@@ -81,7 +81,7 @@ class FlagManager {
         return flist;
     }
 
-    public Term getFlag(String name) {
+    public synchronized Term getFlag(String name) {
         java.util.Iterator<Flag> it = flags.iterator();
         while (it.hasNext()) {
             Flag fl = (Flag) it.next();

@@ -17,6 +17,7 @@
  */
 package alice.tuprolog;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -174,10 +175,12 @@ public class BuiltIn extends Library {
 		 arg0 = arg0.getTerm();
 		 if (arg0 instanceof Var)
 			 throw PrologError.instantiation_error(engineManager, 1);
-		 if (!(arg0 instanceof Struct) || !arg0.isGround()) {
-			 throw PrologError.type_error(engineManager, 1,
-					 "predicate_indicator", arg0);
-		 }
+		 if (!(arg0 instanceof Struct) || !arg0.isGround()) 
+			 throw PrologError.type_error(engineManager, 1, "predicate_indicator", arg0);
+		 
+		 if( ((Struct)arg0).getArg(0).toString().equals("abolish") )
+			 throw PrologError.permission_error(engineManager, "modify", "static_procedure", arg0, new Struct(""));
+		 
 		 return theoryManager.abolish((Struct) arg0);
 	 }
 
@@ -436,7 +439,7 @@ public class BuiltIn extends Library {
 		 // unify arg1 with a renamed copy of arg0
 		 arg0 = arg0.getTerm();
 		 arg1 = arg1.getTerm();
-		 int id = engineManager.env.nDemoSteps;
+		 int id = engineManager.getEnv().nDemoSteps;
 		 return unify(arg1, arg0.copy(new IdentityHashMap<Var,Var>(), id));
 	 }
 
@@ -603,8 +606,13 @@ public class BuiltIn extends Library {
 	 public void include_1(Term theory) throws FileNotFoundException,
 	 InvalidTheoryException, IOException {
 		 theory = theory.getTerm();
-		 engine.addTheory(new Theory(new FileInputStream(alice.util.Tools
-				 .removeApices(theory.toString()))));
+         String path = alice.util.Tools.removeApices(theory.toString());
+         if(! new File(path).isAbsolute()) {
+            path = engine.getCurrentDirectory()  + File.separator + path;
+         }
+         engine.pushDirectoryToList(new File(path).getParent());
+		 engine.addTheory(new Theory(new FileInputStream(path)));
+         engine.popDirectoryFromList();
 	 }
 
 }

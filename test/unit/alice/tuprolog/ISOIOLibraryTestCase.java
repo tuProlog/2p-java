@@ -74,7 +74,7 @@ public class ISOIOLibraryTestCase {
 		info = engine.solve("open('" + writePath + "','read',X,X).");
 		assertFalse(info.isSuccess());
 
-		// Passando una proprietà in una lista illecita:
+		// Passando una proprieta' in una lista illecita:
 		info = engine.solve("open('" + writePath + "','read',X,[ciao(caramelle)]).");
 		assertFalse(info.isSuccess());
 

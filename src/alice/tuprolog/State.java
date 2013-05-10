@@ -24,7 +24,7 @@ package alice.tuprolog;
  */
 abstract class State {
     
-    protected EngineManager c;
+    protected EngineRunner c;
     protected String stateName;
     
     abstract void doJob(Engine e);

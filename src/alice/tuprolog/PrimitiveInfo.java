@@ -63,7 +63,7 @@ public class PrimitiveInfo {
     /**
      * Method to invalidate primitives. It's called just mother library removed
      */
-    public String invalidate() {
+    public synchronized String invalidate() {
         String key = primitive_key;
         primitive_key = null;
         return key;
@@ -102,7 +102,7 @@ public class PrimitiveInfo {
      * @throws IllegalAccessException 
      * @throws Exception if invocation directive failure
      */
-    public void evalAsDirective(Struct g) throws IllegalAccessException, InvocationTargetException {
+    public synchronized void evalAsDirective(Struct g) throws IllegalAccessException, InvocationTargetException {
         for (int i=0; i<primitive_args.length; i++) {
             primitive_args[i] = g.getTerm(i);
         }
@@ -114,7 +114,7 @@ public class PrimitiveInfo {
      * evaluates the primitive as a predicate
      * @throws Exception if invocation primitive failure
      */
-    public boolean evalAsPredicate(Struct g) throws Throwable {
+    public synchronized boolean evalAsPredicate(Struct g) throws Throwable {
         for (int i=0; i<primitive_args.length; i++) {
             primitive_args[i] = g.getArg(i);
         }
@@ -131,7 +131,7 @@ public class PrimitiveInfo {
      * evaluates the primitive as a functor
      * @throws Throwable 
      */
-    public Term evalAsFunctor(Struct g) throws Throwable {
+    public synchronized Term evalAsFunctor(Struct g) throws Throwable {
         try {
             for (int i=0; i<primitive_args.length; i++) {
                 primitive_args[i] = g.getTerm(i);
