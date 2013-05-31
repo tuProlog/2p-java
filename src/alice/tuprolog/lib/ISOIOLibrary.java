@@ -180,12 +180,17 @@ public class ISOIOLibrary extends Library{
                     
                     //mi servono queste istruzioni per set_stream_position
                     //faccio una mark valida fino alla fine del file, appena lo apro in modo che mi possa
-                    //permettere di fare una reset all'inizio del file. Il +5 alloca un po di spazio in pi?
-                    //nel buffer, mi serve per? per evitare che la mark non sia pi? valida quando leggo la fine del file
+                    //permettere di fare una reset all'inizio del file. Il +5 alloca un po di spazio in più
+                    //nel buffer, mi serve per per evitare che la mark non sia più valida quando leggo la fine del file
                     if(((Struct)properties.get("reposition")).getName().equals("true")){
                         try {
                             input.mark((input.available())+5);
                         } catch (IOException e) {
+                        	// ED 2013-05-21: added to prevent Java warning "resource leak", input not closed
+                        	try {input.close();} catch (IOException e2) {
+                        		throw PrologError.system_error(new Struct("An error has occurred in open when closing the input file."));
+                        	} 
+                        	// END ED
                             throw PrologError.system_error(new Struct("An error has occurred in open."));
                         }
                     }
@@ -280,6 +285,11 @@ public class ISOIOLibrary extends Library{
                         try {
                             input.mark((input.available())+5);
                         } catch (IOException e) {
+                        	// ED 2013-05-21: added to prevent Java warning "resource leak", input not closed
+                        	try {input.close();} catch (IOException e2) {
+                        		throw PrologError.system_error(new Struct("An error has occurred in open when closing the input file."));
+                        	} 
+                        	// END ED
                             throw PrologError.system_error(new Struct("An error has occurred in open."));
                         }
                     }

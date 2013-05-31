@@ -33,9 +33,12 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
 	public <Z> Z/*Collection<Z>*/ toJava() {
 		Vector<Z> _javaList = new Vector<Z>(_theList.size());
 		for (Term<?> t : _theList) {
-			_javaList.add((Z)t.toJava());
+			// _javaList.add( (Z)t.toJava() );
+			Z auxList = uncheckedCast(t.toJava());
+			_javaList.add( auxList );
 		}
-		return (Z)_javaList;	
+		//return (Z)_javaList;
+		return uncheckedCast(_javaList);
 	}
 
 	public String toString() {
@@ -47,7 +50,8 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
         }
         
         public List<X> getTail() {
-            Vector<X> tail = (Vector<X>)_theList.clone();
+            //Vector<X> tail = (Vector<X>)_theList.clone();
+            Vector<X> tail = uncheckedCast(_theList.clone());
             tail.remove(0);
             return new List<X>(tail);
         }

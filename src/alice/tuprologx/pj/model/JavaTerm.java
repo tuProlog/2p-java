@@ -155,13 +155,16 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
             for (java.beans.PropertyDescriptor pdesc : binfo.getPropertyDescriptors()) {
                 if (pdesc.getReadMethod()!=null && pdesc.getWriteMethod()!=null) {
                     Term<?> property = it.next();
-                    if (!((property instanceof Var) && ((Var<Term<?>>)property).getValue()==null)) {
+                    /* ED 2013-05-21 */ Var<Term<?>> auxProperty = uncheckedCast(property);
+                    //if (!((property instanceof Var) && ((Var<Term<?>>)property).getValue()==null)) {
+                    if (!((property instanceof Var) && (auxProperty).getValue()==null)) {
                         //System.out.println(property.toJava().getClass() + " " + pdesc.getWriteMethod().getName());
                         pdesc.getWriteMethod().invoke(po, property.toJava());
                     }
                 }
             }            
-            return (Z)po;            
+            // return (Z)po;
+            return uncheckedCast(po);
         }
         catch (Exception e) {
             throw new UnsupportedOperationException(e);

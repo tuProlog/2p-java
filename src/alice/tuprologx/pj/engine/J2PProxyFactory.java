@@ -218,7 +218,8 @@ public class J2PProxyFactory extends ProxyFactory {
     /**
      * Sets the super class of a proxy class.
      */
-    public void setSuperclass(Class clazz) {
+    @SuppressWarnings("rawtypes")
+	public void setSuperclass(Class clazz) {
         superClass = clazz;
     }
 
@@ -232,7 +233,8 @@ public class J2PProxyFactory extends ProxyFactory {
     /**
 	 * Sets the interfaces of a proxy class.
 	 */
-    public void setInterfaces(Class[] ifs) {
+    @SuppressWarnings("rawtypes")
+	public void setInterfaces(Class[] ifs) {
         interfaces = ifs;
     }
 
@@ -282,7 +284,7 @@ public class J2PProxyFactory extends ProxyFactory {
                 cacheForTheLoader.put(key, key);
             }
             else {
-                CacheKey found = (CacheKey)cacheForTheLoader.get(key);
+                CacheKey found = cacheForTheLoader.get(key);
                 if (found == null)
                     cacheForTheLoader.put(key, key);
                 else {
@@ -438,7 +440,8 @@ public class J2PProxyFactory extends ProxyFactory {
      * @param mh            the method handler for the proxy class.
      * @since 3.4
      */
-    public Object create(Class[] paramTypes, Object[] args, MethodHandler mh)
+    @SuppressWarnings("rawtypes")
+	public Object create(Class[] paramTypes, Object[] args, MethodHandler mh)
         throws NoSuchMethodException, IllegalArgumentException,
                InstantiationException, IllegalAccessException, InvocationTargetException
     {
@@ -453,7 +456,8 @@ public class J2PProxyFactory extends ProxyFactory {
      * @param paramTypes    parameter types for a constructor.
      * @param args          arguments passed to a constructor.
      */
-    public Object create(Class[] paramTypes, Object[] args)
+    @SuppressWarnings("rawtypes")
+	public Object create(Class[] paramTypes, Object[] args)
         throws NoSuchMethodException, IllegalArgumentException,
                InstantiationException, IllegalAccessException, InvocationTargetException
     {

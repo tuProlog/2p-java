@@ -13,7 +13,9 @@ has_child(bob, mary).
 
 loop(I, To, Inc, ThreadId) :- Inc >= 0, I > To, !. 
 loop(I, To, Inc, ThreadId) :- Inc < 0, I < To, !. 
-loop(I, To, Inc, ThreadId) :- (thread_has_next(ThreadId) -> thread_next_sol(ThreadId), 
+loop(I, To, Inc, ThreadId) :- thread_has_next(ThreadId), 
+								!, 
+								thread_next_sol(ThreadId), 
 								Next is I+Inc,
-								loop(Next, To, Inc, ThreadId) ; 
-								!).
+								loop(Next, To, Inc, ThreadId).
+loop(I, To, Inc, ThreadId).

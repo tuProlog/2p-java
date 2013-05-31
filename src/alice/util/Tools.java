@@ -36,6 +36,7 @@ public class Tools extends Object {
             FileInputStream is = new FileInputStream(fileName);
             byte[] info=new byte[is.available()];
             is.read(info);
+            is.close(); // ED 2013-05-21
             return new String(info);
         } catch (Exception ex){
         }

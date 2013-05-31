@@ -29,7 +29,8 @@ public class JavaObject<O> extends Term<JavaObject<O>> {
     }
 
     public <Z> Z toJava() {
-        return (Z)_theObject;
+        //return (Z)_theObject;
+        return uncheckedCast(_theObject);
     }
     
     static boolean matches(alice.tuprolog.Term t) {        
@@ -38,7 +39,9 @@ public class JavaObject<O> extends Term<JavaObject<O>> {
     
     static <Z> JavaObject<Z> unmarshalObject(alice.tuprolog.Struct s) {
         if (matches(s)) {           
-            return new JavaObject<Z>((Z)(PJ.getRegisteredJavaObject(s)));        
+            //return new JavaObject<Z>((Z)(PJ.getRegisteredJavaObject(s)));
+        	Z auxJavaObject = uncheckedCast(PJ.getRegisteredJavaObject(s));
+            return new JavaObject<Z>( auxJavaObject );
         }
         else
             throw new UnsupportedOperationException();

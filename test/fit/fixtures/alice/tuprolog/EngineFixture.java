@@ -109,6 +109,7 @@ public class EngineFixture extends Fixture {
 
 	/* Utilities */
 
+	@SuppressWarnings("rawtypes")
 	public Object parse(String s, Class type) throws Exception {
 		if (type.equals(alice.tuprolog.Term.class))
 			return Term.createTerm(s);

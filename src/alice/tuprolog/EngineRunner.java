@@ -20,22 +20,21 @@ import java.util.concurrent.locks.ReentrantLock;
 @SuppressWarnings("serial")
 public class EngineRunner implements java.io.Serializable, Runnable{
     
-    private Prolog 			 	mediator;
-    private TheoryManager    	theoryManager;
-    private PrimitiveManager	primitiveManager;
-    private LibraryManager   	libraryManager;
-    private EngineManager 		engineManager;
+    private Prolog                              mediator;
+    private TheoryManager       theoryManager;
+    private PrimitiveManager    primitiveManager;
+    private LibraryManager      libraryManager;
+    //private EngineManager             engineManager;
 
     private int id;
-    private long pid;
+    private int pid;
     private boolean detached;
     private boolean solving;
-    private SolveInfo sinfo;
     private Term query;
     private TermQueue msgs;
     private ArrayList<Boolean> next;
     private int countNext;
-    private Lock lockVar;		
+    private Lock lockVar;               
     private Condition cond;
     private Object semaphore;
     
@@ -45,10 +44,11 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     private Engine last_env;
     /* Stack environments of nidicate solving */
     private LinkedList<Engine> stackEnv = new LinkedList<Engine>();
+    private SolveInfo sinfo;
     
     /**
-	 * States
-	 */
+         * States
+         */
     final State INIT;
     final State GOAL_EVALUATION;
     final State EXCEPTION;
@@ -78,8 +78,8 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         END_TRUE        = new StateEnd(this,TRUE);
         END_TRUE_CP     = new StateEnd(this,TRUE_CP);
         END_HALT        = new StateEnd(this,HALT);
-		
-		this.id = id;
+                
+                this.id = id;
     }
     
     
@@ -91,7 +91,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         theoryManager    = vm.getTheoryManager();
         primitiveManager = vm.getPrimitiveManager();
         libraryManager   = vm.getLibraryManager();
-        engineManager = vm.getEngineManager();
+        //engineManager = vm.getEngineManager();
         
         detached = false;
         solving = false;
@@ -99,7 +99,7 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         msgs = new TermQueue();
         next = new ArrayList<Boolean>();
         countNext = 0;
-        lockVar = new ReentrantLock();	
+        lockVar = new ReentrantLock();  
         cond = lockVar.newCondition();
         semaphore = new Object();
     }
@@ -113,19 +113,19 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     }
     
     /*Castagna 06/2011*/
-	void exception(String message) {
-		mediator.exception(message);
-	}
-	/**/
-	
-	public void detach(){
-    	detached = true;
+        void exception(String message) {
+                mediator.exception(message);
+        }
+        /**/
+        
+        public void detach(){
+        detached = true;
     }
     
-	public boolean isDetached(){
-    	return detached;
+        public boolean isDetached(){
+        return detached;
     }
-	
+        
     /**
      *  Solves a query
      *
@@ -138,23 +138,22 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         solving = false;    
         
         lockVar.lock();
-		try{
-			cond.signalAll();
-		}
-		finally{
-			lockVar.unlock();
-		}
+                try{
+                        cond.signalAll();
+                }
+                finally{
+                        lockVar.unlock();
+                }
             
-        if (!sinfo.hasOpenAlternatives()) {
-            solveEnd();
-        }
-        else if(next.isEmpty() || !next.get(countNext)){
-        	synchronized(semaphore){     	
-            	try {
-            		semaphore.wait();	//Mi metto in attesa di eventuali altre richieste
-    			} catch (InterruptedException e) {
-    				e.printStackTrace();
-    			}	
+        if (sinfo.hasOpenAlternatives()) {
+            if(next.isEmpty() || !next.get(countNext)){
+                synchronized(semaphore){        
+                try {
+                        semaphore.wait();       //Mi metto in attesa di eventuali altre richieste
+                        } catch (InterruptedException e) {
+                                e.printStackTrace();
+                        }  
+                }
             }         
         }
     }
@@ -178,11 +177,13 @@ public class EngineRunner implements java.io.Serializable, Runnable{
                     result.getResultDemo(),
                     result.getResultVars()
             );
-
+            if (!sinfo.hasOpenAlternatives()) 
+                solveEnd();
+           return sinfo;
         } catch (Exception ex) {
             ex.printStackTrace();
+            return new SolveInfo(query);
         }
-        return sinfo;
     }
     
     /**
@@ -193,37 +194,35 @@ public class EngineRunner implements java.io.Serializable, Runnable{
      * @see SolveInfo
      **/
     private void threadSolveNext() throws NoMoreSolutionException {
-    	next.set(countNext, false);
-    	countNext++;
+    	solving = true;
+        next.set(countNext, false);
+        countNext++;
    
-		sinfo = solveNext();
-		
-		solving = false;
+                sinfo = solveNext();
+                
+                solving = false;
 
-		lockVar.lock();
-		try{
-			cond.signalAll();
-		}
-		finally{
-			lockVar.unlock();
-		}
-        
-        if (!sinfo.hasOpenAlternatives()){
-        	solveEnd();
-        }
-        else if(countNext>(next.size()-1) || !next.get(countNext)){
-        	try{
-                synchronized(semaphore){
-                	semaphore.wait();	//Mi metto in attesa di eventuali altre richieste
+                lockVar.lock();
+                try{
+                        cond.signalAll();
                 }
-            }
+                finally{
+                        lockVar.unlock();
+                }
+        
+        if (sinfo.hasOpenAlternatives()){
+        	if(countNext>(next.size()-1) || !next.get(countNext)){
+                try{
+	                synchronized(semaphore){
+	                        semaphore.wait();       //Mi metto in attesa di eventuali altre richieste
+	                }
+                }
             catch(InterruptedException e) {}
+        	}
         }
     }
     
     public SolveInfo solveNext() throws NoMoreSolutionException {
-    	solving = true;
-    	
         if (hasOpenAlternatives()) {
             refreeze();
             env.nextState = BACKTRACK;
@@ -236,10 +235,9 @@ public class EngineRunner implements java.io.Serializable, Runnable{
                     result.getResultVars()
             );
             
-            /*if (!sinfo.hasOpenAlternatives()){
-            	solveEnd();
-            	
-            }*/
+            if (!sinfo.hasOpenAlternatives()){
+                solveEnd();             
+            }
             return sinfo;
 
         } else
@@ -262,7 +260,6 @@ public class EngineRunner implements java.io.Serializable, Runnable{
 //        theoryManager.transEnd(sinfo.isSuccess());
 //        theoryManager.optimize();
         libraryManager.onSolveEnd();
-        //engineManager.removeThread(pid);
     }
     
     
@@ -340,96 +337,100 @@ public class EngineRunner implements java.io.Serializable, Runnable{
     }
 
 
-	@Override
-	public void run() {
-		solving = true;
-		
-		if (sinfo == null) {
-			threadSolve();
-		}
-		try {
-			while(hasOpenAlternatives())
-				if(next.get(countNext))
-					threadSolveNext();
-		} catch (NoMoreSolutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		engineManager.removeThread(pid);
-	}    
-	
-	public int getId(){
-		return id;
-	}
-	
-	public SolveInfo getSolution(){
-		return sinfo;
-	}
-	
-	public void setGoal(Term goal){
-		this.query = goal;
-	}
+        @Override
+        public void run() {
+                solving = true;
+                pid = (int) Thread.currentThread().getId();
+                
+                if (sinfo == null) {
+                        threadSolve();
+                }
+                try {
+                        while(hasOpenAlternatives())
+                                if(next.get(countNext))
+                                        threadSolveNext();
+                } catch (NoMoreSolutionException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                }
+        }    
+        
+        public int getId(){
+                return id;
+        }
+        
+        public int getPid(){
+                return pid;
+        }
+        
+        public SolveInfo getSolution(){
+                return sinfo;
+        }
+        
+        public void setGoal(Term goal){
+                this.query = goal;
+        }
 
-	public boolean nextSolution() {
-		solving = true;
-		next.add(true);
-		
-		synchronized(semaphore){	
-			semaphore.notify();			
-		}
-		return true;
-	}
-	
-	public SolveInfo read(){
-		lockVar.lock();
-		try{
-			while(solving || sinfo==null)	
-			try {
-				cond.await();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		finally{
-			lockVar.unlock();
-		}
-		
-		return sinfo;
-	}
-	
-	public void setSolving(boolean solved){
-		solving = solved;
-	}
-	
-	
-	public void sendMsg(Term t){			
-		msgs.store(t);
-	}
-	
-	
-	public boolean getMsg(Term t){
-		msgs.get(t, mediator, this);
-		return true;
-	}
-	
-	
-	public boolean peekMsg (Term t){
-		return msgs.peek(t, mediator);
-	}
-	
-	
-	public boolean removeMsg(Term t){
-		return msgs.remove(t, mediator);
-	}
+        public boolean nextSolution() {
+                solving = true;
+                next.add(true);
+                
+                synchronized(semaphore){        
+                        semaphore.notify();                     
+                }
+                return true;
+        }
+        
+        public SolveInfo read(){
+                lockVar.lock();
+                try{
+                        while(solving || sinfo==null)   
+                        try {
+                                cond.await();
+                        } catch (InterruptedException e) {
+                                e.printStackTrace();
+                        }
+                }
+                finally{
+                        lockVar.unlock();
+                }
+                
+                return sinfo;
+        }
+        
+        public void setSolving(boolean solved){
+                solving = solved;
+        }
+        
+        
+        public void sendMsg(Term t){                    
+                msgs.store(t);
+        }
+        
+        
+        public boolean getMsg(Term t){
+                msgs.get(t, mediator, this);
+                return true;
+        }
+        
+        
+        public boolean peekMsg (Term t){
+                return msgs.peek(t, mediator);
+        }
+        
+        
+        public boolean removeMsg(Term t){
+                return msgs.remove(t, mediator);
+        }
 
-	
-	public boolean waitMsg(Term msg) {
-		msgs.wait(msg, mediator, this);
-		return true;
-	}
-	
-	
-	public int msgQSize(){
-		return msgs.size();
-	}
+        
+        public boolean waitMsg(Term msg) {
+                msgs.wait(msg, mediator, this);
+                return true;
+        }
+        
+        
+        public int msgQSize(){
+                return msgs.size();
+        }
 }

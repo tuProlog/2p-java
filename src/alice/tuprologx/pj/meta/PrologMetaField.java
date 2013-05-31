@@ -37,7 +37,8 @@ public class PrologMetaField {
         }
     }
     
-    public <T extends Term<?>> T getValue(PrologObject o) {        
+    @SuppressWarnings("unchecked")
+	public <T extends Term<?>> T getValue(PrologObject o) {        
         try {
             return (T)_theField.get(o);
         }

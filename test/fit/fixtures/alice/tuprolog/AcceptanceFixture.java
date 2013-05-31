@@ -22,7 +22,8 @@ public class AcceptanceFixture extends ColumnFixture {
     protected Counts runCounts = new Counts();
     protected String footnote = null;
 
-    protected void run() throws Exception {
+    @SuppressWarnings("unchecked")
+	protected void run() throws Exception {
         input = read(new File(file(section)));
         fixture = new Fixture();
         tables = new Parse(input, new String[] {"table", "tr", "td"});

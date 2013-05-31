@@ -20,12 +20,14 @@ public class Clause<H extends Term<?>, B extends Term<?>> extends Compound2<H,B>
     private boolean isFact;
     
     /** Creates a new instance of Clause */
-    public Clause(H head, B body) {
-        super(":-",head,body == null ? (B)new Bool(true) : body);        
+    @SuppressWarnings("unchecked")
+	public Clause(H head, B body) {
+        super(":-", head, body == null ? (B)new Bool(true) : body);        
         isFact = (body == null || body instanceof Bool);
     }
     
-    public Clause(Struct s) { 
+    @SuppressWarnings("unchecked")
+	public Clause(Struct s) { 
         this(s.getName().equals(":-") ? (H)Term.unmarshal(s.getArg(0)) : (H)Term.unmarshal(s), s.getName().equals(":-") ? (B)Term.unmarshal(s.getArg(1)) : null);        
     }
     /*

@@ -25,10 +25,10 @@ import java.util.*;
 public class HashLibrary extends Library {
 	private static final long serialVersionUID = 1L;
 
-	private HashMap dict;
+	private HashMap<String, Term> dict;
 		
 	public boolean hashtable_0(){
-		dict = new HashMap();
+		dict = new HashMap<String, Term>();
 		return true;
 	} 
 	
@@ -38,7 +38,7 @@ public class HashLibrary extends Library {
 	}
 	
 	public boolean get_data_2(Term key, Term res){
-		Term result = (Term)dict.get(key.toString());
+		Term result = dict.get(key.toString());
 		return unify(res,result);
 	}
 	

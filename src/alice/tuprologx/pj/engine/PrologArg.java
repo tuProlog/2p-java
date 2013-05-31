@@ -24,6 +24,7 @@ public class PrologArg<X extends Term<X>> {
         for (TermKind tk : _annotations) {
             switch (tk) {
                 case INPUT : return true;
+                default: continue; // ED 2013-05-21
             }
         }
         return false;
@@ -33,6 +34,7 @@ public class PrologArg<X extends Term<X>> {
         for (TermKind tk : _annotations) {
             switch (tk) {
                 case OUTPUT : return true;
+                default: continue; // ED 2013-05-21
             }
         }
         return false;
@@ -42,6 +44,7 @@ public class PrologArg<X extends Term<X>> {
         for (TermKind tk : _annotations) {
             switch (tk) {
                 case GROUND : return true;
+                default: continue; // ED 2013-05-21
             }
         }
         return false;
@@ -51,6 +54,7 @@ public class PrologArg<X extends Term<X>> {
         for (TermKind tk : _annotations) {
             switch (tk) {
                 case HIDE : return true;
+                default: continue; // ED 2013-05-21
             }
         }
         return false;

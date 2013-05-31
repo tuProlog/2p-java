@@ -48,6 +48,11 @@ public class Server_Socket extends AbstractSocket{
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public String toString(){
+		return socket.toString();
+	}
 
 
 }

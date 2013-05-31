@@ -135,7 +135,8 @@ public final class LibraryManager
 	     * @throws ClassNotFoundException if the library class cannot be found.
 	     * @throws InvalidLibraryException if the library is not a valid tuProlog library.
 	     */
-	    public void addLibrary(String libraryClassname, File file) throws ClassNotFoundException, InvalidLibraryException {
+	    @SuppressWarnings("resource")
+		public void addLibrary(String libraryClassname, File file) throws ClassNotFoundException, InvalidLibraryException {
 	        if (libraryClassname.equals(""))
 	            throw new ClassNotFoundException();
 	        /** 

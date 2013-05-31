@@ -16,7 +16,11 @@ package alice.tuprologx.pj.model;
 public class Double extends Term<Double> {
 	java.lang.Double _theDouble;
 
-	public <Z> Z/*java.lang.Double*/ toJava() {return (Z)_theDouble;}
+	public <Z> Z/*java.lang.Double*/ toJava() {
+		//return (Z)_theDouble;
+		return uncheckedCast(_theDouble);
+	}
+	
 	public Double (java.lang.Double d) {_theDouble = d;}
            
         public alice.tuprolog.Double marshal() {

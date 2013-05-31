@@ -1,7 +1,5 @@
 package alice.tuprolog.interfaces;
 
-import java.net.SocketException;
-
 import alice.tuprolog.PrologError;
 import alice.tuprolog.Struct;
 import alice.tuprolog.Term;

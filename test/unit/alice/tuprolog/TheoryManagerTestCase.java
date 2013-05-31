@@ -39,7 +39,7 @@ public class TheoryManagerTestCase extends TestCase {
 		engine.setTheory(new Theory(theory));
 		TheoryManager manager = engine.getTheoryManager();
 		Struct testTerm = new Struct("test", new Struct("a"), new Struct("b"));
-		List testClauses = manager.find(testTerm);
+		List<ClauseInfo> testClauses = manager.find(testTerm);
 		assertEquals(1, testClauses.size());
 		manager.abolish(new Struct("/", new Struct("test"), new Int(2)));
 		testClauses = manager.find(testTerm);

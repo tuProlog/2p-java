@@ -104,7 +104,7 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
         if (pm != null) {                
             String theory = "";
             for (String s : pm.clauses()) {
-                theory+=s+"\n";
+                theory = theory + s +"\n";
             }            
             //methodTheory = checkTheory(theory);                        
             checkPredicate(pm.predicate(),d);

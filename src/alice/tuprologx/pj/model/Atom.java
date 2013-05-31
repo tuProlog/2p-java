@@ -17,7 +17,11 @@ public class Atom extends Term<Atom> {
 	String _theAtom;
 
 	public Atom (String s) {_theAtom=s;}
-	public <Z> Z toJava() {return (Z)_theAtom;}
+	
+	public <Z> Z toJava() {
+		//return (Z)_theAtom;
+		return uncheckedCast(_theAtom);
+	}
 
 	public String toString() {
 		return "Atom("+_theAtom+")";

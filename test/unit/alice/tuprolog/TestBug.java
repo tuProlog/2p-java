@@ -28,19 +28,12 @@ public class TestBug {
 		
 		new Prolog().solve(goal);
 		
-		
-		
 		String st =
 		"p(X).				\n"+
 		"test(L1,L2):-		\n"+
 		"	findall(p(X),p(X),L1), \n"+
 		"	append([a,b],L1,L2).	\n";
 		
-		String st1 =
-				"p(X).				\n"+
-				"test(L1,L2):-		\n"+
-				"	p(X), L1 = [p(X)]. \n";
-				//"	append([a,b],L1,L2).	\n";
 		
 		Prolog engine = new Prolog();
 		engine.addSpyListener(new SpyListener(){ 

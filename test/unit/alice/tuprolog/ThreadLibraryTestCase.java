@@ -48,7 +48,7 @@ public class ThreadLibraryTestCase {
 		SolveInfo sinfo = engine.solve("thread_id(ID).");	//unifica ad ID l'identificativo del thread corrente (Root)
 		assertTrue(sinfo.isSuccess());
 		Term id = sinfo.getVarValue("ID");
-		assertEquals(new Int(1), id);
+		assertEquals(new Int(0), id);
 	}
 
 	/**
@@ -79,10 +79,11 @@ public class ThreadLibraryTestCase {
 	 */
 	@Test
 	public void testThread_next_sol_1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
-		theory = "start(X,Y) :- thread_create(ID, genitore(bob,X)), thread_create(ID2, genitore(b,Y)), loop(1,5,1,ID),  loop(1,3,1,ID2), thread_read(ID, X), thread_read(ID2, Y).\n"+
+		theory = "start(X) :- thread_create(ID, genitore(bob,X)),  loop(1,5,1,ID),  thread_read(ID, X).\n"+
 		"loop(I, To, Inc, ThreadId) :- Inc >= 0, I > To, !.\n"+
 		"loop(I, To, Inc, ThreadId) :- Inc < 0,  I < To, !.\n"+
-		"loop(I, To, Inc, ThreadId) :- (thread_has_next(ThreadId) -> thread_next_sol(ThreadId), Next is I+Inc, loop(Next, To, Inc, ThreadId); !).\n"+
+		"loop(I, To, Inc, ThreadId) :- thread_read(ThreadId,A), thread_has_next(ThreadId), !, thread_next_sol(ThreadId), Next is I+Inc, loop(Next, To, Inc, ThreadId).\n"+
+		"loop(I, To, Inc, ThreadId).\n"+
 		"genitore(b,b).\n" +
 		"genitore(bob,c).\n" +
 		"genitore(b,d).\n" +
@@ -91,14 +92,11 @@ public class ThreadLibraryTestCase {
 		"genitore(b,f).";
 		engine.setTheory(new Theory(theory));
 		
-		SolveInfo sinfo = engine.solve("start(X,Y).");
+		SolveInfo sinfo = engine.solve("start(X).");
 		assertTrue(sinfo.isSuccess());
 		
 		Term X = sinfo.getVarValue("X");
 		assertEquals(Term.createTerm("genitore(bob,gdh)"), X);
-		
-		Term Y = sinfo.getVarValue("Y");
-		assertEquals(Term.createTerm("genitore(b,f)"), Y);
 	}
 
 	/**
@@ -165,10 +163,10 @@ public class ThreadLibraryTestCase {
 	 */
 	@Test
 	public void testThread_has_next_1() throws InvalidTheoryException, MalformedGoalException, NoSolutionException {
-		theory = "start(X) :- thread_execute(ID, X), lettura(ID,X).\n" +
-		"lettura(ID, X):- thread_read(ID, X).\n" +
-		"thread_execute(ID, X):- thread_create(ID, X), thread_sleep(1), thread_execute2(ID). \n" +
-		"thread_execute2(ID) :- (thread_has_next(ID) -> thread_next_sol(ID), thread_execute2(ID); ! ). \n" +
+		theory = "start(X) :- thread_create(ID, X), thread_execute(ID), lettura(ID,X).\n" +
+		"lettura(ID, X):- thread_join(ID, X).\n" +
+		"thread_execute(ID) :- thread_read(ID,A), thread_has_next(ID), !, thread_next_sol(ID). \n" +
+		"thread_execute(ID).\n" +
 		"genitore(bob,a).\n" +
 		"genitore(bob,b).\n" +
 		"genitore(bob,d).";
@@ -178,7 +176,7 @@ public class ThreadLibraryTestCase {
 		assertTrue(sinfo.isSuccess());
 		
 		Term X = sinfo.getVarValue("X");
-		assertEquals(Term.createTerm("d"), X);
+		assertEquals(Term.createTerm("b"), X);
 	}
 
 	

@@ -53,5 +53,10 @@ public class Client_Socket extends AbstractSocket {
 		return false;
 	}
 
+	@Override
+	public String toString(){
+		return socket.toString();
+	}
+	
 
 }

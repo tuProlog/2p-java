@@ -287,9 +287,9 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
      *
      * @param library A library in the Library Manager.
      */
-    private JComboBox createComboBox(Object library)
+    private JComboBox<String> createComboBox(Object library)
     {
-        JComboBox cb = new JComboBox();
+        JComboBox<String> cb = new JComboBox<String>();
         cb.setEditable(false);
         cb.addItem("Loaded");
         cb.addItem("Unloaded");
@@ -440,7 +440,8 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
      * Load and unload the managed libraries following the indications given
      * by the user through the dialog interface.
      */
-    public void setLibraryManagerStatus()
+    @SuppressWarnings("unchecked")
+	public void setLibraryManagerStatus()
     {
         Object[] libraries = libraryManager.getLibraries();
         /** in the dialog there are 2 void JLabel and 3 Component
@@ -459,7 +460,8 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener
                 //JOptionPane.showMessageDialog(this,((JLabel)librariesDisplayPanel.getComponent(3*(i)+1)).getText());
                 //JOptionPane.showMessageDialog(this, libraryClassname);
 
-                if (((JComboBox)librariesDisplayPanel.getComponent(3*i+2)).getSelectedItem().equals("Loaded"))
+                //if (((JComboBox)librariesDisplayPanel.getComponent(3*i+2)).getSelectedItem().equals("Loaded")) // ED 2013-05-21
+                if (((JComboBox<String>) librariesDisplayPanel.getComponent(3*i+2)).getSelectedItem().equals("Loaded"))
                 {
                 	if(libraryManager.isExternalLibrary(libraryClassname))
                 	{

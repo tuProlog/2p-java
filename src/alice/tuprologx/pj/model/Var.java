@@ -14,7 +14,7 @@ package alice.tuprologx.pj.model;
  * @author maurizio
  */
 public class Var<X extends Term<?>> extends Term<X> {
-	X _theValue;
+		X _theValue;
         String _theName;
         private static java.lang.reflect.Method _setLink = null;
         
@@ -30,9 +30,15 @@ public class Var<X extends Term<?>> extends Term<X> {
 
 	public Var(String name) {_theName = name;}
         
-    private Var(String name, Term<?> val) {_theName = name;_theValue=(X)val;}
-        
-	public <Z> Z toJava() {return _theValue != null ? (Z)_theValue.toJava() : (Z)this;}
+    //private Var(String name, Term<?> val) {_theName = name; _theValue= (X) val;}
+    private Var(String name, Term<?> val) {
+    	_theName = name; _theValue = uncheckedCast(val);
+    }
+    		
+	public <Z> Z toJava() {
+		// return _theValue != null ? (Z)_theValue.toJava() : (Z)this;
+		return uncheckedCast( _theValue != null ? _theValue.toJava() : this );
+	}
         
     public X getValue() {return _theValue;}
     

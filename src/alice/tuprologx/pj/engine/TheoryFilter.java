@@ -32,7 +32,8 @@ public class TheoryFilter {
         this(theory,new Theory(filter));
     }
     
-    public Theory apply() {                
+    @SuppressWarnings("unchecked")
+	public Theory apply() {                
         Var<List<Clause<?,?>>> filtered_list = new Var<List<Clause<?,?>>>("X");
         Compound2<List<Clause<?,?>>,Var<List<Clause<?,?>>>> goal = new Compound2<List<Clause<?,?>>,Var<List<Clause<?,?>>>>("filter",_theory,filtered_list);
         try {

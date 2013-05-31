@@ -21,8 +21,7 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
 
 
     static final String incipit =
-        "tuProlog " + Prolog.getVersion() + " - DEIS,  University of Bologna at Cesena \n"+
-        new java.util.Date();
+        "tuProlog system - release " + Prolog.getVersion() + "\n";
        
     public CUIConsole(String[] args){
 

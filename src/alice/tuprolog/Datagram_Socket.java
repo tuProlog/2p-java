@@ -57,5 +57,10 @@ public class Datagram_Socket extends AbstractSocket {
             return false;
         }
 	}
+	
+	@Override
+	public String toString(){
+		return socket.toString();
+	}
 
 }

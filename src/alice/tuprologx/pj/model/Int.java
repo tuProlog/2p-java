@@ -16,7 +16,11 @@ package alice.tuprologx.pj.model;
 public class Int extends Term<Int> {
 	Integer _theInt;
 
-	public <Z> Z/*Integer*/ toJava() {return (Z)_theInt;}
+	public <Z> Z/*Integer*/ toJava() {
+		//return (Z)_theInt;
+		return uncheckedCast(_theInt);
+	}
+	
 	public Int (Integer i) {_theInt = i;}
         
         public alice.tuprolog.Int marshal() {

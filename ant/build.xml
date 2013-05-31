@@ -36,11 +36,6 @@
 				<fileset dir="${build.classes.dir}" includes="**/*"/>
 			</delete>
 			
-	    	<!-- Set the version in file Prolog.java from the version specified in file environment.properties 
-			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="@engine.version@" value="${engine.version}"/>
-	    	<replace file="${src.dir}/alice/util/JavaVersionInfo.java" token="@JavaSpecific.version@" value="${JavaSpecific.version}"/>
-	    	<replace file="${src.dir}/alice/util/NetVersionInfo.java" token="@NETSpecific.version@" value="${NETSpecific.version}"/> -->
-			
 			<javac destdir="${build.classes.dir}" debug="@{debug}"
 			deprecation="false" optimize="@{optimize}" failonerror="true" includeantruntime="false" target="${target}" source="${target}">
 	            <src path="${src.dir}"/>
@@ -51,11 +46,6 @@
 				<fileset dir="${src.dir}/alice/tuprologx/ide/img"/>
 			</copy>
 			
-	    	<!-- Set the keyword @version@ back into file Prolog.java so no modification is seen from subversion 
-			<replace file="${src.dir}/alice/tuprolog/Prolog.java" token="${engine.version}" value="@engine.version@"/>	
-	    	<replace file="${src.dir}/alice/util/JavaVersionInfo.java" token="${JavaSpecific.version}" value="@JavaSpecific.version@"/>
-	    	<replace file="${src.dir}/alice/util/NetVersionInfo.java" token="${NETSpecific.version}" value="@NETSpecific.version@"/> -->
-	    	
 	    </sequential>
 	</macrodef>
 	
@@ -331,6 +321,7 @@
 		<mkdir dir="${build.fit.reports.dir}"/>
 		<mkdir dir="${build.archives.net.dir}"/>
 		<mkdir dir="${lib.dir}"/>
+		<delete dir="${tmp.dir}" />
         <mkdir dir="${tmp.dir}"/>
 	</target>
     
@@ -659,6 +650,19 @@
 		
 		<!-- DOC: http://subclipse.tigris.org/svnant/svntask.html -->
 		<svn refid="settings">
+		    
+		    <export
+		    	srcUrl="https://tuprolog.googlecode.com/svn/2p/trunk/.project"
+		    	destPath="${tmp.dir}/.project" />
+		    
+		 </svn>
+		
+			<!--  I use <name> </name> because in this way I'm sure that I replace the name of the project and nothing else called 2p -->
+			<replace file="${tmp.dir}/.project" token="&lt;name&gt;2p&lt;/name&gt;" value="&lt;name&gt;tuProlog REL-${engine.version}.${JavaSpecific.version}&lt;/name&gt;"/>
+		
+		<svn refid="settings">
+		    
+		    <!--  Real of the code -->
 			<copy
 				srcUrl="https://tuprolog.googlecode.com/svn/2p/trunk" 
 				destUrl="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}"
@@ -666,6 +670,18 @@
 				message="${TagMessage}" 
 				makeParents="true" >
 			</copy> 
+			
+			<!--  Change the project name -->
+			<delete
+			    url = "https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/.project"
+			    message = "${TagMessage}">
+			</delete>
+			
+			<import
+				path="${tmp.dir}/.project" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/.project"
+				message="${TagMessage}" >
+			</import> 
 			
 			<import
 				path="${build.archives.dir}/2p.jar" 
@@ -680,7 +696,7 @@
 				message="${TagMessage}" 
 				recurse="false" > 
 			</import>
-			
+			 
 			<import
 				path="${build.archives.net.dir}/tuprolog.dll" 
 				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/tuprolog.dll"
@@ -715,7 +731,7 @@
 				message="${TagMessage}" 
 				recurse="false" >
 			</import> 
-
+		
 		</svn>
 	</target>
 </project>

@@ -44,7 +44,8 @@ public class PJ implements MethodHandler {
         return PJ.<T>newInstance(cl,null);
     }
 
-    public static <T> T newInstance(Class<?> cl, Theory init) throws Exception {
+    @SuppressWarnings("unchecked")
+	public static <T> T newInstance(Class<?> cl, Theory init) throws Exception {
             J2PProxyFactory pf = new J2PProxyFactory();
             pf.setSuperclass(cl.isInterface() ? Object.class : cl);
             pf.setInterfaces(cl.isInterface() ?
