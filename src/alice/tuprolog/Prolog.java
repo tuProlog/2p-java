@@ -22,6 +22,7 @@ import java.io.*;
 
 import alice.tuprolog.event.*;
 import alice.tuprolog.interfaces.IProlog;
+import alice.tuprologx.ide.ToolBar;
 
 
 
@@ -222,15 +223,27 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
      */
     public String getCurrentDirectory() {
         String directory = "";
+        String s;
         if(absolutePathList.isEmpty()) {
-            directory = System.getProperty("user.dir");
+        	if((s = ToolBar.getPath())!=null)
+        	{
+        		directory = s;
+        	}
+        	else
+        	{
+        		directory = System.getProperty("user.dir");
+        	}
         } else {
             directory = absolutePathList.get(absolutePathList.size()-1);
         }
+
         return directory;
     }
 
 
+    
+    
+    
 	// theory management interface
 
 	/**
@@ -412,7 +425,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 	public SolveInfo solve(Term g) {
 		//System.out.println("ENGINE SOLVE #0: "+g);
 		if (g == null) return null;
-
+		
 		SolveInfo sinfo = engineManager.solve(g);
 		
 		QueryEvent ev = new QueryEvent(this,sinfo);
@@ -1010,12 +1023,24 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
      /**
        *
-       * Retract an element from directory list
+       * Reset directory list
       */
     public void resetDirectoryList(String path) {
         absolutePathList = new ArrayList<String>();
         absolutePathList.add(path);
     }
-
+    
+    public Term termSolve(String st){
+		try{
+			Parser p = new Parser(opManager, st);
+			Term t = p.nextTerm(true);
+			return t;
+		}catch(InvalidTermException e)
+		{
+			String s = "null";
+			Term t = Term.createTerm(s);
+			return t;
+		}
+	}
 
 }

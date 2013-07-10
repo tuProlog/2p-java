@@ -42,6 +42,7 @@ public class JavaIDE
     //private Prolog engine;
     private ToolBar toolBar;
     private TheoryTabbedPane tabbedPane;
+    private static ConsoleManager consoleManager;
 
     public JavaIDE() {
         super("tuProlog IDE");
@@ -70,7 +71,7 @@ public class JavaIDE
         JavaInputField inputField = new JavaInputField();
         tabbedPane.setInputField(inputField);
 
-        ConsoleManager consoleManager=new ConsoleManager(tabbedPane);
+        consoleManager=new ConsoleManager(tabbedPane);
         ConsoleDialog consoleDialog = new ConsoleDialog(consoleManager);
         tabbedPane.setConsoleDialog(consoleDialog);
 
@@ -156,6 +157,11 @@ public class JavaIDE
         ImageIcon icon = new ImageIcon(getClass().getResource("img/tuProlog.gif"));
         setIconImage(icon.getImage());
     }
+    
+    public static ConsoleManager getConsoleManager()
+    {
+    	return consoleManager;
+    }
 
     public void onOutput(OutputEvent e) {
         System.out.print(e.getMsg());
@@ -209,4 +215,5 @@ public class JavaIDE
             onClose();
         }
     }
+    
 } // end JavaIDE class

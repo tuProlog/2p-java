@@ -112,6 +112,7 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
         wordChars('A', 'Z');
         wordChars('_', '_');
         wordChars('0', '9'); // need to parse numbers as special words
+        
 
         ordinaryChar('!');
 

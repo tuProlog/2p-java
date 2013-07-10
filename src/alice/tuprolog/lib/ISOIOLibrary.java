@@ -180,8 +180,8 @@ public class ISOIOLibrary extends Library{
                     
                     //mi servono queste istruzioni per set_stream_position
                     //faccio una mark valida fino alla fine del file, appena lo apro in modo che mi possa
-                    //permettere di fare una reset all'inizio del file. Il +5 alloca un po di spazio in più
-                    //nel buffer, mi serve per per evitare che la mark non sia più valida quando leggo la fine del file
+                    //permettere di fare una reset all'inizio del file. Il +5 alloca un po di spazio in piu
+                    //nel buffer, mi serve per per evitare che la mark non sia piu valida quando leggo la fine del file
                     if(((Struct)properties.get("reposition")).getName().equals("true")){
                         try {
                             input.mark((input.available())+5);

@@ -180,8 +180,8 @@ public class JavaIOManager extends IOFileOperations {
 
         public void setAsTheoryFileFilter()
         {
-            String[] extensions = {"pl", "pro"};
-            this.description = "Prolog files (*.pro, *.pl)";
+            String[] extensions = {"pl", "pro", "2p"};
+            this.description = "Prolog files (*.pro, *.pl, *.2p)";
             this.extensions = extensions;
             this.defaultExtension = "pl";
         }

@@ -126,5 +126,10 @@ public class Engine /*Castagna 06/2011*/implements IEngine/**/{
 		nDemoSteps = 1;
 		currentAlternative = null;
 	}
+	
+	public String getNextStateName()
+	{
+		return nextState.stateName;
+	}
 
 }

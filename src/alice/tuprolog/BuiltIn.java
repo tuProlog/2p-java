@@ -343,7 +343,9 @@ public class BuiltIn extends Library {
 	 static Term convertTermToGoal(Term term) {
 		 if (term instanceof Number)
 			 return null;
-		 term = term.getTerm();
+		 if(term instanceof Var && ((Var)term).getLink() instanceof Number)
+			 return null;
+		 term = term.getTerm(); 
 		 if (term instanceof Var)
 			 return new Struct("call", term);
 		 if (term instanceof Struct) {
@@ -431,7 +433,8 @@ public class BuiltIn extends Library {
 		 }
 		 Term val1 = ((Struct) arg1).fromList();
 		 if (val1 == null)
-			 throw PrologError.type_error(engineManager, 2, "list", arg1);
+			 //throw PrologError.type_error(engineManager, 2, "list", arg1);
+			 return false;
 		 return (unify(arg0, val1));
 	 }
 

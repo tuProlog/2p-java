@@ -44,6 +44,8 @@ public class ConsoleManager
 
     public void solve()
     {
+    	//dialog.setTermPanel(engine.termSolve(getGoal()));
+    	
         dialog.clearResults();
         if (!getGoal().equals(""))
         {

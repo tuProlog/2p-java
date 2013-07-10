@@ -93,7 +93,17 @@ public class EngineFixture extends Fixture {
 		//t.resolveTerm();
 		return t;
     }
-    
+    /*
+    public String binding() throws NoSolutionException, UnknownVarException
+    {
+    	Term t = result.getVarValue(variable);
+    	if (t.toString().startsWith("_"))
+    	{
+    		return "_";
+    	}
+    	return t.toString();
+    }
+    */
     public String output() {
     	return output;
     }
