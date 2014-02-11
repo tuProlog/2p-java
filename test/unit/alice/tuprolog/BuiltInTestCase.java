@@ -25,5 +25,16 @@ public class BuiltInTestCase extends TestCase {
 		assertEquals(new Struct(",", results), BuiltIn.convertTermToGoal(new Struct(",", arguments)));
 		assertEquals(new Struct("->", results), BuiltIn.convertTermToGoal(new Struct("->", arguments)));
 	}
+	
+	//Based on the bug #59 Grouping conjunctions in () changes result on sourceforge
+	public void testGroupingConjunctions() throws InvalidTheoryException, MalformedGoalException {
+		Prolog engine = new Prolog();
+		engine.setTheory(new Theory("g1. g2."));
+		SolveInfo info = engine.solve("(g1, g2), (g3, g4).");
+		assertFalse(info.isSuccess());
+		engine.setTheory(new Theory("g1. g2. g3. g4."));
+		info = engine.solve("(g1, g2), (g3, g4).");
+		assertTrue(info.isSuccess());
+	}
 
 }

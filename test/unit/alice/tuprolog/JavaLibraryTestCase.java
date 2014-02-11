@@ -54,12 +54,14 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(2, counter.getValue());
 	}
 
-	public void test_java_object_4() throws PrologException, IOException
+	
+	public void test_java_object() throws PrologException, IOException
 	{
 		// Testing URLClassLoader with a paths' array
 		setPath(true);
 		theory = "demo(C) :- \n" +
-				"java_object('Counter', [], Obj,[" + paths +"]), \n" +
+				"set_classpath([" + paths + "]), \n" +
+				"java_object('Counter', [], Obj), \n" +
 				"Obj <- inc, \n" +
 				"Obj <- inc, \n" +
 				"Obj <- getValue returns C.";
@@ -79,8 +81,9 @@ public class JavaLibraryTestCase extends TestCase {
 		result = info.getVarValue("StringValue").toString().replace("'", "");
 		assertEquals("MyString", result);
 	}
+	
 
-	public void test_java_object_4_2() throws PrologException, IOException
+	public void test_java_object_2() throws PrologException, IOException
 	{
 		setPath(true);
 		theory = "demo_hierarchy(Gear) :- \n"
@@ -95,12 +98,13 @@ public class JavaLibraryTestCase extends TestCase {
 		assertEquals(8, result2.intValue());
 	}
 	
-	public void test_invalid_path_java_object_4() throws PrologException, IOException
+	public void test_invalid_path_java_object() throws PrologException, IOException
 	{
 		//Testing incorrect path
 		setPath(false);
 		theory = "demo(Res) :- \n" +
-				"java_object('Counter', [], Obj_inc, [" + paths +"]), \n" +
+				"set_classpath([" + paths + "]), \n" + 
+				"java_object('Counter', [], Obj_inc), \n" +
 				"Obj_inc <- inc, \n" +
 				"Obj_inc <- inc, \n" +
 				"Obj_inc <- getValue returns Res.";
@@ -113,7 +117,7 @@ public class JavaLibraryTestCase extends TestCase {
 	{
 		//Testing java_call_3 using URLClassLoader 
 		setPath(true); 
-		theory = "demo(Value) :- class([" + paths + "], 'TestStaticClass') <- echo('Message') returns Value.";
+		theory = "demo(Value) :- set_classpath([" + paths + "]), class('TestStaticClass') <- echo('Message') returns Value.";
 		engine.setTheory(new Theory(theory));
 		info = engine.solve("demo(StringValue).");
 		assertEquals(true, info.isSuccess());
@@ -122,14 +126,14 @@ public class JavaLibraryTestCase extends TestCase {
 
 		//Testing get/set static Field 
 		setPath(true);
-		theory = "demo_2(Value) :- class([" + paths + "], 'TestStaticClass').'id' <- get(Value).";
+		theory = "demo_2(Value) :- set_classpath([" + paths + "]), class('TestStaticClass').'id' <- get(Value).";
 		engine.setTheory(new Theory(theory));
 		info = engine.solve("demo_2(Res).");
 		assertEquals(true, info.isSuccess());		
 		assertEquals(0, Integer.parseInt(info.getVarValue("Res").toString()));
 		
-		theory = "demo_2(Value, NewValue) :- class([" + paths + "], 'TestStaticClass').'id' <- set(Value), \n" +
-				"class([" + paths + "], 'TestStaticClass').'id' <- get(NewValue).";
+		theory = "demo_2(Value, NewValue) :- set_classpath([" + paths + "]), class('TestStaticClass').'id' <- set(Value), \n" +
+				"class('TestStaticClass').'id' <- get(NewValue).";
 		engine.setTheory(new Theory(theory));
 		info = engine.solve("demo_2(5, Val).");
 		assertEquals(true, info.isSuccess());		
@@ -141,7 +145,7 @@ public class JavaLibraryTestCase extends TestCase {
 	{
 		//Testing java_call_4 with invalid path
 		setPath(false);
-		theory = "demo(Value) :- class([" + paths + "], 'TestStaticClass') <- echo('Message') returns Value.";
+		theory = "demo(Value) :- set_classpath([" + paths + "]), class('TestStaticClass') <- echo('Message') returns Value.";
 		engine.setTheory(new Theory(theory));
 		info = engine.solve("demo(StringValue).");
 		assertEquals(true, info.isHalted());
@@ -151,8 +155,8 @@ public class JavaLibraryTestCase extends TestCase {
 	{
 		//Testing java_array_length using URLClassLoader 
 		setPath(true);
-		theory =  "demo(Size) :- java_object('Counter', [], MyCounter, [" + paths +"]), \n"
-				+ "java_object('Counter[]', [10], ArrayCounters, [" + paths +"]), \n"
+		theory =  "demo(Size) :- set_classpath([" + paths + "]), java_object('Counter', [], MyCounter), \n"
+				+ "java_object('Counter[]', [10], ArrayCounters), \n"
 				+ "java_array_length(ArrayCounters, Size).";
 
 		engine.setTheory(new Theory(theory));
@@ -163,8 +167,8 @@ public class JavaLibraryTestCase extends TestCase {
 
 		//Testing java_array_set and java_array_get
 		setPath(true);
-		theory =  "demo(Res) :- java_object('Counter', [], MyCounter, [" + paths +"]), \n"
-				+ "java_object('Counter[]', [10], ArrayCounters, [" + paths +"]), \n"
+		theory =  "demo(Res) :- set_classpath([" + paths + "]), java_object('Counter', [], MyCounter), \n"
+				+ "java_object('Counter[]', [10], ArrayCounters), \n"
 				+ "MyCounter <- inc, \n"
 				+ "java_array_set(ArrayCounters, 0, MyCounter), \n"
 				+ "java_array_get(ArrayCounters, 0, C), \n"
@@ -227,7 +231,8 @@ public class JavaLibraryTestCase extends TestCase {
 	{
 		setPath(true);
 		theory = "demo(Obj) :- \n" +
-				"java_object('Counter', [], Obj, [" + paths +"]), \n" +
+				"set_classpath([" + paths + "]), \n" +
+				"java_object('Counter', [], Obj), \n" +
 				"Obj <- inc, \n" +
 				"Obj <- inc, \n" +
 				"register(Obj).";
@@ -262,7 +267,8 @@ public class JavaLibraryTestCase extends TestCase {
 		
 		setPath(true);
 		theory = "demo(Obj) :- \n" +
-				"java_object('Counter', [], Obj,[" + paths +"]), \n" +
+				"set_classpath([" + paths + "]), \n" +
+				"java_object('Counter', [], Obj), \n" +
 				"Obj <- inc, \n" +
 				"Obj <- inc, \n" +
 				"register(Obj), unregister(Obj).";
@@ -305,7 +311,7 @@ public class JavaLibraryTestCase extends TestCase {
 		info = engine.solve("goal2.");
 		assertEquals(true, info.isSuccess());
 		
-		theory = "goal3 :- java_object('Pippo', [], Obj), class([" + paths + "], 'Pluto') <- method(Obj).";
+		theory = "goal3 :- java_object('Pippo', [], Obj), set_classpath([" + paths + "]), class('Pluto') <- method(Obj).";
 				
 		engine.setTheory(new Theory(theory));
 		info = engine.solve("goal3.");

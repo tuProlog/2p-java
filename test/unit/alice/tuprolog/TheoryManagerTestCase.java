@@ -2,6 +2,9 @@ package alice.tuprolog;
 
 import java.util.List;
 
+import alice.tuprolog.event.OutputEvent;
+import alice.tuprolog.event.OutputListener;
+
 import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {
@@ -58,8 +61,40 @@ public class TheoryManagerTestCase extends TestCase {
 		info = engine.solve("fact(V).");
 		assertFalse(info.isSuccess());
 	}
+	
+	// Based on the bugs 65 and 66 on sourceforge
+	public void testRetractall() throws MalformedGoalException, NoSolutionException, NoMoreSolutionException {
+		Prolog engine = new Prolog();
+		SolveInfo info = engine.solve("assert(takes(s1,c2)), assert(takes(s1,c3)).");
+		assertTrue(info.isSuccess());
+		info = engine.solve("takes(s1, N).");
+		assertTrue(info.isSuccess());
+		assertTrue(info.hasOpenAlternatives());
+		assertEquals("c2", info.getVarValue("N").toString());
+		info = engine.solveNext();
+		assertTrue(info.isSuccess());
+		assertEquals("c3", info.getVarValue("N").toString());
+		
+		info = engine.solve("retractall(takes(s1,c2)).");
+		assertTrue(info.isSuccess());
+		info = engine.solve("takes(s1, N).");
+		assertTrue(info.isSuccess());
+		assertFalse(info.hasOpenAlternatives());
+		assertEquals("c3", info.getVarValue("N").toString());
+	}
 
 	// TODO test retractall: ClauseDatabase#get(f/a) should return an
 	// empty list
+	
+	public void testRetract() throws InvalidTheoryException, MalformedGoalException {
+		Prolog engine = new Prolog();
+		TestOutputListener listener = new TestOutputListener();
+		engine.addOutputListener(listener);
+		engine.setTheory(new Theory("insect(ant). insect(bee)."));
+		SolveInfo info = engine.solve("retract(insect(I)), write(I), retract(insect(bee)), fail.");
+		assertFalse(info.isSuccess());
+		assertEquals("antbee", listener.output);
+		
+	}
 
 }

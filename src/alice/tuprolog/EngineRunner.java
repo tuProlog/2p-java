@@ -433,4 +433,8 @@ public class EngineRunner implements java.io.Serializable, Runnable{
         public int msgQSize(){
                 return msgs.size();
         }
+        
+        TheoryManager getTheoryManager() {
+            return theoryManager;
+         }
 }
