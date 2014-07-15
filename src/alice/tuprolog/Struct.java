@@ -18,6 +18,7 @@
 package alice.tuprolog;
 
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -357,11 +358,11 @@ public class Struct extends Term {
             if (arity > tarity) {
                 return true;
             } else if (arity == tarity) {
-                if (name.compareTo(ts.name) > 0) {
+            	if (name.compareTo(ts.name) > 0) {
                     return true;
                 } else if (name.compareTo(ts.name) == 0) {
                     for (int c = 0;c < arity;c++) {
-                        if (arg[c].isGreater(ts.arg[c])) {
+                    	if (arg[c].isGreater(ts.arg[c])) {
                             return true;
                         } else if (!arg[c].isEqual(ts.arg[c])) {
                             return false;
@@ -373,6 +374,33 @@ public class Struct extends Term {
         return false;
     }
     
+    public boolean isGreaterRelink(Term t,ArrayList<String> vorder) {
+        t = t.getTerm();
+        if (!(t instanceof Struct)) {
+            return true;
+        } else {
+            Struct ts = (Struct) t;
+            int tarity = ts.arity;
+            if (arity > tarity) {
+                return true;
+            } else if (arity == tarity) {
+            	//System.out.println("Compare di "+name+" con "+ts.name);
+                if (name.compareTo(ts.name) > 0) {
+                    return true;
+                } else if (name.compareTo(ts.name) == 0) {
+                    for (int c = 0;c < arity;c++) {
+                    	//System.out.println("Compare di "+arg[c]+" con "+ts.arg[c]);
+                        if (arg[c].isGreaterRelink(ts.arg[c],vorder)) {
+                            return true;
+                        } else if (!arg[c].isEqual(ts.arg[c])) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
     
     /**
      * Test if a term is equal to other

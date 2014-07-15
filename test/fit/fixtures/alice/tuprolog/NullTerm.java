@@ -81,6 +81,9 @@ public class NullTerm extends Term {
     public boolean isGreater(Term t){
         return false;
     }
+    public boolean isGreaterRelink(Term t,ArrayList<String> v){
+        return false;
+    }
 
     public boolean isEqual(Term t){
         return false;

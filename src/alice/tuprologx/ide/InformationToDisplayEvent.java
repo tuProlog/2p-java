@@ -17,11 +17,13 @@ import java.util.ArrayList;
 public class InformationToDisplayEvent extends PrologEvent {
 
     private ArrayList<QueryEvent> queryEventList;
+    private ArrayList<String> queryEventListString;
     private int solveType;
 
-    public InformationToDisplayEvent(Prolog source, ArrayList<QueryEvent> queryEventList, int solveType){
+    public InformationToDisplayEvent(Prolog source, ArrayList<QueryEvent> queryEventList,ArrayList<String> queryEventListString, int solveType){
         super(source);
         this.queryEventList=queryEventList;
+        this.queryEventListString=queryEventListString;
         this.solveType=solveType;
     }
     
@@ -33,6 +35,11 @@ public class InformationToDisplayEvent extends PrologEvent {
     public QueryEvent[] getQueryResults()
     {
         return (QueryEvent[]) queryEventList.toArray(new QueryEvent[queryEventList.size()]);
+    }
+    
+    public ArrayList<String> getQueryResultsString()
+    {
+        return queryEventListString;
     }
 
     public SolveInfo getQueryResult()

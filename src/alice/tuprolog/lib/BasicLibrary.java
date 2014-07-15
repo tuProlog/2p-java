@@ -17,6 +17,8 @@
  */
 package alice.tuprolog.lib;
 
+import java.util.ArrayList;
+
 import alice.tuprolog.*;
 import alice.tuprolog.Number;
 
@@ -491,6 +493,7 @@ public class BasicLibrary extends Library {
     public boolean term_greater_than_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
+        //System.out.println("Confronto "+arg0+" con "+arg1);
         return arg0.isGreater(arg1);
     }
 
@@ -1038,10 +1041,19 @@ public class BasicLibrary extends Library {
                 + "'=..'(T,L)  :- compound(T),!, '$tolist'(T,L). \n                                                          "
                 + "'=..'(T,L)  :- nonvar(L), catch('$fromlist'(T,L),Error,false). \n                                                          "
                 
+                /* commented by Roberta Calegari 29/04/14 it causes a loop: functor bug issue 14 google code, rewritten functor predicate
                 + "functor(Term, Name, Arity) :- atomic(Term), !, Name = Term, Arity = 0. \n"
                 + "functor(Term, Name, Arity) :- compound(Term), !, Term =.. [Name | Args], length(Args, Arity). \n"
                 + "functor(Term, Name, Arity) :- var(Term), atomic(Name), Arity == 0, !, Term = Name. \n"
                 + "functor(Term, Name, Arity) :- var(Term), atom(Name), integer(Arity), Arity > 0, current_prolog_flag(max_arity, Max), Arity=<Max, !, newlist([], Arity, L), Term =.. [Name | L]. \n"
+                */
+                + "functor(Term, Functor, Arity) :- \\+ var(Term), !, Term =.. [Functor|ArgList],length(ArgList, Arity).\n"
+                + "functor(Term, Functor, Arity) :- var(Term), atomic(Functor), Arity == 0, !, Term = Functor.\n"
+                + "functor(Term, Functor, Arity) :- var(Term), current_prolog_flag(max_arity, Max), Arity>Max, !, false.\n"
+                + "functor(Term, Functor, Arity) :- var(Term), atom(Functor), number(Arity), Arity > 0, !,length(ArgList, Arity),Term =.. [Functor|ArgList].\n"
+                //+ "functor(_Term, _Functor, _Arity) :- throw('Arguments are not sufficiently instantiated.').\n"
+                + "functor(_Term, _Functor, _Arity) :-false.\n"
+                
                 
                 + "arg(N,C,T):- arg_guard(N,C,T), C =.. [_|Args], element(N,Args,T).\n"
                 + "clause(H, B) :- clause_guard(H,B), L = [], '$find'(H, L), copy_term(L, LC), member((':-'(H, B)), LC). \n"
@@ -1135,7 +1147,82 @@ public class BasicLibrary extends Library {
                 + "'$wt_list'([W + T | STail], [WW + T | WTTail]) :- copy_term(W, WW), '$wt_list'(STail, WTTail). \n"
                 + "'$s_next'(Witness, WT_List, S_Next) :- copy_term(Witness, W2), '$s_next0'(W2, WT_List, S_Next), !. \n"
                 
-                + "bagof(Template, Goal, Instances) :- \n"
+                /*Roberta Calegari Sep 2013*/
+                +"bagof(Template, Goal, Instances) :- \n"
+                + "all_solutions_predicates_guard(Template, Goal, Instances), \n"
+                + "free_variables_set(Goal, Template, Set), \n"
+                + "Witness =.. [witness | Set], \n"
+                + "iterated_goal_term(Goal, G), \n"
+                +"all_solutions_predicates_guard(Template, G, Instances),"
+                + "'splitAndSolve'(Witness, S, Instances,Set,Template,G,Goal). \n"  
+                //+ "'splitAndSolve'(Witness, S, Instances1,Set,Template,G,Goal),"
+                //+"write('  Instances: '),write(Instances),"
+                //+"write('  Instances1: '),write(Instances1),"
+                //+"Instances=Instances1. \n"
+                /*INIT utility function used by bagof*/
+                +"count([],0). \n"
+                +"count([T1|Ts],N):- count(Ts,N1), N is (N1+1). \n"
+                +"is_list(X) :- var(X), !,fail. \n"
+                +"is_list([]). \n"
+                +"is_list([_|T]) :- is_list(T). \n"
+                +"list_to_term([T1|Ts],N):- count(Ts,K),K==0 \n"
+                +"->  N = T1,! \n"
+                +"; list_to_term(Ts,N1), N = ';'(T1,N1),!. \n"
+                +"list_to_term(Atom,Atom). \n"
+                +"quantVar(X^Others, [X|ListOthers]) :- !,quantVar(Others, ListOthers). \n"
+                +"quantVar(_Others, []). \n"
+                +"'splitAndSolve'(Witness, S, Instances,Set,Template,G,Goal):- splitSemicolon(G,L), \n"
+                +"variable_set(Template,TT), \n"
+                +"quantVar(Goal, Qvars), \n"
+                +"append(TT,Qvars,L1), \n"
+                +"'aggregateSubgoals'(L1,L,OutputList), \n"
+                +"member(E,OutputList), \n"
+                +"list_to_term(E, GoalE), \n"
+                +"findall(Witness + Template, GoalE, S), \n"
+                +"'bag0'(Witness, S, Instances,Set,Template,GoalE). \n"
+                
+                +"splitSemicolon(';'(G1,Gs),[G1|Ls]) :-!, splitSemicolon(Gs,Ls). \n"
+                +"splitSemicolon(G1,[G1]). \n"
+                +"aggregateSubgoals(Template, List, OutputList) :- \n"
+                +"aggregateSubgoals(Template, List, [], [], OutputList). \n"
+                +"aggregateSubgoals(Template, [H|T], CurrentAccumulator, Others, OutputList) :- \n"
+                +"'occurs0'(Template, H) \n"
+                +"-> aggregateSubgoals(Template, T, [H|CurrentAccumulator], Others, OutputList) \n"
+                +"; aggregateSubgoals(Template, T, CurrentAccumulator, [H|Others], OutputList). \n"
+                +"aggregateSubgoals(_, [], CurrentAccumulator, NonAggregatedList, [Result1|Result2]):- \n"
+                +"reverse(CurrentAccumulator, Result1), reverse(NonAggregatedList, Result2). \n"
+                +"occurs_member_list([], L):-!,fail. \n"
+                +"occurs_member_list([H|T], L) :- is_member(H,L) \n"
+                +"-> true,! \n"
+                +"; occurs_member_list(T,L). \n"
+                +"occurs_member_list_of_term(L, []):-!,fail. \n"
+                +"occurs_member_list_of_term(Template,[H|T]):-'occurs0'(Template, H) \n"
+                +"-> true,! \n"
+                +"; occurs_member_list_of_term(Template,T). \n"
+                +"'check_sub_goal'(Template, H, _Functor, Arguments):- ((_Functor==';';_Functor==',') \n"
+                +"-> 'occurs0'(Template,Arguments) \n"
+                +"; ((_Functor=='.') \n"
+                +"->  occurs_member_list_of_term(Template,Arguments) \n"
+                +"; occurs_member_list(Template, Arguments))). \n"
+                +"'occurs0'(Template, H):- \n"
+                +"H =.. [_Functor | Arguments], \n"
+                +"'check_sub_goal'(Template, H, _Functor, Arguments). \n"
+                +"'bag0'(_, [], _,_,_,_) :- !, fail. \n"
+                +"'bag0'(Witness, S, Instances,Set,Template,Goal) :- \n"
+                +"S==[] -> fail, !; \n"
+                +"'$wt_list'(S, WT_List), \n"
+                +"'$wt_unify'(Witness, WT_List, Instances,Set,Template,Goal). \n"
+                //+"'$wt_unify'(Witness, WT_List, T_List,Set,Template,Goal), \n"
+                //+"Instances = T_List. \n"
+                //+"write('T_List: '),write(T_List). \n"
+                
+                +"'bag0'(Witness, S, Instances,Set,Template,Goal) :- \n"
+                +"'$wt_list'(S, WT_List), \n"
+                +"'$s_next'(Witness, WT_List, S_Next),  \n"
+                +"'bag0'(Witness, S_Next, Instances,Set,Template,Goal). \n"
+   
+                /*END utility function used by bagof*/
+                /*+ "bagof(Template, Goal, Instances) :- \n"
                 + "all_solutions_predicates_guard(Template, Goal, Instances), \n"
                 + "free_variables_set(Goal, Template, Set), \n"
                 + "Witness =.. [witness | Set], \n"
@@ -1150,7 +1237,7 @@ public class BasicLibrary extends Library {
                 + "'$bagof0'(Witness, S, Instances) :- \n"
                 + "'$wt_list'(S, WT_List), \n"
                 + "'$s_next'(Witness, WT_List, S_Next), \n"
-                + "'$bagof0'(Witness, S_Next, Instances). \n"
+                + "'$bagof0'(Witness, S_Next, Instances). \n"*/
                 
                 + "setof(Template, Goal, Instances) :- \n"
                 + "all_solutions_predicates_guard(Template, Goal, Instances), \n"
@@ -1194,9 +1281,11 @@ public class BasicLibrary extends Library {
                 + "element(P,L,E):- element_guard(P,L,E), element0(P,L,E). \n                                                                              "
                 + "element0(1,[E|L],E):- !. \n                                                                              "
                 + "element0(N,[_|L],E):- M is N - 1,element0(M,L,E). \n                                                      "
+                /* commented by Roberta Calegari 29/04/14 it causes a loop
                 + "newlist(Ls,0,Ls):- !. \n                                                                                "
                 + "newlist(Ls,N,Ld):- !, append(X,Ls,Ld), length(X,N). \n                                                                                "
                 + "newlist(Ls,N,Ld):- M is N - 1,newlist([_|Ls],M,Ld). \n                                                  "
+                */
                 + "quicksort([],Pred,[]).                             \n"
                 + "quicksort([X|Tail],Pred,Sorted):-                  \n"
                 + "   split(X,Tail,Pred,Small,Big),                   \n"
@@ -1254,12 +1343,18 @@ public class BasicLibrary extends Library {
 
     public boolean all_solutions_predicates_guard_3(Term arg0, Term arg1,
             Term arg2) throws PrologError {
+    	//System.out.println("Entro qui.... ");
         arg1 = arg1.getTerm();
-        if (arg1 instanceof Var)
+        //System.out.println("Arg1 "+arg1);
+        if (arg1 instanceof Var){
+        	//System.out.println("ECCEZIONE 1 ");
             throw PrologError.instantiation_error(engine.getEngineManager(), 2);
-        if (!arg1.isAtom() && !arg1.isCompound())
+        }
+        if (!arg1.isAtom() && !arg1.isCompound()){
+        	//System.out.println("ECCEZIONE 2 ");
             throw PrologError.type_error(engine.getEngineManager(), 2,
-                    "callable", arg1);
+                    "callable", arg1); 
+         }
         return true;
     }
 
@@ -1322,8 +1417,71 @@ public class BasicLibrary extends Library {
         }
         return unify(tList, result);
     }
+    
+    public boolean $wt_unify_6(Term witness, Term wtList, Term tList, Term varSet,Term temp, Term goal) {
+    	/*System.out.println("witness "+witness);
+    	System.out.println("wtList "+wtList);
+    	System.out.println("tList "+tList+" "+((Var)tList).getLink());
+    	System.out.println("varSet "+varSet);
+    	System.out.println("template "+temp);
+    	*/
+    	//se ci sono variabili libere nel goal alla fine il risultato deve essere relinked
+    	Struct freeVarList = (Struct) varSet.getTerm();
+    	java.util.Iterator<? extends Term> it1 = freeVarList.listIterator();
+    	if (it1.hasNext()) {
+    		(engine.getEngineManager()).setRelinkVar(true);
+    		//ArrayList<String> l = new ArrayList<String>(); 
+    		
+    		(engine.getEngineManager()).setBagOFvarSet(varSet);
+    		(engine.getEngineManager()).setBagOFgoal(goal);
+    		if ((engine.getEngineManager()).getBagOFbag()==null)
+    			(engine.getEngineManager()).setBagOFbag(tList);
+    		
+    	}
+    		
+    	
+    	//System.out.println("template "+temp);
+    	//System.out.println("goal "+goal);
+        Struct list = (Struct) wtList.getTerm();
+        Struct varList = (Struct) varSet.getTerm();
+        //String goalString = goal.toString();
+        //System.out.println("goal string "+goalString);
+        
+        //System.out.println("termini wtList "+list);
+        Struct result = new Struct();
+        for (java.util.Iterator<? extends Term> it = list.listIterator(); it.hasNext();) {
+            Struct element = (Struct) it.next();
+            //System.out.println("termine wtList "+element);
+            Term w = element.getArg(0);
+            Term t = element.getArg(1);
+            //System.out.println("termine W wtList "+w);
+            //System.out.println("termine T wtList "+t);
+            if (unify(witness, w)){
+            	//System.out.println("=====witness  "+witness+" unifica con w "+w+" metto t nel risultato "+t);
+            	result.append(t);
+            	//System.out.println("=====****result  "+result);
+            	ArrayList<Term> l = (engine.getEngineManager()).getBagOFres();
+            	ArrayList<String> lString = (engine.getEngineManager()).getBagOFresString();
+            	if(l==null){
+            		l=new ArrayList<Term>();
+            		lString=new ArrayList<String>();
+            	}
+            	l.add(t);
+            	//if(t instanceof Var)
+            	lString.add(t.toString());
+            	/*for(int m=0; m<l.size(); m++){
+            		System.out.println("=====****elemento lista engine.getEngineManager()).getBagOFres()  "+l.get(m));
+            	}*/
+            	(engine.getEngineManager()).setBagOFres(l);
+            	(engine.getEngineManager()).setBagOFresString(lString);
+                //System.out.println("Ho unificato witness con w appendo t al risultato ");
+            }
+        } 
+        return unify(tList, result);
+    }
 
-    public boolean $s_next0_3(Term witness, Term wtList, Term sNext) {
+   
+  public boolean $s_next0_3(Term witness, Term wtList, Term sNext) {
         Struct list = (Struct) wtList.getTerm();
         Struct result = new Struct();
         for (java.util.Iterator<? extends Term> it = list.listIterator(); it.hasNext();) {
@@ -1340,7 +1498,7 @@ public class BasicLibrary extends Library {
         Term igt = t.iteratedGoalTerm();
         return unify(igt, goal);
     }
-
+    
     /**
      * Defines some synonyms
      */

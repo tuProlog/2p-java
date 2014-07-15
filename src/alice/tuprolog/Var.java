@@ -247,7 +247,7 @@ public class Var extends Term {
 	/**
 	 * Gets the term which is direct referred by the variable.
 	 */
-	Term getLink() {
+	public Term getLink() {
 		return link;
 	}
 
@@ -479,6 +479,22 @@ public class Var extends Term {
 		 }
 	 }
 
+	 public boolean isGreaterRelink(Term t,ArrayList<String> vorder) {
+		 Term tt = getTerm();
+		 if (tt == this) {
+			 t = t.getTerm();
+			 if (!(t instanceof Var)) return false;
+			 //System.out.println("Compare di tt "+tt+" con t "+t);
+			 //System.out.println("vorder "+vorder);
+			 //System.out.println("indice tt "+vorder.indexOf(((Var)tt).getName())+" indice t "+vorder.indexOf(((Var)t).getName()));
+			 //return timestamp > ((Var)t).timestamp;
+			 return vorder.indexOf(((Var)tt).getName())>vorder.indexOf(((Var)t).getName());
+		 }
+		 else {
+			 return tt.isGreaterRelink(t,vorder);
+		 }
+	 }
+	 
 	 public boolean isEqual(Term t) {
 		 Term tt = getTerm();
 		 if(tt == this) {
@@ -487,6 +503,10 @@ public class Var extends Term {
 		 } else {
 			 return tt.isEqual(t);
 		 }
+	 }
+	 
+	 public void setName(String s){
+		 this.name=s;
 	 }
 
 	 /**

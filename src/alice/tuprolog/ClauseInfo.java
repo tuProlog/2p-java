@@ -223,7 +223,8 @@ public class ClauseInfo {
         }
     }
     
-    static private String indentPredicatesAsArgX(Term t,OperatorManager op,int p) {
+    /*commented by Roberta Calegari fixed following issue 20 Christian Lemke suggestion
+     * static private String indentPredicatesAsArgX(Term t,OperatorManager op,int p) {
         if (t instanceof Struct) {
             Struct co=(Struct)t;
             if (co.getName().equals(",")) {
@@ -249,6 +250,47 @@ public class ClauseInfo {
             }
         } else {
             return t.toStringAsArgY(op,p);
+        }
+    }*/
+    
+    static private String indentPredicatesAsArgX(Term t,OperatorManager op,int p) {
+        if (t instanceof Struct) {
+            Struct co=(Struct)t;
+            if (co.getName().equals(",")) {
+               int prio = op.opPrio(",","xfy");
+               StringBuilder sb = new StringBuilder(prio >= p ? "(" : "");
+               sb.append(co.getArg(0).toStringAsArgX(op,prio));
+               sb.append(",\n\t");
+               sb.append(indentPredicatesAsArgY(co.getArg(1),op,prio));
+               if (prio >= p) sb.append(")");
+
+               return sb.toString();
+
+           } else {
+               return t.toStringAsArgX(op,p);
+           }
+       } else {
+           return t.toStringAsArgX(op,p);
+       }
+    }
+
+    static private String indentPredicatesAsArgY(Term t,OperatorManager op,int p) {
+        if (t instanceof Struct) {
+            Struct co=(Struct)t;
+            if (co.getName().equals(",")) {
+               int prio = op.opPrio(",","xfy");
+               StringBuilder sb = new StringBuilder(prio > p ? "(" : "");
+               sb.append(co.getArg(0).toStringAsArgX(op,prio));
+               sb.append(",\n\t");
+               sb.append(indentPredicatesAsArgY(co.getArg(1),op,prio));
+               if (prio > p) sb.append(")");
+
+               return sb.toString();
+            } else {
+               return t.toStringAsArgY(op,p);
+            }
+        } else {
+           return t.toStringAsArgY(op,p);
         }
     }
     

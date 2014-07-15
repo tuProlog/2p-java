@@ -17,6 +17,7 @@
  */
 package alice.tuprolog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -127,6 +128,19 @@ public class Double extends Number {
      * For number term argument, the int value is considered.
      */
     public boolean isGreater(Term t) {
+        t = t.getTerm();
+        if (t instanceof Number) {
+            return value>((Number)t).doubleValue();
+        } else if (t instanceof Struct) {
+            return false;
+        } else if (t instanceof Var) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean isGreaterRelink(Term t, ArrayList<String> vorder) {
         t = t.getTerm();
         if (t instanceof Number) {
             return value>((Number)t).doubleValue();

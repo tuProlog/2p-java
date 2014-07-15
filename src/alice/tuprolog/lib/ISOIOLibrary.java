@@ -186,11 +186,11 @@ public class ISOIOLibrary extends Library{
                         try {
                             input.mark((input.available())+5);
                         } catch (IOException e) {
-                        	// ED 2013-05-21: added to prevent Java warning "resource leak", input not closed
-                        	try {input.close();} catch (IOException e2) {
-                        		throw PrologError.system_error(new Struct("An error has occurred in open when closing the input file."));
-                        	} 
-                        	// END ED
+                                // ED 2013-05-21: added to prevent Java warning "resource leak", input not closed
+                                try {input.close();} catch (IOException e2) {
+                                        throw PrologError.system_error(new Struct("An error has occurred in open when closing the input file."));
+                                } 
+                                // END ED
                             throw PrologError.system_error(new Struct("An error has occurred in open."));
                         }
                     }
@@ -285,11 +285,11 @@ public class ISOIOLibrary extends Library{
                         try {
                             input.mark((input.available())+5);
                         } catch (IOException e) {
-                        	// ED 2013-05-21: added to prevent Java warning "resource leak", input not closed
-                        	try {input.close();} catch (IOException e2) {
-                        		throw PrologError.system_error(new Struct("An error has occurred in open when closing the input file."));
-                        	} 
-                        	// END ED
+                                // ED 2013-05-21: added to prevent Java warning "resource leak", input not closed
+                                try {input.close();} catch (IOException e2) {
+                                        throw PrologError.system_error(new Struct("An error has occurred in open when closing the input file."));
+                                } 
+                                // END ED
                             throw PrologError.system_error(new Struct("An error has occurred in open."));
                         }
                     }
@@ -392,7 +392,7 @@ public class ISOIOLibrary extends Library{
         }
         else if(in != null){
             String in_name = get_input_name(in);
-            if(in_name.equals(inputStreamName)){ //Modificato Mastrovito < in_name.equals("stdin") >
+            if(in_name.equals("stdin")){
                 return true;
             }
             try {
@@ -402,8 +402,8 @@ public class ISOIOLibrary extends Library{
                     inputStreams.remove(in);
                     in = null;
                     if(in_name.equals(inputStreamName)){
-                        //Rimosso Mastrovito <inputStreamName = "stdin";>
-                        inputStream = IOLib.getInputStreamByContext(inputStreamName); //Modificato Mastrovito < = System.in >
+                        inputStreamName = "stdin";
+                        inputStream = System.in;
                     }
                 }
                 else{
@@ -447,7 +447,7 @@ public class ISOIOLibrary extends Library{
         }
         else if(in != null){
             String in_name = get_input_name(in);
-            if(in_name.equals(inputStreamName)){ //Modificato Mastrovito < in_name.equals("stdin") >
+            if(in_name.equals("stdin")){
                 return true;
             }
             try {
@@ -456,8 +456,8 @@ public class ISOIOLibrary extends Library{
                 throw PrologError.system_error(new Struct("An error has occurred on stream closure."));
             }
             if(in_name.equals(inputStreamName)){
-            	//Rimosso Mastrovito <inputStreamName = "stdin";>
-                inputStream = IOLib.getInputStreamByContext(inputStreamName); //Modificato Mastrovito < = System.in >
+                inputStreamName = "stdin";
+                inputStream = System.in;
             }
             inputStreams.remove(in);
         }
@@ -549,7 +549,7 @@ public class ISOIOLibrary extends Library{
                 for(Map.Entry<String, Term> currentElement2 : currentElement.getValue().entrySet()){
                     if(currentElement2.getKey().equals(propertyName)){
                         if(propertyName.equals("alias")){
-                        	int arity = ((Struct)currentElement2.getValue()).getArity();
+                                int arity = ((Struct)currentElement2.getValue()).getArity();
                             if(arity == 0){
                                 if(propertyValue.equals(((Struct)currentElement2.getValue()))){
                                     resultList.add(new Struct(currentElement.getKey().toString()));
@@ -713,25 +713,25 @@ public class ISOIOLibrary extends Library{
         
         //se lo stream e' stdin, leggo il carattere esattamente come fa get0 di IOLib
         //stdin lo scrivo come stringa, non posso usare inputStreamName, perche' in quel campo ci deve rimanere lo stream corrente, e se e' stato cambiato, non ho piu' sdtin
-        if(file_name.equals(inputStreamName)){ //Modificato Mastrovito <"stdin">
-        	IOLib.get0_1(arg);
-        	return true;
+        if(file_name.equals("stdin")){ 
+                IOLib.get0_1(arg);
+                return true;
         }
         
         //se e' un file invece devo effettuare tutti i controlli sullo stream.
         try{        
-        	Number position  = (Number) (element.get("position"));
-        	Struct eof = (Struct) element.get("end_of_stream");
-        	
-        	//se e' stata raggiunta la fine del file, controllo ed eseguo l'azione prestabilita nelle opzioni al momento dell'apertura del file.
-        	if((eof.getName()).equals("past")){
-        		Term actionTemp = element.get("eof_action");
-        		String action = ((Struct)actionTemp).getName();
-        		
-        		if(action.equals("error"))
-        			throw PrologError.permission_error(engine.getEngineManager(), "input","past_end_of_stream", new Struct("reader"), new Struct("End of file is reached."));
+                Number position  = (Number) (element.get("position"));
+                Struct eof = (Struct) element.get("end_of_stream");
+                
+                //se e' stata raggiunta la fine del file, controllo ed eseguo l'azione prestabilita nelle opzioni al momento dell'apertura del file.
+                if((eof.getName()).equals("past")){
+                        Term actionTemp = element.get("eof_action");
+                        String action = ((Struct)actionTemp).getName();
+                        
+                        if(action.equals("error"))
+                                throw PrologError.permission_error(engine.getEngineManager(), "input","past_end_of_stream", new Struct("reader"), new Struct("End of file is reached."));
                 else if(action.equals("eof_code"))
-                	return unify(arg,new Struct("-1"));
+                        return unify(arg,new Struct("-1"));
                 else if(action.equals("reset")){
                         element.put("end_of_stream", new Struct("not"));
                         element.put("position", new Int(0));
@@ -739,7 +739,7 @@ public class ISOIOLibrary extends Library{
                     }
                 }
                 
-        		//effettuo la lettura, anche se dovevo fare reset dello stream
+                        //effettuo la lettura, anche se dovevo fare reset dello stream
                 value = stream.read();
 
                 if(!Character.isDefined(value)){
@@ -806,16 +806,16 @@ public class ISOIOLibrary extends Library{
         //senza preoccuparmi di controllare tutte le opzioni dello stream. 
         Struct struct_name = (Struct) element.get("file_name");
         String file_name = struct_name.toString();
-        if(file_name.equals(inputStreamName)){ //Modificato Mastrovito <"stdin">
-        		try {
+        if(file_name.equals("stdin")){ 
+                        try {
                     value = inputStream.read();
                 } 
-        		catch (IOException e) {
+                        catch (IOException e) {
                     throw PrologError.permission_error(engine.getEngineManager(),
                             "input", "stream", new Struct(inputStreamName), new Struct(
                                     e.getMessage()));
                 }
-        		
+                        
                 if (value == -1) {
                     return unify(char_code, new Int(-1));
                 } else {
@@ -903,8 +903,8 @@ public class ISOIOLibrary extends Library{
         Hashtable<String,Term> element = (Hashtable<String, Term>) inputStreams.get(stream);
         String file_name = ((Struct)element.get("file_name")).getName();
         
-        if(file_name.equals(inputStreamName)){ //Modificato Mastrovito < "stdin" >
-        	return get_char_2(stream_or_alias,in_char);
+        if(file_name.equals("stdin")){
+                return get_char_2(stream_or_alias,in_char);
         }
         
         FileInputStream stream2=null;
@@ -1040,7 +1040,7 @@ public class ISOIOLibrary extends Library{
                     stream2.close();
                 }
                 if(!Character.isDefined(value) && value != -1){     //non devo nemmeno settare a eof la proprieta' perche' la posizone
-                                                					//dello stream deve rimanere inalterata.
+                                                                                        //dello stream deve rimanere inalterata.
                     throw PrologError.representation_error(engine.getEngineManager(), 2, "character");
                 }
                 inputStreams.put(stream, element);
@@ -1283,11 +1283,11 @@ public class ISOIOLibrary extends Library{
 //        initLibrary();
 //        out_byte = out_byte.getTerm();
 //        return IOLib.put_1(out_byte);
-    	
-    	initLibrary();
+        
+        initLibrary();
         Struct stream_or_alias = new Struct(outputStream.toString());
         return put_byte_2(stream_or_alias, out_byte);
-    	
+        
     }
     
     public boolean put_byte_2(Term stream_or_alias, Term out_byte)throws PrologError{
@@ -1306,13 +1306,13 @@ public class ISOIOLibrary extends Library{
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         
         if (stream.equals("stdout")) {
-        		//lo standard output non e' uno stream binario, 
-        		//se si tenta di scrivere su std output questo mi restituisce soltanto la stringa.
+                        //lo standard output non e' uno stream binario, 
+                        //se si tenta di scrivere su std output questo mi restituisce soltanto la stringa.
                getEngine().stdOutput(out_byte.toString()); //da riguardare!!
         } 
         else {
                try {
-            	   DataOutputStream writer = new DataOutputStream(stream);
+                   DataOutputStream writer = new DataOutputStream(stream);
                     Number position  = (Number) (element.get("position"));
                     Int i = (Int)position;
                     int i2 = i.intValue();
@@ -1616,19 +1616,19 @@ public class ISOIOLibrary extends Library{
         }
         try{
             if(!out_term.isCompound() && !(out_term instanceof Var)){
-            	 
-            	if (output_name.equals("stdout")) {
+                 
+                if (output_name.equals("stdout")) {
                      if(quoted == true){ //per scrivere sull'output devo richiamare l'output dell'Engine nel caso di stdio,
-                    	 				//altrimenti utilizzando write() il risultato lo stampa sulla console Java.
-                    	 				//Nel caso in cui l'output e' un file write e' corretto.
-                    	 getEngine().stdOutput((alice.util.Tools.removeApices(out_term.toString())));
+                                                        //altrimenti utilizzando write() il risultato lo stampa sulla console Java.
+                                                        //Nel caso in cui l'output e' un file write e' corretto.
+                         getEngine().stdOutput((alice.util.Tools.removeApices(out_term.toString())));
                      }
                      else{
-                    	 getEngine().stdOutput((out_term.toString()));
+                         getEngine().stdOutput((out_term.toString()));
                      }
                  } 
-            	 else {
-            		 if(quoted == true){
+                 else {
+                         if(quoted == true){
                          output.write((alice.util.Tools.removeApices(out_term.toString())).getBytes());
                      }
                      else{
@@ -1641,17 +1641,17 @@ public class ISOIOLibrary extends Library{
             
             
             if(out_term instanceof Var){
-            	
-            	if (output_name.equals("stdout")) {
+                
+                if (output_name.equals("stdout")) {
                     if(quoted == true){ 
-                   	 getEngine().stdOutput((alice.util.Tools.removeApices(out_term.toString())+" "));
+                         getEngine().stdOutput((alice.util.Tools.removeApices(out_term.toString())+" "));
                     }
                     else{
-                   	 getEngine().stdOutput((out_term.toString()+" "));
+                         getEngine().stdOutput((out_term.toString()+" "));
                     }
                 } 
-           	 else {
-           		 if(quoted == true){
+                 else {
+                         if(quoted == true){
                         output.write((alice.util.Tools.removeApices(out_term.toString())+" ").getBytes());
                     }
                     else{
@@ -1672,10 +1672,10 @@ public class ISOIOLibrary extends Library{
             result = create_string(options,term);
             
             if (output_name.equals("stdout")) {
-            	getEngine().stdOutput(result);
+                getEngine().stdOutput(result);
             }
             else{
-            	output.write((result+" ").getBytes());
+                output.write((result+" ").getBytes());
             }
             
         }
@@ -2013,28 +2013,28 @@ public class ISOIOLibrary extends Library{
         for(Map.Entry<InputStream, Hashtable<String, Term>> currentElement : inputStreams.entrySet()){
             for(Map.Entry<String, Term> currentElement2 : currentElement.getValue().entrySet()){
 
-            	//Puo' anche essere che l'utente inserisca il nome della variabile a cui e' associato lo stream che gli serve
-            	//in quel caso basta confrontare il nome dello stream con la chiave dell'elemento che sto analizzando (currentElement)
-            	if((currentElement.getKey().toString()).equals(stream_name)){
+                //Puo' anche essere che l'utente inserisca il nome della variabile a cui e' associato lo stream che gli serve
+                //in quel caso basta confrontare il nome dello stream con la chiave dell'elemento che sto analizzando (currentElement)
+                if((currentElement.getKey().toString()).equals(stream_name)){
                     result = currentElement.getKey();
                     flag = 1;
                     break;
                 }
-            	else if(currentElement2.getKey().equals("file_name")){
-            		if(stream_or_alias.equals(currentElement2.getValue())){
-            			result = currentElement.getKey();
-            			flag = 1;
-            			break;
-            		}
-            	} 
+                else if(currentElement2.getKey().equals("file_name")){
+                        if(stream_or_alias.equals(currentElement2.getValue())){
+                                result = currentElement.getKey();
+                                flag = 1;
+                                break;
+                        }
+                } 
                 //se mi viene passato un alias lo cerco e restituisco lo stream associato.
-            	else if(currentElement2.getKey().equals("alias")){ 
-            		Struct alias = (Struct)currentElement2.getValue();
+                else if(currentElement2.getKey().equals("alias")){ 
+                        Struct alias = (Struct)currentElement2.getValue();
                     int arity = alias.getArity();
                     //Ci posso essere anche piu' di un alias associti a quello stream, percio' devo controllare l'arita'
                     //della struttura che contiene tutti gli alias.
                     if(arity > 1){
-                    	for(int k = 0; k< alias.getArity();k++){
+                        for(int k = 0; k< alias.getArity();k++){
                             if((alias.getArg(k)).equals(stream_or_alias)){
                                 result = currentElement.getKey();
                                 flag =1;
@@ -2043,11 +2043,11 @@ public class ISOIOLibrary extends Library{
                         }
                     }
                     else{
-                    	//se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' e' sufficiente fare alias.getName()
+                        //se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' e' sufficiente fare alias.getName()
                         if(alias.getName().equals(stream_name)){
-                        	result = currentElement.getKey();
-                        	flag =1;
-                        	break;
+                                result = currentElement.getKey();
+                                flag =1;
+                                break;
                         }
                     }
                 }
@@ -2058,11 +2058,11 @@ public class ISOIOLibrary extends Library{
         //Siccome gli stream di input o output possono essere invocati anche come "stdin" e "stdout"
         //faccio un controllo anche su quei nomi.
         if(stream_name.contains("Output") || stream_name.equals("stdout"))
-        	throw PrologError.permission_error(engine.getEngineManager(), "output", "stream", stream_or_alias, new Struct("S_or_a is an output stream"));
+                throw PrologError.permission_error(engine.getEngineManager(), "output", "stream", stream_or_alias, new Struct("S_or_a is an output stream"));
 
         if(flag == 0)
             //se lo stream non si trova all'interno della hashtable, significa che non ? mai stato aperto
-        	throw PrologError.existence_error(engine.getEngineManager(), 1, "stream", stream_or_alias, new Struct("Input stream should be opened."));
+                throw PrologError.existence_error(engine.getEngineManager(), 1, "stream", stream_or_alias, new Struct("Input stream should be opened."));
         
         return result;
     }
@@ -2081,28 +2081,28 @@ public class ISOIOLibrary extends Library{
         
         for(Map.Entry<OutputStream, Hashtable<String, Term>> currentElement : outputStreams.entrySet()){
             for(Map.Entry<String, Term> currentElement2 : currentElement.getValue().entrySet()){
-            	
-            	if((currentElement.getKey().toString()).equals(stream_name)){
+                
+                if((currentElement.getKey().toString()).equals(stream_name)){
                     result = currentElement.getKey();
                     flag = 1;
                     break;
                 }
-            	else if(currentElement2.getKey().equals("file_name")){
-            		if(stream_or_alias.equals(currentElement2.getValue())){
-            			result = currentElement.getKey();
-            			flag = 1;
-            			break;
-            		}
-            	}
-            	
+                else if(currentElement2.getKey().equals("file_name")){
+                        if(stream_or_alias.equals(currentElement2.getValue())){
+                                result = currentElement.getKey();
+                                flag = 1;
+                                break;
+                        }
+                }
+                
                 //se mi viene passato un alias lo cerco e restituisco lo stream associato.
-            	else if(currentElement2.getKey().equals("alias")){ 
-            		Struct alias = (Struct)currentElement2.getValue();
+                else if(currentElement2.getKey().equals("alias")){ 
+                        Struct alias = (Struct)currentElement2.getValue();
                     int arity = alias.getArity();
                     //Ci posso essere anche piu' di un alias associti a quello stream, percio' devo controllare l'arita'
                     //della struttura che contiene tutti gli alias.
                     if(arity > 1){
-                    	for(int k = 0; k< alias.getArity();k++){
+                        for(int k = 0; k< alias.getArity();k++){
                             if((alias.getArg(k)).equals(stream_or_alias)){
                                 result = currentElement.getKey();
                                 flag =1;
@@ -2111,23 +2111,23 @@ public class ISOIOLibrary extends Library{
                         }
                     }
                     else{
-                    	//se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' e' sufficiente fare alias.getName()
+                        //se arity e' uguale a 1, non devo fare un ciclo for, ha soltanto un elemento, percio' e' sufficiente fare alias.getName()
                         if(alias.getName().equals(stream_name)){
-                        	result = currentElement.getKey();
-                        	flag =1;
-                        	break;
+                                result = currentElement.getKey();
+                                flag =1;
+                                break;
                         }
                     }
                 }
             }
         }
         
-        if(stream_name.contains("Input") || stream_name.equals(inputStreamName)) //Modificato Mastrovito < "stdin" >
-        	throw PrologError.permission_error(engine.getEngineManager(), "input", "stream", stream_or_alias, new Struct("S_or_a is an input stream."));
+        if(stream_name.contains("Input") || stream_name.equals("stdin"))
+                throw PrologError.permission_error(engine.getEngineManager(), "input", "stream", stream_or_alias, new Struct("S_or_a is an input stream."));
 
         if(flag == 0)
             //se lo stream non si trova all'interno della hashtable, significa che non ? mai stato aperto
-        	throw PrologError.existence_error(engine.getEngineManager(), 1, "stream", stream_or_alias, new Struct("Output stream should be opened."));
+                throw PrologError.existence_error(engine.getEngineManager(), 1, "stream", stream_or_alias, new Struct("Output stream should be opened."));
         
         return result;
     }

@@ -22,7 +22,7 @@ import java.io.*;
 
 import alice.tuprolog.event.*;
 import alice.tuprolog.interfaces.IProlog;
-import alice.tuprologx.ide.ToolBar;
+//import alice.tuprologx.ide.ToolBar;
 
 
 
@@ -76,6 +76,7 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
 
     /* path history for including documents */
     private ArrayList<String> absolutePathList;
+    private String lastPath;
 
 
 	/**
@@ -223,11 +224,10 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
      */
     public String getCurrentDirectory() {
         String directory = "";
-        String s;
         if(absolutePathList.isEmpty()) {
-        	if((s = ToolBar.getPath())!=null)
+        	if(this.lastPath!=null)
         	{
-        		directory = s;
+        		directory = this.lastPath;
         	}
         	else
         	{
@@ -240,6 +240,12 @@ public class Prolog implements /*Castagna 06/2011*/IProlog,/**/ Serializable {
         return directory;
     }
 
+    /**
+     * Sets the last Element of the path list
+     */
+    public void setCurrentDirectory(String s) {
+        this.lastPath=s;    
+    }
 
     
     

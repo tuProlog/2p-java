@@ -9,9 +9,9 @@ Structure of the project:
 		|---fit
 		|---unit
 	|---tests			Tests’ .class files									[05.build.tests]			
-	|---release			Package ready for distribution (folder and zip)		[11.release.bin]
 |---doc					Documentation (guide + javadoc)						[10.javadoc]
-|---lib					
+|---lib				
+|---release				Package ready for distribution (folder and zip)		[11.release.bin]	
 |---src
 |---test
 	|---fit
@@ -24,7 +24,7 @@ Details:
 						if the target is the build via ikvm the sub directory "net" will be also created.
 						Note: since other projects dependes on 2p, in the tags folder in the repository you will find
 						2p.jar and tuprolog.jar inside this directory.
-- "build/release":		in this directory, if the target "11.release.bin" is used, will be created the package of 2p 
+- "release":		in this directory, if the target "11.release.bin" is used, will be created the package of 2p 
 						ready to be distributed in two forms: folder and zip file.
 						The package contains the binaries of 2p (2p.jar and tuprolog.jar), the javadoc, the guide and 
 						the results of tests (unit and acceptance).

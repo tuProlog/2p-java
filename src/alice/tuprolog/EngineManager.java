@@ -3,6 +3,7 @@ package alice.tuprolog;
 //import java.io.File;
 //import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -220,9 +221,14 @@ public class EngineManager implements java.io.Serializable {
 	}
 	
 	public synchronized SolveInfo solve(Term query) {
+		this.clearSinfoSetOf();
 		er1.setGoal(query);
 		
-		return er1.solve();
+		SolveInfo s = er1.solve();
+		//System.out.println("ENGINE MAN solve(Term) risultato: "+s);
+		return s;
+		
+		//return er1.solve();
 	}
 	
 	public void solveEnd() {
@@ -406,5 +412,68 @@ public class EngineManager implements java.io.Serializable {
 		EngineRunner er=findRunner();
 		er.identify(t);
 	}	
+	
+	public boolean getRelinkVar(){
+		EngineRunner r = this.findRunner();
+		return r.getRelinkVar();
+	}
+	
+	public void setRelinkVar(boolean b){
+		EngineRunner r = this.findRunner();
+		r.setRelinkVar(b);
+	}
+	
+	public ArrayList<Term> getBagOFres(){
+		EngineRunner r = this.findRunner();
+		return r.getBagOFres();
+	}
+    public void setBagOFres(ArrayList<Term> l){
+    	EngineRunner r = this.findRunner();
+		r.setBagOFres(l);
+	}
+    public ArrayList<String> getBagOFresString(){
+		EngineRunner r = this.findRunner();
+		return r.getBagOFresString();
+	}
+    public void setBagOFresString(ArrayList<String> l){
+    	EngineRunner r = this.findRunner();
+		r.setBagOFresString(l);
+	}
+    public Term getBagOFvarSet(){
+    	EngineRunner r = this.findRunner();
+		return r.getBagOFvarSet();
+	}
+    public void setBagOFvarSet(Term l){
+    	EngineRunner r = this.findRunner();
+		r.setBagOFvarSet(l);
+	}
+    public Term getBagOFgoal(){
+    	EngineRunner r = this.findRunner();
+		return r.getBagOFgoal();
+	}
+    public void setBagOFgoal(Term l){
+    	EngineRunner r = this.findRunner();
+    	r.setBagOFgoal(l);
+	}
+    public Term getBagOFbag(){
+    	EngineRunner r = this.findRunner();
+		return r.getBagOFBag();
+	}
+    public void setBagOFbag(Term l){
+    	EngineRunner r = this.findRunner();
+    	r.setBagOFBag(l);
+	}
+    public String getSetOfSolution() {
+    	EngineRunner r = this.findRunner();
+        return r.getSetOfSolution();
+    }
+    public void setSetOfSolution(String s) {
+    	EngineRunner r = this.findRunner();
+        r.setSetOfSolution(s);
+    }
+    public void clearSinfoSetOf() {
+    	EngineRunner r = this.findRunner();
+    	r.clearSinfoSetOf();
+    }
 }
 

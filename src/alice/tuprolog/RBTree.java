@@ -306,6 +306,7 @@ public class RBTree<K extends Comparable<? super K>,V>
             return;  // Key not found, do nothing
         
         /*must be check if node is a list of clause*/
+		@SuppressWarnings("unchecked")
 		LinkedList<ClauseInfo> nodeClause= (LinkedList<ClauseInfo>)n.value;
         if(nodeClause.size()>1){
         	

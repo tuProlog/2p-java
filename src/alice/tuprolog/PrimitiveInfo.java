@@ -119,6 +119,7 @@ public class PrimitiveInfo {
             primitive_args[i] = g.getArg(i);
         }
         try {
+        	//System.out.println("PRIMITIVE INFO evalAsPredicate sto invocando metodo "+method.getName());
             return ((Boolean)method.invoke(source,primitive_args)).booleanValue();
         } catch (InvocationTargetException e) {
             // throw new Exception(e.getCause());

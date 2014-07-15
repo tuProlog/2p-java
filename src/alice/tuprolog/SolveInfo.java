@@ -46,6 +46,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     private Term query;
     private Struct goal;
     private List<Var>   bindings;
+    private String setOfSolution;
     
     
     /**
@@ -54,6 +55,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     SolveInfo(Term initGoal){
         query = initGoal;
         isSuccess = false;
+        setOfSolution=null;
     }
     
     /**
@@ -69,6 +71,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
         bindings = resultVars;
         endState = resultDemo;
         isSuccess = (endState > FALSE);
+        setOfSolution=null;
     }
     
     
@@ -108,6 +111,13 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
 	 */
     public Term getQuery() {
         return query;
+    }
+    
+    public String getSetOfSolution() {
+        return setOfSolution;
+    }
+    public void setSetOfSolution(String s) {
+        setOfSolution=s;
     }
     
     

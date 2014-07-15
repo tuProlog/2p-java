@@ -110,7 +110,7 @@ public class TheoryManager implements Serializable {
 		/*creo un nuovo clause database x memorizzare la teoria all'atto della retract 
 		 * questo lo faccio solo al primo giro della stessa retract 
 		 * (e riconosco questo in base all'id del contesto)
-		 * sarˆ la retract da questo db a restituire il risultato
+		 * sara' la retract da questo db a restituire il risultato
 		 */    
 		FamilyClausesList familyQuery;
 	    if(!retractDBase.containsKey("ctxId "+ctx.getId())){

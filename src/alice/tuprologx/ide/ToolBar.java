@@ -358,6 +358,7 @@ public class ToolBar extends JPanel
             if (fileIDE.getFilePath() != null) {
             	path = fileIDE.getFilePath();
                 engine.resetDirectoryList(fileIDE.getFilePath());
+                engine.setCurrentDirectory(path);
 
                 /** this isn't correct with the tabbed theory visualization*/
                 //engine.setTheory(theory);

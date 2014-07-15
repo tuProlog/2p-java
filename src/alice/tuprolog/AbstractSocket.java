@@ -1,6 +1,7 @@
 package alice.tuprolog;
 import java.net.InetAddress;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 @SuppressWarnings("serial")
 
 
@@ -73,6 +74,10 @@ public abstract class AbstractSocket extends Term{
 
 	@Override
 	public boolean isGreater(Term t) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+	public boolean isGreaterRelink(Term t, ArrayList<String> vorder) {
 		// TODO Auto-generated method stub
 		return false;
 	}

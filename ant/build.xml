@@ -163,7 +163,7 @@
 	    <property name="build.classes.dir" value="${build.dir}/classes"/>
 	    <property name="build.tests.dir" value="${build.dir}/tests"/>
 	    <property name="build.archives.dir" value="${build.dir}/archives"/>
-		<property name="build.release.dir" value="${build.dir}/release"/>
+		<property name="build.release.dir" value="release"/>
 		<property name="build.unit.reports.dir" value="${build.dir}/reports/unit"/>
 		<property name="build.fit.reports.dir" value="${build.dir}/reports/fit"/>
 		
@@ -632,7 +632,7 @@
 			<echo>Look directory ${build.release.dir}</echo>
 		</target>
 	
-	<target name="12.tag" depends="01.set.classpath, 04.prepare, 08.package, 09.build.NET" description="Tags the code">
+	<target name="12.tag" depends="01.set.classpath, 04.prepare, 08.package, 09.build.NET, 11.release.bin" description="Tags the code">
 		
 		<property name="TagMessage" value="Tag Java ${engine.version}.${JavaSpecific.version}"/>
 		
@@ -660,9 +660,10 @@
 			<!--  I use <name> </name> because in this way I'm sure that I replace the name of the project and nothing else called 2p -->
 			<replace file="${tmp.dir}/.project" token="&lt;name&gt;2p&lt;/name&gt;" value="&lt;name&gt;tuProlog REL-${engine.version}.${JavaSpecific.version}&lt;/name&gt;"/>
 		
+		<echo>Tagging the code...</echo>
+		<!-- It is not possible to put echo messahes inside the svn tag -->
 		<svn refid="settings">
 		    
-		    <!--  Real of the code -->
 			<copy
 				srcUrl="https://tuprolog.googlecode.com/svn/2p/trunk" 
 				destUrl="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}"
@@ -671,7 +672,7 @@
 				makeParents="true" >
 			</copy> 
 			
-			<!--  Change the project name -->
+			<!-- Changing the project name... -->
 			<delete
 			    url = "https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/.project"
 			    message = "${TagMessage}">
@@ -683,20 +684,15 @@
 				message="${TagMessage}" >
 			</import> 
 			
+			<!-- Importing the files that are necessary for the other projects... -->
 			<import
-				path="${build.archives.dir}/2p.jar" 
-				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/2p.jar"
+				path="${build.archives.dir}" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives"
 				message="${TagMessage}" 
 				recurse="false" >
 			</import> 
-			
-			<import
-				path="${build.archives.dir}/tuprolog.jar" 
-				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/tuprolog.jar"
-				message="${TagMessage}" 
-				recurse="false" > 
-			</import>
 			 
+			<!-- We don't want to copy all the IKVM libraries so we select only the three file needed -->
 			<import
 				path="${build.archives.net.dir}/tuprolog.dll" 
 				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/tuprolog.dll"
@@ -728,6 +724,14 @@
 			<import
 				path="${build.archives.net.dir}/test" 
 				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/build/archives/net/test"
+				message="${TagMessage}" 
+				recurse="false" >
+			</import> 
+			
+			<!-- Importing the release zip... -->
+			<import
+				path="${build.release.dir}/2p-${engine.version}.${JavaSpecific.version}.zip" 
+				url="https://tuprolog.googlecode.com/svn/2p/tags/REL-${engine.version}.${JavaSpecific.version}/release/2p-${engine.version}.${JavaSpecific.version}.zip"
 				message="${TagMessage}" 
 				recurse="false" >
 			</import> 

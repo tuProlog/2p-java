@@ -1,7 +1,8 @@
 package alice.tuprolog.event;
 
 import java.util.EventObject;
-import alice.tuprolog.*;
+
+import alice.tuprolog.lib.UserContextInputStream;
 
 public class ReadEvent extends EventObject {
 
@@ -9,7 +10,7 @@ public class ReadEvent extends EventObject {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private alice.tuprolog.UserContextInputStream stream;
+	private alice.tuprolog.lib.UserContextInputStream stream;
 	
 	public ReadEvent(UserContextInputStream str) {
 		super(str);

@@ -18,6 +18,7 @@ public class ConsoleManager
     //private PJProlog pjengine;
     private IDE ide;
     private ArrayList<QueryEvent> queryEventList;
+    private ArrayList<String> queryEventListString;
     private int solveType;
     private long timeFromBeginSolving=-1;
     private int millsStopEngine;
@@ -29,6 +30,7 @@ public class ConsoleManager
         this.ide = ide;
         informationToDisplayListeners = new ArrayList<InformationToDisplayListener>();
         queryEventList = new ArrayList<QueryEvent>();
+        queryEventListString = new ArrayList<String>();
     }
 
     public void setDialog(ConsoleDialog dialog){this.dialog = dialog;}
@@ -97,6 +99,7 @@ public class ConsoleManager
     public void newQueryResultAvailable(QueryEvent event)
     {
         queryEventList.add(event);
+        queryEventListString.add(event.getSolveInfo().toString());
         boolean display = false;
         if (getSolveType()==1)//if there is information about a solveAll operation
         {
@@ -127,8 +130,10 @@ public class ConsoleManager
         }
         if (display)
         {
-            notifyInformationToDisplayEvent(new InformationToDisplayEvent(engine, queryEventList, getSolveType()));
+            //notifyInformationToDisplayEvent(new InformationToDisplayEvent(engine, queryEventList, getSolveType()));
+        	notifyInformationToDisplayEvent(new InformationToDisplayEvent(engine, queryEventList,queryEventListString, getSolveType()));
             queryEventList.clear();
+            queryEventListString.clear();
         }
     }
 

@@ -2,8 +2,6 @@ package alice.tuprolog;
 
 import java.util.List;
 
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
 
 import junit.framework.TestCase;
 

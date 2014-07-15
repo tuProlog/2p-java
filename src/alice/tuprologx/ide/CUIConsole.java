@@ -10,6 +10,7 @@ import alice.tuprolog.event.SpyEvent;
 import alice.tuprolog.event.SpyListener;
 import alice.tuprolog.event.WarningEvent;
 import alice.tuprolog.event.WarningListener;
+import alice.tuprolog.lib.IOLibrary;
 
 import java.io.*;
 
@@ -32,6 +33,13 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         
 
         engine = new Prolog();
+        /**
+         * Added the method setExecution to conform
+         * the operation of CUIConsole as that of JavaIDE
+         */
+        IOLibrary IO = (IOLibrary)engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IO.setExecutionType(IOLibrary.consoleExecution);
+        /***/
         stdin = new BufferedReader(new InputStreamReader(System.in));
         engine.addWarningListener(this);
         engine.addOutputListener(this);

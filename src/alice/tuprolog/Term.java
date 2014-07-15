@@ -19,6 +19,7 @@ package alice.tuprolog;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -97,6 +98,7 @@ public abstract class Term implements Serializable {
      * is term greater than term t?
      */
     public abstract boolean isGreater(Term t);
+    public abstract boolean isGreaterRelink(Term t, ArrayList<String> vorder);
     
     /**
      * Tests if this term is (logically) equal to another

@@ -11,27 +11,27 @@ import java.net.URL;
 
 import org.junit.Test;
 
-import alice.util.DynamicURLClassLoader;
+import alice.util.JavaDynamicClassLoader;
 
 /**
- * Custom Dynamic URLCLassLoader Test Case
+ * JavaDynamicClassLoader Test Case
  * 
- * @author Michele Mannino
+ * @author Alessio Mercurio
  * 
  */
-public class DynamicURLClassLoaderTestCase {
+public class JavaDynamicClassLoaderTestCase {
 	
 	final static int PATHS_NUMBER = 2;
 	String[] paths = new String[PATHS_NUMBER];
 	
 	@Test
 	public void ConstructorTest() throws MalformedURLException, IOException, ClassNotFoundException{
-		DynamicURLClassLoader loader = new DynamicURLClassLoader();
+		JavaDynamicClassLoader loader = new JavaDynamicClassLoader();
 		assertNotNull(loader);
 		
 		setPath(true);
 		URL[] urls = getURLsFromStringArray(paths);
-		loader = new DynamicURLClassLoader(urls, this.getClass().getClassLoader());
+		loader = new JavaDynamicClassLoader(urls, this.getClass().getClassLoader());
 		assertEquals(2, loader.getURLs().length);
 	}
 	
@@ -39,10 +39,10 @@ public class DynamicURLClassLoaderTestCase {
 	public void LoadClassTest() throws MalformedURLException, 
 		IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InstantiationException, InvocationTargetException
 	{
-		DynamicURLClassLoader loader = null;
+		JavaDynamicClassLoader loader = null;
 		setPath(true);
 		URL[] urls = getURLsFromStringArray(paths);
-		loader = new DynamicURLClassLoader(urls, this.getClass().getClassLoader());
+		loader = new JavaDynamicClassLoader(urls, this.getClass().getClassLoader());
 		assertEquals(2, loader.getURLs().length);
 		
 		Class<?> cl = loader.loadClass("Counter");
@@ -61,28 +61,28 @@ public class DynamicURLClassLoaderTestCase {
 	@Test(expected = ClassNotFoundException.class)
 	public void LoadClassNotFoundTest() throws ClassNotFoundException, IOException
 	{
-		DynamicURLClassLoader loader = null;
+		JavaDynamicClassLoader loader = null;
 		setPath(true);
 		URL[] urls = getURLsFromStringArray(paths);
-		loader = new DynamicURLClassLoader(urls, this.getClass().getClassLoader());
+		loader = new JavaDynamicClassLoader(urls, this.getClass().getClassLoader());
 		loader.loadClass("ClassNotFound");
 	}
 	
 	@Test(expected = ClassNotFoundException.class)
 	public void InvalidPathTest() throws ClassNotFoundException, IOException
 	{
-		DynamicURLClassLoader loader = null;
+		JavaDynamicClassLoader loader = null;
 		URL url = new File(".").toURI().toURL();
-		loader = new DynamicURLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
+		loader = new JavaDynamicClassLoader(new URL[]{url}, this.getClass().getClassLoader());
 		loader.loadClass("Counter");
 	}
 	
 	@Test
 	public void URLHandling() throws ClassNotFoundException, MalformedURLException, IOException
 	{
-		DynamicURLClassLoader loader = null;
+		JavaDynamicClassLoader loader = null;
 		URL url = new File(".").toURI().toURL();
-		loader = new DynamicURLClassLoader(new URL[]{url}, this.getClass().getClassLoader());
+		loader = new JavaDynamicClassLoader(new URL[]{url}, this.getClass().getClassLoader());
 		assertEquals(1,  loader.getURLs().length);
 		loader.removeURL(url);
 		assertEquals(0, loader.getURLs().length);
@@ -96,14 +96,14 @@ public class DynamicURLClassLoaderTestCase {
 	@Test(expected = ClassNotFoundException.class)
 	public void TestNestedPackage() throws ClassNotFoundException, IOException
 	{
-		DynamicURLClassLoader loader = null;
+		JavaDynamicClassLoader loader = null;
 		File file = new File(".");
 		String tempPath = file.getCanonicalPath()
 			+ File.separator + "test"
 			+ File.separator + "unit" 
 			+ File.separator + "TestURLClassLoaderNestedPackage.jar";
 		URL[] urls = getURLsFromStringArray(new String[]{tempPath});
-		loader = new DynamicURLClassLoader(urls, this.getClass().getClassLoader());
+		loader = new JavaDynamicClassLoader(urls, this.getClass().getClassLoader());
 		Class<?> cl = loader.loadClass("acme.corp.Counter");
 		assertNotNull(cl);
 		cl = loader.loadClass("java.lang.String");
