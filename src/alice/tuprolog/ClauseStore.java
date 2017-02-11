@@ -22,7 +22,6 @@ public class ClauseStore {
         clauses = null;
     }
     
-    
     /**
      * Carica una famiglia di clausole
          *
