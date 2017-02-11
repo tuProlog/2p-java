@@ -444,8 +444,9 @@ public class Var extends Term {
 	  * the var must not appear in the compound ( avoid X=p(X),
 	  * or p(X,X)=p(Y,f(Y)) ); if occur check is ok
 	  * then it's success and a new link is created (retractable by a code)
+	  * (test done if occursCheck is enabled)
 	  */
-	 boolean unify(List<Var> vl1, List<Var> vl2, Term t) {
+	 boolean unify(List<Var> vl1, List<Var> vl2, Term t, boolean isOccursCheckEnabled) {
 		 Term tt = getTerm();
 		 if(tt == this) {
 			 t = t.getTerm();
@@ -458,8 +459,7 @@ public class Var extends Term {
 					 return true;
 				 }
 			 } else if (t instanceof Struct) {
-				 boolean choice = FlagManager.isOccursCheckEnabled(); //Alberto
-				 if(choice){
+				 if(isOccursCheckEnabled){
 					 if(occurCheck(vl2, (Struct)t)){
 						 //this.isCyclic = true;  //Alberto -> da usare quando si supporteranno i termini ciclici
 						 return false; // da togliere 
@@ -476,7 +476,7 @@ public class Var extends Term {
 			 } catch(NullPointerException e) {}
 			 return true;
 		 } else {
-			 return (tt.unify(vl1, vl2, t));
+			 return (tt.unify(vl1, vl2, t, isOccursCheckEnabled));
 		 }
 	 }
 
@@ -569,4 +569,9 @@ public class Var extends Term {
 	 public void accept(TermVisitor tv) {
 		 tv.visit(this);
 	 }
+
+	@Override
+	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+		return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
+	}
 }
