@@ -209,7 +209,7 @@ public abstract class Term implements Serializable {
         t1.resolveTerm();
         List<Var> v1 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
         List<Var> v2 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
-        boolean ok = unify(v1,v2,t1);
+        boolean ok = unify(v1,v2,t1, mediator.getFlagManager().isOccursCheckEnabled());
         if (ok) {
             ExecutionContext ec = engine.getCurrentContext();
             if (ec != null) {
@@ -242,27 +242,50 @@ public abstract class Term implements Serializable {
     	return false;
     }
     
-    
+    //Alberto
     /**
      * Tests if this term is unifiable with an other term.
      * No unification is done.
      *
-     * The test is done outside any demonstration context
+     * The test is done outside any demonstration context 
      * @param t the term to checked
-     *
+     * @param isOccursCheckEnabled
      * @return true if the term is unifiable with this one
      */
-    public boolean match(Term t) {
+    public boolean match(boolean isOccursCheckEnabled, Term t) {
         resolveTerm();
         t.resolveTerm();
         List<Var> v1 = new LinkedList<Var>();
         List<Var> v2 = new LinkedList<Var>();
-        boolean ok = unify(v1,v2,t);
+        boolean ok = unify(v1,v2,t, isOccursCheckEnabled);
         Var.free(v1);
         Var.free(v2);
         return ok;
     }
     
+    /**
+     * Tests if this term is unifiable with an other term.
+     * No unification is done.
+     *
+     * The test is done outside any demonstration context 
+     * @param t the term to checked
+     * @return true if the term is unifiable with this one
+     */
+    public boolean match(Term t) {
+        return match(true, t); //Alberto
+    }
+    
+    //Alberto
+    /**
+     * Tries to unify two terms, given a demonstration context
+     * identified by the mark integer.
+     *
+     * Try the unification among the term and the term specified
+     * @param varsUnifiedArg1 Vars unified in myself
+     * @param varsUnifiedArg2 Vars unified in term t
+     * @param isOccursCheckEnabled
+     */
+    abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled);
     
     /**
      * Tries to unify two terms, given a demonstration context
@@ -273,7 +296,6 @@ public abstract class Term implements Serializable {
      * @param varsUnifiedArg2 Vars unified in term t
      */
     abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t);
-    
     
     /**
      * Static service to create a Term from a string.
