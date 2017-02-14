@@ -29,9 +29,6 @@ import alice.tuprolog.json.JSONSerializerManager;
  * @author Alex Benini
  */
 class FlagManager {
-
-	/* flag list */
-	private static ArrayList<Flag> Sflags; //Alberto
 	
     /* flag list */
     private ArrayList<Flag> flags;
@@ -43,7 +40,6 @@ class FlagManager {
 
     FlagManager() { //Alberto
         flags = new ArrayList<Flag>();
-        Sflags = flags;
         
         //occursCheck flag -> a default è on!
         Struct s = new Struct();
@@ -133,8 +129,8 @@ class FlagManager {
     }
 
     //Alberto
-	public static boolean isOccursCheckEnabled() {
-		for(Flag f : Sflags){
+	public synchronized boolean isOccursCheckEnabled() {
+		for(Flag f : flags){
 			if(f.getName().equals("occursCheck")){
 				if(f.getValue().toString().equals("on"))
 					return true;
@@ -163,7 +159,6 @@ class FlagManager {
 			Flag fl = JSONSerializerManager.fromJSON(s, Flag.class);
 			f.add(fl);
 		}
-		Sflags = f;
 		flags = f;
 	}
 }
