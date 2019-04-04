@@ -332,8 +332,7 @@ public class LibraryManager
 		{
 			throw new InvalidLibraryException();
 		}
-		if (externalLibraries.containsKey(name))
-			externalLibraries.remove(name);
+        externalLibraries.remove(name);
 		theoryManager.removeLibraryTheory(name);
 		theoryManager.rebindPrimitives();
 		LibraryEvent ev = new LibraryEvent(prolog, name);

@@ -206,7 +206,7 @@ public abstract class Library implements Serializable, IPrimitives {
                 int index=name.lastIndexOf('_');
                 if (index!=-1) {
                     try {
-                        int arity = Integer.parseInt(name.substring(index + 1, name.length()));
+                        int arity = Integer.parseInt(name.substring(index + 1));
                         // check arg number
                         if (clist.length == arity) {
                             boolean valid = true;

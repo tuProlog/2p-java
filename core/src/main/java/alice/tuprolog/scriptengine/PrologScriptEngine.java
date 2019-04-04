@@ -205,7 +205,7 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
     @Override
     public Object eval(Reader reader, Bindings bndngs) throws ScriptException {
         BufferedReader bReader = new BufferedReader(reader);
-        String script = new String();
+        String script = "";
         try {
             while(bReader.ready()) {
                 script += bReader.readLine();

@@ -27,5 +27,5 @@ import java.util.EventListener;
  *
  */
 public interface WarningListener extends EventListener {
-    public abstract void onWarning(WarningEvent e);
+    void onWarning(WarningEvent e);
 }

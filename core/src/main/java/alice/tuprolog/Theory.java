@@ -108,7 +108,7 @@ public class Theory implements Serializable {
                 p.setArg(1, otherClauseList);
             }
         } else if (!isTextual() && th.isTextual()) {
-            theory = theory.toString() + "\n" + th;
+            theory = theory + "\n" + th;
             clauseList = null;
         } else if (isTextual() && !th.isTextual()) {
             theory += th.toString();

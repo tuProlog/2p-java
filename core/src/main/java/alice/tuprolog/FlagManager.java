@@ -132,9 +132,7 @@ class FlagManager {
 	public synchronized boolean isOccursCheckEnabled() {
 		for(Flag f : flags){
 			if(f.getName().equals("occursCheck")){
-				if(f.getValue().toString().equals("on"))
-					return true;
-				else return false;
+                return f.getValue().toString().equals("on");
 			}
 		}
 		return false;

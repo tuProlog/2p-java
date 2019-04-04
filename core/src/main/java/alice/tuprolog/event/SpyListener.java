@@ -28,5 +28,5 @@ import java.util.EventListener;
  *
  */
 public interface SpyListener extends EventListener {
-    public abstract void onSpy(SpyEvent e);
+    void onSpy(SpyEvent e);
 }

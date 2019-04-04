@@ -256,7 +256,7 @@ public class BuiltIn extends Library {
 	 }
 
 	 private String[] getStringArrayFromStruct(Struct list) {
-	        String args[] = new String[list.listSize()];
+		 String[] args = new String[list.listSize()];
 	        Iterator<? extends Term> it = list.listIterator();
 	        int count = 0;
 	        while (it.hasNext()) {
@@ -601,8 +601,8 @@ public class BuiltIn extends Library {
 			 libraryManager.loadLibrary(((Struct) lib).getName());
 	 }
 
-	 public void include_1(Term theory) throws FileNotFoundException,
-	 InvalidTheoryException, IOException {
+	 public void include_1(Term theory) throws
+			 InvalidTheoryException, IOException {
 		 theory = theory.getTerm();
          String path = alice.util.Tools.removeApices(theory.toString());
          if(! new File(path).isAbsolute()) {

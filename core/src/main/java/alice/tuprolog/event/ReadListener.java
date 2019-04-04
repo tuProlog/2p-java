@@ -4,5 +4,5 @@ import java.util.EventListener;
 
 public interface ReadListener extends EventListener{
 
-	public void readCalled(ReadEvent event);
+	void readCalled(ReadEvent event);
 }

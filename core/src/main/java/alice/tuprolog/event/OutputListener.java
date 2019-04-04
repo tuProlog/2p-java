@@ -27,5 +27,5 @@ import java.util.EventListener;
  *
  */
 public interface OutputListener extends EventListener {
-    public abstract void onOutput(OutputEvent e);
+    void onOutput(OutputEvent e);
 }
