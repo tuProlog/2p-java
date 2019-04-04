@@ -32,7 +32,7 @@ public class InspectionUtils
 	            continue;
 
 	        // Check for type compatibility
-	        if(alice.util.InspectionUtils.areTypesCompatible(types, parms))
+	        if(InspectionUtils.areTypesCompatible(types, parms))
 	            return methods[i];
 	        }
 	    return null;

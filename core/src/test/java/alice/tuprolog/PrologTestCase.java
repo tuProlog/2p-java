@@ -1,8 +1,5 @@
 package alice.tuprolog;
 
-import alice.tuprolog.InvalidLibraryException;
-import alice.tuprolog.Library;
-import alice.tuprolog.Prolog;
 import alice.tuprolog.event.SpyEvent;
 import alice.tuprolog.event.SpyListener;
 
@@ -21,22 +18,22 @@ public class PrologTestCase extends TestCase {
 	
 	public void testLoadLibraryAsString() throws InvalidLibraryException {
 		Prolog engine = new Prolog();
-		engine.loadLibrary("alice.tuprolog.StringLibrary");
-		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
+		engine.loadLibrary("StringLibrary");
+		assertNotNull(engine.getLibrary("StringLibrary"));
 	}
 	
 	public void testLoadLibraryAsObject() throws InvalidLibraryException {
 		Prolog engine = new Prolog();
 		Library stringLibrary = new StringLibrary();
 		engine.loadLibrary(stringLibrary);
-		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
+		assertNotNull(engine.getLibrary("StringLibrary"));
 		Library javaLibrary = new alice.tuprolog.lib.OOLibrary();
 		engine.loadLibrary(javaLibrary);
 		assertSame(javaLibrary, engine.getLibrary("alice.tuprolog.lib.OOLibrary"));
 	}
 	
 	public void testGetLibraryWithName() throws InvalidLibraryException {
-		Prolog engine = new Prolog(new String[] {"alice.tuprolog.TestLibrary"});
+		Prolog engine = new Prolog(new String[] {"TestLibrary"});
 		assertNotNull(engine.getLibrary("TestLibraryName"));
 	}
 	

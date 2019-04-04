@@ -9,11 +9,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
-import cli.System.Reflection.Assembly;
 
 import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.event.WarningEvent;
-import alice.util.AssemblyCustomClassLoader;
 
 /**
  * @author Alex Benini
@@ -170,41 +168,41 @@ public class LibraryManager
 					urls[i] = (file.toURI().toURL());
 				}
 				// JVM
-				if (!System.getProperty("java.vm.name").equals("IKVM.NET"))
-				{
+//				if (!System.getProperty("java.vm.name").equals("IKVM.NET"))
+//				{
 					loader = URLClassLoader.newInstance(urls, getClass()
 							.getClassLoader());
 					lib = (Library) Class.forName(className, true, loader)
 							.newInstance();
-				} else
-				// .NET
-				{
-					Assembly asm = null;
-					boolean classFound = false;
-					className = "cli."
-							+ className.substring(0, className.indexOf(","))
-									.trim();
-					for (int i = 0; i < paths.length; i++)
-					{
-						try
-						{
-							asm = Assembly.LoadFrom(paths[i]);
-							loader = new AssemblyCustomClassLoader(asm, urls);
-							lib = (Library) Class.forName(className, true, loader).newInstance();
-							if (lib != null)
-							{
-								classFound = true;
-								break;
-							}
-						} catch (Exception e)
-						{
-							e.printStackTrace();
-							continue;
-						}
-					}
-					if (!classFound)
-						throw new InvalidLibraryException(className, -1, -1);
-				}
+//				} else
+//				// .NET
+//				{
+//					Assembly asm = null;
+//					boolean classFound = false;
+//					className = "cli."
+//							+ className.substring(0, className.indexOf(","))
+//									.trim();
+//					for (int i = 0; i < paths.length; i++)
+//					{
+//						try
+//						{
+//							asm = Assembly.LoadFrom(paths[i]);
+//							loader = new AssemblyCustomClassLoader(asm, urls);
+//							lib = (Library) Class.forName(className, true, loader).newInstance();
+//							if (lib != null)
+//							{
+//								classFound = true;
+//								break;
+//							}
+//						} catch (Exception e)
+//						{
+//							e.printStackTrace();
+//							continue;
+//						}
+//					}
+//					if (!classFound)
+//						throw new InvalidLibraryException(className, -1, -1);
+//				}
 			}
 
 			String name = lib.getName();

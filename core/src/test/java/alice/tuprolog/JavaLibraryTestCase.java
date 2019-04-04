@@ -44,7 +44,7 @@ public class JavaLibraryTestCase extends TestCase {
 		Prolog engine = new Prolog();
 		OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
 		String theory = "demo(C) :- \n" +
-				"java_object('alice.tuprolog.TestCounter', [], C), \n" +
+				"java_object('TestCounter', [], C), \n" +
 				"C <- update, \n" +
 				"C <- update. \n";			
 		engine.setTheory(new Theory(theory));

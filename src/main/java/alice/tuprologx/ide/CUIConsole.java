@@ -1,7 +1,6 @@
 package alice.tuprologx.ide;
 
 import alice.util.*;
-import alice.tuprolog.*;
 import alice.tuprolog.event.ExceptionEvent;
 import alice.tuprolog.event.OutputEvent;
 import alice.tuprolog.event.SpyEvent;

@@ -26,9 +26,9 @@ public class AboutFrame extends GenericFrame
         
         JLabel versionSystem=new JLabel(" tuProlog engine version " + Prolog.getVersion() );
         
-        //String platformMessage = " " + alice.util.VersionInfo.getPlatform();
+        //String platformMessage = " " + VersionInfo.getPlatform();
         //platformMessage += " platform version ";
-        //platformMessage += alice.util.VersionInfo.getCompleteVersion();
+        //platformMessage += VersionInfo.getCompleteVersion();
         JLabel versionIDE=new JLabel(" tuProlog for " + alice.util.VersionInfo.getPlatform() + " version " + alice.util.VersionInfo.getCompleteVersion() + "   ");
         JLabel copyright=new JLabel(" \u00a9 2001-2017 @ Apice Research Group");
         JLabel unibo=new JLabel(" Alma Mater Studiorum-Universita' di Bologna");
