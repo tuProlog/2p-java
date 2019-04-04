@@ -1,4 +1,4 @@
-package acme.corp;
+package TestURLClassLoaderClasses.acme.corp;
 
 public class TestMain{
 	public static void main(String[] args) throws MyException

@@ -1,4 +1,4 @@
-package acme.corp;
+package TestURLClassLoaderClasses.acme.corp;
 
 public class MountainBike extends Bicycle {
         
