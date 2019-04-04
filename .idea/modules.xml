@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/2p.core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/2p.core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/2p.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/2p.core.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/2p.core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/core/2p.core.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui/2p.ui.iml" filepath="$PROJECT_DIR$/.idea/modules/ui/2p.ui.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui/2p.ui.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ui/2p.ui.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui/2p.ui.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ui/2p.ui.test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core.iml" filepath="$PROJECT_DIR$/.idea/modules/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/it.unibo.tuprolog.2p.iml" filepath="$PROJECT_DIR$/.idea/modules/it.unibo.tuprolog.2p.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/it.unibo.tuprolog.core.iml" filepath="$PROJECT_DIR$/.idea/modules/core/it.unibo.tuprolog.core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/it.unibo.tuprolog.core.main.iml" filepath="$PROJECT_DIR$/.idea/modules/core/it.unibo.tuprolog.core.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/core/it.unibo.tuprolog.core.test.iml" filepath="$PROJECT_DIR$/.idea/modules/core/it.unibo.tuprolog.core.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui/it.unibo.tuprolog.ui.iml" filepath="$PROJECT_DIR$/.idea/modules/ui/it.unibo.tuprolog.ui.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui/it.unibo.tuprolog.ui.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ui/it.unibo.tuprolog.ui.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui/it.unibo.tuprolog.ui.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ui/it.unibo.tuprolog.ui.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ui.iml" filepath="$PROJECT_DIR$/.idea/modules/ui.iml" />
     </modules>
   </component>

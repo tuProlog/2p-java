@@ -8,6 +8,10 @@
       <module name="2p.test" target="11" />
       <module name="2p.ui.main" target="1.8" />
       <module name="2p.ui.test" target="1.8" />
+      <module name="it.unibo.tuprolog.core.main" target="1.8" />
+      <module name="it.unibo.tuprolog.core.test" target="1.8" />
+      <module name="it.unibo.tuprolog.ui.main" target="1.8" />
+      <module name="it.unibo.tuprolog.ui.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
