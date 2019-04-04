@@ -27,15 +27,14 @@ import java.util.Iterator;
 /**
  * This class represents prolog theory which can be provided
  * to a prolog engine.
- *
+ * <p>
  * Actually theory incapsulates only textual representation
  * of prolog theories, without doing any check about validity
  *
  * @see Prolog
- *
  */
 public class Theory implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     private String theory;
     private Struct clauseList;
 
@@ -60,9 +59,9 @@ public class Theory implements Serializable {
         if (theory == null) {
             throw new InvalidTheoryException();
         }
-        this.theory=theory;
+        this.theory = theory;
     }
-    
+
     Theory() {
         this.theory = "";
     }
@@ -74,12 +73,17 @@ public class Theory implements Serializable {
      * @throws s InvalidTheoryException if clauseList is null or is not a prolog list
      */
     public Theory(Struct clauseList) throws InvalidTheoryException {
-        if (clauseList==null || !clauseList.isList()) {
+        if (clauseList == null || !clauseList.isList()) {
             throw new InvalidTheoryException();
         }
         this.clauseList = clauseList;
     }
-    
+
+    //Alberto
+    public static Theory fromJSON(String jsonString) {
+        return JSONSerializerManager.fromJSON(jsonString, Theory.class);
+    }
+
     public Iterator<? extends Term> iterator(Prolog engine) {
         if (isTextual())
             return new Parser(engine.getOperatorManager(), theory).iterator();
@@ -92,7 +96,7 @@ public class Theory implements Serializable {
      *
      * @param th is the theory to be appended
      * @throws s InvalidTheoryException if the theory object are not compatibles (they are
-     *  compatibles when both have been built from texts or both from clause lists)
+     *           compatibles when both have been built from texts or both from clause lists)
      */
     public void append(Theory th) throws InvalidTheoryException {
         if (th.isTextual() && isTextual()) {
@@ -112,8 +116,7 @@ public class Theory implements Serializable {
             clauseList = null;
         } else if (isTextual() && !th.isTextual()) {
             theory += th.toString();
-        }
-        else {
+        } else {
             throw new InvalidTheoryException();
         }
     }
@@ -121,7 +124,6 @@ public class Theory implements Serializable {
     /**
      * Checks if the theory has been built
      * from a text or a clause list
-     *
      */
     boolean isTextual() {
         return theory != null;
@@ -132,18 +134,13 @@ public class Theory implements Serializable {
     }
 
     @Override
-	public String toString() {
+    public String toString() {
         return theory != null ? theory : clauseList.toString();
     }
 
     //Alberto
-  	public String toJSON(){
-  		return JSONSerializerManager.toJSON(this);
-  	}
-  	
-  	//Alberto
-  	public static Theory fromJSON(String jsonString){
-  		return JSONSerializerManager.fromJSON(jsonString, Theory.class);	
-  	}
+    public String toJSON() {
+        return JSONSerializerManager.toJSON(this);
+    }
 
 }

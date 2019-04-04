@@ -24,31 +24,30 @@ import java.util.List;
 
 /**
  * @author Alex Benini
- *
  */
 public class StateBacktrack extends State {
-    
+
     public StateBacktrack(EngineRunner c) {
         this.c = c;
         stateName = "Back";
     }
-    
+
     /* (non-Javadoc)
      * @see alice.tuprolog.AbstractRunState#doJob()
      */
     @Override
-	void doJob(Engine e) {
+    void doJob(Engine e) {
         ChoicePointContext curChoice = e.choicePointSelector.fetch();
         if (curChoice == null) {
             e.nextState = c.END_FALSE;
             Struct goal = e.currentContext.currentGoal;
-            if(!c.getTheoryManager().checkExistance(goal.getPredicateIndicator())) //Alberto
-            	c.warn("The predicate " + goal.getPredicateIndicator() + " is unknown.");
+            if (!c.getTheoryManager().checkExistance(goal.getPredicateIndicator())) //Alberto
+                c.warn("The predicate " + goal.getPredicateIndicator() + " is unknown.");
             return;
         }
-        
+
         e.currentAlternative = curChoice;
-        
+
         //deunify variables and reload old goal
         e.currentContext = curChoice.executionContext;
         Term curGoal = e.currentContext.goalsToEval.backTo(curChoice.indexSubGoal).getTerm();
@@ -57,7 +56,7 @@ public class StateBacktrack extends State {
             return;
         }
         e.currentContext.currentGoal = (Struct) curGoal;
-        
+
         // Rende coerente l'execution_stack
         ExecutionContext curCtx = e.currentContext;
         OneWayList<List<Var>> pointer = curCtx.trailingVars;
@@ -74,8 +73,8 @@ public class StateBacktrack extends State {
                 pointer = pointer.getTail();
             }
             curCtx.trailingVars = pointer;
-            if (curCtx.fatherCtx == null) 
-            	break;
+            if (curCtx.fatherCtx == null)
+                break;
             stopDeunify = curCtx.fatherVarsList;
             fatherIndex = curCtx.fatherGoalId;
             curCtx = curCtx.fatherCtx;
@@ -84,12 +83,12 @@ public class StateBacktrack extends State {
                 e.nextState = c.END_FALSE;
                 return;
             }
-            curCtx.currentGoal = (Struct)curGoal;
+            curCtx.currentGoal = (Struct) curGoal;
             pointer = curCtx.trailingVars;
         } while (true);
-        
+
         //set next state
         e.nextState = c.GOAL_EVALUATION;
     }
-    
+
 }

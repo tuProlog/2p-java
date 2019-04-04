@@ -2,9 +2,9 @@ package alice.tuprolog;
 
 /**
  * Identifier of single subGoal during the demo.
- * @see DefaultSubGoalId
- * 
- * @author Alex Benini
  *
+ * @author Alex Benini
+ * @see DefaultSubGoalId
  */
-public interface SubGoalId {}
+public interface SubGoalId {
+}

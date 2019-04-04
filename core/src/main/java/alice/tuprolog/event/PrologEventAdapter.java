@@ -19,10 +19,7 @@ package alice.tuprolog.event;
 
 
 /**
- * 
- *
  * @author aricci
- *
  */
 public abstract class PrologEventAdapter implements TheoryListener, QueryListener, LibraryListener {
 
@@ -30,28 +27,28 @@ public abstract class PrologEventAdapter implements TheoryListener, QueryListene
      * @see alice.tuprolog.PrologEventListener#theoryChanged(alice.tuprolog.TheoryEvent)
      */
     @Override
-	public void theoryChanged(TheoryEvent e) {
+    public void theoryChanged(TheoryEvent e) {
     }
 
     /* (non-Javadoc)
      * @see alice.tuprolog.PrologEventListener#libraryLoaded(alice.tuprolog.LibraryEvent)
      */
     @Override
-	public void libraryLoaded(LibraryEvent e) {
+    public void libraryLoaded(LibraryEvent e) {
     }
 
     /* (non-Javadoc)
      * @see alice.tuprolog.PrologEventListener#libraryUnloaded(alice.tuprolog.LibraryEvent)
      */
     @Override
-	public void libraryUnloaded(LibraryEvent e) {
+    public void libraryUnloaded(LibraryEvent e) {
     }
 
     /* (non-Javadoc)
      * @see alice.tuprolog.PrologEventListener#newQueryResultAvailable(alice.tuprolog.QueryEvent)
      */
     @Override
-	public void newQueryResultAvailable(QueryEvent e) {
+    public void newQueryResultAvailable(QueryEvent e) {
     }
 
 }

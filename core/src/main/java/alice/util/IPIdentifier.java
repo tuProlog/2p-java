@@ -14,58 +14,57 @@ package alice.util;
  * managing of IP identifiers
  *
  * <Name>@<IPAddress>:<port>
- *
  */
 public class IPIdentifier {
 
-    static public int getPort(String name){
-        int index=name.indexOf(':');
-        if (index!=-1){
+    static public int getPort(String name) {
+        int index = name.indexOf(':');
+        if (index != -1) {
             try {
-                return Integer.parseInt(name.substring(index+1));
-            } catch (Exception ex){
+                return Integer.parseInt(name.substring(index + 1));
+            } catch (Exception ex) {
             }
         }
         return -1;
     }
 
-    static public String getHost(String name){
-        int index_port=name.indexOf(':');
-        int index_at=name.indexOf('@');
-        if (index_port!=-1){
-            return name.substring(index_at+1,index_port);
-        } else if (index_at!=-1) {
-            return name.substring(index_at+1);
+    static public String getHost(String name) {
+        int index_port = name.indexOf(':');
+        int index_at = name.indexOf('@');
+        if (index_port != -1) {
+            return name.substring(index_at + 1, index_port);
+        } else if (index_at != -1) {
+            return name.substring(index_at + 1);
         } else {
             // its a name
             return "";
         }
     }
 
-    static public String getName(String name){
-        int index_port=name.indexOf(':');
-        int index_at=name.indexOf('@');
-        if (index_port!=-1){
-            if (index_at!=-1){
-                return name.substring(0,index_at);
+    static public String getName(String name) {
+        int index_port = name.indexOf(':');
+        int index_at = name.indexOf('@');
+        if (index_port != -1) {
+            if (index_at != -1) {
+                return name.substring(0, index_at);
             } else {
                 return "";
             }
         } else {
-            if (index_at!=-1){
-                return name.substring(0,index_at);
+            if (index_at != -1) {
+                return name.substring(0, index_at);
             } else {
                 return name;
             }
         }
     }
 
-    static public String getAddress(String name){
-        int index_at=name.indexOf('@');
-        if (index_at==-1){
+    static public String getAddress(String name) {
+        int index_at = name.indexOf('@');
+        if (index_at == -1) {
             return "";
         } else {
-            return name.substring(index_at+1);
+            return name.substring(index_at + 1);
         }
     }
 

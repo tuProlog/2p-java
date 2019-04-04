@@ -20,24 +20,23 @@ package alice.tuprolog.event;
 import java.util.EventObject;
 
 /**
- *  This class defines an event defining a warning emitted by
- *  a prolog engine
- *
+ * This class defines an event defining a warning emitted by
+ * a prolog engine
  */
 public class WarningEvent extends EventObject {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     /**
-	 * event description
-	 */
+     * event description
+     */
     private String msg;
 
-    public WarningEvent(Object source,String msg_){
+    public WarningEvent(Object source, String msg_) {
         super(source);
-        msg=msg_;
+        msg = msg_;
     }
 
-    public String getMsg(){
-        return "WARNING: "+msg;
+    public String getMsg() {
+        return "WARNING: " + msg;
     }
-    
+
 }

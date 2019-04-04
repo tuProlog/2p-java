@@ -4,12 +4,9 @@ import java.util.EventListener;
 
 /**
  * Listener for information to display in the console events
- *
- * 
  */
 
 public interface InformationToDisplayListener
-    extends EventListener
-{
+        extends EventListener {
     void onInformation(InformationToDisplayEvent e);
 }

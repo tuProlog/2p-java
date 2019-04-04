@@ -6,20 +6,19 @@ import java.util.EventObject;
 
 public class ReadEvent extends EventObject {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private alice.tuprolog.lib.UserContextInputStream stream;
-	
-	public ReadEvent(UserContextInputStream str) {
-		super(str);
-		this.stream = str;
-	}
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private alice.tuprolog.lib.UserContextInputStream stream;
 
-	public UserContextInputStream getStream()
-	{
-		return this.stream;
-	}
+    public ReadEvent(UserContextInputStream str) {
+        super(str);
+        this.stream = str;
+    }
+
+    public UserContextInputStream getStream() {
+        return this.stream;
+    }
 
 }

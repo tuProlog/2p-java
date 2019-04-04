@@ -36,63 +36,63 @@ import java.beans.PropertyChangeSupport;
 
 /**
  * An edit area for the Java 2 platform. Makes use of an advanced Swing text area.
- * 
- * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version    1.0 - 14-nov-02
+ *
+ * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version 1.0 - 14-nov-02
  */
 
 @SuppressWarnings("serial")
 public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea {
 
     /**
-	 * The advanced Swing text area used by this edit area.
-	 */
+     * The advanced Swing text area used by this edit area.
+     */
     private RSyntaxTextArea inputTheory;
     /**
-	 * The line number corresponding to the caret's current position in the text area.
-	 */
+     * The line number corresponding to the caret's current position in the text area.
+     */
     private int caretLine;
     /**
-	 * Indicate if the edit area is changed after the last Set Theory operation issued by the editor.
-	 */
+     * Indicate if the edit area is changed after the last Set Theory operation issued by the editor.
+     */
     private boolean dirty;
     /**
-	 * Indicate if the edit area is changed after the last save operation
-	 */
+     * Indicate if the edit area is changed after the last save operation
+     */
     private boolean saved;
     /**
-	 * Used for components interested in changes of console's properties.
-	 */
+     * Used for components interested in changes of console's properties.
+     */
     private PropertyChangeSupport propertyChangeSupport;
     /**
-	 * Undo Manager for the Document in the JEditTextArea.
-	 */
+     * Undo Manager for the Document in the JEditTextArea.
+     */
     private UndoManager undoManager;
 
     public JavaEditArea(CompletionProvider completionProvider) {
-    	// Create the editor
+        // Create the editor
         inputTheory = new RSyntaxTextArea(20, 60);
         inputTheory.setTabSize(2);
         inputTheory.setClearWhitespaceLinesEnabled(true);
         inputTheory.setAntiAliasingEnabled(true);
         inputTheory.setMarkOccurrences(true);
-        
+
         // Add token definitions for syntax coloring
-        AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory)TokenMakerFactory.getDefaultInstance();
+        AbstractTokenMakerFactory atmf = (AbstractTokenMakerFactory) TokenMakerFactory.getDefaultInstance();
         atmf.putMapping("text/Prolog", "alice.tuprologx.ide.PrologTokenMaker2");
         inputTheory.setSyntaxEditingStyle("text/Prolog");
         SyntaxScheme scheme = inputTheory.getSyntaxScheme();
         scheme.getStyle(TokenTypes.VARIABLE).foreground = Color.BLUE;
-        
+
         // Add text completion
         AutoCompletion ac = new AutoCompletion(completionProvider);
         ac.install(inputTheory);
         ac.setShowDescWindow(true);
         ac.setParameterAssistanceEnabled(true);
         ac.setAutoCompleteSingleChoices(false);
-        
+
         RTextScrollPane inputTheoryScrollPane = new RTextScrollPane(inputTheory);
-        
+
         setLayout(new java.awt.GridBagLayout());
         java.awt.GridBagConstraints constraints = new java.awt.GridBagConstraints();
         constraints.gridx = 0;
@@ -106,7 +106,7 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
 
         inputTheory.addCaretListener(new CaretListener() {
             @Override
-			public void caretUpdate(CaretEvent event) {
+            public void caretUpdate(CaretEvent event) {
                 setCaretLine(inputTheory.getCaretLineNumber() + 1);
             }
         });
@@ -115,19 +115,21 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         saved = true;
         inputTheory.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-			public void insertUpdate(DocumentEvent event) {
+            public void insertUpdate(DocumentEvent event) {
                 changedUpdate(event);
             }
+
             @Override
-			public void removeUpdate(DocumentEvent event) {
+            public void removeUpdate(DocumentEvent event) {
                 changedUpdate(event);
             }
+
             @Override
-			public void changedUpdate(DocumentEvent event) {
+            public void changedUpdate(DocumentEvent event) {
                 if (!dirty)
                     setDirty(true);
-                  if (saved)
-                       setSaved(false);
+                if (saved)
+                    setSaved(false);
             }
 
         });
@@ -136,34 +138,39 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         inputTheory.getDocument().addUndoableEditListener(undoManager);
 
         add(inputTheoryScrollPane, constraints);
-        
+
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
-    
+
     @Override
-	public void setCaretLine(int caretLine) {
+    public int getCaretLine() {
+        return caretLine;
+    }
+
+    @Override
+    public void setCaretLine(int caretLine) {
         int oldCaretLine = getCaretLine();
         this.caretLine = caretLine;
         propertyChangeSupport.firePropertyChange("caretLine", oldCaretLine, caretLine);
     }
 
     @Override
-	public int getCaretLine() {
-        return caretLine;
-    }
-
-    @Override
-	public void addPropertyChangeListener(PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
     @Override
-	public void removePropertyChangeListener(PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     @Override
-	public void setTheory(String theory) {
+    public String getTheory() {
+        return inputTheory.getText();
+    }
+
+    @Override
+    public void setTheory(String theory) {
         inputTheory.setText(theory);
 
         //to set caret at the begin of the edit area
@@ -171,43 +178,33 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
     }
 
     @Override
-	public String getTheory() {
-        return inputTheory.getText();
-    }
-
-
-    @Override
-	public void setDirty(boolean flag) {
-        dirty = flag;
-    }
-
-
-    @Override
-	public boolean isDirty() {
+    public boolean isDirty() {
         return dirty;
     }
 
+    @Override
+    public void setDirty(boolean flag) {
+        dirty = flag;
+    }
 
     @Override
-	public void setSaved(boolean flag) {
-        if (inputTheory.isEditable())
-        {
+    public boolean isSaved() {
+        return saved;
+    }
+
+    @Override
+    public void setSaved(boolean flag) {
+        if (inputTheory.isEditable()) {
             boolean oldSaved = isSaved();
             saved = flag;
             propertyChangeSupport.firePropertyChange("saved", oldSaved, saved);
         }
     }
 
-
-    @Override
-	public boolean isSaved() {
-        return saved;
-    }
-
     /* Managing Undo/Redo actions. */
 
     @Override
-	public void undoAction() {
+    public void undoAction() {
         try {
             undoManager.undo();
         } catch (CannotUndoException e) {
@@ -216,7 +213,7 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
     }
 
     @Override
-	public void redoAction() {
+    public void redoAction() {
         try {
             undoManager.redo();
         } catch (CannotRedoException e) {
@@ -224,14 +221,12 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         }
     }
 
-    public void setFontDimension(int dimension)
-    {
+    public void setFontDimension(int dimension) {
         Font font = new Font(inputTheory.getFont().getName(), inputTheory.getFont().getStyle(), dimension);
         inputTheory.setFont(font);
     }
 
-    public void setEditable(boolean flag)
-    {
+    public void setEditable(boolean flag) {
         inputTheory.setEditable(flag);
     }
 }

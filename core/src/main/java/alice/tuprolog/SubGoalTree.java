@@ -5,50 +5,55 @@ import java.util.Iterator;
 
 
 public class SubGoalTree extends AbstractSubGoalTree implements Iterable<AbstractSubGoalTree> {
-    
+
     private ArrayList<AbstractSubGoalTree> terms;
-        //private LinkedList terms;
-    
+    //private LinkedList terms;
+
     public SubGoalTree() {
         terms = new ArrayList<AbstractSubGoalTree>();
-                //terms = new LinkedList();
+        //terms = new LinkedList();
     }
 
-        public SubGoalTree(ArrayList<AbstractSubGoalTree> terms) {
-        this.terms=terms;
+    public SubGoalTree(ArrayList<AbstractSubGoalTree> terms) {
+        this.terms = terms;
     }
-    
+
     public void addChild(Term term) {
         SubGoalElement l = new SubGoalElement(term);
         terms.add(l);
     }
-    
+
     public SubGoalTree addChild() {
         SubGoalTree r = new SubGoalTree();
         terms.add(r);
         return r;
     }
-    
+
     public AbstractSubGoalTree getChild(int i) {
         return terms.get(i);
     }
-    
+
     @Override
-	public Iterator<AbstractSubGoalTree> iterator() {
+    public Iterator<AbstractSubGoalTree> iterator() {
         return terms.iterator();
     }
-    
+
     public int size() {
         return terms.size();
     }
-    
+
     @Override
-	public boolean isLeaf() { return false; }
+    public boolean isLeaf() {
+        return false;
+    }
+
     @Override
-	public boolean isRoot() { return true; }
-    
+    public boolean isRoot() {
+        return true;
+    }
+
     @Override
-	public String toString() {
+    public String toString() {
         String result = " [ ";
         Iterator<AbstractSubGoalTree> i = terms.iterator();
         if (i.hasNext())
@@ -67,7 +72,8 @@ public class SubGoalTree extends AbstractSubGoalTree implements Iterable<Abstrac
             return false;
         }
     }
-    public SubGoalTree copy(){
+
+    public SubGoalTree copy() {
         return new SubGoalTree(terms);
     }
 }

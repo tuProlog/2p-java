@@ -19,38 +19,38 @@ package alice.tuprolog;
 
 /**
  * @author Alex Benini
- *
+ * <p>
  * Initial state of demostration
  */
 public class StateInit extends State {
-    
+
     public StateInit(EngineRunner c) {
         this.c = c;
         stateName = "Goal";
     }
-    
+
     /* (non-Javadoc)
      * @see alice.tuprolog.AbstractRunState#doJob()
      */
     @Override
-	void doJob(Engine e) {
-    	
+    void doJob(Engine e) {
+
         e.prepareGoal();
-        
+
         /* Initialize first executionContext */
         ExecutionContext eCtx = new ExecutionContext(0);
         eCtx.goalsToEval = new SubGoalStore();
         eCtx.goalsToEval.load(ClauseInfo.extractBody(e.startGoal));
-        eCtx.clause = (Struct)e.query;
+        eCtx.clause = (Struct) e.query;
         eCtx.depth = 0;
         eCtx.fatherCtx = null;
-       	eCtx.haveAlternatives = false;
-        
+        eCtx.haveAlternatives = false;
+
         /* Initialize VM environment */
         e.initialize(eCtx);
-        
+
         /* Set the future state */
         e.nextState = c.GOAL_SELECTION;
     }
-    
+
 }

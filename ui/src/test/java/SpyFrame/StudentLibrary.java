@@ -6,9 +6,9 @@ import alice.tuprolog.Term;
 
 // import in a prolog session by
 // :-load_library('StudentLibrary').
-public class StudentLibrary extends Library{
-  public boolean termframe_1(Term term){
-    new TermFrame(term);
-    return true;
-  }
+public class StudentLibrary extends Library {
+    public boolean termframe_1(Term term) {
+        new TermFrame(term);
+        return true;
+    }
 }

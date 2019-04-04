@@ -21,18 +21,18 @@ package alice.tuprolog;
  * This exceptions means that a not valid tuProlog theory has been specified
  *
  * @see Theory
- *
  */
 public class InvalidTheoryException extends PrologException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     public int line = -1;
     public int pos = -1;
-    /*Castagna 06/2011*/	
-	public int clause = -1;
-	/**/
-    
-    public InvalidTheoryException() {}
-    
+    /*Castagna 06/2011*/
+    public int clause = -1;
+    /**/
+
+    public InvalidTheoryException() {
+    }
+
     public InvalidTheoryException(int line, int pos) {
         this.line = line;
         this.pos = pos;
@@ -41,14 +41,13 @@ public class InvalidTheoryException extends PrologException {
     public InvalidTheoryException(String message) {
         super(message);
     }
-    
+
     /*Castagna 06/2011*/
-	public InvalidTheoryException(String message, int clause, int line, int pos)
-	{
-		super(message);
-		this.clause = clause;
-		this.line = line;
-		this.pos = pos;
-	}
-	/**/
+    public InvalidTheoryException(String message, int clause, int line, int pos) {
+        super(message);
+        this.clause = clause;
+        this.line = line;
+        this.pos = pos;
+    }
+    /**/
 }

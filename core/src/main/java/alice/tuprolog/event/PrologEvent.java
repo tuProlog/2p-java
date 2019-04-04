@@ -20,24 +20,25 @@ package alice.tuprolog.event;
 import alice.tuprolog.Prolog;
 
 /**
- * Base class for engine event  
+ * Base class for engine event
  *
  * @since 1.3
- *
  */
 public abstract class PrologEvent extends java.util.EventObject {
-    private long when;
     private static final long serialVersionUID = 1L;
-    public PrologEvent(Prolog source){
+    private long when;
+
+    public PrologEvent(Prolog source) {
         super(source);
         when = System.currentTimeMillis();
     }
-    
+
     /**
      * Gets the VM time of  event occurrence.
+     *
      * @return time in millis
      */
-    public long getTime(){
+    public long getTime() {
         return when;
     }
 }

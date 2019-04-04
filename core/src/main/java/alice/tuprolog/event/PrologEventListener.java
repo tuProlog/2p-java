@@ -27,7 +27,10 @@ import java.util.EventListener;
  */
 public interface PrologEventListener extends EventListener {
     void theoryChanged(TheoryEvent e);
+
     void libraryLoaded(LibraryEvent e);
+
     void libraryUnloaded(LibraryEvent e);
+
     void newQueryResultAvailable(QueryEvent e);
 }

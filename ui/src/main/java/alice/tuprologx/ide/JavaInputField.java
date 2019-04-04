@@ -30,60 +30,59 @@ import java.net.URL;
 
 /**
  * An input field for the Java2 platform using Swing components.
- * 
- * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version    1.0 - 29-nov-02
+ *
+ * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version 1.0 - 29-nov-02
  */
 
 public class JavaInputField
-    extends JPanel
-    implements InputField
-{
-    
+        extends JPanel
+        implements InputField {
+
     private static final long serialVersionUID = 1L;
 
     /**
-	 * The input field used in the graphic interface.
-	 */
+     * The input field used in the graphic interface.
+     */
     private JTextField inputField;
     /**
-	 * A store for the history of the requested goals.
-	 */
+     * A store for the history of the requested goals.
+     */
     private History history;
 
     private ConsoleManager console;
 
-    
+
     public JavaInputField(CompletionProvider completionProvider) {
         inputField = new JTextField();
         inputField.addKeyListener(new KeyAdapter() {
             @Override
-			public void keyReleased(KeyEvent event) {
+            public void keyReleased(KeyEvent event) {
                 inputFieldKeyReleased(event);
             }
         });
         inputField.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent event) {
+            public void actionPerformed(ActionEvent event) {
                 solve();
             }
         });
-        
+
         // Add text completion
         AutoCompletion ac = new AutoCompletion(completionProvider);
         ac.install(inputField);
         ac.setShowDescWindow(true);
         ac.setParameterAssistanceEnabled(true);
         ac.setAutoCompleteSingleChoices(false);
-        
+
         JButton solveButton = new JButton();
         URL urlImage = getClass().getResource("img/Solve18.png");
         solveButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-        solveButton.setPreferredSize(new Dimension(18,18));
+        solveButton.setPreferredSize(new Dimension(18, 18));
         solveButton.setToolTipText("Solve");
         solveButton.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent event) {
+            public void actionPerformed(ActionEvent event) {
                 solve();
             }
         });
@@ -91,11 +90,11 @@ public class JavaInputField
         JButton solveAllButton = new JButton();
         urlImage = getClass().getResource("img/SolveAll18.png");
         solveAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
-        solveAllButton.setPreferredSize(new Dimension(18,18));
+        solveAllButton.setPreferredSize(new Dimension(18, 18));
         solveAllButton.setToolTipText("Solve All");
         solveAllButton.addActionListener(new ActionListener() {
             @Override
-			public void actionPerformed(ActionEvent event) {
+            public void actionPerformed(ActionEvent event) {
                 solveAll();
             }
         });
@@ -107,8 +106,8 @@ public class JavaInputField
         JPanel buttonsPanel = new JPanel();
         setLayout(new BorderLayout());
         add(new JLabel("?- "), BorderLayout.WEST);
-        add(inputFieldPanel,BorderLayout.CENTER);
-        add(buttonsPanel,BorderLayout.EAST);
+        add(inputFieldPanel, BorderLayout.CENTER);
+        add(buttonsPanel, BorderLayout.EAST);
         inputFieldPanel.setLayout(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.gridy = 0;
@@ -116,7 +115,7 @@ public class JavaInputField
         constraints.weightx = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
         inputFieldPanel.add(inputField, constraints);
-        
+
         buttonsPanel.add(solveButton);
         buttonsPanel.add(solveAllButton);
     }
@@ -127,50 +126,44 @@ public class JavaInputField
      * using the up and down arrow keys.
      *
      * @param event The <code>java.awt.event.KeyEvent</code> occurred in the
-     * input field.
+     *              input field.
      */
     private void inputFieldKeyReleased(KeyEvent event) {
         int code = event.getKeyCode();
         if (code == 38) // up arrow
             inputField.setText(history.previous());
-        else
-            if (code == 40) // down arrow
-                inputField.setText(history.next());
+        else if (code == 40) // down arrow
+            inputField.setText(history.next());
     }
 
     /**
-	 * Since the solve() method must be placed in this class, I need a reference to the Console where output, solveInfo, tuProlog engine and the ProcessInput thread are placed. This behaviour will change as soon as there will be no need of separate input components for .NET and Java2, i.e. as soon as the AltGr bug in Thinlet, preventing the use of italian keycombo AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
-	 */
+     * Since the solve() method must be placed in this class, I need a reference to the Console where output, solveInfo, tuProlog engine and the ProcessInput thread are placed. This behaviour will change as soon as there will be no need of separate input components for .NET and Java2, i.e. as soon as the AltGr bug in Thinlet, preventing the use of italian keycombo AltGr + '?' and AltGr + '+' to write '[' and ']', will be solved.
+     */
     @Override
-	public void setConsole(ConsoleManager consoleManager)
-    {
+    public void setConsole(ConsoleManager consoleManager) {
         this.console = consoleManager;
     }
 
     /**
      * Solve the goal currently displayed in the input field.
      */
-    public void solve()
-    {
-        if (getGoal().length()>0)//if the goal isn't empty
+    public void solve() {
+        if (getGoal().length() > 0)//if the goal isn't empty
         {
             addGoalToHistory();
             console.setSolveType(0);
             console.solve();
-        }
-        else
+        } else
             console.setStatusMessage("Ready.");
     }
 
-    public void solveAll()
-    {
-        if (getGoal().length()>0)//if the goal isn't empty
+    public void solveAll() {
+        if (getGoal().length() > 0)//if the goal isn't empty
         {
             addGoalToHistory();
             console.setSolveType(1);
             console.solveAll();
-        }
-        else
+        } else
             console.setStatusMessage("Ready.");
     }
 
@@ -179,13 +172,12 @@ public class JavaInputField
     }
 
     @Override
-	public String getGoal() {
+    public String getGoal() {
         return inputField.getText();
     }
 
-    public void setFontDimension(int dimension)
-    {
-        Font font = new Font(inputField.getFont().getName(),inputField.getFont().getStyle(),dimension);
+    public void setFontDimension(int dimension) {
+        Font font = new Font(inputField.getFont().getName(), inputField.getFont().getStyle(), dimension);
         inputField.setFont(font);
     }
 

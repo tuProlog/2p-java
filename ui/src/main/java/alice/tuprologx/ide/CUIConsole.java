@@ -8,137 +8,138 @@ import alice.util.Automaton;
 import java.io.*;
 
 @SuppressWarnings("serial")
-public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener/*Castagna 06/2011*/, ExceptionListener/**/{
-
-	BufferedReader  stdin;
-    Prolog          engine;
-
+public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener/*Castagna 06/2011*/, ExceptionListener/**/ {
 
     static final String incipit =
-        "tuProlog system - release " + Prolog.getVersion() + "\n";
-    
+            "tuProlog system - release " + Prolog.getVersion() + "\n";
     static String sol = ""; //to do -> correct output of CUI console in order to show multiple results
-       
-    public CUIConsole(String[] args){
+    BufferedReader stdin;
+    Prolog engine;
 
-        if (args.length>1){
+    public CUIConsole(String[] args) {
+
+        if (args.length > 1) {
             System.err.println("args: { theory file }");
             System.exit(-1);
         }
-        
+
 
         engine = new Prolog();
         /**
          * Added the method setExecution to conform
          * the operation of CUIConsole as that of JavaIDE
          */
-        IOLibrary IO = (IOLibrary)engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IOLibrary IO = (IOLibrary) engine.getLibrary("alice.tuprolog.lib.IOLibrary");
         IO.setExecutionType(IOLibrary.consoleExecution);
         /***/
         stdin = new BufferedReader(new InputStreamReader(System.in));
         engine.addWarningListener(this);
         engine.addOutputListener(this);
         engine.addSpyListener(this);
-        /*Castagna 06/2011*/   
+        /*Castagna 06/2011*/
         engine.addExceptionListener(this);
         /**/
-        if (args.length>0) {
+        if (args.length > 0) {
             try {
                 engine.setTheory(new Theory(new FileInputStream(args[0])));
-            } catch (InvalidTheoryException ex){
-                System.err.println("invalid theory - line: "+ex.line);
+            } catch (InvalidTheoryException ex) {
+                System.err.println("invalid theory - line: " + ex.line);
                 System.exit(-1);
-            } catch (Exception ex){
+            } catch (Exception ex) {
                 System.err.println("invalid theory.");
                 System.exit(-1);
             }
         }
     }
 
+    public static void main(String[] args) {
+        new Thread(new CUIConsole(args)).start();
+    }
+
     @Override
-	public void boot(){
+    public void boot() {
         System.out.println(incipit);
         become("goalRequest");
     }
 
-    public void goalRequest(){
-        String goal="";
-        while (goal.equals("")){
+    public void goalRequest() {
+        String goal = "";
+        while (goal.equals("")) {
             System.out.print("\n?- ");
             try {
-                goal=stdin.readLine();
+                goal = stdin.readLine();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         solveGoal(goal);
     }
-    
 
-    void solveGoal(String goal){
+    void solveGoal(String goal) {
 
         try {
-        	SolveInfo info = engine.solve(goal);
-   
-            /*Castagna 06/2011*/        	
-        	//if (engine.isHalted())
-        	//	System.exit(0);
+            SolveInfo info = engine.solve(goal);
+
+            /*Castagna 06/2011*/
+            //if (engine.isHalted())
+            //	System.exit(0);
             /**/
             if (!info.isSuccess()) {
-            	/*Castagna 06/2011*/        		
-        		if(info.isHalted())
-        			System.out.println("halt.");
-        		else
-        		/**/ 
-                System.out.println("no.");
+                /*Castagna 06/2011*/
+                if (info.isHalted())
+                    System.out.println("halt.");
+                else
+                    /**/
+                    System.out.println("no.");
                 become("goalRequest");
-            } else
-                if (!engine.hasOpenAlternatives()) {
-                    String binds = info.toString();
-                    if (binds.equals("")) {
-                        System.out.println("yes.");
-                    } else {
-                        System.out.println(solveInfoToString(info) + "\nyes.");
-                    }
-                    become("goalRequest");
+            } else if (!engine.hasOpenAlternatives()) {
+                String binds = info.toString();
+                if (binds.equals("")) {
+                    System.out.println("yes.");
                 } else {
-                    System.out.print(solveInfoToString(info) + " ? ");
-                    become("getChoice");
+                    System.out.println(solveInfoToString(info) + "\nyes.");
                 }
-        } catch (MalformedGoalException ex){
-            System.out.println("syntax error in goal:\n"+goal);
+                become("goalRequest");
+            } else {
+                System.out.print(solveInfoToString(info) + " ? ");
+                become("getChoice");
+            }
+        } catch (MalformedGoalException ex) {
+            System.out.println("syntax error in goal:\n" + goal);
             become("goalRequest");
         }
     }
-    
+
     private String solveInfoToString(SolveInfo result) {
         String s = "";
         try {
-            for (Var v: result.getBindingVars()) {
-                if ( !v.isAnonymous() && v.isBound() && (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
+            for (Var v : result.getBindingVars()) {
+                if (!v.isAnonymous() && v.isBound() && (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
                     s += v.getName() + " / " + v.getTerm() + "\n";
                 }
             }
             /*Castagna 06/2011*/
-            if(s.length()>0){
-            /**/
-                s.substring(0,s.length()-1);    
+            if (s.length() > 0) {
+                /**/
+                s.substring(0, s.length() - 1);
             }
-        } catch (NoSolutionException e) {}
+        } catch (NoSolutionException e) {
+        }
         return s;
     }
 
-    public void getChoice(){
-        String choice="";
+    public void getChoice() {
+        String choice = "";
         try {
-            while (true){
+            while (true) {
                 choice = stdin.readLine();
                 if (!choice.equals(";") && !choice.equals(""))
                     System.out.println("\nAction ( ';' for more choices, otherwise <return> ) ");
                 else
                     break;
             }
-        } catch (IOException ex){}
+        } catch (IOException ex) {
+        }
         if (!choice.equals(";")) {
             System.out.println("yes.");
             engine.solveEnd();
@@ -147,14 +148,14 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
             try {
                 System.out.println();
                 SolveInfo info = engine.solveNext();
-                if (!info.isSuccess()){
+                if (!info.isSuccess()) {
                     System.out.println("no.");
                     become("goalRequest");
                 } else {
-                	System.out.print(solveInfoToString(info) + " ? ");
-                	become("getChoice");
+                    System.out.print(solveInfoToString(info) + " ? ");
+                    become("getChoice");
                 }
-            }catch (Exception ex){
+            } catch (Exception ex) {
                 System.out.println("no.");
                 become("goalRequest");
             }
@@ -162,26 +163,24 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     }
 
     @Override
-	public void onOutput(OutputEvent e) {
+    public void onOutput(OutputEvent e) {
         System.out.print(e.getMsg());
     }
+
     @Override
-	public void onSpy(SpyEvent e) {
-        System.out.println(e.getMsg());
-    }
-    @Override
-	public void onWarning(WarningEvent e) {
+    public void onSpy(SpyEvent e) {
         System.out.println(e.getMsg());
     }
 
-    /*Castagna 06/2011*/  
-	@Override
-	public void onException(ExceptionEvent e) {
-    	 System.out.println(e.getMsg());
-	}
-	/**/
-	
-    public static void main(String[] args){
-        new Thread(new CUIConsole(args)).start();
+    @Override
+    public void onWarning(WarningEvent e) {
+        System.out.println(e.getMsg());
+    }
+    /**/
+
+    /*Castagna 06/2011*/
+    @Override
+    public void onException(ExceptionEvent e) {
+        System.out.println(e.getMsg());
     }
 }

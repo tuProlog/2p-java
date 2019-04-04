@@ -12,36 +12,36 @@ import java.util.ListIterator;
  * composed by clauses with the same functor and arity.
  */
 public class ClauseStore {
-    
-    
+
+
     private OneWayList<ClauseInfo> clauses;
     private Term goal;
     private List<Var> vars;
     private boolean haveAlternatives;
-    
+
     private ClauseStore(Term goal, List<Var> vars) {
         this.goal = goal;
         this.vars = vars;
         clauses = null;
     }
-    
+
     /**
      * Carica una famiglia di clausole
-         *
-         * Reviewed by Paolo Contessi:
-         * OneWayList.transform(List) -> OneWayList.transform2(List)
-         * 
+     * <p>
+     * Reviewed by Paolo Contessi:
+     * OneWayList.transform(List) -> OneWayList.transform2(List)
+     *
      * @param familyClauses
      */
     public static ClauseStore build(Term goal, List<Var> vars, List<ClauseInfo> familyClauses) {
         ClauseStore clauseStore = new ClauseStore(goal, vars);
-                clauseStore.clauses = OneWayList.transform2(familyClauses);
-                if (clauseStore.clauses == null || !clauseStore.existCompatibleClause())
+        clauseStore.clauses = OneWayList.transform2(familyClauses);
+        if (clauseStore.clauses == null || !clauseStore.existCompatibleClause())
             return null;
         return clauseStore;
     }
-    
-    
+
+
     /**
      * Restituisce la clausola da caricare
      */
@@ -55,15 +55,16 @@ public class ClauseStore {
         haveAlternatives = checkCompatibility(goal);
         return clause;
     }
-    
-    
+
+
     public boolean haveAlternatives() {
         return haveAlternatives;
     }
-    
-    
+
+
     /**
-     * Verify if there is a term in compatibleGoals compatible with goal. 
+     * Verify if there is a term in compatibleGoals compatible with goal.
+     *
      * @param goal
      * @param compGoals
      * @return true if compatible or false otherwise.
@@ -74,10 +75,11 @@ public class ClauseStore {
         reunify(vars, saveUnifications);
         return found;
     }
-    
-    
+
+
     /**
      * Salva le unificazioni delle variabili da deunificare
+     *
      * @param varsToDeunify
      * @return unificazioni delle variabili
      */
@@ -93,10 +95,11 @@ public class ClauseStore {
         }
         return saveUnifications;
     }
-    
-    
+
+
     /**
      * Restore previous unifications into variables.
+     *
      * @param varsToReunify
      * @param saveUnifications
      */
@@ -112,12 +115,13 @@ public class ClauseStore {
             it1.previous().setLink(it2.previous());
         }
     }
-    
-    
+
+
     /**
      * Verify if a clause exists that is compatible with goal.
      * As a side effect, clauses that are not compatible get
      * discarded from the currently examined family.
+     *
      * @param goal
      */
     private boolean checkCompatibility(Term goal) {
@@ -130,20 +134,20 @@ public class ClauseStore {
         } while (clauses != null);
         return false;
     }
-    
-    
+
+
     @Override
-	public String toString() {
-        return "clauses: "+clauses+"\n"+
-        "goal: "+goal+"\n"+
-        "vars: "+vars+"\n";
+    public String toString() {
+        return "clauses: " + clauses + "\n" +
+                "goal: " + goal + "\n" +
+                "vars: " + vars + "\n";
     }
-    
-    
+
+
     /*
      * Methods for spyListeners
      */
-    
+
     public List<ClauseInfo> getClauses() {
         ArrayList<ClauseInfo> l = new ArrayList<ClauseInfo>();
         OneWayList<ClauseInfo> t = clauses;
@@ -153,14 +157,14 @@ public class ClauseStore {
         }
         return l;
     }
-    
+
     public Term getMatchGoal() {
         return goal;
     }
-    
+
     public List<Var> getVarsForMatch() {
         return vars;
     }
-    
-    
+
+
 }

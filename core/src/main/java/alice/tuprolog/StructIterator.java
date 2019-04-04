@@ -25,20 +25,20 @@ import java.util.NoSuchElementException;
  * @see Struct
  */
 class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     Struct list;
-    
+
     StructIterator(Struct t) {
         this.list = t;
     }
-    
+
     @Override
-	public boolean hasNext() {
+    public boolean hasNext() {
         return !list.isEmptyList();
     }
-    
+
     @Override
-	public Term next() {
+    public Term next() {
         if (list.isEmptyList())
             throw new NoSuchElementException();
         // Using Struct#getTerm(int) instead of Struct#listHead and Struct#listTail
@@ -48,10 +48,10 @@ class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
         list = (Struct) list.getTerm(1);
         return head;
     }
-    
+
     @Override
-	public void remove() {
+    public void remove() {
         throw new UnsupportedOperationException();
     }
-    
+
 }

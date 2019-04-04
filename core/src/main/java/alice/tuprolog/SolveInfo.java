@@ -25,41 +25,38 @@ import java.util.List;
 
 
 /**
- *
  * SolveInfo class represents the result of a solve
  * request made to the engine, providing information
  * about the solution
- * 
+ *
  * @author Alex Benini
  */
-public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
-	private static final long serialVersionUID = 1L;
+public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/ {
     /*
      * possible values returned by step functions
      * and used as eval state flags
      */
-    static final int HALT    = EngineRunner.HALT;
-    static final int FALSE   = EngineRunner.FALSE;
-    static final int TRUE    = EngineRunner.TRUE;
+    static final int HALT = EngineRunner.HALT;
+    static final int FALSE = EngineRunner.FALSE;
+    static final int TRUE = EngineRunner.TRUE;
     static final int TRUE_CP = EngineRunner.TRUE_CP;
-    
-    private int     endState;
+    private static final long serialVersionUID = 1L;
+    private int endState;
     private boolean isSuccess;
-    
+
     private Term query;
     private Struct goal;
     private List<Var> bindings;
-    
+
     /**
-     * 
+     *
      */
-    SolveInfo(Term initGoal){
+    SolveInfo(Term initGoal) {
         query = initGoal;
         isSuccess = false;
     }
-    
+
     /**
-     * 
      * @param initGoal
      * @param resultGoal
      * @param resultDemo
@@ -72,18 +69,21 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
         endState = resultDemo;
         isSuccess = (endState > FALSE);
     }
-    
-    
-    
+
+    //Alberto
+    public static SolveInfo fromJSON(String jsonString) {
+        return JSONSerializerManager.fromJSON(jsonString, SolveInfo.class);
+    }
+
     /**
-	 * Checks if the solve request was successful
-	 * @return  true if the solve was successful
-	 */
+     * Checks if the solve request was successful
+     *
+     * @return true if the solve was successful
+     */
     public boolean isSuccess() {
         return isSuccess;
     }
-    
-    
+
     /**
      * Checks if the solve request was halted
      *
@@ -92,8 +92,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     public boolean isHalted() {
         return (endState == HALT);
     }
-    
-    
+
     /**
      * Checks if the solve request was halted
      *
@@ -102,48 +101,48 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
     public boolean hasOpenAlternatives() {
         return (endState == TRUE_CP);
     }
-    
-    
+
     /**
-	 * Gets the query
-	 * @return  the query
-	 */
+     * Gets the query
+     *
+     * @return the query
+     */
     public Term getQuery() {
         return query;
     }
-    
+
     /**
-     *  Gets the solution of the request
+     * Gets the solution of the request
      *
-     *  @exception NoSolutionException if the solve request has not
-     *             solution
+     * @throws NoSolutionException if the solve request has not
+     *                             solution
      */
-    public Term  getSolution() throws NoSolutionException {
-        if (isSuccess){
+    public Term getSolution() throws NoSolutionException {
+        if (isSuccess) {
             return goal;
         } else {
             throw new NoSolutionException();
         }
     }
-    
-    
+
     /**
      * Gets the list of the variables in the solution.
+     *
      * @return the array of variables.
-     * 
      * @throws NoSolutionException if current solve information
-     * does not concern a successful 
+     *                             does not concern a successful
      */
     public List<Var> getBindingVars() throws NoSolutionException {
-        if (isSuccess){
+        if (isSuccess) {
             return bindings;
-        }else {
+        } else {
             throw new NoSolutionException();
         }
     }
-    
+
     /**
      * Gets the value of a variable in the substitution.
+     *
      * @throws NoSolutionException if the solve request has no solution
      * @throws UnknownVarException if the variable does not appear in the substitution.
      */
@@ -153,7 +152,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
             throw new UnknownVarException();
         return t;
     }
-    
+
     /**
      * Gets the value of a variable in the substitution. Returns <code>null</code>
      * if the variable does not appear in the substitution.
@@ -163,7 +162,7 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
             Iterator<Var> it = bindings.iterator();
             while (it.hasNext()) {
                 Var v = it.next();
-                if (v!=null && v.getName().equals(varName)) {
+                if (v != null && v.getName().equals(varName)) {
                     return v.getTerm();
                 }
             }
@@ -171,16 +170,15 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
         } else
             throw new NoSolutionException();
     }
-    
+
     /**
      * Returns the string representation of the result of the demonstration.
-     * 
-     * For successful demonstration, the representation concerns 
+     * <p>
+     * For successful demonstration, the representation concerns
      * variables with bindings.  For failed demo, the method returns false string.
-     * 
-     */    
+     */
     @Override
-	public String toString() {
+    public String toString() {
         if (isSuccess) {
             StringBuffer st = new StringBuffer("yes");
             if (bindings.size() > 0) {
@@ -189,9 +187,9 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
                 st.append(". ");
             }
             Iterator<Var> it = bindings.iterator();
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 Var v = it.next();
-                if (v != null && !v.isAnonymous() && v.isBound() && 
+                if (v != null && !v.isAnonymous() && v.isBound() &&
                         (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
                     st.append(v);
                     st.append("  ");
@@ -199,23 +197,18 @@ public class SolveInfo implements Serializable/*, ISolution<Term,Term,Term>*/  {
             }
             return st.toString().trim();
         } else {
-        	/*Castagna 06/2011*/
-        	if(endState == EngineRunner.HALT)
-        		return ("halt.");
-        	else
-        	/**/
-            return "no.";
+            /*Castagna 06/2011*/
+            if (endState == EngineRunner.HALT)
+                return ("halt.");
+            else
+                /**/
+                return "no.";
         }
     }
-    
+
     //Alberto
-  	public String toJSON(){
-  		return JSONSerializerManager.toJSON(this);
-  	}
-  	
-  	//Alberto
-  	public static SolveInfo fromJSON(String jsonString){
-  		return JSONSerializerManager.fromJSON(jsonString, SolveInfo.class);	
-  	}
-    
+    public String toJSON() {
+        return JSONSerializerManager.toJSON(this);
+    }
+
 }

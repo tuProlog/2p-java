@@ -16,28 +16,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog;
+
 import java.io.Serializable;
 
 /**
  * This class represents a token read by the prolog term tokenizer
- *
- *
- *
  */
 class Token implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     // token textual representation
     String seq;
     // token type and attribute
     int type;
-    
-    public Token(String seq_,int type_) {
+
+    public Token(String seq_, int type_) {
         seq = seq_;
         type = type_;
     }
-    
+
     public int getType() {
-        return(type & Tokenizer.TYPEMASK);
+        return (type & Tokenizer.TYPEMASK);
     }
 
     /**
@@ -47,7 +45,7 @@ class Token implements Serializable {
         return type & Tokenizer.ATTRMASK;
     }
 
-    public String getValue(){
+    public String getValue() {
         return seq;
     }
 
@@ -60,7 +58,7 @@ class Token implements Serializable {
     public boolean isFunctor() {
         return getAttribute() == Tokenizer.FUNCTOR;
     }
-    
+
     public boolean isNumber() {
         return type == Tokenizer.INTEGER || type == Tokenizer.FLOAT;
     }

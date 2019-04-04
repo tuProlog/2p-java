@@ -23,53 +23,54 @@ import java.util.HashMap;
  * This class represents a prolog Flag
  */
 class Flag implements java.io.Serializable {
-	private static final long serialVersionUID = 1L;
-	protected Term   value;
+    private static final long serialVersionUID = 1L;
+    protected Term value;
     private String name;
     private Struct valueList;
-    private Term   defaultValue;
+    private Term defaultValue;
     private boolean modifiable;
-    private String  libraryName;
-    
+    private String libraryName;
+
     /**
      * Builds a Prolog flag
      *
-     * @param name is the name of the flag
-     * @param valueSet is the Prolog list of the possible values
-     * @param defValue is the default value
+     * @param name       is the name of the flag
+     * @param valueSet   is the Prolog list of the possible values
+     * @param defValue   is the default value
      * @param modifiable states if the flag is modifiable
-     * @param library is the library defining the flag
+     * @param library    is the library defining the flag
      */
     public Flag(String name, Struct valueSet, Term defValue, boolean modifiable, String library) {
 
-    	this.name = name;
+        this.name = name;
         this.valueList = valueSet;
         defaultValue = defValue;
         this.modifiable = modifiable;
         libraryName = library;
         value = defValue;
     }
-    
-    protected Flag() {}
-    
-    
+
+    protected Flag() {
+    }
+
+
     /**
      * Gets a deep copy of the flag
      *
      * @return a copy of the flag
      */
     @Override
-	public Object clone() {
+    public Object clone() {
         Flag f = new Flag();
-        f.name=name;
-        f.valueList=(Struct)valueList.copy(new HashMap<Var,Var>(),Var.ORIGINAL);
-        f.value=value.copy(new HashMap<Var,Var>(),Var.ORIGINAL);
-        f.defaultValue=defaultValue.copy(new HashMap<Var,Var>(),Var.ORIGINAL);
-        f.modifiable=modifiable;
-        f.libraryName=libraryName;
+        f.name = name;
+        f.valueList = (Struct) valueList.copy(new HashMap<Var, Var>(), Var.ORIGINAL);
+        f.value = value.copy(new HashMap<Var, Var>(), Var.ORIGINAL);
+        f.defaultValue = defaultValue.copy(new HashMap<Var, Var>(), Var.ORIGINAL);
+        f.modifiable = modifiable;
+        f.libraryName = libraryName;
         return f;
     }
-    
+
     /**
      * Checks if a value is valid according to flag description
      *
@@ -77,32 +78,34 @@ class Flag implements java.io.Serializable {
      * @return flag validity
      */
     public boolean isValidValue(Term value) {
-        java.util.Iterator<? extends Term> it=valueList.listIterator();
+        java.util.Iterator<? extends Term> it = valueList.listIterator();
         while (it.hasNext()) {
-            Term t=it.next();
+            Term t = it.next();
             if (value.match(t)) {
                 return true;
             }
         }
         return false;
     }
-    
+
     /**
-	 * Gets the name of the flag
-	 * @return  the name
-	 */
+     * Gets the name of the flag
+     *
+     * @return the name
+     */
     public String getName() {
         return name;
     }
-    
+
     /**
-	 * Gets the list of flag possible values
-	 * @return  a Prolog list
-	 */
+     * Gets the list of flag possible values
+     *
+     * @return a Prolog list
+     */
     public Struct getValueList() {
         return valueList;
     }
-    
+
     /**
      * Sets the value of a flag
      *
@@ -117,29 +120,32 @@ class Flag implements java.io.Serializable {
             return false;
         }
     }
-    
+
     /**
-	 * Gets the current value of the flag
-	 * @return  flag current value
-	 */
+     * Gets the current value of the flag
+     *
+     * @return flag current value
+     */
     public Term getValue() {
         return value;
     }
-    
+
     /**
-	 * Checks if the value is modifiable
-	 * @return
-	 */
+     * Checks if the value is modifiable
+     *
+     * @return
+     */
     public boolean isModifiable() {
         return modifiable;
     }
-    
+
     /**
-	 * Gets the name of the library where the flag has been defined
-	 * @return  the library name
-	 */
+     * Gets the name of the library where the flag has been defined
+     *
+     * @return the library name
+     */
     public String getLibraryName() {
         return libraryName;
     }
-    
+
 }

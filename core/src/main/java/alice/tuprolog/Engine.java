@@ -28,118 +28,117 @@ import java.util.List;
 /**
  * @author Alex Benini
  */
-public class Engine implements IEngine {    
-	
-	int nDemoSteps; //Alberto
-	int nResultAsked; //Alberto
-	boolean hasOpenAlternatives; //Alberto
-	boolean mustStop;
-	State nextState;
-	Term query;
-	Struct startGoal;
-	Collection<Var> goalVars;
-	ExecutionContext currentContext; 
-	ChoicePointContext currentAlternative;
-	ChoicePointStore choicePointSelector;
-	EngineRunner manager;
+public class Engine implements IEngine {
 
-	public Engine(EngineRunner manager, Term query) {
-		this.manager = manager;        
-		this.nextState = manager.INIT;
-		this.query = query;
-		this.mustStop = false;
-		this.manager.getTheoryManager().clearRetractDB();
-	}
+    int nDemoSteps; //Alberto
+    int nResultAsked; //Alberto
+    boolean hasOpenAlternatives; //Alberto
+    boolean mustStop;
+    State nextState;
+    Term query;
+    Struct startGoal;
+    Collection<Var> goalVars;
+    ExecutionContext currentContext;
+    ChoicePointContext currentAlternative;
+    ChoicePointStore choicePointSelector;
+    EngineRunner manager;
 
-	//Alberto
-	public int getNDemoSteps(){
-		return nDemoSteps;
-	}
-	
-	//Alberto
-	public int getNResultAsked(){
-		return nResultAsked;
-	}
-	
-	//Alberto
-	public boolean hasOpenAlternatives(){
-		return hasOpenAlternatives;
-	}
+    public Engine(EngineRunner manager, Term query) {
+        this.manager = manager;
+        this.nextState = manager.INIT;
+        this.query = query;
+        this.mustStop = false;
+        this.manager.getTheoryManager().clearRetractDB();
+    }
 
-	@Override
-	public String toString() {
-		try {
-			return	"ExecutionStack: \n"+currentContext+"\n"+
-					"ChoicePointStore: \n"+choicePointSelector+"\n\n";
-		} 
-		catch(Exception ex) { 
-			return ""; 
-		}
-	}
+    //Alberto
+    public int getNDemoSteps() {
+        return nDemoSteps;
+    }
 
-	void mustStop() {
-		mustStop = true;
-	}
+    //Alberto
+    public int getNResultAsked() {
+        return nResultAsked;
+    }
 
-	/**
-	 * Core of engine. Finite State Machine
-	 */
-	StateEnd run() {
-		String action;
+    //Alberto
+    public boolean hasOpenAlternatives() {
+        return hasOpenAlternatives;
+    }
 
-		do {
-			if (mustStop) {
-				nextState = manager.END_FALSE;
-				break;
-			}
-			action = nextState.toString();
-			
-			nextState.doJob(this);
-			manager.spy(action, this);
-			
+    @Override
+    public String toString() {
+        try {
+            return "ExecutionStack: \n" + currentContext + "\n" +
+                    "ChoicePointStore: \n" + choicePointSelector + "\n\n";
+        } catch (Exception ex) {
+            return "";
+        }
+    }
 
-		} while (!(nextState instanceof StateEnd));
-		nextState.doJob(this);
-		
-		return (StateEnd)(nextState);
-	}
+    void mustStop() {
+        mustStop = true;
+    }
 
-	public Term getQuery() {
-		return query;
-	}
+    /**
+     * Core of engine. Finite State Machine
+     */
+    StateEnd run() {
+        String action;
 
-	public int getNumDemoSteps() {
-		return nDemoSteps;
-	}
+        do {
+            if (mustStop) {
+                nextState = manager.END_FALSE;
+                break;
+            }
+            action = nextState.toString();
 
-	public List<ExecutionContext> getExecutionStack() {
-		ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
-		ExecutionContext t = currentContext;
-		while (t != null) {
-			l.add(t);
-			t = t.fatherCtx;
-		}
-		return l;
-	}
+            nextState.doJob(this);
+            manager.spy(action, this);
 
-	public ChoicePointStore getChoicePointStore() {
-		return choicePointSelector;
-	}
 
-	void prepareGoal() {
-		LinkedHashMap<Var,Var> goalVars = new LinkedHashMap<Var, Var>();
-		startGoal = (Struct)(query).copyGoal(goalVars,0);
-		this.goalVars = goalVars.values();
-	}
+        } while (!(nextState instanceof StateEnd));
+        nextState.doJob(this);
 
-	void initialize(ExecutionContext eCtx) {
-		currentContext = eCtx;
-		choicePointSelector = new ChoicePointStore();
-		nDemoSteps = 1;
-		currentAlternative = null;
-	}
-	
-	public String getNextStateName(){
-		return nextState.stateName;
-	}
+        return (StateEnd) (nextState);
+    }
+
+    public Term getQuery() {
+        return query;
+    }
+
+    public int getNumDemoSteps() {
+        return nDemoSteps;
+    }
+
+    public List<ExecutionContext> getExecutionStack() {
+        ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
+        ExecutionContext t = currentContext;
+        while (t != null) {
+            l.add(t);
+            t = t.fatherCtx;
+        }
+        return l;
+    }
+
+    public ChoicePointStore getChoicePointStore() {
+        return choicePointSelector;
+    }
+
+    void prepareGoal() {
+        LinkedHashMap<Var, Var> goalVars = new LinkedHashMap<Var, Var>();
+        startGoal = (Struct) (query).copyGoal(goalVars, 0);
+        this.goalVars = goalVars.values();
+    }
+
+    void initialize(ExecutionContext eCtx) {
+        currentContext = eCtx;
+        choicePointSelector = new ChoicePointStore();
+        nDemoSteps = 1;
+        currentAlternative = null;
+    }
+
+    public String getNextStateName() {
+        return nextState.stateName;
+    }
 }

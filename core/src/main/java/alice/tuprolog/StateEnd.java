@@ -22,50 +22,55 @@ import java.util.List;
 
 /**
  * @author Alex Benini
- *
+ * <p>
  * End state of demostration.
  */
 public class StateEnd extends State {
-    
-    private int endState;    
+
+    private int endState;
     private Struct goal;
     private List<Var> vars;
-    
+
     /**
      * Constructor
+     *
      * @param end Terminal state of computation
      */
     public StateEnd(EngineRunner c, int end) {
-    	this.c=c;
+        this.c = c;
         endState = end;
     }
-    
+
     public int getResultDemo() {
         return endState;
     }
-    
+
     public Struct getResultGoal() {
         return goal;
     }
-    
+
     public List<Var> getResultVars() {
         return vars;
     }
-    
+
     @Override
-	public String toString() {
-        switch(endState){
-        	case EngineRunner.FALSE   : return "FALSE";
-        	case EngineRunner.TRUE    : return "TRUE";
-        	case EngineRunner.TRUE_CP : return "TRUE_CP";
-        	default                   : return "HALT";
-        }  
+    public String toString() {
+        switch (endState) {
+            case EngineRunner.FALSE:
+                return "FALSE";
+            case EngineRunner.TRUE:
+                return "TRUE";
+            case EngineRunner.TRUE_CP:
+                return "TRUE_CP";
+            default:
+                return "HALT";
+        }
     }
-    
+
     @Override
-	void doJob(Engine e) {	
+    void doJob(Engine e) {
         vars = new ArrayList<Var>();
-        goal = (Struct)e.startGoal.copyResult(e.goalVars,vars);  
+        goal = (Struct) e.startGoal.copyResult(e.goalVars, vars);
     }
-    
+
 }

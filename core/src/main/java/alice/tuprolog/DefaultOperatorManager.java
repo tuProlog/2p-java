@@ -18,12 +18,12 @@
 package alice.tuprolog;
 
 /**
- *  This class defines an operator manager with
- *  some standard operators defined
- *
+ * This class defines an operator manager with
+ * some standard operators defined
  */
 class DefaultOperatorManager extends OperatorManager {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+
     public DefaultOperatorManager() {
         opNew(":-", "xfx", 1200);
         opNew("-->", "xfx", 1200);
@@ -70,5 +70,5 @@ class DefaultOperatorManager extends OperatorManager {
         opNew("\\", "fx", 200);
         opNew("-", "fy", 200);
     }
-    
+
 }

@@ -26,5 +26,6 @@ import java.util.EventListener;
  */
 public interface LibraryListener extends EventListener {
     void libraryLoaded(LibraryEvent e);
+
     void libraryUnloaded(LibraryEvent e);
 }

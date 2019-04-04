@@ -1,10 +1,10 @@
 package alice.tuprolog;
 
-public interface ISolution<Q,S,T> {
-    
+public interface ISolution<Q, S, T> {
+
     <Z extends T> Z agetVarValue(String varName) throws alice.tuprolog.NoSolutionException;
 
-    <Z extends T> Z getTerm(String varName) throws alice.tuprolog.NoSolutionException, UnknownVarException ;
+    <Z extends T> Z getTerm(String varName) throws alice.tuprolog.NoSolutionException, UnknownVarException;
 
     boolean isSuccess();
 

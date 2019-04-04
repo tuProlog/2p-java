@@ -17,7 +17,7 @@ public class StateException extends State {
     }
 
     @Override
-	void doJob(Engine e) {
+    void doJob(Engine e) {
         String errorType = e.currentContext.currentGoal.getName();
         if (errorType.equals("throw"))
             prologError(e);
@@ -108,9 +108,9 @@ public class StateException extends State {
             // visito all'indietro l'albero di risoluzione alla ricerca di un
             // subgoal java_catch/3 che abbia un catcher unificabile con
             // l'argomento dell'eccezione lanciata
-        	if (e.currentContext.currentGoal.match(javaCatchTerm)
+            if (e.currentContext.currentGoal.match(javaCatchTerm)
                     && javaMatch(e.currentContext.currentGoal.getArg(1),
-                            exceptionTerm)) {
+                    exceptionTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
                 // java_catch/3
 

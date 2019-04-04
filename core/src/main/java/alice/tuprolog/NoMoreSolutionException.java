@@ -22,10 +22,7 @@ package alice.tuprolog;
  * actually no other ones exist.
  *
  * @see SolveInfo
- *
- *
- *
  */
 public class NoMoreSolutionException extends PrologException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 }

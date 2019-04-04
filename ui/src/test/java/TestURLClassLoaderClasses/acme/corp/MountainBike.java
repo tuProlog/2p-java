@@ -1,7 +1,7 @@
 package TestURLClassLoaderClasses.acme.corp;
 
 public class MountainBike extends Bicycle {
-        
+
     // the MountainBike subclass adds
     // one field
     private int seatHeight;
@@ -14,14 +14,15 @@ public class MountainBike extends Bicycle {
                         int startGear) {
         super(startCadence, startSpeed, startGear);
         seatHeight = startHeight;
-    }   
-        
+    }
+
     // the MountainBike subclass adds
     // one method
     public void setHeight(int newValue) {
         seatHeight = newValue;
-    }   
-    
-    public int getSeatHeight()
-    {return this.seatHeight;}
+    }
+
+    public int getSeatHeight() {
+        return this.seatHeight;
+    }
 }
