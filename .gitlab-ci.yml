@@ -1,4 +1,4 @@
-image: openjdk:12-alpine
+image: gciatto/my-images:jdk12-alpine-gradle531
 
 variables:
   GOPTS: "--no-daemon --console=plain"
