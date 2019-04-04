@@ -8,6 +8,8 @@ group = rootProject.group
 
 dependencies {
     api(project(":core"))
+    implementation("com.fifesoft", "rsyntaxtextarea", "3.0.3")
+    implementation("com.fifesoft", "autocomplete", "3.0.0")
 
     testImplementation("junit", "junit", "4.12")
     testImplementation("org.concordion", "concordion", "2.+")

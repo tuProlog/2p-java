@@ -1,5 +1,9 @@
 package alice.tuprologx.ide;
 
+import alice.utils.jedit.KeywordMap;
+import alice.utils.jedit.Token;
+import alice.utils.jedit.TokenMarker;
+
 import javax.swing.text.Segment;
 
 public class PrologTokenMarker extends TokenMarker
@@ -9,7 +13,7 @@ public class PrologTokenMarker extends TokenMarker
         this(true,getKeywords());
     }
 
-    public PrologTokenMarker(boolean cpp,KeywordMap keywords)
+    public PrologTokenMarker(boolean cpp, KeywordMap keywords)
     {
         this.cpp = cpp;
         this.keywords = keywords;
