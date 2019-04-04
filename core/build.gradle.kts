@@ -2,15 +2,13 @@ plugins {
     java
 }
 
-version = "unspecified"
-
-repositories {
-    mavenCentral()
-}
+version = rootProject.version
+group = rootProject.group
 
 dependencies {
     implementation("com.google.code.gson", "gson", "2.8.5")
     implementation("org.apache.commons", "commons-lang3", "3.8.1")
+
     testImplementation("junit", "junit", "4.12")
     testImplementation("org.concordion", "concordion", "2.+")
     testImplementation("org.concordion", "concordion-embed-extension", "1.2.0")
@@ -22,7 +20,7 @@ tasks.getByName<Test>("test") {
     // write output to build/reports/spec
     systemProperties["concordion.output.dir"] = "${reporting.baseDir}/spec"
     // force tests to run even if code hasn't changed
-    outputs.upToDateWhen { false }   
+    outputs.upToDateWhen { false }
 }
 
 configure<JavaPluginConvention> {

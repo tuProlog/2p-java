@@ -6,6 +6,8 @@
       <module name="2p.core.test" target="1.8" />
       <module name="2p.main" target="11" />
       <module name="2p.test" target="11" />
+      <module name="2p.ui.main" target="1.8" />
+      <module name="2p.ui.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

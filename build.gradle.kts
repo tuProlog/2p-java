@@ -11,6 +11,9 @@
 //    `java-library`
 //}
 
+version = "4.0.0"
+group = "it.unibo.tuprolog"
+
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
