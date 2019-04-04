@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    application
 }
 
 version = rootProject.version
@@ -18,4 +17,31 @@ dependencies {
 
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
+task<JavaExec>("runIde") {
+    group = "run"
+    dependsOn("classes")
+
+    main = "alice.tuprologx.ide.GUILauncher"
+    sourceSets {
+        main {
+            classpath = runtimeClasspath
+        }
+    }
+}
+
+task<JavaExec>("runRepl") {
+    group = "run"
+    dependsOn("classes")
+
+    main = "alice.tuprologx.ide.CUIConsole"
+    sourceSets {
+        main {
+            classpath = runtimeClasspath
+        }
+    }
+
+    standardInput = System.`in`
+    standardOutput = System.out
 }
