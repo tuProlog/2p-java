@@ -3,6 +3,7 @@ package SpyFrame;
 
 import alice.tuprolog.Library;
 import alice.tuprolog.Term;
+import alice.tuprologx.spyframe.TermFrame;
 
 // import in a prolog session by
 // :-load_library('StudentLibrary').
