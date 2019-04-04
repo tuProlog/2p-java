@@ -1,12 +1,16 @@
 package alice.tuprologx.ide;
 
+import alice.tuprolog.InvalidLibraryException;
+import alice.tuprolog.event.LibraryEvent;
+import alice.tuprolog.event.LibraryListener;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -14,10 +18,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
-import alice.tuprolog.event.LibraryEvent;
-import alice.tuprolog.InvalidLibraryException;
-import alice.tuprolog.event.LibraryListener;
 
 public class LibraryDialogFrame extends GenericFrame implements LibraryListener
 {

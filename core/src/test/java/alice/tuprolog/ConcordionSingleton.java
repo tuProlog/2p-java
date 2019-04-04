@@ -1,10 +1,10 @@
 package alice.tuprolog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import alice.tuprolog.event.ExceptionEvent;
 import alice.tuprolog.event.ExceptionListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConcordionSingleton {
 

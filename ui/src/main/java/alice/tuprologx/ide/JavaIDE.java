@@ -17,15 +17,17 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
-import alice.tuprolog.event.*;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.event.OutputEvent;
+import alice.tuprolog.event.SpyEvent;
+import alice.tuprolog.event.WarningEvent;
 import alice.tuprolog.lib.IOLibrary;
-
-import javax.swing.*;
 import org.fife.ui.autocomplete.DefaultCompletionProvider;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 
 /**

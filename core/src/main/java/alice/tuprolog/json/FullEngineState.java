@@ -1,10 +1,10 @@
 package alice.tuprolog.json;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-
 import alice.tuprolog.Operator;
 import alice.tuprolog.Term;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 //Alberto
 public class FullEngineState extends AbstractEngineState {

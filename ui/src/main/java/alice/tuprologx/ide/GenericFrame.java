@@ -1,9 +1,9 @@
 package alice.tuprologx.ide;
 
 import javax.swing.*;
-
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class GenericFrame
     extends JFrame

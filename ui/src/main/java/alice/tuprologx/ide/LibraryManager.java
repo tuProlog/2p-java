@@ -17,9 +17,9 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
 import alice.tuprolog.InvalidLibraryException;
-//import alice.util.AssemblyCustomClassLoader;
+import alice.tuprolog.Library;
+import alice.tuprolog.Prolog;
 
 import java.io.File;
 import java.net.URL;
@@ -27,6 +27,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
+
+//import alice.util.AssemblyCustomClassLoader;
 //import cli.System.Reflection.Assembly;
 
 /**

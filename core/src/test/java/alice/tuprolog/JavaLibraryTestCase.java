@@ -1,13 +1,13 @@
 package alice.tuprolog;
 
+import alice.tuprolog.lib.InvalidObjectIdException;
+import alice.tuprolog.lib.OOLibrary;
+import junit.framework.TestCase;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import alice.tuprolog.lib.InvalidObjectIdException;
-import alice.tuprolog.lib.OOLibrary;
-import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {
 	String theory = null;

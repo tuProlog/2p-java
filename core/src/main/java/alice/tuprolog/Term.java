@@ -18,18 +18,13 @@
 
 package alice.tuprolog;
 
-import java.io.Serializable;
-import java.util.AbstractMap;
-//import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.List;
-
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.OneWayList;
+
+import java.io.Serializable;
+import java.util.*;
+
+//import java.util.ArrayList;
 
 /**
  * Term class is the root abstract class for prolog data type

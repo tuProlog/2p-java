@@ -1,16 +1,12 @@
 package SpyFrame;
 
-import alice.tuprolog.Engine;
-import alice.tuprolog.ExecutionContext;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.SolveInfo;
-import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
-import alice.tuprolog.event.*;
+import alice.tuprolog.*;
+import alice.tuprolog.event.SpyEvent;
+import alice.tuprolog.event.SpyListener;
+import alice.tuprologx.spyframe.TermFrame;
+
 import java.util.List;
 import java.util.Scanner;
-import javax.swing.JOptionPane;
-import alice.tuprologx.spyframe.*;
 
 /**This is to be thrown away in the end.
  * 

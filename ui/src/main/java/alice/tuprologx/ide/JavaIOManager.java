@@ -17,10 +17,12 @@
  */
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
+import alice.tuprolog.Theory;
 
 import javax.swing.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
 
 /**
  * A manager for Input/Output operations on the Java 2 platform.

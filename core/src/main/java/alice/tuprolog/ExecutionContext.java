@@ -18,11 +18,10 @@
 
 package alice.tuprolog;
 
-import java.util.*;
-
-import alice.tuprolog.Struct;
-import alice.tuprolog.SubGoalId;
 import alice.util.OneWayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

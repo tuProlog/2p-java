@@ -1,19 +1,17 @@
 package alice.tuprologx.ide;
 
-import java.util.ArrayList;
+import alice.tuprolog.Prolog;
+import org.fife.ui.autocomplete.CompletionProvider;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import org.fife.ui.autocomplete.CompletionProvider;
-
-import alice.tuprolog.Prolog;
-
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 
 public class TheoryTabbedPane
     extends JTabbedPane

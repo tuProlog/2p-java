@@ -1,11 +1,11 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.*;
-import alice.tuprolog.event.*;
 import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
+import alice.tuprolog.event.QueryEvent;
 import alice.tuprolog.event.QueryListener;
 import alice.tuprolog.lib.IOLibrary;
-import alice.tuprologx.ide.EngineThread;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

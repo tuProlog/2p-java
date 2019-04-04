@@ -1,9 +1,9 @@
 package alice.tuprologx.ide;
 
-import alice.util.*;
-import alice.tuprolog.event.*;
 import alice.tuprolog.*;
-import alice.tuprolog.lib.*;
+import alice.tuprolog.event.*;
+import alice.tuprolog.lib.IOLibrary;
+import alice.util.Automaton;
 
 import java.io.*;
 

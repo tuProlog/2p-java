@@ -17,9 +17,6 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.HaltException;
-import alice.tuprolog.JavaException;
-
 /**
  * @author Alex Benini
  */

@@ -1,11 +1,8 @@
 package alice.tuprolog;
 
 import alice.util.ReadOnlyLinkedList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+
+import java.util.*;
 
 /**
  * <code>FamilyClausesList</code> is a common <code>LinkedList</code>

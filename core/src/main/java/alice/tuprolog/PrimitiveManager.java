@@ -17,10 +17,10 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.interfaces.IPrimitiveManager;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
-import alice.tuprolog.interfaces.IPrimitiveManager;
 
 
 /**

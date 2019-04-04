@@ -1,14 +1,12 @@
 package alice.tuprolog;
 
+import alice.tuprolog.json.AbstractEngineState;
+
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
-
-import alice.tuprolog.NoMoreSolutionException;
-import alice.tuprolog.json.AbstractEngineState;
 
 public class EngineManager implements java.io.Serializable {
 	

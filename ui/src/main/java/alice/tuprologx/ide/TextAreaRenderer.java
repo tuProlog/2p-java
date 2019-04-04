@@ -1,10 +1,14 @@
 package alice.tuprologx.ide;
 
 import javax.swing.*;
-import javax.swing.table.*;
-
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("serial")
 public class TextAreaRenderer

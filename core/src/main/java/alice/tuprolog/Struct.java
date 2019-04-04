@@ -18,13 +18,11 @@
 package alice.tuprolog;
 
 import java.util.AbstractMap;
-//import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.TermVisitor;
+//import java.util.ArrayList;
 
 /**
  * Struct class represents both compound prolog term

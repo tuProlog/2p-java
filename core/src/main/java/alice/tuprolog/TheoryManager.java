@@ -17,6 +17,10 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.json.AbstractEngineState;
+import alice.tuprolog.json.FullEngineState;
+import alice.util.Tools;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,12 +29,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
-
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.json.AbstractEngineState;
-import alice.tuprolog.json.FullEngineState;
-import alice.util.Tools;
 
 /**
  * This class defines the Theory Manager who manages the clauses/theory often referred to as the Prolog database.

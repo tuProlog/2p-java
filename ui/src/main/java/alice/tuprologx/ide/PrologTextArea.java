@@ -10,7 +10,7 @@ package alice.tuprologx.ide;
 
 import alice.utils.jedit.*;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class PrologTextArea extends TextAreaDefaults
 {

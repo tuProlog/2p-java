@@ -5,10 +5,14 @@
  */
 package alice.tuprologx.ide;
 
-import java.io.*;
-import javax.swing.text.Segment;
+import org.fife.ui.rsyntaxtextarea.AbstractJFlexTokenMaker;
+import org.fife.ui.rsyntaxtextarea.Token;
+import org.fife.ui.rsyntaxtextarea.TokenImpl;
+import org.fife.ui.rsyntaxtextarea.TokenTypes;
 
-import org.fife.ui.rsyntaxtextarea.*;
+import javax.swing.text.Segment;
+import java.io.IOException;
+import java.io.Reader;
 
 
 /**

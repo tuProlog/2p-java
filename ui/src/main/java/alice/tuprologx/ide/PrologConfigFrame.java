@@ -1,11 +1,11 @@
 package alice.tuprologx.ide;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
-import javax.swing.*;
 
 public class PrologConfigFrame
     extends GenericFrame

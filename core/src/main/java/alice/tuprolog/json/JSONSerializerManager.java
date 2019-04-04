@@ -1,9 +1,8 @@
 package alice.tuprolog.json;
 
+import alice.tuprolog.Term;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import alice.tuprolog.Term;
 
 //Alberto
 public class JSONSerializerManager {

@@ -2,7 +2,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.event.SpyEvent;
 import alice.tuprolog.event.SpyListener;
-
 import junit.framework.TestCase;
 
 public class PrologTestCase extends TestCase {

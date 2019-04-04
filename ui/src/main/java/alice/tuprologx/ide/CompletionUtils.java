@@ -1,28 +1,13 @@
 package alice.tuprologx.ide;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.fife.ui.autocomplete.AbstractCompletion;
-import org.fife.ui.autocomplete.AbstractCompletionProvider;
-import org.fife.ui.autocomplete.BasicCompletion;
-import org.fife.ui.autocomplete.Completion;
-import org.fife.ui.autocomplete.DefaultCompletionProvider;
-import org.fife.ui.autocomplete.TemplateCompletion;
-
 import alice.tuprolog.event.TheoryEvent;
 import alice.tuprolog.event.TheoryListener;
+import org.fife.ui.autocomplete.*;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 class CompletionUtils{

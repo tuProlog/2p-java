@@ -1,20 +1,18 @@
 package alice.tuprologx.ide;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import javax.swing.*;
-
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.*;
-import java.awt.BorderLayout;
-import java.net.URL;
-
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Term;
 import alice.tuprolog.Theory;
 import alice.tuprologx.spyframe.SpyFrame;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.net.URL;
 
 public class ToolBar extends JPanel
 {

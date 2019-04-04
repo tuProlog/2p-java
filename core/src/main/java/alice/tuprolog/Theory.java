@@ -16,10 +16,13 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog;
-import    java.io.*;
-import java.util.Iterator;
 
 import alice.tuprolog.json.JSONSerializerManager;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
+import java.util.Iterator;
 
 /**
  * This class represents prolog theory which can be provided

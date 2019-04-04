@@ -17,23 +17,19 @@
  */
 package alice.tuprolog;
 
-import java.util.*;
-import java.io.*;
-
 import alice.tuprolog.event.*;
 import alice.tuprolog.interfaces.IProlog;
-//import alice.tuprologx.ide.ToolBar;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.LibraryListener;
-import alice.tuprolog.event.OutputListener;
-import  alice.tuprolog.event.QueryListener;
-import  alice.tuprolog.event.SpyListener;
-import  alice.tuprolog.event.TheoryListener;
-import  alice.tuprolog.event.WarningListener;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.json.ReducedEngineState;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+//import alice.tuprologx.ide.ToolBar;
 
 
 

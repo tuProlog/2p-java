@@ -1,15 +1,14 @@
 package alice.tuprologx.ide;
 
-import java.awt.BorderLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.ByteArrayInputStream;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import alice.tuprolog.event.ReadEvent;
 import alice.tuprolog.event.ReadListener;
 import alice.tuprolog.lib.UserContextInputStream;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.ByteArrayInputStream;
 
 /**
  * 

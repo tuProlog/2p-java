@@ -17,10 +17,8 @@
  */
 package alice.tuprolog;
 
-import java.util.*;
-
-import alice.tuprolog.InvalidTermException;
-import alice.tuprolog.TermVisitor;
+import java.util.AbstractMap;
+import java.util.List;
 
 /**
  * This class represents a variable term.

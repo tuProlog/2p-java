@@ -1,17 +1,20 @@
 package alice.tuprologx.ide;
 
 import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.WarningEvent;
 import alice.tuprolog.event.SpyListener;
+import alice.tuprolog.event.WarningEvent;
 import alice.tuprolog.event.WarningListener;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.tree.*;
-
-import java.awt.event.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.StringTokenizer;
 

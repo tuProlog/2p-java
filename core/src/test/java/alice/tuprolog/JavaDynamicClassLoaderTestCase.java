@@ -1,6 +1,7 @@
 package alice.tuprolog;
 
-import static org.junit.Assert.*;
+import alice.util.JavaDynamicClassLoader;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,9 +10,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.junit.Test;
-
-import alice.util.JavaDynamicClassLoader;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * JavaDynamicClassLoader Test Case

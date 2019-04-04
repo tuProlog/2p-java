@@ -1,18 +1,9 @@
 package alice.tuprolog;
-import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import alice.tuprolog.Int;
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.MalformedGoalException;
-import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.SolveInfo;
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
+import static org.junit.Assert.*;
 
 /**
  * 

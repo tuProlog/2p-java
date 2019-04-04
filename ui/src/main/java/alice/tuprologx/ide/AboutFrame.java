@@ -1,9 +1,8 @@
 package alice.tuprologx.ide;
 
-import javax.swing.*;
-
 import alice.tuprolog.Prolog;
 
+import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 

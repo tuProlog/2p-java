@@ -18,7 +18,10 @@
 package alice.tuprolog;
 
 import alice.util.ReadOnlyLinkedList;
-import java.util.*;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Customized HashMap for storing clauses in the TheoryManager

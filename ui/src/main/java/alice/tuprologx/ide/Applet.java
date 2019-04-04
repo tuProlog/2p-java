@@ -17,8 +17,7 @@
  */
 package alice.tuprologx.ide;
 
-import javax.swing.JApplet;
-
+import javax.swing.*;
 import java.awt.event.WindowListener;
 
 /**

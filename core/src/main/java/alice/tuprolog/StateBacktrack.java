@@ -17,10 +17,9 @@
  */
 package alice.tuprolog;
 
-import java.util.*;
-
-import alice.tuprolog.SubGoalId;
 import alice.util.OneWayList;
+
+import java.util.List;
 
 
 /**

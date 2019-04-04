@@ -17,11 +17,11 @@
  */
 package alice.tuprolog;
 
-import java.util.*;
-
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
+
+import java.util.ArrayList;
 
 /**
  * Administrator of flags declared

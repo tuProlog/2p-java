@@ -1,35 +1,33 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.event.*;
-//import alice.tuprologx.spyframe.TermPanel;
 import alice.tuprolog.NoSolutionException;
-import alice.tuprolog.event.ExceptionListener;
-import alice.tuprolog.event.OutputListener;
-import alice.tuprolog.event.ReadListener;
 import alice.tuprolog.SolveInfo;
-//import alice.tuprolog.Term;
 import alice.tuprolog.Var;
+import alice.tuprolog.event.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.*;
-/*Castagna 06/2011*/
+import javax.swing.table.TableModel;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.BadLocationException;
-/**/
-
-
-
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.URL;
 import java.util.ArrayList;
+
+//import alice.tuprologx.spyframe.TermPanel;
+//import alice.tuprolog.Term;
+/*Castagna 06/2011*/
+/**/
 
 public class ConsoleDialog
     extends JPanel
