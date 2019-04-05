@@ -17,22 +17,22 @@ public class PrologTestCase extends TestCase {
 	
 	public void testLoadLibraryAsString() throws InvalidLibraryException {
 		Prolog engine = new Prolog();
-		engine.loadLibrary("StringLibrary");
-		assertNotNull(engine.getLibrary("StringLibrary"));
+		engine.loadLibrary("alice.tuprolog.StringLibrary");
+		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
 	}
 	
 	public void testLoadLibraryAsObject() throws InvalidLibraryException {
 		Prolog engine = new Prolog();
 		Library stringLibrary = new StringLibrary();
 		engine.loadLibrary(stringLibrary);
-		assertNotNull(engine.getLibrary("StringLibrary"));
+		assertNotNull(engine.getLibrary("alice.tuprolog.StringLibrary"));
 		Library javaLibrary = new alice.tuprolog.lib.OOLibrary();
 		engine.loadLibrary(javaLibrary);
 		assertSame(javaLibrary, engine.getLibrary("alice.tuprolog.lib.OOLibrary"));
 	}
 	
 	public void testGetLibraryWithName() throws InvalidLibraryException {
-		Prolog engine = new Prolog(new String[] {"TestLibrary"});
+		Prolog engine = new Prolog(new String[] {"alice.tuprolog.TestLibrary"});
 		assertNotNull(engine.getLibrary("TestLibraryName"));
 	}
 	
