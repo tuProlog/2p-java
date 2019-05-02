@@ -16,7 +16,6 @@ public class StateException extends State {
         stateName = "Exception";
     }
 
-    @Override
     void doJob(Engine e) {
         String errorType = e.currentContext.currentGoal.getName();
         if (errorType.equals("throw"))
@@ -110,7 +109,7 @@ public class StateException extends State {
             // l'argomento dell'eccezione lanciata
             if (e.currentContext.currentGoal.match(javaCatchTerm)
                     && javaMatch(e.currentContext.currentGoal.getArg(1),
-                    exceptionTerm)) {
+                            exceptionTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
                 // java_catch/3
 
@@ -204,7 +203,7 @@ public class StateException extends State {
             return false;
         Iterator<? extends Term> it = list.listIterator();
         while (it.hasNext()) {
-            Term nextTerm = it.next();
+            Term nextTerm = (Term) it.next();
             if (!nextTerm.isCompound())
                 continue;
             Struct element = (Struct) nextTerm;

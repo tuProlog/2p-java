@@ -15,25 +15,24 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog.lib;
 
-import alice.tuprolog.Library;
-import alice.tuprolog.PrologError;
-import alice.tuprolog.Term;
-import alice.tuprolog.Var;
+import alice.tuprolog.*;
 
 /**
  * Library for managing DCGs.
- * <p>
+ * 
  * Library/Theory dependency: BasicLibrary
+ * 
+ * 
+ * 
  */
 public class DCGLibrary extends Library {
-    private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 1L;
     public DCGLibrary() {
     }
 
-    @Override
     public String getTheory() {
         return ":- op(1200, xfx, '-->'). \n"
                 + ":- op(200, xfx, '\\'). \n"

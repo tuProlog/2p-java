@@ -20,176 +20,137 @@ package alice.tuprolog;
 import java.util.List;
 
 /**
+ *
  * Int class represents the integer prolog data type
+ *
  */
 public class Int extends Number {
-    private static final long serialVersionUID = 1L;
-    private int value;
-
-    @SuppressWarnings("unused")
-    private String type = "Int";
-
+   
+	private static final long serialVersionUID = 1L; 
+	
+	@SuppressWarnings("unused")
+	private String type = "Int";
+   
+	private int value;
+    
     public Int(int v) {
         value = v;
     }
-
+    
     /**
-     * Returns the value of the Integer as int
+     *  Returns the value of the Integer as int
+     *
      */
-    @Override
     final public int intValue() {
         return value;
     }
-
+    
     /**
-     * Returns the value of the Integer as float
+     *  Returns the value of the Integer as float
+     *
      */
-    @Override
     final public float floatValue() {
-        return value;
+        return (float) value;
     }
-
+    
     /**
-     * Returns the value of the Integer as double
+     *  Returns the value of the Integer as double
+     *
      */
-    @Override
     final public double doubleValue() {
-        return value;
+        return (double) value;
     }
-
+    
     /**
-     * Returns the value of the Integer as long
+     *  Returns the value of the Integer as long
+     *
      */
-    @Override
     final public long longValue() {
         return value;
     }
-
-
-    /**
-     * is this term a prolog integer term?
-     */
-    @Override
+    
+    
+    /** is this term a prolog integer term? */
     final public boolean isInteger() {
         return true;
     }
-
-    /**
-     * is this term a prolog real term?
-     */
-    @Override
+    
+    /** is this term a prolog real term? */
     final public boolean isReal() {
         return false;
     }
-
-
-    /**
-     * is an int Integer number?
-     *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
-     */
-    @Deprecated
-    @Override
+    
+    
+    /** is an int Integer number? 
+     * @deprecated Use <tt>instanceof Int</tt> instead. */
     final public boolean isTypeInt() {
         return true;
     }
 
-    /**
-     * is an int Integer number?
-     *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
-     */
-    @Deprecated
-    @Override
+    /** is an int Integer number?
+     * @deprecated Use <tt>instanceof Int</tt> instead. */
     final public boolean isInt() {
         return true;
     }
-
-    /**
-     * is a float Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
-     */
-    @Deprecated
-    @Override
+    
+    /** is a float Real number? 
+     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
     final public boolean isTypeFloat() {
         return false;
     }
 
-    /**
-     * is a float Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
-     */
-    @Deprecated
-    @Override
+    /** is a float Real number?
+     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
     final public boolean isFloat() {
         return false;
     }
-
-    /**
-     * is a double Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
-     */
-    @Deprecated
-    @Override
+    
+    /** is a double Real number? 
+     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead. */
     final public boolean isTypeDouble() {
         return false;
     }
 
-    /**
-     * is a double Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
-     */
-    @Deprecated
-    @Override
+    /** is a double Real number?
+     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead. */
     final public boolean isDouble() {
         return false;
     }
-
-    /**
-     * is a long Integer number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
-     */
-    @Deprecated
-    @Override
+    
+    /** is a long Integer number? 
+     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
     final public boolean isTypeLong() {
         return false;
     }
 
-    /**
-     * is a long Integer number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
-     */
-    @Deprecated
-    @Override
+    /** is a long Integer number?
+     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
     final public boolean isLong() {
         return false;
     }
-
+    
+    
     /**
      * Returns true if this integer term is grater that the term provided.
      * For number term argument, the int value is considered.
      */
-    @Override
     public boolean isGreater(Term t) {
         t = t.getTerm();
         if (t instanceof Number) {
-            return value > ((Number) t).intValue();
+            return value>((Number)t).intValue();
         } else if (t instanceof Struct) {
             return false;
-        } else return t instanceof Var;
+        } else if (t instanceof Var) {
+            return true;
+        } else {
+            return false;
+        }
     }
-
+    
     /**
      * Tries to unify a term with the provided term argument.
      * This service is to be used in demonstration context.
      */
-    @Override
     boolean unify(List<Var> vl1, List<Var> vl2, Term t, boolean isOccursCheckEnabled) {
         t = t.getTerm();
         if (t instanceof Var) {
@@ -200,8 +161,7 @@ public class Int extends Number {
             return false;
         }
     }
-
-    @Override
+    
     public String toString() {
         return Integer.toString(value);
     }
@@ -209,14 +169,12 @@ public class Int extends Number {
     /**
      * @author Paolo Contessi
      */
-    @Override
     public int compareTo(Number o) {
         return (new java.lang.Integer(value)).compareTo(o.intValue());
     }
 
-    @Override
-    boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
-        return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
-    }
-
+	@Override
+	boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
+		return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
+	}
 }

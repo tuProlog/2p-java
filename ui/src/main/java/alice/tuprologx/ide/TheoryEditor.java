@@ -1,98 +1,104 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.InvalidTheoryException;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.net.URL;
+
+import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.net.URL;
-
 public class TheoryEditor
-        extends JPanel {
-
+    extends JPanel
+{
+    
     private static final long serialVersionUID = 1L;
 
     /**
-     * The Prolog engine referenced by the editor.
-     */
+	 * The Prolog engine referenced by the editor.
+	 */
     private Prolog engine;
     /**
-     * The edit area used by the editor.
-     */
+	 * The edit area used by the editor.
+	 */
     private TheoryEditArea editArea;
     /**
-     * Used for components interested in changes of console's properties.
-     */
+	 * Used for components interested in changes of console's properties.
+	 */
     private PropertyChangeSupport propertyChangeSupport;
 
-    private IDE ide;
+   private IDE ide;
 
     private JLabel caretLineLabel;
     private JButton bSetTheory;
 
-    public TheoryEditor(IDE ide) {
+    public TheoryEditor(IDE ide)
+    {
         initComponents();
         this.ide = ide;
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    private void initComponents() {
+    private void initComponents()
+    {
         setLayout(new BorderLayout());
         JPanel caretPanel = new JPanel();
-        add(caretPanel, BorderLayout.WEST);
+        add(caretPanel,BorderLayout.WEST);
         JPanel buttonsPanel = new JPanel();
-        add(buttonsPanel, BorderLayout.EAST);
-        add(new JSeparator(), BorderLayout.SOUTH);
+        add(buttonsPanel,BorderLayout.EAST);
+        add(new JSeparator(),BorderLayout.SOUTH);
 
         caretLineLabel = new JLabel("Line: ");
         caretPanel.add(caretLineLabel);
 
-        JButton bGetTheory = new JButton();
+        JButton bGetTheory=new JButton();
         URL urlImage = getClass().getResource("img/GetTheory20.png");
         bGetTheory.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bGetTheory.setToolTipText("Get Theory");
-        bGetTheory.setPreferredSize(new Dimension(32, 32));
-        bGetTheory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
+        bGetTheory.setPreferredSize(new Dimension(32,32));
+        bGetTheory.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
                 getEngineTheory();
             }
         });
-        bSetTheory = new JButton();
+        bSetTheory=new JButton();
         urlImage = getClass().getResource("img/SetTheory20.png");
         bSetTheory.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bSetTheory.setToolTipText("Set Theory");
-        bSetTheory.setPreferredSize(new Dimension(32, 32));
-        bSetTheory.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
+        bSetTheory.setPreferredSize(new Dimension(32,32));
+        bSetTheory.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
                 setEngineTheory();
             }
         });
-        JButton bUndo = new JButton();
+        JButton bUndo=new JButton();
         urlImage = getClass().getResource("img/Undo20.png");
         bUndo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bUndo.setToolTipText("Undo Edit Action");
-        bUndo.setPreferredSize(new Dimension(32, 32));
-        bUndo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
+        bUndo.setPreferredSize(new Dimension(32,32));
+        bUndo.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
                 undo();
             }
         });
-        JButton bRedo = new JButton();
+        JButton bRedo=new JButton();
         urlImage = getClass().getResource("img/Redo20.png");
         bRedo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bRedo.setToolTipText("Redo Edit Action");
-        bRedo.setPreferredSize(new Dimension(32, 32));
-        bRedo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
+        bRedo.setPreferredSize(new Dimension(32,32));
+        bRedo.addActionListener(new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
                 redo();
             }
         });
@@ -103,19 +109,17 @@ public class TheoryEditor
     }
 
     /**
-     * Get the Prolog engine referenced by the editor.
-     *
-     * @return The Prolog engine referenced by the editor.
-     */
+	 * Get the Prolog engine referenced by the editor.
+	 * @return  The Prolog engine referenced by the editor.
+	 */
     public Prolog getEngine() {
         return engine;
     }
 
     /**
-     * Set the Prolog engine referenced by the editor.
-     *
-     * @param engine an <code>alice.tuprolog.Prolog</code> engine.
-     */
+	 * Set the Prolog engine referenced by the editor.
+	 * @param engine  an <code>alice.tuprolog.Prolog</code> engine.
+	 */
     public void setEngine(Prolog engine) {
         this.engine = engine;
     }
@@ -129,21 +133,18 @@ public class TheoryEditor
         propertyChangeSupport.firePropertyChange("StatusMessage", "", message);
     }
 
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     /**
-     * Set the edit area used by the editor to manipulate the text of Prolog theories.
-     *
-     * @param editArea The edit area we want the editor to use.
-     */
+	 * Set the edit area used by the editor to manipulate the text of Prolog theories.
+	 * @param editArea  The edit area we want the editor to use.
+	 */
     public void setEditArea(TheoryEditArea editArea) {
         this.editArea = editArea;
     }
@@ -161,9 +162,9 @@ public class TheoryEditor
             setStatusMessage("New theory accepted.");
         } catch (InvalidTheoryException ite) {
             setStatusMessage("Error setting theory: Syntax Error at/before line " + ite.line);
-        }
+        } 
     }
-
+    
     /**
      * Get the theory currently contained in the tuProlog engine referenced by
      * the editor and display it in the edit area.
@@ -193,7 +194,7 @@ public class TheoryEditor
      * @param caretLine The line number to be displayed.
      */
     public void setCaretLine(int caretLine) {
-        caretLineLabel.setText("Line: " + caretLine);
+        caretLineLabel.setText("Line: "+caretLine);
     }
 
     /**

@@ -18,127 +18,133 @@
 
 package alice.tuprolog;
 
-import alice.tuprolog.interfaces.IEngine;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import alice.tuprolog.interfaces.IEngine;
 
 /**
  * @author Alex Benini
  */
-public class Engine implements IEngine {
+public class Engine implements IEngine {    
+	
+	int nDemoSteps; //Alberto
+	int nResultAsked; //Alberto
+	boolean hasOpenAlternatives; //Alberto
+	boolean mustStop;
+	State nextState;
+	Term query;
+	Struct startGoal;
+	Collection<Var> goalVars;
+	ExecutionContext currentContext; 
+	ChoicePointContext currentAlternative;
+	ChoicePointStore choicePointSelector;
+	EngineRunner manager;
+	long maxTime = 0;
 
-    int nDemoSteps; //Alberto
-    int nResultAsked; //Alberto
-    boolean hasOpenAlternatives; //Alberto
-    boolean mustStop;
-    State nextState;
-    Term query;
-    Struct startGoal;
-    Collection<Var> goalVars;
-    ExecutionContext currentContext;
-    ChoicePointContext currentAlternative;
-    ChoicePointStore choicePointSelector;
-    EngineRunner manager;
+	public Engine(EngineRunner manager, Term query) {
+		this.manager = manager;        
+		this.nextState = manager.INIT;
+		this.query = query;
+		this.mustStop = false;
+		this.manager.getTheoryManager().clearRetractDB();
+	}
 
-    public Engine(EngineRunner manager, Term query) {
-        this.manager = manager;
-        this.nextState = manager.INIT;
-        this.query = query;
-        this.mustStop = false;
-        this.manager.getTheoryManager().clearRetractDB();
-    }
+	//Alberto
+	public int getNDemoSteps(){
+		return nDemoSteps;
+	}
+	
+	//Alberto
+	public int getNResultAsked(){
+		return nResultAsked;
+	}
+	
+	//Alberto
+	public boolean hasOpenAlternatives(){
+		return hasOpenAlternatives;
+	}
 
-    //Alberto
-    public int getNDemoSteps() {
-        return nDemoSteps;
-    }
+	public String toString() {
+		try {
+			return	"ExecutionStack: \n"+currentContext+"\n"+
+					"ChoicePointStore: \n"+choicePointSelector+"\n\n";
+		} 
+		catch(Exception ex) { 
+			return ""; 
+		}
+	}
 
-    //Alberto
-    public int getNResultAsked() {
-        return nResultAsked;
-    }
+	void mustStop() {
+		mustStop = true;
+	}
 
-    //Alberto
-    public boolean hasOpenAlternatives() {
-        return hasOpenAlternatives;
-    }
+	/**
+	 * Core of engine. Finite State Machine
+	 */
+	StateEnd run() {
+		String action;
+		long startTime = System.currentTimeMillis();
+		do {
+			if(this.maxTime > 0 && checktime(startTime)){
+				nextState = manager.END_TIMED_OUT;
+				break;
+			} 
+			if (mustStop) {
+				nextState = manager.END_FALSE;
+				break;
+			}
+			action = nextState.toString(); 
+			nextState.doJob(this);
+			manager.spy(action, this);
 
-    @Override
-    public String toString() {
-        try {
-            return "ExecutionStack: \n" + currentContext + "\n" +
-                    "ChoicePointStore: \n" + choicePointSelector + "\n\n";
-        } catch (Exception ex) {
-            return "";
-        }
-    }
+		} while (!(nextState instanceof StateEnd));
+		nextState.doJob(this);
+		
+		return (StateEnd)(nextState);
+	}
 
-    void mustStop() {
-        mustStop = true;
-    }
+	private boolean checktime(long startTime) {
+		//long current = System.currentTimeMillis();
+		//System.out.println("startTime: "+startTime+" "+"current: "+current+" "+this.maxTime+" "+nextState);
+		return (System.currentTimeMillis() - startTime) > this.maxTime;
+	}
 
-    /**
-     * Core of engine. Finite State Machine
-     */
-    StateEnd run() {
-        String action;
+	public Term getQuery() {
+		return query;
+	}
 
-        do {
-            if (mustStop) {
-                nextState = manager.END_FALSE;
-                break;
-            }
-            action = nextState.toString();
+	public int getNumDemoSteps() {
+		return nDemoSteps;
+	}
 
-            nextState.doJob(this);
-            manager.spy(action, this);
+	public List<ExecutionContext> getExecutionStack() {
+		ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
+		ExecutionContext t = currentContext;
+		while (t != null) {
+			l.add(t);
+			t = t.fatherCtx;
+		}
+		return l;
+	}
 
+	public ChoicePointStore getChoicePointStore() {
+		return choicePointSelector;
+	}
 
-        } while (!(nextState instanceof StateEnd));
-        nextState.doJob(this);
+	void prepareGoal() {
+		LinkedHashMap<Var,Var> goalVars = new LinkedHashMap<Var, Var>();
+		startGoal = (Struct)(query).copyGoal(goalVars,0);
+		this.goalVars = goalVars.values();
+	}
 
-        return (StateEnd) (nextState);
-    }
-
-    public Term getQuery() {
-        return query;
-    }
-
-    public int getNumDemoSteps() {
-        return nDemoSteps;
-    }
-
-    public List<ExecutionContext> getExecutionStack() {
-        ArrayList<ExecutionContext> l = new ArrayList<ExecutionContext>();
-        ExecutionContext t = currentContext;
-        while (t != null) {
-            l.add(t);
-            t = t.fatherCtx;
-        }
-        return l;
-    }
-
-    public ChoicePointStore getChoicePointStore() {
-        return choicePointSelector;
-    }
-
-    void prepareGoal() {
-        LinkedHashMap<Var, Var> goalVars = new LinkedHashMap<Var, Var>();
-        startGoal = (Struct) (query).copyGoal(goalVars, 0);
-        this.goalVars = goalVars.values();
-    }
-
-    void initialize(ExecutionContext eCtx) {
-        currentContext = eCtx;
-        choicePointSelector = new ChoicePointStore();
-        nDemoSteps = 1;
-        currentAlternative = null;
-    }
-
-    public String getNextStateName() {
-        return nextState.stateName;
-    }
+	void initialize(ExecutionContext eCtx) {
+		currentContext = eCtx;
+		choicePointSelector = new ChoicePointStore();
+		nDemoSteps = 1;
+		currentAlternative = null;
+	}
+	
+	public String getNextStateName(){
+		return nextState.stateName;
+	}
 }

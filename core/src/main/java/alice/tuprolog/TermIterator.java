@@ -15,10 +15,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import alice.tuprolog.exceptions.InvalidTermException;
 
 /**
  * This class represents an iterator of terms from Prolog text embedded
@@ -31,18 +34,19 @@ import java.util.NoSuchElementException;
  * of already produced terms.
  */
 class TermIterator implements Iterator<Term>, java.io.Serializable {
-    private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = 1L;
+	
     private Parser parser;
     private boolean hasNext;
     private Term next;
-
+    
     TermIterator(Parser p) {
         parser = p;
         next = parser.nextTerm(true);
-        hasNext = (next != null);
+        hasNext = (next != null);    
     }
-
-    @Override
+    
     public Term next() {
         if (hasNext) {
             if (next == null) {
@@ -54,20 +58,20 @@ class TermIterator implements Iterator<Term>, java.io.Serializable {
             Term temp = next;
             next = null;
             return temp;
-        } else if (hasNext()) {
-            hasNext = false;
-            Term temp = next;
-            next = null;
-            return temp;
-        }
+        } else
+            if (hasNext()) {
+                hasNext = false;
+                Term temp = next;
+                next = null;
+                return temp;
+            }
         throw new NoSuchElementException();
     }
-
+    
     /**
      * @throws InvalidTermException if, while the parser checks for the
-     *                              existence of the next term, a syntax error is encountered.
+     * existence of the next term, a syntax error is encountered.
      */
-    @Override
     public boolean hasNext() {
         if (hasNext)
             return hasNext;
@@ -76,10 +80,9 @@ class TermIterator implements Iterator<Term>, java.io.Serializable {
             hasNext = true;
         return hasNext;
     }
-
-    @Override
+    
     public void remove() {
         throw new UnsupportedOperationException();
     }
-
+    
 }

@@ -20,19 +20,18 @@ package alice.tuprolog;
 
 /**
  * @author Alex Benini
- * <p>
+ *
  * Template for states of Core Engine
  */
 abstract class State {
-
+    
     protected EngineRunner c;
     protected String stateName;
-
+    
     abstract void doJob(Engine e);
-
-    @Override
+    
     public String toString() {
         return stateName;
     }
-
+    
 }

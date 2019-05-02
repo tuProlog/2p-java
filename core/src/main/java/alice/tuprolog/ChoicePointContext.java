@@ -15,51 +15,43 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
+import java.util.*;
+
+import alice.tuprolog.interfaces.SubGoalId;
 import alice.util.OneWayList;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * @author Alex Benini
  */
 public class ChoicePointContext {
-
+    
     ClauseStore compatibleGoals;
     ExecutionContext executionContext;
     ChoicePointContext prevChoicePointContext;
     SubGoalId indexSubGoal;
     OneWayList<List<Var>> varsToDeunify;
-
-
-    @Override
-    public String toString() {
-        return "     ChoicePointId: " + executionContext.getId() + ":" + indexSubGoal + "\n" +
-                //"varsToDeunify: "+getVarsToDeunify()+"\n"+
-                "     compGoals:     " + compatibleGoals + "\n";
+    
+    public String toString(){
+        return "     ChoicePointId: "+executionContext.getId()+":"+indexSubGoal+"\n"+
+               "     varsToDeunify: "+getVarsToDeunify()+"\n"+
+               "     compGoals:     "+compatibleGoals+"\n";
     }
-
-    /*
-     * Methods for spyListeners
-     */
-
-
+   
     public ClauseStore getCompatibleGoals() {
         return compatibleGoals;
     }
-
-
+    
     public ExecutionContext getExecutionContext() {
         return executionContext;
     }
-
+    
     public SubGoalId getIndexBack() {
         return indexSubGoal;
     }
-
+    
     public List<List<Var>> getVarsToDeunify() {
         ArrayList<List<Var>> l = new ArrayList<List<Var>>();
         OneWayList<List<Var>> t = varsToDeunify;

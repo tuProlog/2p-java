@@ -19,9 +19,8 @@ package alice.tuprologx.ide;
 
 /**
  * This interface is not public, since it is intended for internal use, and could be subject to several changes in future releases.
- *
- * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version 1.0 - 14-nov-02
+ * @author     <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version     1.0 - 14-nov-02
  */
 
 interface InputField {
@@ -30,7 +29,7 @@ interface InputField {
      * Since the solve() method must be placed in a class implementing the
      * InputField interface, I need a reference to the Console where output,
      * solveInfo, tuProlog engine and the ProcessInput thread are placed.
-     * <p>
+     *
      * This behaviour will change as soon as there will be no need of
      * separate input components for .NET and Java2, i.e. as soon as
      * the AltGr bug in Thinlet, preventing the use of italian keycombo
@@ -39,10 +38,9 @@ interface InputField {
     void setConsole(ConsoleManager console);
 
     /**
-     * Get the goal displayed in the input field.
-     *
-     * @return The goal displayed in the input field.
-     */
+	 * Get the goal displayed in the input field.
+	 * @return  The goal displayed in the input field.
+	 */
     public String getGoal();
 
     /**

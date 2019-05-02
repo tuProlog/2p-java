@@ -18,17 +18,20 @@
 
 package alice.tuprolog;
 
-import alice.util.OneWayList;
+import java.util.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import alice.tuprolog.Struct;
+import alice.tuprolog.interfaces.SubGoalId;
+import alice.util.OneWayList;
 
 
 /**
+ * 
  * @author Alex Benini
  */
 public class ExecutionContext {
-
+    
+    private int id;
     int depth;
     Struct currentGoal;
     ExecutionContext fatherCtx;
@@ -40,49 +43,45 @@ public class ExecutionContext {
     OneWayList<List<Var>> fatherVarsList;
     ChoicePointContext choicePointAfterCut;
     boolean haveAlternatives;
-    private int id;
-
+    
     ExecutionContext(int id) {
-        this.id = id;
+        this.id=id;
     }
-
-    public int getId() {
-        return id;
+    
+    public int getId() { return id; }
+    
+    public String toString(){
+        return "        id: "+id+"\n"+
+        "      currentGoal: "+currentGoal+"\n"+
+        "           clause: "+clause+"\n"+
+        "     subGoalStore: "+goalsToEval+"\n"+
+        "     trailingVars: "+trailingVars+"\n";
     }
-
-    @Override
-    public String toString() {
-        return "        id: " + id + "\n" +
-                "      currentGoal: " + currentGoal + "\n" +
-                "           clause: " + clause + "\n" +
-                "     subGoalStore: " + goalsToEval + "\n" +
-                "     trailingVars: " + trailingVars + "\n";
-    }
-
+    
     public int getDepth() {
         return depth;
     }
-
+    
     public Struct getCurrentGoal() {
         return currentGoal;
     }
-
+    
     public SubGoalId getFatherGoalId() {
         return fatherGoalId;
     }
-
+    
     public Struct getClause() {
         return clause;
     }
-
+    
     public Struct getHeadClause() {
         return headClause;
     }
-
+    
     public SubGoalStore getSubGoalStore() {
         return goalsToEval;
     }
-
+    
     public List<List<Var>> getTrailingVars() {
         ArrayList<List<Var>> l = new ArrayList<List<Var>>();
         OneWayList<List<Var>> t = trailingVars;
@@ -90,9 +89,9 @@ public class ExecutionContext {
             l.add(t.getHead());
             t = t.getTail();
         }
-        return l;
+        return l;        
     }
-
+    
     /**
      * Save the state of the parent context to later bring the ExectutionContext
      * objects tree in a consistent state after a backtracking step.
@@ -103,28 +102,32 @@ public class ExecutionContext {
             fatherVarsList = fatherCtx.trailingVars;
         }
     }
-
+   
     /**
      * If no open alternatives, no other term to execute and
      * current context doesn't contain as current goal a catch or java_catch predicate ->
      * current context no more needed ->
      * reused to execute g subgoal =>
-     * got TAIL RECURSION OPTIMIZATION!
+     * got TAIL RECURSION OPTIMIZATION!   
      */
-
+   
     //Alberto
-    boolean tryToPerformTailRecursionOptimization(Engine e) {
-        if (!haveAlternatives && e.currentContext.goalsToEval.getCurSGId() == null && !e.currentContext.goalsToEval.haveSubGoals() && !(e.currentContext.currentGoal.getName().equalsIgnoreCase("catch") || e.currentContext.currentGoal.getName().equalsIgnoreCase("java_catch"))) {
-            fatherCtx = e.currentContext.fatherCtx;
-            depth = e.currentContext.depth;
-            return true;
-        } else
-            return false;
+    boolean tryToPerformTailRecursionOptimization(Engine e)
+    {
+    	if(!haveAlternatives && e.currentContext.goalsToEval.getCurSGId() == null && !e.currentContext.goalsToEval.haveSubGoals() && !(e.currentContext.currentGoal.getName().equalsIgnoreCase("catch") || e.currentContext.currentGoal.getName().equalsIgnoreCase("java_catch")))
+    	{
+    		fatherCtx = e.currentContext.fatherCtx;
+    		depth = e.currentContext.depth;
+    		return true;
+    	}
+    	else
+    		return false;
     }
 
     //Alberto
-    void updateContextAndDepth(Engine e) {
-        fatherCtx = e.currentContext;
-        depth = e.currentContext.depth + 1;
-    }
+	void updateContextAndDepth(Engine e)
+	{
+		fatherCtx = e.currentContext;
+        depth = e.currentContext.depth +1; 
+	}
 }

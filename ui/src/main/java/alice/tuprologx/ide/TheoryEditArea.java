@@ -19,26 +19,30 @@ package alice.tuprologx.ide;
 
 /**
  * An interface to an edit area for Prolog theories.<br> This interface is not public, since it is intended for internal use, and could be subject to several changes in future releases.
- *
- * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version 1.0 - 13-nov-02
+ * @author     <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version     1.0 - 13-nov-02
  */
 
 interface TheoryEditArea {
 
     /**
-     * Get the displayed theory as a <code>java.lang.String</code>.
-     *
-     * @return the displayed theory as a <code>java.lang.String</code>.
-     */
+	 * Display a theory in the edit area.
+	 * @param theory  The theory to be displayed in the edit area.
+	 */
+    public void setTheory(String theory);
+
+    /**
+	 * Get the displayed theory as a <code>java.lang.String</code>.
+	 * @return  the displayed theory as a <code>java.lang.String</code>.
+	 */
     public String getTheory();
 
     /**
-     * Display a theory in the edit area.
+     * Set the line number corresponding to the caret's current position.
      *
-     * @param theory The theory to be displayed in the edit area.
+     * @param caretLine The line number corresponding to the caret's current position.
      */
-    public void setTheory(String theory);
+    public void setCaretLine(int caretLine);
 
     /**
      * Get the line number corresponding to the caret's current position.
@@ -48,11 +52,13 @@ interface TheoryEditArea {
     public int getCaretLine();
 
     /**
-     * Set the line number corresponding to the caret's current position.
+     * Set the dirty flag for the theory contained in the edit area.
      *
-     * @param caretLine The line number corresponding to the caret's current position.
+     * @param flag <code>true</code> if the theory has been modified after
+     * the last Set Theory operation,
+     * <code>false</code> otherwise.
      */
-    public void setCaretLine(int caretLine);
+    public void setDirty(boolean flag);
 
     /**
      * Check if the theory in the edit area has been modified after the
@@ -63,15 +69,6 @@ interface TheoryEditArea {
      * <code>false</code> otherwise.
      */
     public boolean isDirty();
-
-    /**
-     * Set the dirty flag for the theory contained in the edit area.
-     *
-     * @param flag <code>true</code> if the theory has been modified after
-     *             the last Set Theory operation,
-     *             <code>false</code> otherwise.
-     */
-    public void setDirty(boolean flag);
 
     /**
      * Undo last action in the edit area.

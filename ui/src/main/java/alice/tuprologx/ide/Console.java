@@ -1,22 +1,18 @@
 package alice.tuprologx.ide;
 
 /**
- * @author ale
+ * @author  ale
  */
 
-public interface Console {
+public interface Console
+{
     public boolean hasOpenAlternatives();
-
     public void enableTheoryCommands(boolean flag);
-
     public void getNextSolution();
-
     public void acceptSolution();
-
     public void stopEngine();
-
     /**
-     * @uml.property name="goal"
-     */
+	 * @uml.property  name="goal"
+	 */
     public String getGoal();
 }

@@ -20,25 +20,27 @@ package alice.tuprolog.event;
 import alice.tuprolog.Prolog;
 
 /**
+ * 
  * This class represents events concerning library management.
- *
+ * 
  * @since 1.3
+ * 
  */
 public class LibraryEvent extends PrologEvent {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
     private String libName;
-
-    public LibraryEvent(Prolog source, String libName) {
+    
+    public LibraryEvent(Prolog source, String libName){
         super(source);
-        this.libName = libName;
+        this.libName = libName; 
     }
-
+    
     /**
      * Gets the library name (loaded or unloaded).
-     *
+     * 
      * @return library name
      */
-    public String getLibraryName() {
+    public String getLibraryName(){
         return libName;
     }
 }

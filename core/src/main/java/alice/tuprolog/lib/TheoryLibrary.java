@@ -16,30 +16,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog.lib;
-
-import alice.tuprolog.Library;
-import alice.tuprolog.Theory;
+import alice.tuprolog.*;
 
 /**
  * Library built from Prolog theory.
+ * 
  */
 public class TheoryLibrary extends Library {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
     private Theory th;
     private String name;
-
-    public TheoryLibrary(String name, Theory theory) {
+    
+    public TheoryLibrary(String name, Theory theory){
         this.th = theory;
         this.name = name;
     }
-
-    @Override
-    public String getTheory() {
+    
+    public String getTheory(){
         return th.toString();
     }
-
-    @Override
-    public String getName() {
+    
+    public String getName(){
         return name;
     }
 }

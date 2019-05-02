@@ -18,268 +18,189 @@
 
 package alice.tuprolog;
 
+import java.io.Serializable;
+import java.util.AbstractMap;
+//import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Collection;
+import java.util.IdentityHashMap;
+import java.util.List;
+
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.interfaces.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.OneWayList;
 
-import java.io.Serializable;
-import java.util.*;
-
-//import java.util.ArrayList;
-
 /**
  * Term class is the root abstract class for prolog data type
- *
  * @see Struct
  * @see Var
- * @see Number
+ * @see  Number
  */
 public abstract class Term implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
     // true and false constants
-    public static final Term TRUE = new Struct("true");
-    public static final Term FALSE = new Struct("false");
-    private static final long serialVersionUID = 1L;
-
+    public static final Term TRUE  = new Struct("true");
+    public static final Term FALSE = new Struct("false");   
+    
     //boolean isCyclic = false; //Alberto -> da usare quando si supporteranno i termini ciclici
-
+     
     // checking type and properties of the Term
-
-    /**
-     * Static service to create a Term from a string.
-     *
-     * @param st the string representation of the term
-     * @return the term represented by the string
-     * @throws InvalidTermException if the string does not represent a valid term
-     */
-    public static Term createTerm(String st) {
-        return Parser.parseSingleTerm(st);
-    }
-
-    /**
-     * @deprecated Use {@link Term#createTerm(String)} instead.
-     */
-    @Deprecated
-    public static Term parse(String st) {
-        return Term.createTerm(st);
-    }
-
-    /**
-     * Static service to create a Term from a string, providing an
-     * external operator manager.
-     *
-     * @param st the string representation of the term
-     * @param op the operator manager used to build the term
-     * @return the term represented by the string
-     * @throws InvalidTermException if the string does not represent a valid term
-     */
-    public static Term createTerm(String st, OperatorManager op) {
-        return Parser.parseSingleTerm(st, op);
-    }
-
-    /**
-     * @deprecated Use {@link Term#createTerm(String, OperatorManager)} instead.
-     */
-    @Deprecated
-    public static Term parse(String st, OperatorManager op) {
-        return Term.createTerm(st, op);
-    }
-
-    /**
-     * Gets an iterator providing
-     * a term stream from a source text
-     */
-    public static java.util.Iterator<Term> getIterator(String text) {
-        return new Parser(text).iterator();
-    }
-
-    //Alberto
-    public static Term fromJSON(String jsonString) {
-        if (jsonString.contains("Var")) {
-            return JSONSerializerManager.fromJSON(jsonString, Var.class);
-        } else if (jsonString.contains("Struct")) {
-            return JSONSerializerManager.fromJSON(jsonString, Struct.class);
-        } else if (jsonString.contains("Double")) {
-            return JSONSerializerManager.fromJSON(jsonString, Double.class);
-        } else if (jsonString.contains("Int")) {
-            return JSONSerializerManager.fromJSON(jsonString, Int.class);
-        } else if (jsonString.contains("Long")) {
-            return JSONSerializerManager.fromJSON(jsonString, Long.class);
-        } else if (jsonString.contains("Float")) {
-            return JSONSerializerManager.fromJSON(jsonString, Float.class);
-        } else
-            return null;
-    }
-
+    
     /**
      * is this term a prolog numeric term?
-     *
      * @deprecated Use <tt>instanceof Number</tt> instead.
      */
-    @Deprecated
     public abstract boolean isNumber();
-
+    
     /**
      * is this term a struct?
-     *
-     * @deprecated Use <tt>instanceof Struct</tt> instead.
+     * @deprecated Use <tt>instanceof Struct</tt> instead. 
      */
-    @Deprecated
     public abstract boolean isStruct();
-
+    
     /**
      * is this term a variable?
-     *
-     * @deprecated Use <tt>instanceof Var</tt> instead.
+     * @deprecated Use <tt>instanceof Var</tt> instead. 
      */
-    @Deprecated
     public abstract boolean isVar();
-
-    /**
-     * is this term a null term?
-     */
+    
+    /** is this term a null term?*/
     public abstract boolean isEmptyList();
-
-    /**
-     * is this term a constant prolog term?
-     */
+    
+    /** is this term a constant prolog term? */
     public abstract boolean isAtomic();
-
-    /**
-     * is this term a prolog compound term?
-     */
+    
+    /** is this term a prolog compound term? */
     public abstract boolean isCompound();
-
-    /**
-     * is this term a prolog (alphanumeric) atom?
-     */
+    
+    /** is this term a prolog (alphanumeric) atom? */
     public abstract boolean isAtom();
-
-    /**
-     * is this term a prolog list?
-     */
+    
+    /** is this term a prolog list? */
     public abstract boolean isList();
-
-    /**
-     * is this term a ground term?
-     */
+    
+    /** is this term a ground term? */
     public abstract boolean isGround();
-
+    
     /**
      * Tests for the equality of two object terms
-     * <p>
+     *
      * The comparison follows the same semantic of
      * the isEqual method.
+     *
      */
-    @Override
     public boolean equals(Object t) {
         if (!(t instanceof Term))
             return false;
         return isEqual((Term) t);
     }
-
+    
     /**
      * is term greater than term t?
      */
     public abstract boolean isGreater(Term t);
-
+    
     /**
      * Tests if this term is (logically) equal to another
      */
-    public boolean isEqual(Term t) { //Alberto
-        return this.toString().equals(t.toString());
+    public boolean isEqual(Term t){ //Alberto
+    	return this.toString().equals(t.toString());
     }
-
+    
     /**
      * Tests if this term (as java object) is equal to another
      */
-    public boolean isEqualObject(Term t) { //Alberto
-        if (!(t instanceof Term))
+    public boolean isEqualObject(Term t){ //Alberto
+    	if (!(t instanceof Term))
             return false;
-        else
-            return this == t;
+    	else 
+    		return this == t;
     }
-
+    
     /**
-     * Gets the actual term referred by this Term. if the Term is a bound variable, the method gets the Term linked to the variable
-     */
+	 * Gets the actual term referred by this Term. if the Term is a bound variable, the method gets the Term linked to the variable
+	 */
     public abstract Term getTerm();
-
+    
+    
     /**
      * Unlink variables inside the term
      */
     public abstract void free();
-
+    
+    
     /**
      * Resolves variables inside the term, starting from a specific time count.
-     * <p>
-     * If the variables has been already resolved, no renaming is done.
      *
+     * If the variables has been already resolved, no renaming is done.
      * @param count new starting time count for resolving process
      * @return the new time count, after resolving process
      */
     abstract long resolveTerm(long count);
-
+    
+    
     /**
      * Resolves variables inside the term
-     * <p>
+     * 
      * If the variables has been already resolved, no renaming is done.
      */
     public void resolveTerm() {
         resolveTerm(System.currentTimeMillis());
     }
-
-    //Alberto
-
+    
+    
     /**
      * gets a engine's copy of this term.
-     *
      * @param idExecCtx Execution Context identified
      */
-    public Term copyGoal(AbstractMap<Var, Var> vars, int idExecCtx) {
-        return copy(vars, idExecCtx);
+    public Term copyGoal(AbstractMap<Var,Var> vars, int idExecCtx) {
+        return copy(vars,idExecCtx);
     }
-
+    
+    
     /**
      * gets a copy of this term for the output
      */
     public Term copyResult(Collection<Var> goalVars, List<Var> resultVars) {
-        IdentityHashMap<Var, Var> originals = new IdentityHashMap<Var, Var>();
-        for (Var key : goalVars) {
+        IdentityHashMap<Var,Var> originals = new IdentityHashMap<Var,Var>();
+        for (Var key: goalVars) 
+        {
             Var clone = new Var();
-            if (!key.isAnonymous()) {
-                clone = new Var(key.getOriginalName());
+            if (!key.isAnonymous())
+            {
+                clone =  new Var(key.getOriginalName()); 
             }
-            originals.put(key, clone);
+            originals.put(key,clone);
             resultVars.add(clone);
         }
-        return copy(originals, new IdentityHashMap<Term, Var>());
+        return copy(originals,new IdentityHashMap<Term,Var>());
     }
-
-    //Alberto
-
+    
+    
     /**
      * gets a copy (with renamed variables) of the term.
-     * <p>
+     *
      * The list argument passed contains the list of variables to be renamed
      * (if empty list then no renaming)
-     *
      * @param idExecCtx Execution Context identifier
      */
-    abstract Term copy(AbstractMap<Var, Var> vMap, int idExecCtx);
-
+    abstract Term copy(AbstractMap<Var,Var> vMap, int idExecCtx);
+    
     //Alberto
-    public abstract Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx);
-
+    public abstract Term copyAndRetainFreeVar(AbstractMap<Var,Var> vMap, int idExecCtx);
+    
     /**
      * gets a copy for result.
      */
-    abstract Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap);
-
+    abstract Term copy(AbstractMap<Var,Var> vMap, AbstractMap<Term,Var> substMap);
+    
     /**
      * Try to unify two terms
-     *
      * @param mediator have the reference of EngineManager
-     * @param t1       the term to unify
+     * @param t1 the term to unify
      * @return true if the term is unifiable with this one
      */
     public boolean unify(Prolog mediator, Term t1) {
@@ -288,28 +209,28 @@ public abstract class Term implements Serializable {
         t1.resolveTerm();
         List<Var> v1 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
         List<Var> v2 = new LinkedList<Var>(); /* Reviewed by: Paolo Contessi (was: ArrayList()) */
-        boolean ok = unify(v1, v2, t1, mediator.getFlagManager().isOccursCheckEnabled());
+        boolean ok = unify(v1,v2,t1, mediator.getFlagManager().isOccursCheckEnabled());
         if (ok) {
             ExecutionContext ec = engine.getCurrentContext();
             if (ec != null) {
-                int id = (engine.getEnv() == null) ? Var.PROGRESSIVE : engine.getEnv().nDemoSteps;
+                int id = (engine.getEnv()==null)? Var.PROGRESSIVE : engine.getEnv().nDemoSteps;
                 // Update trailingVars
-                ec.trailingVars = new OneWayList<List<Var>>(v1, ec.trailingVars);
+                ec.trailingVars = new OneWayList<List<Var>>(v1,ec.trailingVars);
                 // Renaming after unify because its utility regards not the engine but the user
                 int count = 0;
-                for (Var v : v1) {
-                    v.rename(id, count);
-                    if (id >= 0) {
+                for(Var v:v1){
+                    v.rename(id,count);
+                    if(id>=0){
                         id++;
-                    } else {
+                    }else{
                         count++;
                     }
                 }
-                for (Var v : v2) {
-                    v.rename(id, count);
-                    if (id >= 0) {
+                for(Var v:v2){
+                    v.rename(id,count);
+                    if(id>=0){
                         id++;
-                    } else {
+                    }else{
                         count++;
                     }
                 }
@@ -318,16 +239,17 @@ public abstract class Term implements Serializable {
         }
         Var.free(v1);
         Var.free(v2);
-        return false;
+    	return false;
     }
+    
+    //Alberto
 
-    /**
+	/**
      * Tests if this term is unifiable with an other term.
      * No unification is done.
-     * <p>
-     * The test is done outside any demonstration context
      *
-     * @param t                    the term to checked
+     * The test is done outside any demonstration context 
+     * @param t the term to checked
      * @param isOccursCheckEnabled
      * @return true if the term is unifiable with this one
      */
@@ -336,79 +258,119 @@ public abstract class Term implements Serializable {
         t.resolveTerm();
         List<Var> v1 = new LinkedList<Var>();
         List<Var> v2 = new LinkedList<Var>();
-        boolean ok = unify(v1, v2, t, isOccursCheckEnabled);
+        boolean ok = unify(v1,v2,t, isOccursCheckEnabled);
         Var.free(v1);
         Var.free(v2);
         return ok;
     }
-
+    
     /**
      * Tests if this term is unifiable with an other term.
      * No unification is done.
-     * <p>
-     * The test is done outside any demonstration context
      *
+     * The test is done outside any demonstration context 
      * @param t the term to checked
      * @return true if the term is unifiable with this one
      */
     public boolean match(Term t) {
         return match(true, t); //Alberto
     }
-
+    
+    //Alberto
     /**
      * Tries to unify two terms, given a demonstration context
      * identified by the mark integer.
-     * <p>
-     * Try the unification among the term and the term specified
      *
-     * @param varsUnifiedArg1      Vars unified in myself
-     * @param varsUnifiedArg2      Vars unified in term t
+     * Try the unification among the term and the term specified
+     * @param varsUnifiedArg1 Vars unified in myself
+     * @param varsUnifiedArg2 Vars unified in term t
      * @param isOccursCheckEnabled
      */
     abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t, boolean isOccursCheckEnabled);
-
-    // term representation
-
+    
     /**
      * Tries to unify two terms, given a demonstration context
      * identified by the mark integer.
-     * <p>
-     * Try the unification among the term and the term specified
      *
+     * Try the unification among the term and the term specified
      * @param varsUnifiedArg1 Vars unified in myself
      * @param varsUnifiedArg2 Vars unified in term t
      */
     abstract boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t);
-
+    
+    /**
+     * Static service to create a Term from a string.
+     * @param st the string representation of the term
+     * @return the term represented by the string
+     * @throws InvalidTermException if the string does not represent a valid term
+     */
+    public static Term createTerm(String st) {
+        return Parser.parseSingleTerm(st);
+    }
+    
+    /**
+     * @deprecated Use {@link Term#createTerm(String)} instead.
+     */
+    public static Term parse(String st) {
+        return Term.createTerm(st);
+    }
+    
+    /**
+     * Static service to create a Term from a string, providing an
+     * external operator manager.
+     * @param st the string representation of the term
+     * @param op the operator manager used to build the term
+     * @return the term represented by the string
+     * @throws InvalidTermException if the string does not represent a valid term
+     */
+    public static Term createTerm(String st, OperatorManager op) {
+        return Parser.parseSingleTerm(st, op);
+    }
+    
+    /**
+     * @deprecated Use {@link Term#createTerm(String, OperatorManager)} instead.
+     */
+    public static Term parse(String st, OperatorManager op) {
+        return Term.createTerm(st, op);
+    }
+    
+    /**
+     * Gets an iterator providing
+     * a term stream from a source text
+     */
+    public static java.util.Iterator<Term> getIterator(String text) {
+        return new Parser(text).iterator();
+    }
+    
+    // term representation
+    
     /**
      * Gets the string representation of this term
      * as an X argument of an operator, considering the associative property.
      */
-    String toStringAsArgX(OperatorManager op, int prio) {
-        return toStringAsArg(op, prio, true);
+    String toStringAsArgX(OperatorManager op,int prio) {
+        return toStringAsArg(op,prio,true);
     }
-
+    
     /**
      * Gets the string representation of this term
      * as an Y argument of an operator, considering the associative property.
      */
-    String toStringAsArgY(OperatorManager op, int prio) {
-        return toStringAsArg(op, prio, false);
+    String toStringAsArgY(OperatorManager op,int prio) {
+        return toStringAsArg(op,prio,false);
     }
-
+    
     /**
      * Gets the string representation of this term
      * as an argument of an operator, considering the associative property.
-     * <p>
-     * If the boolean argument is true, then the term must be considered
-     * as X arg, otherwise as Y arg (referring to prolog associative rules)
+     *
+     *  If the boolean argument is true, then the term must be considered
+     *  as X arg, otherwise as Y arg (referring to prolog associative rules)
      */
-    String toStringAsArg(OperatorManager op, int prio, boolean x) {
+    String toStringAsArg(OperatorManager op,int prio,boolean x) {
         return toString();
     }
-
-    /*Castagna 06/2011*/
-
+    
     /**
      * The iterated-goal term G of a term T is a term defined
      * recursively as follows:
@@ -421,16 +383,34 @@ public abstract class Term implements Serializable {
     public Term iteratedGoalTerm() {
         return this;
     }
-
+    
+    /*Castagna 06/2011*/
     /**
-     * Visitor pattern
-     *
-     * @param tv - Visitor
-     */
-    public abstract void accept(TermVisitor tv);
-
-    //Alberto
-    public String toJSON() {
-        return JSONSerializerManager.toJSON(this);
-    }
+	 * Visitor pattern
+	 * @param tv - Visitor
+	 */
+	public abstract void accept(TermVisitor tv);
+	
+	//Alberto
+	public String toJSON(){
+		return JSONSerializerManager.toJSON(this);
+	}
+		
+	//Alberto
+	public static Term fromJSON(String jsonString){
+		if(jsonString.contains("Var")) {
+			return JSONSerializerManager.fromJSON(jsonString, Var.class);	
+		} else if(jsonString.contains("Struct")) {
+			return JSONSerializerManager.fromJSON(jsonString, Struct.class);
+		} else if(jsonString.contains("Double")) {
+			return JSONSerializerManager.fromJSON(jsonString, Double.class);
+		} else if(jsonString.contains("Int")) {
+			return JSONSerializerManager.fromJSON(jsonString, Int.class);
+		} else if(jsonString.contains("Long")) {
+			return JSONSerializerManager.fromJSON(jsonString, Long.class);
+		} else if(jsonString.contains("Float")) {
+			return JSONSerializerManager.fromJSON(jsonString, Float.class);
+		} else
+			return null;
+	}
 }

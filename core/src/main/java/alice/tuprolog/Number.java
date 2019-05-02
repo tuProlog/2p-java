@@ -15,262 +15,190 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
 package alice.tuprolog;
 
-import java.util.AbstractMap;
+import java.util.*;
+
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.interfaces.TermVisitor;
 
 /**
+ *
  * Number abstract class represents numbers prolog data type
  *
  * @see Int
  * @see Long
  * @see Float
  * @see Double
- * <p>
+ *
  * Reviewed by Paolo Contessi: implements Comparable<Number>
  */
 public abstract class Number extends Term implements Comparable<Number> {
-    private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = 1L;
+    
+    /**
+     *  Returns the value of the number as int
+     */
+    public abstract int intValue();
+    
+    /**
+     *  Returns the value of the number as float
+     */
+    public abstract float floatValue();
+    
+    /**
+     *  Returns the value of the number as long
+     */
+    public abstract long longValue();
+    
+    /**
+     *  Returns the value of the number as double
+     */
+    public abstract double doubleValue();
+    
+    
+    /** is this term a prolog integer term? */
+    public abstract boolean isInteger();
+    
+    /** is this term a prolog real term? */
+    public abstract boolean isReal();
+    
+    /** is an int Integer number? 
+     * @deprecated Use <tt>instanceof Int</tt> instead. */
+    public abstract boolean isTypeInt();
 
+    /** is an int Integer number?
+     * @deprecated Use <tt>instanceof Int</tt> instead. */
+    public abstract boolean isInt();
+    
+    /** is a float Real number? 
+     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
+    public abstract boolean isTypeFloat();
+
+    /** is a float Real number?
+     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead. */
+    public abstract boolean isFloat();
+    
+    /** is a double Real number? 
+     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.*/
+    public abstract boolean isTypeDouble();
+
+    /** is a double Real number?
+     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead. */
+    public abstract boolean isDouble();
+    
+    /** is a long Integer number? 
+     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
+    public abstract boolean isTypeLong();
+
+    /** is a long Integer number?
+     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead. */
+    public abstract boolean isLong();
+    
     public static Number createNumber(String s) {
         Term t = Term.createTerm(s);
         if (t instanceof Number)
             return (Number) t;
         throw new InvalidTermException("Term " + t + " is not a number.");
     }
-
-    /**
-     * Returns the value of the number as int
-     */
-    public abstract int intValue();
-
-    /**
-     * Returns the value of the number as float
-     */
-    public abstract float floatValue();
-
-    /**
-     * Returns the value of the number as long
-     */
-    public abstract long longValue();
-
-    /**
-     * Returns the value of the number as double
-     */
-    public abstract double doubleValue();
-
-    /**
-     * is this term a prolog integer term?
-     */
-    public abstract boolean isInteger();
-
-    //
-
-    /**
-     * is this term a prolog real term?
-     */
-    public abstract boolean isReal();
-
-    /**
-     * is an int Integer number?
-     *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isTypeInt();
-
-    /**
-     * is an int Integer number?
-     *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isInt();
-
-    /**
-     * is a float Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isTypeFloat();
-
-    /**
-     * is a float Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isFloat();
-
-    /**
-     * is a double Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isTypeDouble();
-
-    /**
-     * is a double Real number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isDouble();
-
-    /**
-     * is a long Integer number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isTypeLong();
-
-    /**
-     * is a long Integer number?
-     *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
-     */
-    @Deprecated
-    public abstract boolean isLong();
-
+    
     /**
      * Gets the actual term referred by this Term.
      */
-    @Override
     public Term getTerm() {
         return this;
     }
-
-    // checking type and properties of the Term
-
-    /**
-     * is this term a prolog numeric term?
-     */
-    @Override
+    
+    /** is this term a prolog numeric term? */
     final public boolean isNumber() {
         return true;
     }
-
-    /**
-     * is this term a struct
-     */
-    @Override
+    
+    /** is this term a struct  */
     final public boolean isStruct() {
         return false;
     }
-
-    /**
-     * is this term a variable
-     */
-    @Override
+    
+    /** is this term a variable  */
     final public boolean isVar() {
         return false;
     }
-
-    @Override
+    
     final public boolean isEmptyList() {
         return false;
     }
-
-    //
-
-    /**
-     * is this term a constant prolog term?
-     */
-    @Override
+    
+    /** is this term a constant prolog term? */
     final public boolean isAtomic() {
         return true;
     }
-
-    /**
-     * is this term a prolog compound term?
-     */
-    @Override
+    
+    /** is this term a prolog compound term? */
     final public boolean isCompound() {
         return false;
     }
-
-    /**
-     * is this term a prolog (alphanumeric) atom?
-     */
-    @Override
+    
+    /** is this term a prolog (alphanumeric) atom? */
     final public boolean isAtom() {
         return false;
     }
-
-    /**
-     * is this term a prolog list?
-     */
-    @Override
+    
+    /** is this term a prolog list? */
     final public boolean isList() {
         return false;
     }
-
-    /**
-     * is this term a ground term?
-     */
-    @Override
+    
+    /** is this term a ground term? */
     final public boolean isGround() {
         return true;
     }
-
-
-    //
-
+    
     /**
      * gets a copy of this term.
      */
     public Term copy(int idExecCtx) {
         return this;
     }
-
+    
+    @Override //Alberto
+    public Term copyAndRetainFreeVar(AbstractMap<Var,Var> vMap, int idExecCtx) {
+		return this;
+	}
+    
     /**
      * gets a copy (with renamed variables) of the term.
      * <p>
      * the list argument passed contains the list of variables to be renamed
      * (if empty list then no renaming)
      */
-    @Override
-    Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    Term copy(AbstractMap<Var,Var> vMap, int idExecCtx) {
         return this;
     }
-
+    
+    Term copyClone(AbstractMap<Var,Var> vMap, int idExecCtx) {
+        return this;
+    }
+    
     /**
      * gets a copy of the term.
      */
-    @Override
-    Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    Term copy(AbstractMap<Var,Var> vMap, AbstractMap<Term,Var> substMap) {
         return this;
     }
-
-    @Override
-    public Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx) {
-        // TODO Auto-generated method stub
-        return this;
-    }
-
-
-    @Override
+    
     long resolveTerm(long count) {
         return count;
     }
-
-    /**
-     *
-     */
-    @Override
-    public void free() {
-    }
-
-    void restoreVariables() {
-    }
-
+    
+    public void free() {}
+    
+    void restoreVariables() {}
+    
     /*Castagna 06/2011*/
-    @Override
-    public void accept(TermVisitor tv) {
-        tv.visit(this);
+    @Override    
+    public void accept(TermVisitor tv) {		 
+    	tv.visit(this);		 
     }
-    /**/
 }

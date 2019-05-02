@@ -17,391 +17,145 @@
  */
 package alice.tuprolog.lib;
 
-import alice.tuprolog.Number;
-import alice.tuprolog.*;
-import alice.tuprolog.lib.annotations.OOLibraryEnableLambdas;
-import alice.util.AbstractDynamicClassLoader;
-import alice.util.AndroidDynamicClassLoader;
-import alice.util.InspectionUtils;
-import alice.util.JavaDynamicClassLoader;
-
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Library;
+import alice.tuprolog.Number;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
+import alice.tuprolog.Var;
+import alice.tuprolog.lib.annotations.OOLibraryEnableLambdas;
+import alice.tuprolog.exceptions.InvalidObjectIdException;
+import alice.tuprolog.exceptions.JavaException;
+import alice.util.AbstractDynamicClassLoader;
+import alice.util.AndroidDynamicClassLoader;
+import alice.util.InspectionUtils;
+import alice.util.JavaDynamicClassLoader;
 /**
+ * 
  * This class represents a tuProlog library enabling the interaction with the
  * Java environment from tuProlog.
- * <p>
- * Warning we use the setAccessible method
- * <p>
+ * 
+ * Warning we use the setAccessible method 
+ * 
  * The most specific method algorithm used to find constructors / methods has
  * been inspired by the article "What Is Interactive Scripting?", by Michael
  * Travers Dr. Dobb's -- Software Tools for the Professional Programmer January
  * 2000 CMP Media Inc., a United News and Media Company
- * <p>
+ * 
  * Library/Theory Dependency: BasicLibrary
  */
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") 
 @OOLibraryEnableLambdas(mode = "active") //Alberto
 public class OOLibrary extends Library {
 
     /**
      * java objects referenced by prolog terms (keys)
      */
-    private HashMap<String, Object> currentObjects = new HashMap<String, Object>();
+    private HashMap<String,Object> currentObjects = new HashMap<String, Object>();
     /**
-     * inverse map useful for implementation issue
-     */
-    private IdentityHashMap<Object, Struct> currentObjects_inverse = new IdentityHashMap<Object, Struct>();
+         * inverse map useful for implementation issue
+         */
+    private IdentityHashMap<Object,Struct> currentObjects_inverse = new IdentityHashMap<Object, Struct>();
 
-    private HashMap<String, Object> staticObjects = new HashMap<String, Object>();
-    private IdentityHashMap<Object, Struct> staticObjects_inverse = new IdentityHashMap<Object, Struct>();
+    private HashMap<String,Object> staticObjects = new HashMap<String, Object>();
+    private IdentityHashMap<Object,Struct> staticObjects_inverse = new IdentityHashMap<Object, Struct>();
 
     /**
-     * progressive counter used to identify registered objects
-     */
+         * progressive counter used to identify registered objects
+         */
     private int id = 0;
     /**
      * progressive counter used to generate lambda function dinamically
      */
     private int counter = 0;
-
+    
     private OOLibraryEnableLambdas lambdaPlugin;
-
+    
     /**
-     * @author Alessio Mercurio
-     * <p>
-     * used to manage different classloaders.
-     */
-    private AbstractDynamicClassLoader dynamicLoader;
-
+	 * @author Alessio Mercurio
+	 * 
+	 * used to manage different classloaders.
+	 */
+    private AbstractDynamicClassLoader dynamicLoader;     
+    
     /**
      * library theory
      */
-
-    public OOLibrary() {
-        Class<OOLibrary> ooLibrary = OOLibrary.class;
-        lambdaPlugin = ooLibrary.getAnnotation(OOLibraryEnableLambdas.class);
-
-        if (System.getProperty("java.vm.name").equals("Dalvik")) {
-            dynamicLoader = new AndroidDynamicClassLoader(new URL[]{}, getClass().getClassLoader());
-        } else {
-            dynamicLoader = new JavaDynamicClassLoader(new URL[]{}, getClass().getClassLoader());
-        }
+    
+    public OOLibrary()
+    {
+    	Class<OOLibrary> ooLibrary = OOLibrary.class;
+		lambdaPlugin = ooLibrary.getAnnotation(OOLibraryEnableLambdas.class);
+		
+    	if (System.getProperty("java.vm.name").equals("Dalvik"))
+		{
+			dynamicLoader = new AndroidDynamicClassLoader(new URL[] {}, getClass().getClassLoader());
+		} 
+		else
+		{
+			dynamicLoader = new JavaDynamicClassLoader(new URL[] {}, getClass().getClassLoader());
+		}
     }
-
-    private static Method lookupMethod(Class<?> target, String name,
-                                       Class<?>[] argClasses, Object[] argValues)
-            throws NoSuchMethodException {
-        // first try for exact match
-        try {
-            Method m = target.getMethod(name, argClasses);
-            return m;
-        } catch (NoSuchMethodException e) {
-            if (argClasses.length == 0) { // if no args & no exact match, out of
-                // luck
-                return null;
-            }
-        }
-
-        // go the more complicated route
-        Method[] methods = target.getMethods();
-        Vector<Method> goodMethods = new Vector<Method>();
-        for (int i = 0; i != methods.length; i++) {
-            if (name.equals(methods[i].getName())
-                    && matchClasses(methods[i].getParameterTypes(), argClasses))
-                goodMethods.addElement(methods[i]);
-        }
-        switch (goodMethods.size()) {
-            case 0:
-                // no methods have been found checking for assignability
-                // and (int -> long) conversion. One last chance:
-                // looking for compatible methods considering also
-                // type conversions:
-                // double --> float
-                // (the first found is used - no most specific
-                // method algorithm is applied )
-
-                for (int i = 0; i != methods.length; i++) {
-                    if (name.equals(methods[i].getName())) {
-                        Class<?>[] types = methods[i].getParameterTypes();
-                        Object[] val = matchClasses(types, argClasses, argValues);
-                        if (val != null) {
-                            // found a method compatible
-                            // after type conversions
-                            for (int j = 0; j < types.length; j++) {
-                                argClasses[j] = types[j];
-                                argValues[j] = val[j];
-                            }
-                            return methods[i];
-                        }
-                    }
-                }
-
-                return null;
-            case 1:
-                return goodMethods.firstElement();
-            default:
-                return mostSpecificMethod(goodMethods);
-        }
-    }
-
-    private static Constructor<?> lookupConstructor(Class<?> target,
-                                                    Class<?>[] argClasses, Object[] argValues)
-            throws NoSuchMethodException {
-        // first try for exact match
-        try {
-            return target.getConstructor(argClasses);
-        } catch (NoSuchMethodException e) {
-            if (argClasses.length == 0) { // if no args & no exact match, out of
-                // luck
-                return null;
-            }
-        }
-
-        // go the more complicated route
-        Constructor<?>[] constructors = target.getConstructors();
-        Vector<Constructor<?>> goodConstructors = new Vector<Constructor<?>>();
-        for (int i = 0; i != constructors.length; i++) {
-            if (matchClasses(constructors[i].getParameterTypes(), argClasses))
-                goodConstructors.addElement(constructors[i]);
-        }
-        switch (goodConstructors.size()) {
-            case 0:
-                // no constructors have been found checking for assignability
-                // and (int -> long) conversion. One last chance:
-                // looking for compatible methods considering also
-                // type conversions:
-                // double --> float
-                // (the first found is used - no most specific
-                // method algorithm is applied )
-
-                for (int i = 0; i != constructors.length; i++) {
-                    Class<?>[] types = constructors[i].getParameterTypes();
-                    Object[] val = matchClasses(types, argClasses, argValues);
-                    if (val != null) {
-                        // found a method compatible
-                        // after type conversions
-                        for (int j = 0; j < types.length; j++) {
-                            argClasses[j] = types[j];
-                            argValues[j] = val[j];
-                        }
-                        return constructors[i];
-                    }
-                }
-
-                return null;
-            case 1:
-                return goodConstructors.firstElement();
-            default:
-                return mostSpecificConstructor(goodConstructors);
-        }
-    }
-
-    // 1st arg is from method, 2nd is actual parameters
-    private static boolean matchClasses(Class<?>[] mclasses, Class<?>[] pclasses) {
-        if (mclasses.length == pclasses.length) {
-            for (int i = 0; i != mclasses.length; i++) {
-                if (!matchClass(mclasses[i], pclasses[i])) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean matchClass(Class<?> mclass, Class<?> pclass) {
-        boolean assignable = mclass.isAssignableFrom(pclass);
-        if (assignable) {
-            return true;
-        } else {
-            return mclass.equals(java.lang.Long.TYPE)
-                    && (pclass.equals(Integer.TYPE));
-        }
-    }
-
-    private static Method mostSpecificMethod(Vector<Method> methods)
-            throws NoSuchMethodException {
-        for (int i = 0; i != methods.size(); i++) {
-            for (int j = 0; j != methods.size(); j++) {
-                if ((i != j)
-                        && (moreSpecific(methods.elementAt(i),
-                        methods.elementAt(j)))) {
-                    methods.removeElementAt(j);
-                    if (i > j)
-                        i--;
-                    j--;
-                }
-            }
-        }
-        if (methods.size() == 1)
-            return methods.elementAt(0);
-        else
-            throw new NoSuchMethodException(">1 most specific method");
-    }
-
-    // true if c1 is more specific than c2
-    private static boolean moreSpecific(Method c1, Method c2) {
-        Class<?>[] p1 = c1.getParameterTypes();
-        Class<?>[] p2 = c2.getParameterTypes();
-        int n = p1.length;
-        for (int i = 0; i != n; i++) {
-            if (!matchClass(p2[i], p1[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static Constructor<?> mostSpecificConstructor(Vector<Constructor<?>> constructors)
-            throws NoSuchMethodException {
-        for (int i = 0; i != constructors.size(); i++) {
-            for (int j = 0; j != constructors.size(); j++) {
-                if ((i != j)
-                        && (moreSpecific(constructors.elementAt(i)
-                        , constructors.elementAt(j)))) {
-                    constructors.removeElementAt(j);
-                    if (i > j)
-                        i--;
-                    j--;
-                }
-            }
-        }
-        if (constructors.size() == 1)
-            return constructors.elementAt(0);
-        else
-            throw new NoSuchMethodException(">1 most specific constructor");
-    }
-
-    // true if c1 is more specific than c2
-    private static boolean moreSpecific(Constructor<?> c1, Constructor<?> c2) {
-        Class<?>[] p1 = c1.getParameterTypes();
-        Class<?>[] p2 = c2.getParameterTypes();
-        int n = p1.length;
-        for (int i = 0; i != n; i++) {
-            if (!matchClass(p2[i], p1[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Checks compatibility also considering explicit type conversion.
-    // The method returns the argument values, since they could be changed
-    // after a type conversion.
-    //
-    // In particular the check must be done for the DEFAULT type of tuProlog,
-    // that are int and double; so
-    // (required X, provided a DEFAULT -
-    // with DEFAULT to X conversion 'conceivable':
-    // for instance *double* to *int* is NOT considered good
-    //
-    // required a float, provided an int OK
-    // required a double, provided a int OK
-    // required a long, provided a int ==> already considered by
-    // previous match test
-    // required a float, provided a double OK
-    // required a int, provided a double => NOT CONSIDERED
-    // required a long, provided a double => NOT CONSIDERED
-    //
-    private static Object[] matchClasses(Class<?>[] mclasses, Class<?>[] pclasses,
-                                         Object[] values) {
-        if (mclasses.length == pclasses.length) {
-            Object[] newvalues = new Object[mclasses.length];
-
-            for (int i = 0; i != mclasses.length; i++) {
-                boolean assignable = mclasses[i].isAssignableFrom(pclasses[i]);
-                if (assignable
-                        || (mclasses[i].equals(java.lang.Long.TYPE) && pclasses[i]
-                        .equals(java.lang.Integer.TYPE))) {
-                    newvalues[i] = values[i];
-                } else if (mclasses[i].equals(java.lang.Float.TYPE)
-                        && pclasses[i].equals(java.lang.Double.TYPE)) {
-                    // arg required: a float, arg provided: a double
-                    // so we need an explicit conversion...
-                    newvalues[i] = new java.lang.Float(
-                            ((java.lang.Double) values[i]).floatValue());
-                } else if (mclasses[i].equals(java.lang.Float.TYPE)
-                        && pclasses[i].equals(java.lang.Integer.TYPE)) {
-                    // arg required: a float, arg provided: an int
-                    // so we need an explicit conversion...
-                    newvalues[i] = new java.lang.Float(
-                            ((java.lang.Integer) values[i]).intValue());
-                } else if (mclasses[i].equals(java.lang.Double.TYPE)
-                        && pclasses[i].equals(java.lang.Integer.TYPE)) {
-                    // arg required: a double, arg provided: an int
-                    // so we need an explicit conversion...
-                    newvalues[i] = new java.lang.Double(
-                            ((java.lang.Integer) values[i]).doubleValue());
-                } else if (values[i] == null && !mclasses[i].isPrimitive()) {
-                    newvalues[i] = null;
-                } else {
-                    return null;
-                }
-            }
-            return newvalues;
-        } else {
-            return null;
-        }
-    }
-
-    @Override
+    
     public String getTheory() {
         return
-                //
-                // operators defined by the JavaLibrary theory
-                //
-                ":- op(800,xfx,'<-').\n"
-                        + ":- op(850,xfx,'returns').\n"
-                        + ":- op(200,xfx,'as').\n"
-                        + ":- op(600,xfx,'.'). \n"
-                        +
-                        "new_object_bt(ClassName,Args,Id):- new_object(ClassName,Args,Id).\n"
-                        + "new_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
+        //
+        // operators defined by the JavaLibrary theory
+        //
+        ":- op(800,xfx,'<-').\n"
+                + ":- op(850,xfx,'returns').\n"
+                + ":- op(200,xfx,'as').\n"
+                + ":- op(600,xfx,'.'). \n"
+                + 
+                "new_object_bt(ClassName,Args,Id):- new_object(ClassName,Args,Id).\n"
+                + "new_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
+                
+                + "Obj <- What :- java_call(Obj,What,Res), Res \\== false.\n"
+                + "Obj <- What returns Res :- java_call(Obj,What,Res).\n"
+                
+                + "array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
+                + "array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
+                + "array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
+                + "array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
+                
+				+ "array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
 
-                        + "Obj <- What :- java_call(Obj,What,Res), Res \\== false.\n"
-                        + "Obj <- What returns Res :- java_call(Obj,What,Res).\n"
-
-                        + "array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
-                        + "array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
-                        + "array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
-                        + "array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
-
-                        + "array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
-
-
-                        + //**** following section deprecated from tuProlog 3.0  ***//
-                        "java_object_bt(ClassName,Args,Id):- java_object(ClassName,Args,Id).\n"
-                        + "java_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
-
-                        + "java_array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
-                        + "java_array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
-                        + "java_array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
-                        + "java_array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
-
-                        + "java_array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
-                        + "java_object_string(Object,String):- Object <- toString returns String.    \n"
-                        +//**** end section deprecated from tuProlog 3.0  ***//
-                        "java_catch(JavaGoal, List, Finally) :- call(JavaGoal), call(Finally).\n";
-
-
+                
+                + //**** following section deprecated from tuProlog 3.0  ***//
+                "java_object_bt(ClassName,Args,Id):- java_object(ClassName,Args,Id).\n"
+                + "java_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
+                
+                + "java_array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
+                + "java_array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
+                + "java_array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
+                + "java_array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
+               
+                + "java_array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
+                + "java_object_string(Object,String):- Object <- toString returns String.    \n"
+                +//**** end section deprecated from tuProlog 3.0  ***//
+                "java_catch(JavaGoal, List, Finally) :- call(JavaGoal), call(Finally).\n";
+        
+        		
     }
 
-    @Override
     public void dismiss() {
         currentObjects.clear();
         currentObjects_inverse.clear();
@@ -414,19 +168,17 @@ public class OOLibrary extends Library {
         staticObjects_inverse.clear();
     }
 
-    @Override
     public void onSolveBegin(Term goal) {
         currentObjects.clear();
         currentObjects_inverse.clear();
-        Iterator<Map.Entry<Object, Struct>> it = staticObjects_inverse.entrySet().iterator();
+        Iterator<Map.Entry<Object,Struct>> it = staticObjects_inverse.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<Object, Struct> en = it.next();
-            bindDynamicObject(en.getValue(), en.getKey());
+            Map.Entry<Object,Struct> en = it.next();
+            bindDynamicObject( en.getValue(), en.getKey());
         }
         preregisterObjects();
     }
 
-    @Override
     public void onSolveEnd() {
     }
 
@@ -446,16 +198,15 @@ public class OOLibrary extends Library {
         }
     }
 
-    /**
+     /**
      * Deprecated from tuProlog 3.0 use new_object
      */
     public boolean java_object_3(Term className, Term argl, Term id) throws JavaException {
-        return new_object_3(className, argl, id);
+    	return new_object_3(className, argl,id);
     }
-
+    
     /**
      * Creates of a java object - not backtrackable case
-     *
      * @param className
      * @param argl
      * @param id
@@ -488,9 +239,9 @@ public class OOLibrary extends Library {
             }
             // object creation with argument described in args
             try {
-                Class<?> cl = Class.forName(clName, true, dynamicLoader);
+            	Class<?> cl = Class.forName(clName, true, dynamicLoader);
                 Object[] args_value = args.getValues();
-                Constructor<?> co = lookupConstructor(cl, args.getTypes(), args_value);
+                Constructor<?> co = lookupConstructor(cl, args.getTypes(),args_value);
                 if (co == null) {
                     getEngine().warn("Constructor not found: class " + clName);
                     throw new JavaException(new NoSuchMethodException(
@@ -524,90 +275,66 @@ public class OOLibrary extends Library {
             throw new JavaException(ex);
         }
     }
-
+    
     /**
-     * @param interfaceName  represent the name of the target interface i.e. 'java.util.function.Predicate<String>'
-     * @param implementation contains the function implementation i.e. 's -> s.length()>4 '
-     * @param id             represent the identification_name of the created object function i.e. MyLambda
-     * @throws JavaException, Exception
-     * @author Roberta Calegari revisione 4 ott 2018 post passaggio java 9
-     * <p>
+     * @author Roberta Calegari
+     * 
      * Creates of a lambda object - not backtrackable case
+     * @param interfaceName represent the name of the target interface i.e. 'java.util.function.Predicate<String>'
+     * @param implementation contains the function implementation i.e. 's -> s.length()>4 '
+     * @param id represent the identification_name of the created object function i.e. MyLambda
+     * 
+     * @throws JavaException, Exception
      */
-    @SuppressWarnings("unchecked")
-    public <T> boolean new_lambda_3(Term interfaceName, Term implementation, Term id) throws JavaException, Exception {
-        if (lambdaPlugin != null) {
-            String mode = lambdaPlugin.mode();
-            if (mode.equalsIgnoreCase("active")) {
-                try {
-                    counter++;
-                    String target_class = (interfaceName.toString()).substring(1, interfaceName.toString().length() - 1);
-                    String lambda_expression = (implementation.toString()).substring(1, implementation.toString().length() - 1);
-                    target_class = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(target_class);
-                    lambda_expression = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(lambda_expression);
-
-                    String className = "MyLambdaFactory" + counter;
-                    String lambdaClassCode =
-                            "public class " + className + " {\n" +
-                                    "  public " + target_class + " getFunction() {\n" +
-                                    " 		return " + lambda_expression + "; \n" +
-                                    "  }\n" +
-                                    "}\n";
-                    Path lambdaPath = saveSource(lambdaClassCode, className);
-
-                    Path lambdaPathCompiled = compileSource(lambdaPath, className);
-
-                    Object myLambdaFactory = createClassInstance(lambdaPathCompiled, className);
-
-                    Class<?> myLambdaClass = myLambdaFactory.getClass();
-
-                    Method[] allMethods = myLambdaClass.getDeclaredMethods();
-                    T myLambdaInstance = null;
-                    for (Method m : allMethods) {
-                        String mname = m.getName();
-                        if (mname.startsWith("getFunction"))
-                            myLambdaInstance = (T) m.invoke(myLambdaFactory);
-                    }
-                    System.out.println("arrivo step 6");
-                    id = id.getTerm();
-                    if (bindDynamicObject(id, myLambdaInstance))
-                        return true;
-                    else
-                        throw new JavaException(new Exception());
-                } catch (Exception ex) {
-                    throw new JavaException(ex);
-                }
-            }
-        }
-        return false;
-    }
-
-    private Path saveSource(String source, String className) throws IOException {
-        String tmpProperty = System.getProperty("java.io.tmpdir");
-        Path sourcePath = Paths.get(tmpProperty, className + ".java");
-        Files.write(sourcePath, source.getBytes(StandardCharsets.UTF_8.name()));
-        return sourcePath;
-    }
-
-    private Path compileSource(Path javaFile, String className) {
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        compiler.run(null, null, null, javaFile.toFile().getAbsolutePath());
-        return javaFile.getParent().resolve(className + "class");
-    }
-
-    private Object createClassInstance(Path javaClass, String className)
-            throws MalformedURLException, ClassNotFoundException, IllegalAccessException, InstantiationException, IllegalArgumentException, InvocationTargetException, SecurityException {
-        URL classUrl = javaClass.getParent().toFile().toURI().toURL();
-        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[]{classUrl});
-        Class<?> clazz = Class.forName(className, true, classLoader);
-        return clazz.getDeclaredConstructors()[0].newInstance();
-        //clazz.newInstance(); deprecato da java 9
+	@SuppressWarnings("unchecked") //Modificato da Alberto
+	public <T> boolean new_lambda_3(Term interfaceName, Term implementation, Term id)throws JavaException, Exception {
+		if(lambdaPlugin != null){
+			String mode = lambdaPlugin.mode();
+			if(mode.equalsIgnoreCase("active")){
+				try {
+		    		counter++;
+		    		String target_class=(interfaceName.toString()).substring(1, interfaceName.toString().length()-1);
+		    		String lambda_expression=(implementation.toString()).substring(1, implementation.toString().length()-1);
+		    		target_class = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(target_class);
+		    		lambda_expression = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(lambda_expression);
+		    	
+		    		Class<?> lambdaMetaFactory = alice.util.proxyGenerator.Generator.make(
+						ClassLoader.getSystemClassLoader(),
+				        "MyLambdaFactory"+counter,
+				        "" +           
+				            "public class MyLambdaFactory"+counter+" {\n" +
+				            "  public "+target_class+" getFunction() {\n" + 
+						    " 		return "+lambda_expression+"; \n"+ 
+				            "  }\n" +
+				            "}\n"
+		    		);
+				
+		    		Object myLambdaFactory = lambdaMetaFactory.newInstance(); 
+		    		Class<?> myLambdaClass = myLambdaFactory.getClass(); 
+		    		Method[] allMethods = myLambdaClass.getDeclaredMethods();
+		    		T myLambdaInstance=null; 
+		    		for (Method m : allMethods) {
+		    			String mname = m.getName();
+		    			if (mname.startsWith("getFunction"))
+		    				myLambdaInstance=(T) m.invoke(myLambdaFactory);
+		    		}
+		    		id = id.getTerm();
+		    		if (bindDynamicObject(id, myLambdaInstance))
+		    			return true;
+		    		else
+		    			throw new JavaException(new Exception());
+		    	} catch (Exception ex) {
+		            throw new JavaException(ex);
+		        }
+			}
+		}
+		return false;
     }
 
     /**
      * Destroy the link to a java object - called not directly, but from
      * predicate java_object (as second choice, for backtracking)
-     *
+     * 
      * @throws JavaException
      */
     public boolean destroy_object_1(Term id) throws JavaException {
@@ -624,29 +351,28 @@ public class OOLibrary extends Library {
 
     /**
      * Deprecated from tuProlog 3.0 use new_class
-     *
+     * 
      * @throws JavaException
      */
-    public boolean java_class_4(Term clSource, Term clName, Term clPathes, Term id) throws JavaException {
-        return new_class_4(clSource, clName, clPathes, id);
+    public boolean java_class_4(Term clSource, Term clName, Term clPathes,Term id) throws JavaException {
+    	return new_class_4(clSource,  clName,  clPathes, id);
     }
-
+    
     /**
      * The java class/4 creates, compiles and loads a new Java class from a source text
-     *
      * @param clSource: is a string representing the text source of the new Java class
-     * @param clName:   full class name
+     * @param clName: full class name
      * @param clPathes: is a (possibly empty) Prolog list of class paths that may be required for a successful dynamic compilation of this class
-     * @param id:       reference to an instance of the meta-class java.lang.Class rep- resenting the newly-created class
+     * @param id: reference to an instance of the meta-class java.lang.Class rep- resenting the newly-created class
      * @return boolean: true if created false otherwise
      * @throws JavaException
      */
-    public boolean new_class_4(Term clSource, Term clName, Term clPathes, Term id) throws JavaException {
-        Struct classSource = (Struct) clSource.getTerm();
-        Struct className = (Struct) clName.getTerm();
-        Struct classPathes = (Struct) clPathes.getTerm();
-        id = id.getTerm();
-        try {
+	public boolean new_class_4(Term clSource, Term clName, Term clPathes,Term id) throws JavaException {
+		Struct classSource = (Struct) clSource.getTerm();
+		Struct className = (Struct) clName.getTerm();
+		Struct classPathes = (Struct) clPathes.getTerm();
+		id = id.getTerm();
+		try {
             String fullClassName = alice.util.Tools.removeApices(className.toString());
 
             String fullClassPath = fullClassName.replace('.', '/');
@@ -656,7 +382,7 @@ public class OOLibrary extends Library {
                 if (cp.length() > 0) {
                     cp += ";";
                 }
-                cp += alice.util.Tools.removeApices(it.next()
+                cp += alice.util.Tools.removeApices(((Struct) it.next())
                         .toString());
             }
             if (cp.length() > 0) {
@@ -690,21 +416,25 @@ public class OOLibrary extends Library {
                 getEngine().warn("(java compiler (javac) invocation failed)");
                 throw new JavaException(ex);
             }
-            try {
-                Class<?> the_class;
-
-                /**
-                 * @author Alessio Mercurio
-                 *
-                 * On Dalvik VM we can only use the DexClassLoader.
-                 */
-
-                if (System.getProperty("java.vm.name").equals("Dalvik")) {
-                    the_class = Class.forName(fullClassName, true, dynamicLoader);
-                } else {
-                    the_class = Class.forName(fullClassName, true, new ClassLoader());
-                }
-
+            try 
+            {
+            	Class<?> the_class;
+            	
+            	/**
+            	 * @author Alessio Mercurio
+            	 * 
+            	 * On Dalvik VM we can only use the DexClassLoader.
+            	 */
+            	
+            	if (System.getProperty("java.vm.name").equals("Dalvik"))
+        		{
+            		the_class = Class.forName(fullClassName, true, dynamicLoader);
+        		}
+            	else
+            	{
+            		the_class = Class.forName(fullClassName, true, new ClassLoader());
+            	}
+                
                 if (bindDynamicObject(id, the_class))
                     return true;
                 else
@@ -722,185 +452,201 @@ public class OOLibrary extends Library {
     }
 
     /**
-     * Calls a method of a Java object
-     *
-     * @throws JavaException
-     */
-    public boolean java_call_3(Term objId, Term method_name, Term idResult)
-            throws JavaException {
-        objId = objId.getTerm();
-        idResult = idResult.getTerm();
-        Struct method = (Struct) method_name.getTerm();
-        Object obj = null;
-        Signature args = null;
-        String methodName = null;
-        try {
-            methodName = method.getName();
-            if (!objId.isAtom()) {
-                if (objId instanceof Var) {
-                    throw new JavaException(new IllegalArgumentException(objId
-                            .toString()));
-                }
-                Struct sel = (Struct) objId;
-                if (sel.getName().equals(".") && sel.getArity() == 2
-                        && method.getArity() == 1) {
-                    if (methodName.equals("set")) {
-                        return java_set(sel.getTerm(0), sel.getTerm(1), method
-                                .getTerm(0));
-                    } else if (methodName.equals("get")) {
-                        return java_get(sel.getTerm(0), sel.getTerm(1), method
-                                .getTerm(0));
-                    }
-                }
-            }
-            args = parseArg(method);
-            // object and argument must be instantiated
-            if (objId instanceof Var)
-                throw new JavaException(new IllegalArgumentException(objId
-                        .toString()));
-            if (args == null) {
-                throw new JavaException(new IllegalArgumentException());
-            }
-            String objName = alice.util.Tools.removeApices(objId.toString());
-            obj = staticObjects.containsKey(objName) ? staticObjects.get(objName) : currentObjects.get(objName);
-            Object res = null;
+	 * 
+	 * Calls a method of a Java object
+	 * 
+	 * @throws JavaException
+	 * 
+	 */
+	public boolean java_call_3(Term objId, Term method_name, Term idResult)
+			throws JavaException {
+		objId = objId.getTerm();
+		idResult = idResult.getTerm();
+		Struct method = (Struct) method_name.getTerm();
+		Object obj = null;
+		Signature args = null;
+		String methodName = null;
+		try {
+			methodName = method.getName();
+			if (!objId.isAtom()) {
+				if (objId instanceof Var) {
+					throw new JavaException(new IllegalArgumentException(objId
+							.toString()));
+				}
+				Struct sel = (Struct) objId;
+				if (sel.getName().equals(".") && sel.getArity() == 2
+						&& method.getArity() == 1) {
+					if (methodName.equals("set")) {
+						return java_set(sel.getTerm(0), sel.getTerm(1), method
+								.getTerm(0));
+					} else if (methodName.equals("get")) {
+						return java_get(sel.getTerm(0), sel.getTerm(1), method
+								.getTerm(0));
+					}
+				}
+			}
+			args = parseArg(method);
+			// object and argument must be instantiated
+			if (objId instanceof Var)
+				throw new JavaException(new IllegalArgumentException(objId
+						.toString()));
+			if (args == null) {
+				throw new JavaException(new IllegalArgumentException());
+			}
+			String objName = alice.util.Tools.removeApices(objId.toString());
+			obj = staticObjects.containsKey(objName) ? staticObjects.get(objName) : currentObjects.get(objName);
+			Object res = null;
+			if(obj == null)
+				System.out.println("name "+objName+" null");
+			if (obj != null) {
+				Class<?> cl = obj.getClass();
+				Object[] args_values = args.getValues();
+				Method m = lookupMethod(cl, methodName, args.getTypes(),args_values);
+				if (m != null) {
+					try {
+						m.setAccessible(true);
+						res = m.invoke(obj, args_values);
+					} catch (IllegalAccessException ex) {
+						getEngine().warn("Method invocation failed: " + methodName+ "( signature: " + args + " )");
+						throw new JavaException(ex);
+					}
+				} else {
+					getEngine().warn("Method not found: " + methodName + "( signature: "+ args + " )");
+					throw new JavaException(new NoSuchMethodException("Method not found: " + methodName + "( signature: "+ args + " )"));
+				}
+			} else {
+				if (objId.isCompound()) {
+					Struct id = (Struct) objId;
 
-            if (obj != null) {
-                Class<?> cl = obj.getClass();
-                Object[] args_values = args.getValues();
-                Method m = lookupMethod(cl, methodName, args.getTypes(), args_values);
-                if (m != null) {
-                    try {
-                        m.setAccessible(true);
-                        res = m.invoke(obj, args_values);
-                    } catch (IllegalAccessException ex) {
-                        getEngine().warn("Method invocation failed: " + methodName + "( signature: " + args + " )");
-                        throw new JavaException(ex);
-                    }
-                } else {
-                    getEngine().warn("Method not found: " + methodName + "( signature: " + args + " )");
-                    throw new JavaException(new NoSuchMethodException("Method not found: " + methodName + "( signature: " + args + " )"));
-                }
-            } else {
-                if (objId.isCompound()) {
-                    Struct id = (Struct) objId;
-
-                    if (id.getArity() == 1 && id.getName().equals("class")) {
-                        try {
-                            String clName = alice.util.Tools
-                                    .removeApices(id.getArg(0).toString());
-                            Class<?> cl = Class.forName(clName, true, dynamicLoader);
-
-                            Method m = InspectionUtils.searchForMethod(cl, methodName, args.getTypes());
-                            m.setAccessible(true);
-                            res = m.invoke(null, args.getValues());
-                        } catch (ClassNotFoundException ex) {
-                            // if not found even as a class id -> consider as a
-                            // String object value
-                            getEngine().warn("Unknown class.");
-                            throw new JavaException(ex);
-                        }
-                    } else {
-                        // the object is the string itself
-                        Method m = java.lang.String.class.getMethod(methodName, args.getTypes());
-                        m.setAccessible(true);
-                        res = m.invoke(objName, args.getValues());
-                    }
-                } else {
-                    // the object is the string itself
-                    Method m = java.lang.String.class.getMethod(methodName,
-                            args.getTypes());
-                    m.setAccessible(true);
-                    res = m.invoke(objName, args.getValues());
-                }
-            }
-            if (parseResult(idResult, res))
-                return true;
-            else
-                throw new JavaException(new Exception());
-        } catch (InvocationTargetException ex) {
-            getEngine().warn(
-                    "Method failed: " + methodName + " - ( signature: " + args
-                            + " ) - Original Exception: "
-                            + ex.getTargetException());
-            throw new JavaException(new IllegalArgumentException());
-        } catch (NoSuchMethodException ex) {
-            getEngine().warn(
-                    "Method not found: " + methodName + " - ( signature: "
-                            + args + " )");
-            throw new JavaException(ex);
-        } catch (IllegalArgumentException ex) {
-            getEngine().warn(
-                    "Invalid arguments " + args + " - ( method: " + methodName
-                            + " )");
-            throw new JavaException(ex);
-        } catch (Exception ex) {
-            getEngine()
-                    .warn("Generic error in method invocation " + methodName);
-            throw new JavaException(ex);
-        }
-    }
-
+					if (id.getArity() == 1 && id.getName().equals("class")) {
+						try {
+							String clName = alice.util.Tools
+									.removeApices(id.getArg(0).toString());
+							Class<?> cl = Class.forName(clName, true, dynamicLoader);
+							
+							Method m = InspectionUtils.searchForMethod(cl, methodName, args.getTypes());
+							m.setAccessible(true);
+							res = m.invoke(null, args.getValues());
+						} catch (ClassNotFoundException ex) {
+							// if not found even as a class id -> consider as a
+							// String object value
+							getEngine().warn("Unknown class.");
+							throw new JavaException(ex);
+						}
+					}
+					else {
+						// the object is the string itself
+						Method m = java.lang.String.class.getMethod(methodName, args.getTypes());
+						m.setAccessible(true);
+						res = m.invoke(objName, args.getValues());
+					}
+				} else {
+					// the object is the string itself
+					Method m = java.lang.String.class.getMethod(methodName,
+							args.getTypes());
+					m.setAccessible(true);
+					res = m.invoke(objName, args.getValues());
+				}
+			}
+			if (parseResult(idResult, res))
+				return true;
+			else
+				throw new JavaException(new Exception());
+		} catch (InvocationTargetException ex) {
+			getEngine().warn(
+					"Method failed: " + methodName + " - ( signature: " + args
+					+ " ) - Original Exception: "
+					+ ex.getTargetException());
+			throw new JavaException(new IllegalArgumentException());
+		} catch (NoSuchMethodException ex) {
+			getEngine().warn(
+					"Method not found: " + methodName + " - ( signature: "
+							+ args + " )");
+			throw new JavaException(ex);
+		} catch (IllegalArgumentException ex) {
+			getEngine().warn(
+					"Invalid arguments " + args + " - ( method: " + methodName
+					+ " )");
+			throw new JavaException(ex);
+		} catch (Exception ex) {
+			getEngine()
+			.warn("Generic error in method invocation " + methodName);
+			throw new JavaException(ex);
+		}
+	}
+	
     /**
-     * @throws JavaException
      * @author Michele Mannino
-     * <p>
+     * 
      * Set global classpath
-     */
-    public boolean set_classpath_1(Term paths) throws JavaException {
-        try {
-            paths = paths.getTerm();
-            if (!paths.isList())
-                throw new IllegalArgumentException();
-            String[] listOfPaths = getStringArrayFromStruct((Struct) paths);
-            dynamicLoader.removeAllURLs();
-            dynamicLoader.addURLs(getURLsFromStringArray(listOfPaths));
-            return true;
-        } catch (IllegalArgumentException e) {
-            getEngine().warn("Illegal list of paths " + paths);
-            throw new JavaException(e);
-        } catch (Exception e) {
-            throw new JavaException(e);
-        }
-    }
-
-    /**
+     * 
      * @throws JavaException
-     * @author Michele Mannino
-     * <p>
-     * Get global classpath
+     * 
      */
-
-    public boolean get_classpath_1(Term paths) throws JavaException {
-        try {
-            paths = paths.getTerm();
-            if (!(paths instanceof Var))
-                throw new IllegalArgumentException();
-            URL[] urls = dynamicLoader.getURLs();
-            String stringURLs = null;
-            Term pathTerm = null;
-            if (urls.length > 0) {
-                stringURLs = "[";
-
-                for (URL url : urls) {
-                    File file = new File(java.net.URLDecoder.decode(url.getFile(), "UTF-8"));
-                    stringURLs = stringURLs + "'" + file.getPath() + "',";
-                }
-
-                stringURLs = stringURLs.substring(0, stringURLs.length() - 1);
-                stringURLs = stringURLs + "]";
-            } else
-                stringURLs = "[]";
-            pathTerm = Term.createTerm(stringURLs);
-            return unify(paths, pathTerm);
-        } catch (IllegalArgumentException e) {
-            getEngine().warn("Illegal list of paths " + paths);
-            throw new JavaException(e);
-        } catch (Exception e) {
+    public boolean set_classpath_1(Term paths) throws JavaException
+    {
+    	try {
+    		paths = paths.getTerm();
+        	if(!paths.isList())
+        		throw new IllegalArgumentException();
+        	String[] listOfPaths = getStringArrayFromStruct((Struct) paths);
+        	dynamicLoader.removeAllURLs();
+        	dynamicLoader.addURLs(getURLsFromStringArray(listOfPaths));
+        	return true;
+    	}catch(IllegalArgumentException e)
+        {
+        	getEngine().warn("Illegal list of paths " + paths);
             throw new JavaException(e);
         }
+        catch (Exception e) {
+        	throw new JavaException(e);
+		}
     }
-
+    
+    /**
+     * @author Michele Mannino
+     * 
+     * Get global classpath
+     * 
+     * @throws JavaException
+     * 
+     */
+    
+	public boolean get_classpath_1(Term paths) throws JavaException
+    {
+    	try {
+    		paths = paths.getTerm();
+    		if(!(paths instanceof Var))
+    			throw new IllegalArgumentException();
+    		URL[] urls = dynamicLoader.getURLs();
+        	String stringURLs = null;
+        	Term pathTerm = null;
+        	if(urls.length > 0)
+        	{
+	        	stringURLs = "[";
+	     
+	        	for (URL url : urls) {
+	        		File file = new File(java.net.URLDecoder.decode(url.getFile(), "UTF-8"));
+	        		stringURLs = stringURLs + "'" + file.getPath() + "',";
+				}
+	        	
+	        	stringURLs = stringURLs.substring(0, stringURLs.length() - 1);
+	        	stringURLs = stringURLs + "]";
+        	}
+        	else
+        		stringURLs = "[]";
+        	pathTerm = Term.createTerm(stringURLs);
+        	return unify(paths, pathTerm);
+    	}catch(IllegalArgumentException e)
+        {
+        	getEngine().warn("Illegal list of paths " + paths);
+            throw new JavaException(e);
+        }
+        catch (Exception e) {
+        	throw new JavaException(e);
+		}
+    }
+	
     /**
      * set the field value of an object
      */
@@ -912,13 +658,15 @@ public class OOLibrary extends Library {
         Object obj = null;
         try {
             Class<?> cl = null;
-            if (objId.isCompound() && ((Struct) objId).getName().equals("class")) {
-                String clName = null;
-                // Case: class(className)
-                if (((Struct) objId).getArity() == 1)
-                    clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
-                if (clName != null) {
-                    try {
+            if(objId.isCompound() && ((Struct) objId).getName().equals("class"))
+            {
+            	String clName = null;
+            	// Case: class(className)
+            	if(((Struct) objId).getArity() == 1)         	
+            		 clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
+            	if(clName != null)
+            	{
+            		try {
                         cl = Class.forName(clName, true, dynamicLoader);
                     } catch (ClassNotFoundException ex) {
                         getEngine().warn("Java class not found: " + clName);
@@ -929,12 +677,13 @@ public class OOLibrary extends Library {
                                         + fieldName
                                         + " not found in class "
                                         + alice.util.Tools
-                                        .removeApices(((Struct) objId)
-                                                .getArg(0).toString()));
+                                                .removeApices(((Struct) objId)
+                                                        .getArg(0).toString()));
                         return false;
                     }
-                }
-            } else {
+            	}
+            }
+            else {
                 String objName = alice.util.Tools
                         .removeApices(objId.toString());
                 obj = currentObjects.get(objName);
@@ -992,12 +741,14 @@ public class OOLibrary extends Library {
         Object obj = null;
         try {
             Class<?> cl = null;
-            if (objId.isCompound() && ((Struct) objId).getName().equals("class")) {
-                String clName = null;
-                if (((Struct) objId).getArity() == 1)
-                    clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
-                if (clName != null) {
-                    try {
+            if(objId.isCompound() && ((Struct) objId).getName().equals("class"))
+            {
+            	String clName = null;
+            	if(((Struct) objId).getArity() == 1)         	
+            		 clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
+            	if(clName != null)
+            	{
+            		try {
                         cl = Class.forName(clName, true, dynamicLoader);
                     } catch (ClassNotFoundException ex) {
                         getEngine().warn("Java class not found: " + clName);
@@ -1008,12 +759,13 @@ public class OOLibrary extends Library {
                                         + fieldName
                                         + " not found in class "
                                         + alice.util.Tools
-                                        .removeApices(((Struct) objId)
-                                                .getArg(0).toString()));
+                                                .removeApices(((Struct) objId)
+                                                        .getArg(0).toString()));
                         return false;
                     }
-                }
-            } else {
+            	}
+            }
+            else {
                 String objName = alice.util.Tools.removeApices(objId.toString());
                 obj = currentObjects.get(objName);
                 if (obj == null) {
@@ -1042,7 +794,7 @@ public class OOLibrary extends Library {
                 Object res = field.get(obj);
                 return bindDynamicObject(what, res);
             }
-
+            
         } catch (NoSuchFieldException ex) {
             getEngine().warn(
                     "Field " + fieldName + " not found in class " + objId);
@@ -1052,7 +804,7 @@ public class OOLibrary extends Library {
             return false;
         }
     }
-
+    
     public boolean java_array_set_primitive_3(Term obj_id, Term i, Term what)
             throws JavaException {
         Struct objId = (Struct) obj_id.getTerm();
@@ -1142,10 +894,10 @@ public class OOLibrary extends Library {
             throw new JavaException(ex);
         }
     }
-
+    
+    
     /**
      * Sets the value of the field 'i' with 'what'
-     *
      * @param obj_id
      * @param i
      * @param what
@@ -1181,7 +933,7 @@ public class OOLibrary extends Library {
                 else
                     throw new JavaException(new IllegalArgumentException(what.toString()));
             } else if (name.equals("class [D")) {
-                Term value = new alice.tuprolog.Double(Array.getDouble(obj, index.intValue()));
+                Term value = new alice.tuprolog.Double(Array.getDouble(obj,index.intValue()));
                 if (unify(what, value))
                     return true;
                 else
@@ -1256,10 +1008,10 @@ public class OOLibrary extends Library {
         try {
             Object array = null;
             String obtype = type.substring(0, type.length() - 2);
-
-            if (obtype.equals("boolean")) {
+          
+            if (obtype.equals("boolean")) { 
                 array = new boolean[nargs];
-            } else if (obtype.equals("byte")) {
+            } else if (obtype.equals("byte")) { 
                 array = new byte[nargs];
             } else if (obtype.equals("char")) {
                 array = new char[nargs];
@@ -1289,42 +1041,46 @@ public class OOLibrary extends Library {
      *
      * @throws JavaException
      */
-    private URL[] getURLsFromStringArray(String[] paths) throws MalformedURLException {
-        URL[] urls = null;
-        if (paths != null) {
-            urls = new URL[paths.length];
-
-            for (int i = 0; i < paths.length; i++) {
-                if (paths[i] == null)
-                    continue;
-                if (paths[i].contains("http") || paths[i].contains("https") || paths[i].contains("ftp"))
-                    urls[i] = new URL(paths[i]);
-                else {
-                    File file = new File(paths[i]);
-                    urls[i] = (file.toURI().toURL());
-                }
-            }
-        }
-        return urls;
+    private URL[] getURLsFromStringArray(String[] paths) throws MalformedURLException  
+    {
+    	URL[] urls = null;
+    	if(paths != null)
+    	{
+	    	urls = new URL[paths.length];
+			
+			for (int i = 0; i < paths.length; i++) 
+			{
+				if(paths[i] == null)
+					continue;
+				if(paths[i].contains("http") || paths[i].contains("https") || paths[i].contains("ftp"))
+					urls[i] = new URL(paths[i]);
+				else{
+					File file = new File(paths[i]);
+					urls[i] = (file.toURI().toURL());
+				}
+			}
+    	}
+		return urls;
     }
-
+    
     /**
      * Returns a String array from a Struct contains a list
      *
      * @throws JavaException
      */
-
+    
     private String[] getStringArrayFromStruct(Struct list) {
-        String[] args = new String[list.listSize()];
+        String args[] = new String[list.listSize()];
         Iterator<? extends Term> it = list.listIterator();
         int count = 0;
         while (it.hasNext()) {
-            String path = alice.util.Tools.removeApices(it.next().toString());
+        	String path = alice.util.Tools.removeApices(it.next().toString());
             args[count++] = path;
         }
         return args;
     }
-
+    
+    
     /**
      * creation of method signature from prolog data
      */
@@ -1332,7 +1088,7 @@ public class OOLibrary extends Library {
         Object[] values = new Object[method.getArity()];
         Class<?>[] types = new Class[method.getArity()];
         for (int i = 0; i < method.getArity(); i++) {
-            if (!parse_arg(values, types, i, method.getTerm(i)))
+            if (!parse_arg(values, types, i, (Term) method.getTerm(i)))
                 return null;
         }
         return new Signature(values, types);
@@ -1415,11 +1171,13 @@ public class OOLibrary extends Library {
     }
 
     /**
+     * 
      * parsing 'as' operator, which makes it possible to define the specific
      * class of an argument
+     * 
      */
     private boolean parse_as(Object[] values, Class<?>[] types, int i,
-                             Term castWhat, Term castTo) {
+            Term castWhat, Term castTo) {
         try {
             if (!(castWhat instanceof Number)) {
                 String castTo_name = alice.util.Tools
@@ -1457,7 +1215,7 @@ public class OOLibrary extends Library {
                     } else {
                         castTo_name = "[L"
                                 + castTo_name.substring(0,
-                                castTo_name.length() - 2) + ";";
+                                        castTo_name.length() - 2) + ";";
                     }
                 }
                 if (!castWhat_name.equals("null")) {
@@ -1556,30 +1314,30 @@ public class OOLibrary extends Library {
             return unify(id, new Var());
         }
         try {
-            if (obj instanceof Boolean) {
+            if (Boolean.class.isInstance(obj)) {
                 if (((Boolean) obj).booleanValue()) {
                     return unify(id, Term.TRUE);
                 } else {
                     return unify(id, Term.FALSE);
                 }
-            } else if (obj instanceof Byte) {
+            } else if (Byte.class.isInstance(obj)) {
                 return unify(id, new Int(((Byte) obj).intValue()));
-            } else if (obj instanceof Short) {
+            } else if (Short.class.isInstance(obj)) {
                 return unify(id, new Int(((Short) obj).intValue()));
-            } else if (obj instanceof Integer) {
+            } else if (Integer.class.isInstance(obj)) {
                 return unify(id, new Int(((Integer) obj).intValue()));
-            } else if (obj instanceof java.lang.Long) {
+            } else if (java.lang.Long.class.isInstance(obj)) {
                 return unify(id, new alice.tuprolog.Long(((java.lang.Long) obj)
                         .longValue()));
-            } else if (obj instanceof java.lang.Float) {
+            } else if (java.lang.Float.class.isInstance(obj)) {
                 return unify(id, new alice.tuprolog.Float(
                         ((java.lang.Float) obj).floatValue()));
-            } else if (obj instanceof java.lang.Double) {
+            } else if (java.lang.Double.class.isInstance(obj)) {
                 return unify(id, new alice.tuprolog.Double(
                         ((java.lang.Double) obj).doubleValue()));
-            } else if (obj instanceof String) {
+            } else if (String.class.isInstance(obj)) {
                 return unify(id, new Struct((String) obj));
-            } else if (obj instanceof Character) {
+            } else if (Character.class.isInstance(obj)) {
                 return unify(id, new Struct(((Character) obj).toString()));
             } else {
                 return bindDynamicObject(id, obj);
@@ -1591,7 +1349,7 @@ public class OOLibrary extends Library {
     }
 
     private Object[] getArrayFromList(Struct list) {
-        Object[] args = new Object[list.listSize()];
+        Object args[] = new Object[list.listSize()];
         Iterator<? extends Term> it = list.listIterator();
         int count = 0;
         while (it.hasNext()) {
@@ -1603,11 +1361,15 @@ public class OOLibrary extends Library {
     /**
      * Register an object with the specified id. The life-time of the link to
      * the object is engine life-time, available besides the individual query.
-     *
-     * @param id  object identifier
-     * @param obj the object
+     * 
+     * 
+     * @param id
+     *            object identifier
+     * @param obj
+     *            the object
      * @return true if the operation is successful
-     * @throws InvalidObjectIdException if the object id is not valid
+     * @throws InvalidObjectIdException
+     *             if the object id is not valid
      */
     public boolean register(Struct id, Object obj)
             throws InvalidObjectIdException {
@@ -1634,58 +1396,71 @@ public class OOLibrary extends Library {
             }
         }
     }
-
+    
     /**
      * Register an object with the specified id. The life-time of the link to
      * the object is engine life-time, available besides the individual query.
-     * <p>
+     * 
      * The identifier must be a ground object.
-     *
-     * @param id object identifier
+     * 
+     * @param id
+     *            object identifier
+     *            
      * @return true if the operation is successful
-     * @throws JavaException if the object id is not valid
+     * @throws JavaException
+     *             if the object id is not valid
      */
-    public boolean register_1(Term id) throws JavaException {
-        id = id.getTerm();
-        Object obj = null;
-        try {
-            obj = getRegisteredDynamicObject((Struct) id);
-            return register((Struct) id, obj);
-        } catch (InvalidObjectIdException e) {
-            getEngine().warn("Illegal object id " + id.toString());
+    public boolean register_1(Term id) throws JavaException
+    {
+    	id = id.getTerm();
+    	Object obj =  null; 
+    	try
+        {
+        	obj = getRegisteredDynamicObject((Struct) id);
+        	return register((Struct)id, obj);
+        }catch(InvalidObjectIdException e)
+        {
+        	getEngine().warn("Illegal object id " + id.toString());
             throw new JavaException(e);
         }
     }
-
+    
     /**
      * Unregister an object with the specified id.
-     * <p>
+     * 
      * The identifier must be a ground object.
-     *
-     * @param id object identifier
+     * 
+     * @param id
+     *            object identifier
+     *            
      * @return true if the operation is successful
-     * @throws JavaException if the object id is not valid
+     * @throws JavaException
+     *             if the object id is not valid
      */
-    public boolean unregister_1(Term id) throws JavaException {
-        id = id.getTerm();
-        try {
-            return unregister((Struct) id);
-        } catch (InvalidObjectIdException e) {
-            getEngine().warn("Illegal object id " + id.toString());
+    public boolean unregister_1(Term id) throws JavaException
+    {
+    	id = id.getTerm(); 
+    	try
+        {
+        	return unregister((Struct)id);
+        }catch(InvalidObjectIdException e)
+        {
+        	getEngine().warn("Illegal object id " + id.toString());
             throw new JavaException(e);
         }
     }
-
+    
     /**
      * Registers an object, with automatic creation of the identifier.
-     * <p>
+     * 
      * If the object is already registered, its identifier is returned
-     *
-     * @param obj object to be registered.
+     * 
+     * @param obj
+     *            object to be registered.
      * @return fresh id
      */
     public Struct register(Object obj) {
-        // already registered object?
+    	// already registered object?
         synchronized (staticObjects) {
             Object aKey = staticObjects_inverse.get(obj);
             if (aKey != null) {
@@ -1704,8 +1479,9 @@ public class OOLibrary extends Library {
 
     /**
      * Gets the reference to an object previously registered
-     *
-     * @param id object id
+     * 
+     * @param id
+     *            object id
      * @return the object, if present
      * @throws InvalidObjectIdException
      */
@@ -1720,14 +1496,15 @@ public class OOLibrary extends Library {
         }
     }
 
-    // --------------------------------------------------
-
     /**
      * Unregisters an object, given its identifier
-     *
-     * @param id object identifier
+     * 
+     * 
+     * @param id
+     *            object identifier
      * @return true if the operation is successful
-     * @throws InvalidObjectIdException if the id is not valid (e.g. is not ground)
+     * @throws InvalidObjectIdException
+     *             if the id is not valid (e.g. is not ground)
      */
     public boolean unregister(Struct id) throws InvalidObjectIdException {
         if (!id.isGround()) {
@@ -1747,9 +1524,11 @@ public class OOLibrary extends Library {
 
     /**
      * Registers an object only for the running query life-time
-     *
-     * @param id  object identifier
-     * @param obj object
+     * 
+     * @param id
+     *            object identifier
+     * @param obj
+     *            object
      */
     public void registerDynamic(Struct id, Object obj) {
         synchronized (currentObjects) {
@@ -1762,10 +1541,11 @@ public class OOLibrary extends Library {
     /**
      * Registers an object for the query life-time, with the automatic
      * generation of the identifier.
-     * <p>
+     * 
      * If the object is already registered, its identifier is returned
-     *
-     * @param obj object to be registered
+     * 
+     * @param obj
+     *            object to be registered
      * @return identifier
      */
     public Struct registerDynamic(Object obj) {
@@ -1804,8 +1584,9 @@ public class OOLibrary extends Library {
 
     /**
      * Unregister the object, only for dynamic case
-     *
-     * @param id object identifier
+     * 
+     * @param id
+     *            object identifier
      * @return true if the operation is successful
      */
     public boolean unregisterDynamic(Struct id) {
@@ -1823,7 +1604,7 @@ public class OOLibrary extends Library {
 
     /**
      * Tries to bind specified id to a provided java object.
-     * <p>
+     * 
      * Term id can be a variable or a ground term.
      */
     protected boolean bindDynamicObject(Term id, Object obj) {
@@ -1869,7 +1650,7 @@ public class OOLibrary extends Library {
 
     /**
      * Generates a fresh numeric identifier
-     *
+     * 
      * @return
      */
     protected Struct generateFreshId() {
@@ -1881,8 +1662,8 @@ public class OOLibrary extends Library {
      * serializable, 'nullyfing' eventually objects registered in maps
      */
     private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        HashMap<String, Object> bak00 = currentObjects;
-        IdentityHashMap<Object, Struct> bak01 = currentObjects_inverse;
+        HashMap<String,Object> bak00 = currentObjects;
+        IdentityHashMap<Object,Struct> bak01 = currentObjects_inverse;
         try {
             currentObjects = null;
             currentObjects_inverse = null;
@@ -1908,6 +1689,267 @@ public class OOLibrary extends Library {
         preregisterObjects();
     }
 
+    // --------------------------------------------------
+
+    private static Method lookupMethod(Class<?> target, String name,
+            Class<?>[] argClasses, Object[] argValues)
+            throws NoSuchMethodException {
+        // first try for exact match
+        try {
+            Method m = target.getMethod(name, argClasses);
+            return m;
+        } catch (NoSuchMethodException e) {
+            if (argClasses.length == 0) { // if no args & no exact match, out of
+                // luck
+                return null;
+            }
+        }
+
+        // go the more complicated route
+        Method[] methods = target.getMethods();
+        Vector<Method> goodMethods = new Vector<Method>();
+        for (int i = 0; i != methods.length; i++) {
+            if (name.equals(methods[i].getName())
+                    && matchClasses(methods[i].getParameterTypes(), argClasses))
+                goodMethods.addElement(methods[i]);
+        }
+        switch (goodMethods.size()) {
+        case 0:
+            // no methods have been found checking for assignability
+            // and (int -> long) conversion. One last chance:
+            // looking for compatible methods considering also
+            // type conversions:
+            // double --> float
+            // (the first found is used - no most specific
+            // method algorithm is applied )
+
+            for (int i = 0; i != methods.length; i++) {
+                if (name.equals(methods[i].getName())) {
+                    Class<?>[] types = methods[i].getParameterTypes();
+                    Object[] val = matchClasses(types, argClasses, argValues);
+                    if (val != null) {
+                        // found a method compatible
+                        // after type conversions
+                        for (int j = 0; j < types.length; j++) {
+                            argClasses[j] = types[j];
+                            argValues[j] = val[j];
+                        }
+                        return methods[i];
+                    }
+                }
+            }
+
+            return null;
+        case 1:
+            return (Method) goodMethods.firstElement();
+        default:
+            return mostSpecificMethod(goodMethods);
+        }
+    }
+
+    private static Constructor<?> lookupConstructor(Class<?> target,
+            Class<?>[] argClasses, Object[] argValues)
+            throws NoSuchMethodException {
+        // first try for exact match
+        try {
+            return target.getConstructor(argClasses);
+        } catch (NoSuchMethodException e) {
+            if (argClasses.length == 0) { // if no args & no exact match, out of
+                // luck
+                return null;
+            }
+        }
+
+        // go the more complicated route
+        Constructor<?>[] constructors = target.getConstructors();
+        Vector<Constructor<?>> goodConstructors = new Vector<Constructor<?>>();
+        for (int i = 0; i != constructors.length; i++) {
+            if (matchClasses(constructors[i].getParameterTypes(), argClasses))
+                goodConstructors.addElement(constructors[i]);
+        }
+        switch (goodConstructors.size()) {
+        case 0:
+            // no constructors have been found checking for assignability
+            // and (int -> long) conversion. One last chance:
+            // looking for compatible methods considering also
+            // type conversions:
+            // double --> float
+            // (the first found is used - no most specific
+            // method algorithm is applied )
+
+            for (int i = 0; i != constructors.length; i++) {
+                Class<?>[] types = constructors[i].getParameterTypes();
+                Object[] val = matchClasses(types, argClasses, argValues);
+                if (val != null) {
+                    // found a method compatible
+                    // after type conversions
+                    for (int j = 0; j < types.length; j++) {
+                        argClasses[j] = types[j];
+                        argValues[j] = val[j];
+                    }
+                    return constructors[i];
+                }
+            }
+
+            return null;
+        case 1:
+            return goodConstructors.firstElement();
+        default:
+            return mostSpecificConstructor(goodConstructors);
+        }
+    }
+
+    // 1st arg is from method, 2nd is actual parameters
+    private static boolean matchClasses(Class<?>[] mclasses, Class<?>[] pclasses) {
+        if (mclasses.length == pclasses.length) {
+            for (int i = 0; i != mclasses.length; i++) {
+                if (!matchClass(mclasses[i], pclasses[i])) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean matchClass(Class<?> mclass, Class<?> pclass) {
+        boolean assignable = mclass.isAssignableFrom(pclass);
+        if (assignable) {
+            return true;
+        } else {
+            if (mclass.equals(java.lang.Long.TYPE)
+                    && (pclass.equals(java.lang.Integer.TYPE))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static Method mostSpecificMethod(Vector<Method> methods)
+            throws NoSuchMethodException {
+        for (int i = 0; i != methods.size(); i++) {
+            for (int j = 0; j != methods.size(); j++) {
+                if ((i != j)
+                        && (moreSpecific((Method) methods.elementAt(i),
+                                (Method) methods.elementAt(j)))) {
+                    methods.removeElementAt(j);
+                    if (i > j)
+                        i--;
+                    j--;
+                }
+            }
+        }
+        if (methods.size() == 1)
+            return (Method) methods.elementAt(0);
+        else
+            throw new NoSuchMethodException(">1 most specific method");
+    }
+
+    // true if c1 is more specific than c2
+    private static boolean moreSpecific(Method c1, Method c2) {
+        Class<?>[] p1 = c1.getParameterTypes();
+        Class<?>[] p2 = c2.getParameterTypes();
+        int n = p1.length;
+        for (int i = 0; i != n; i++) {
+            if (!matchClass(p2[i], p1[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static Constructor<?> mostSpecificConstructor(Vector<Constructor<?>> constructors)
+            throws NoSuchMethodException {
+        for (int i = 0; i != constructors.size(); i++) {
+            for (int j = 0; j != constructors.size(); j++) {
+                if ((i != j)
+                        && (moreSpecific(constructors.elementAt(i)
+                                , constructors.elementAt(j)))) {
+                    constructors.removeElementAt(j);
+                    if (i > j)
+                        i--;
+                    j--;
+                }
+            }
+        }
+        if (constructors.size() == 1)
+            return constructors.elementAt(0);
+        else
+            throw new NoSuchMethodException(">1 most specific constructor");
+    }
+
+    // true if c1 is more specific than c2
+    private static boolean moreSpecific(Constructor<?> c1, Constructor<?> c2) {
+        Class<?>[] p1 = c1.getParameterTypes();
+        Class<?>[] p2 = c2.getParameterTypes();
+        int n = p1.length;
+        for (int i = 0; i != n; i++) {
+            if (!matchClass(p2[i], p1[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Checks compatibility also considering explicit type conversion.
+    // The method returns the argument values, since they could be changed
+    // after a type conversion.
+    //
+    // In particular the check must be done for the DEFAULT type of tuProlog,
+    // that are int and double; so
+    // (required X, provided a DEFAULT -
+    // with DEFAULT to X conversion 'conceivable':
+    // for instance *double* to *int* is NOT considered good
+    //
+    // required a float, provided an int OK
+    // required a double, provided a int OK
+    // required a long, provided a int ==> already considered by
+    // previous match test
+    // required a float, provided a double OK
+    // required a int, provided a double => NOT CONSIDERED
+    // required a long, provided a double => NOT CONSIDERED
+    //
+    private static Object[] matchClasses(Class<?>[] mclasses, Class<?>[] pclasses,
+            Object[] values) {
+        if (mclasses.length == pclasses.length) {
+            Object[] newvalues = new Object[mclasses.length];
+
+            for (int i = 0; i != mclasses.length; i++) {
+                boolean assignable = mclasses[i].isAssignableFrom(pclasses[i]);
+                if (assignable
+                        || (mclasses[i].equals(java.lang.Long.TYPE) && pclasses[i]
+                                .equals(java.lang.Integer.TYPE))) {
+                    newvalues[i] = values[i];
+                } else if (mclasses[i].equals(java.lang.Float.TYPE)
+                        && pclasses[i].equals(java.lang.Double.TYPE)) {
+                    // arg required: a float, arg provided: a double
+                    // so we need an explicit conversion...
+                    newvalues[i] = new java.lang.Float(
+                            ((java.lang.Double) values[i]).floatValue());
+                } else if (mclasses[i].equals(java.lang.Float.TYPE)
+                        && pclasses[i].equals(java.lang.Integer.TYPE)) {
+                    // arg required: a float, arg provided: an int
+                    // so we need an explicit conversion...
+                    newvalues[i] = new java.lang.Float(
+                            ((java.lang.Integer) values[i]).intValue());
+                } else if (mclasses[i].equals(java.lang.Double.TYPE)
+                        && pclasses[i].equals(java.lang.Integer.TYPE)) {
+                    // arg required: a double, arg provided: an int
+                    // so we need an explicit conversion...
+                    newvalues[i] = new java.lang.Double(
+                            ((java.lang.Integer) values[i]).doubleValue());
+                } else if (values[i] == null && !mclasses[i].isPrimitive()) {
+                    newvalues[i] = null;
+                } else {
+                    return null;
+                }
+            }
+            return newvalues;
+        } else {
+            return null;
+        }
+    }
+
 }
 
 /**
@@ -1916,8 +1958,8 @@ public class OOLibrary extends Library {
  */
 @SuppressWarnings("serial")
 class Signature implements Serializable {
-    Class<?>[] types;
-    Object[] values;
+   Class<?>[] types;
+   Object[] values;
 
     public Signature(Object[] v, Class<?>[] c) {
         values = v;
@@ -1932,7 +1974,6 @@ class Signature implements Serializable {
         return values;
     }
 
-    @Override
     public String toString() {
         String st = "";
         for (int i = 0; i < types.length; i++) {
@@ -1943,9 +1984,7 @@ class Signature implements Serializable {
     }
 }
 
-/**
- * used to load new classes without touching system class loader
- */
+/** used to load new classes without touching system class loader */
 class ClassLoader extends java.lang.ClassLoader {
 }
 
@@ -1957,7 +1996,7 @@ class ListenerInfo implements Serializable {
     public String listenerInterfaceName;
     public EventListener listener;
     // public String eventName;
-    public String eventFullClass;
+   public String eventFullClass;
 
     public ListenerInfo(EventListener l, String eventClass, String n) {
         listener = l;

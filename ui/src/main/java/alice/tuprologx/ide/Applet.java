@@ -17,7 +17,8 @@
  */
 package alice.tuprologx.ide;
 
-import javax.swing.*;
+import javax.swing.JApplet;
+
 import java.awt.event.WindowListener;
 
 /**
@@ -25,14 +26,13 @@ import java.awt.event.WindowListener;
  * Note that since tuProlog cannot run under JVM 1.1, the launched IDE is directly
  * the one for the Java2 platform, without passing through GUILauncher.
  *
- * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version 1.1 - 27-lug-04
+ * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version    1.1 - 27-lug-04
  */
 
 @SuppressWarnings("serial")
 public class Applet extends JApplet {
 
-    @Override
     public void init() {
         JavaIDE ide = new JavaIDE();
 

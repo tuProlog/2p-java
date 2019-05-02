@@ -3,16 +3,14 @@ package alice.tuprolog;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class ChoicePointStore {
-
-
+    
     private ChoicePointContext pointer;
-
+    
     public ChoicePointStore() {
         pointer = null;
     }
-
+    
     public void add(ChoicePointContext cpc) {
         if (pointer == null) {
             pointer = cpc;
@@ -22,31 +20,29 @@ public class ChoicePointStore {
         cpc.prevChoicePointContext = oldCtx;
         pointer = cpc;
     }
-
+    
     public void cut(ChoicePointContext pointerAfterCut) {
         pointer = pointerAfterCut;
     }
-
+    
     /**
      * Return the correct choice-point
      */
     public ChoicePointContext fetch() {
         return (existChoicePoint()) ? pointer : null;
     }
-
+    
     /**
-     * Return the actual choice-point store
-     *
-     * @return
-     */
+	 * Return the actual choice-point store
+	 * @return
+	 */
     public ChoicePointContext getPointer() {
         return pointer;
     }
-
+    
     /**
      * Check if a choice point exists in the store.
-     * As a side effect, removes choice points which have been already used and are now empty.
-     *
+     * As a side effect, removes choice points which have been already used and are now empty. 
      * @return
      */
     protected boolean existChoicePoint() {
@@ -56,10 +52,10 @@ public class ChoicePointStore {
             clauses = pointer.compatibleGoals;
             if (clauses.existCompatibleClause()) return true;
             pointer = pointer.prevChoicePointContext;
-        } while (pointer != null);
+        } while (pointer != null);            
         return false;
     }
-
+    
     /**
      * Removes choice points which have been already used and are now empty.
      */
@@ -67,24 +63,11 @@ public class ChoicePointStore {
         // Note: it uses the side effect of this.existChoicePoint()!
         existChoicePoint();
     }
-
-    /**
-     * Cut at defined depth (toDepth)
-     */
-//    void cut(int toDepth) {
-//        while (pointer != null && pointer.executionContext.depth >= toDepth) {
-//            pointer = pointer.prevChoicePointContext;
-//        }
-//    }
-    @Override
-    public String toString() {
+    
+    public String toString(){
         return pointer + "\n";
     }
-
-    /*
-     * Methods for spyListeners
-     */
-
+    
     public List<ChoicePointContext> getChoicePoints() {
         ArrayList<ChoicePointContext> l = new ArrayList<ChoicePointContext>();
         ChoicePointContext t = pointer;
@@ -94,5 +77,5 @@ public class ChoicePointStore {
         }
         return l;
     }
-
+    
 }

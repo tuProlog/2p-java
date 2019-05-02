@@ -6,8 +6,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 //Alberto -> vedere OOLibrary
-@Target(value = {ElementType.TYPE})
+@Target(value = { ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface OOLibraryEnableLambdas {
-    String mode();
+	
+	/**
+     * @author Alberto Sita
+     * 
+     */
+	
+	String mode();
 }

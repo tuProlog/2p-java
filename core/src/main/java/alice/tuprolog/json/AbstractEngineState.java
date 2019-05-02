@@ -4,27 +4,28 @@ import alice.tuprolog.Term;
 
 //Alberto
 public abstract class AbstractEngineState {
+	
+	/**
+     * @author Alberto Sita
+     * 
+     */
 
-    Term query;
-    int nAskedResults;
-    boolean hasOpenAlternatives;
-
-    long serializationTimestamp;
-
-    public abstract Term getQuery();
-
-    public abstract void setQuery(Term query);
-
-    public abstract int getNumberAskedResults();
-
-    public abstract void setNumberAskedResults(int nResultAsked);
-
-    public abstract void setHasOpenAlternatives(boolean hasOpenAlternatives);
-
-    public abstract boolean hasOpenAlternatives();
-
-    public abstract long getSerializationTimestamp();
-
-    public abstract void setSerializationTimestamp(long serializationTimestamp);
-
+	Term query;
+	int nAskedResults;
+	boolean hasOpenAlternatives;
+	
+	long serializationTimestamp;
+	
+	public abstract void setQuery(Term query);
+	public abstract Term getQuery();
+	
+	public abstract void setNumberAskedResults(int nResultAsked);
+	public abstract int getNumberAskedResults();
+	
+	public abstract void setHasOpenAlternatives(boolean hasOpenAlternatives);
+	public abstract boolean hasOpenAlternatives();
+	
+	public abstract long getSerializationTimestamp();
+	public abstract void setSerializationTimestamp(long serializationTimestamp);
+	
 }
