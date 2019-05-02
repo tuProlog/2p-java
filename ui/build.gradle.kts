@@ -19,7 +19,7 @@ configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
-task<JavaExec>("runIde") {
+task<JavaExec>("ide") {
     group = "run"
     dependsOn("classes")
 
@@ -31,7 +31,7 @@ task<JavaExec>("runIde") {
     }
 }
 
-task<JavaExec>("runRepl") {
+task<JavaExec>("repl") {
     group = "run"
     dependsOn("classes")
 
