@@ -159,29 +159,35 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
                 try {
                     ooLib.register(new Struct(keyPair.getKey()), keyPair.getValue());
                 } catch (InvalidObjectIdException ex) {
-                    throw new ScriptException("Could not register object(" + keyPair.getKey() + "): " + ex.getMessage());
+                    throw new ScriptException(
+                            "Could not register object(" + keyPair.getKey() + "): " + ex.getMessage());
                 }
             }
         }
 
         try {
 
-            if (!script.equals(previousScript))
+            if (!script.equals(previousScript)) {
                 useSolveNext = false;
+            }
 
-            if (theory != null)
+            if (theory != null) {
                 prolog.setTheory(new Theory(theory));
+            }
 
-            if (useSolveNext)
+            if (useSolveNext) {
                 info = prolog.solveNext();
-            else
+            } else {
                 info = prolog.solve(script);
+            }
 
             previousScript = script;
 
-            if (solveVars != null)
-                for (Var v : solveVars)
+            if (solveVars != null) {
+                for (Var v : solveVars) {
                     bindings.remove(v.getName());
+                }
+            }
 
             bindings.put(IS_SUCCESS, info.isSuccess());
             bindings.put(IS_HALTED, info.isHalted());
@@ -189,8 +195,9 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
 
             if (info.isSuccess()) {
                 solveVars = info.getBindingVars();
-                for (Var v : solveVars)
+                for (Var v : solveVars) {
                     bindings.put(v.getName(), v.getTerm().toString());
+                }
             }
 
             useSolveNext = info.hasOpenAlternatives();
@@ -205,7 +212,7 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
     @Override
     public Object eval(Reader reader, Bindings bndngs) throws ScriptException {
         BufferedReader bReader = new BufferedReader(reader);
-        String script = new String();
+        String script = "";
         try {
             while (bReader.ready()) {
                 script += bReader.readLine();
@@ -253,8 +260,9 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
 
     @Override
     public void setContext(ScriptContext sc) {
-        if (sc == null)
+        if (sc == null) {
             throw new NullPointerException("Given ScriptContext is null");
+        }
         defaultContext = sc;
     }
 

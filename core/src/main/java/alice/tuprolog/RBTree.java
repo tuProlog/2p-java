@@ -54,8 +54,12 @@ class Node<K extends Comparable<? super K>, V> {
         this.color = nodeColor;
         this.left = left;
         this.right = right;
-        if (left != null) left.parent = this;
-        if (right != null) right.parent = this;
+        if (left != null) {
+            left.parent = this;
+        }
+        if (right != null) {
+            right.parent = this;
+        }
         this.parent = null;
     }
 
@@ -67,10 +71,11 @@ class Node<K extends Comparable<? super K>, V> {
 
     public Node<K, V> sibling() {
         assert parent != null; // Root node has no sibling
-        if (this == parent.left)
+        if (this == parent.left) {
             return parent.right;
-        else
+        } else {
             return parent.left;
+        }
     }
 
     public Node<K, V> uncle() {
@@ -103,7 +108,9 @@ public class RBTree<K extends Comparable<? super K>, V> {
 
     private static void verifyProperty1(Node<?, ?> n) {
         assert nodeColor(n) == Color.RED || nodeColor(n) == Color.BLACK;
-        if (n == null) return;
+        if (n == null) {
+            return;
+        }
         verifyProperty1(n.left);
         verifyProperty1(n.right);
     }
@@ -122,7 +129,9 @@ public class RBTree<K extends Comparable<? super K>, V> {
             assert nodeColor(n.right) == Color.BLACK;
             assert nodeColor(n.parent) == Color.BLACK;
         }
-        if (n == null) return;
+        if (n == null) {
+            return;
+        }
         verifyProperty4(n.left);
         verifyProperty4(n.right);
     }
@@ -164,12 +173,14 @@ public class RBTree<K extends Comparable<? super K>, V> {
         if (n.right != null) {
             printHelper(n.right, indent + INDENT_STEP);
         }
-        for (int i = 0; i < indent; i++)
+        for (int i = 0; i < indent; i++) {
             System.out.print(" ");
-        if (n.color == Color.BLACK)
+        }
+        if (n.color == Color.BLACK) {
             System.out.println(n.key);
-        else
+        } else {
             System.out.println("<" + n.key + ">");
+        }
         if (n.left != null) {
             printHelper(n.left, indent + INDENT_STEP);
         }
@@ -232,10 +243,11 @@ public class RBTree<K extends Comparable<? super K>, V> {
         if (oldn.parent == null) {
             root = newn;
         } else {
-            if (oldn == oldn.parent.left)
+            if (oldn == oldn.parent.left) {
                 oldn.parent.left = newn;
-            else
+            } else {
                 oldn.parent.right = newn;
+            }
         }
         if (newn != null) {
             newn.parent = oldn.parent;
@@ -277,17 +289,19 @@ public class RBTree<K extends Comparable<? super K>, V> {
     }
 
     protected void insertCase1(Node<K, V> n) {
-        if (n.parent == null)
+        if (n.parent == null) {
             n.color = Color.BLACK;
-        else
+        } else {
             insertCase2(n);
+        }
     }
 
     private void insertCase2(Node<K, V> n) {
-        if (nodeColor(n.parent) == Color.BLACK)
+        if (nodeColor(n.parent) == Color.BLACK) {
             return; // Tree is still valid
-        else
+        } else {
             insertCase3(n);
+        }
     }
 
     void insertCase3(Node<K, V> n) {
@@ -326,8 +340,9 @@ public class RBTree<K extends Comparable<? super K>, V> {
     public void delete(K key, ClauseInfo c) {
 
         Node<K, V> n = lookupNode(key);
-        if (n == null)
+        if (n == null) {
             return;  // Key not found, do nothing
+        }
 
         /*must be check if node is a list of clause*/
         @SuppressWarnings("unchecked")
@@ -363,58 +378,62 @@ public class RBTree<K extends Comparable<? super K>, V> {
     }
 
     private void deleteCase1(Node<K, V> n) {
-        if (n.parent == null)
+        if (n.parent == null) {
             return;
-        else
+        } else {
             deleteCase2(n);
+        }
     }
 
     private void deleteCase2(Node<K, V> n) {
         if (nodeColor(n.sibling()) == Color.RED) {
             n.parent.color = Color.RED;
             n.sibling().color = Color.BLACK;
-            if (n == n.parent.left)
+            if (n == n.parent.left) {
                 rotateLeft(n.parent);
-            else
+            } else {
                 rotateRight(n.parent);
+            }
         }
         deleteCase3(n);
     }
 
     private void deleteCase3(Node<K, V> n) {
         if (nodeColor(n.parent) == Color.BLACK &&
-                nodeColor(n.sibling()) == Color.BLACK &&
-                nodeColor(n.sibling().left) == Color.BLACK &&
-                nodeColor(n.sibling().right) == Color.BLACK) {
+            nodeColor(n.sibling()) == Color.BLACK &&
+            nodeColor(n.sibling().left) == Color.BLACK &&
+            nodeColor(n.sibling().right) == Color.BLACK) {
             n.sibling().color = Color.RED;
             deleteCase1(n.parent);
-        } else
+        } else {
             deleteCase4(n);
+        }
     }
 
     private void deleteCase4(Node<K, V> n) {
         if (nodeColor(n.parent) == Color.RED &&
-                nodeColor(n.sibling()) == Color.BLACK &&
-                nodeColor(n.sibling().left) == Color.BLACK &&
-                nodeColor(n.sibling().right) == Color.BLACK) {
+            nodeColor(n.sibling()) == Color.BLACK &&
+            nodeColor(n.sibling().left) == Color.BLACK &&
+            nodeColor(n.sibling().right) == Color.BLACK) {
             n.sibling().color = Color.RED;
             n.parent.color = Color.BLACK;
-        } else
+        } else {
             deleteCase5(n);
+        }
     }
 
     private void deleteCase5(Node<K, V> n) {
         if (n == n.parent.left &&
-                nodeColor(n.sibling()) == Color.BLACK &&
-                nodeColor(n.sibling().left) == Color.RED &&
-                nodeColor(n.sibling().right) == Color.BLACK) {
+            nodeColor(n.sibling()) == Color.BLACK &&
+            nodeColor(n.sibling().left) == Color.RED &&
+            nodeColor(n.sibling().right) == Color.BLACK) {
             n.sibling().color = Color.RED;
             n.sibling().left.color = Color.BLACK;
             rotateRight(n.sibling());
         } else if (n == n.parent.right &&
-                nodeColor(n.sibling()) == Color.BLACK &&
-                nodeColor(n.sibling().right) == Color.RED &&
-                nodeColor(n.sibling().left) == Color.BLACK) {
+                   nodeColor(n.sibling()) == Color.BLACK &&
+                   nodeColor(n.sibling().right) == Color.RED &&
+                   nodeColor(n.sibling().left) == Color.BLACK) {
             n.sibling().color = Color.RED;
             n.sibling().right.color = Color.BLACK;
             rotateLeft(n.sibling());

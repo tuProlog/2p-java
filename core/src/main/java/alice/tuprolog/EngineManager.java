@@ -35,14 +35,19 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
     public synchronized boolean threadCreate(Term threadID, Term goal) {
         id = id + 1;
 
-        if (goal == null) return false;
-        if (goal instanceof Var)
+        if (goal == null) {
+            return false;
+        }
+        if (goal instanceof Var) {
             goal = goal.getTerm();
+        }
 
         EngineRunner er = new EngineRunner(id);
         er.initialize(vm);
 
-        if (!vm.unify(threadID, new Int(id))) return false;
+        if (!vm.unify(threadID, new Int(id))) {
+            return false;
+        }
 
         er.setGoal(goal);
         addRunner(er, id);
@@ -55,7 +60,9 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public SolveInfo join(int id) {
         EngineRunner er = findRunner(id);
-        if (er == null || er.isDetached()) return null;
+        if (er == null || er.isDetached()) {
+            return null;
+        }
         SolveInfo solution = er.read();
         removeRunner(id);
         return solution;
@@ -63,33 +70,43 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public SolveInfo read(int id) {
         EngineRunner er = findRunner(id);
-        if (er == null || er.isDetached()) return null;
+        if (er == null || er.isDetached()) {
+            return null;
+        }
         SolveInfo solution = er.read();
         return solution;
     }
 
     public boolean hasNext(int id) {
         EngineRunner er = findRunner(id);
-        if (er == null || er.isDetached()) return false;
+        if (er == null || er.isDetached()) {
+            return false;
+        }
         return er.hasOpenAlternatives();
     }
 
     public boolean nextSolution(int id) {
         EngineRunner er = findRunner(id);
-        if (er == null || er.isDetached()) return false;
+        if (er == null || er.isDetached()) {
+            return false;
+        }
         boolean bool = er.nextSolution();
         return bool;
     }
 
     public void detach(int id) {
         EngineRunner er = findRunner(id);
-        if (er == null) return;
+        if (er == null) {
+            return;
+        }
         er.detach();
     }
 
     public boolean sendMsg(int dest, Term msg) {
         EngineRunner er = findRunner(dest);
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         Term msgcopy = msg.copy(new LinkedHashMap<Var, Var>(), 0);
         er.sendMsg(msgcopy);
         return true;
@@ -97,7 +114,9 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public boolean sendMsg(String name, Term msg) {
         TermQueue queue = queues.get(name);
-        if (queue == null) return false;
+        if (queue == null) {
+            return false;
+        }
         Term msgcopy = msg.copy(new LinkedHashMap<Var, Var>(), 0);
         queue.store(msgcopy);
         return true;
@@ -105,59 +124,81 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public boolean getMsg(int id, Term msg) {
         EngineRunner er = findRunner(id);
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         return er.getMsg(msg);
     }
 
     public boolean getMsg(String name, Term msg) {
         EngineRunner er = findRunner();
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         TermQueue queue = queues.get(name);
-        if (queue == null) return false;
+        if (queue == null) {
+            return false;
+        }
         return queue.get(msg, vm, er);
     }
 
     public boolean waitMsg(int id, Term msg) {
         EngineRunner er = findRunner(id);
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         return er.waitMsg(msg);
     }
 
     public boolean waitMsg(String name, Term msg) {
         EngineRunner er = findRunner();
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         TermQueue queue = queues.get(name);
-        if (queue == null) return false;
+        if (queue == null) {
+            return false;
+        }
         return queue.wait(msg, vm, er);
     }
 
     public boolean peekMsg(int id, Term msg) {
         EngineRunner er = findRunner(id);
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         return er.peekMsg(msg);
     }
 
     public boolean peekMsg(String name, Term msg) {
         TermQueue queue = queues.get(name);
-        if (queue == null) return false;
+        if (queue == null) {
+            return false;
+        }
         return queue.peek(msg, vm);
     }
 
     public boolean removeMsg(int id, Term msg) {
         EngineRunner er = findRunner(id);
-        if (er == null) return false;
+        if (er == null) {
+            return false;
+        }
         return er.removeMsg(msg);
     }
 
     public boolean removeMsg(String name, Term msg) {
         TermQueue queue = queues.get(name);
-        if (queue == null) return false;
+        if (queue == null) {
+            return false;
+        }
         return queue.remove(msg, vm);
     }
 
     private void removeRunner(int id) {
         EngineRunner er = runners.get(id);
-        if (er == null) return;
+        if (er == null) {
+            return;
+        }
         synchronized (runners) {
             runners.remove(id);
         }
@@ -255,7 +296,9 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
      */
 
     private EngineRunner findRunner(int id) {
-        if (!runners.containsKey(id)) return null;
+        if (!runners.containsKey(id)) {
+            return null;
+        }
         synchronized (runners) {
             return runners.get(id);
         }
@@ -263,8 +306,9 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     private EngineRunner findRunner() {
         int pid = (int) Thread.currentThread().getId();
-        if (!threads.containsKey(pid))
+        if (!threads.containsKey(pid)) {
             return er1;
+        }
         synchronized (threads) {
             synchronized (runners) {
                 int id = threads.get(pid);
@@ -281,7 +325,9 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public boolean createQueue(String name) {
         synchronized (queues) {
-            if (queues.containsKey(name)) return true;
+            if (queues.containsKey(name)) {
+                return true;
+            }
             TermQueue newQ = new TermQueue();
             queues.put(name, newQ);
         }
@@ -301,13 +347,17 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public int queueSize(String name) {
         TermQueue q = queues.get(name);
-        if (q == null) return -1;
+        if (q == null) {
+            return -1;
+        }
         return q.size();
     }
 
     public boolean createLock(String name) {
         synchronized (locks) {
-            if (locks.containsKey(name)) return true;
+            if (locks.containsKey(name)) {
+                return true;
+            }
             ReentrantLock mutex = new ReentrantLock();
             locks.put(name, mutex);
         }
@@ -333,13 +383,17 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public boolean mutexTryLock(String name) {
         ReentrantLock mutex = locks.get(name);
-        if (mutex == null) return false;
+        if (mutex == null) {
+            return false;
+        }
         return mutex.tryLock();
     }
 
     public boolean mutexUnlock(String name) {
         ReentrantLock mutex = locks.get(name);
-        if (mutex == null) return false;
+        if (mutex == null) {
+            return false;
+        }
         try {
             mutex.unlock();
             return true;
@@ -350,7 +404,9 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
 
     public boolean isLocked(String name) {
         ReentrantLock mutex = locks.get(name);
-        if (mutex == null) return false;
+        if (mutex == null) {
+            return false;
+        }
         return mutex.isLocked();
     }
 
@@ -453,10 +509,11 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         } else {
             for (int i = 1; i < numberSol; i++) {
                 s = this.solveNext_untimed();
-                if (s.equals("No more solutions!"))
+                if (s.equals("No more solutions!")) {
                     break;
-                else
+                } else {
                     res.add(s);
+                }
             }
         }
         return JSONSerializerManager.toJSON(res);
@@ -472,10 +529,11 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         } else {
             for (int i = 1; i < numberSol; i++) {
                 s = this.solveNext_timed(maxTime);
-                if (s.equals("No more solutions!"))
+                if (s.equals("No more solutions!")) {
                     break;
-                else
+                } else {
                     res.add(s);
+                }
             }
         }
         return JSONSerializerManager.toJSON(res);
@@ -491,10 +549,11 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         } else {
             for (; ; ) {
                 s = this.solveNext_untimed();
-                if (s.equals("No more solutions!"))
+                if (s.equals("No more solutions!")) {
                     break;
-                else
+                } else {
                     res.add(s);
+                }
             }
         }
         return JSONSerializerManager.toJSON(res);
@@ -510,10 +569,11 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         } else {
             for (; ; ) {
                 s = this.solveNext_timed(maxTime);
-                if (s.equals("No more solutions!"))
+                if (s.equals("No more solutions!")) {
                     break;
-                else
+                } else {
                     res.add(s);
+                }
             }
         }
         return JSONSerializerManager.toJSON(res);

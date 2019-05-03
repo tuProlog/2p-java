@@ -138,19 +138,23 @@ public abstract class Library implements Serializable, IPrimitives {
      * @throws Throwable
      */
     protected Term evalExpression(Term term) throws Throwable {
-        if (term == null)
+        if (term == null) {
             return null;
+        }
         Term val = term.getTerm();
         if (val instanceof Struct) {
             Struct t = (Struct) val;
-            if (term != t)
-                if (!t.isPrimitive())
+            if (term != t) {
+                if (!t.isPrimitive()) {
                     engine.identifyFunctor(t);
+                }
+            }
             if (t.isPrimitive()) {
                 PrimitiveInfo bt = t.getPrimitive();
                 // check for library functors
-                if (bt.isFunctor())
+                if (bt.isFunctor()) {
                     return bt.evalAsFunctor(t);
+                }
             }
         } else if (val instanceof Number) {
             return val;
@@ -202,15 +206,20 @@ public abstract class Library implements Serializable, IPrimitives {
                 String returnTypeName = rclass.getName();
 
                 int type;
-                if (returnTypeName.equals("boolean")) type = PrimitiveInfo.PREDICATE;
-                else if (returnTypeName.equals("alice.tuprolog.Term")) type = PrimitiveInfo.FUNCTOR;
-                else if (returnTypeName.equals("void")) type = PrimitiveInfo.DIRECTIVE;
-                else continue;
+                if (returnTypeName.equals("boolean")) {
+                    type = PrimitiveInfo.PREDICATE;
+                } else if (returnTypeName.equals("alice.tuprolog.Term")) {
+                    type = PrimitiveInfo.FUNCTOR;
+                } else if (returnTypeName.equals("void")) {
+                    type = PrimitiveInfo.DIRECTIVE;
+                } else {
+                    continue;
+                }
 
                 int index = name.lastIndexOf('_');
                 if (index != -1) {
                     try {
-                        int arity = Integer.parseInt(name.substring(index + 1, name.length()));
+                        int arity = Integer.parseInt(name.substring(index + 1));
                         // check arg number
                         if (clist.length == arity) {
                             boolean valid = true;

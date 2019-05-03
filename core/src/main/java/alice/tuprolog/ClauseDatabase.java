@@ -38,20 +38,22 @@ public class ClauseDatabase extends HashMap<String, FamilyClausesList> implement
 
     void addFirst(String key, ClauseInfo d) {
         FamilyClausesList family = get(key);
-        if (family == null)
+        if (family == null) {
             put(key, family = new FamilyClausesList());
+        }
         family.addFirst(d);
     }
 
     void addLast(String key, ClauseInfo d) {
         FamilyClausesList family = get(key);
-        if (family == null)
+        if (family == null) {
             put(key, family = new FamilyClausesList());
+        }
         family.addLast(d);
     }
 
     FamilyClausesList abolish(String key) {
-        return (FamilyClausesList) remove(key);
+        return remove(key);
     }
 
     /**
@@ -62,7 +64,7 @@ public class ClauseDatabase extends HashMap<String, FamilyClausesList> implement
      * @return The list of matching-compatible predicates
      */
     List<ClauseInfo> getPredicates(Term headt) {
-        FamilyClausesList family = (FamilyClausesList) get(((Struct) headt).getPredicateIndicator());
+        FamilyClausesList family = get(((Struct) headt).getPredicateIndicator());
         if (family == null) {
             return new ReadOnlyLinkedList<ClauseInfo>();
         }
@@ -76,7 +78,7 @@ public class ClauseDatabase extends HashMap<String, FamilyClausesList> implement
      * @return The family clauses
      */
     List<ClauseInfo> getPredicates(String key) {
-        FamilyClausesList family = (FamilyClausesList) get(key);
+        FamilyClausesList family = get(key);
         if (family == null) {
             return new ReadOnlyLinkedList<ClauseInfo>();
         }
@@ -96,8 +98,9 @@ public class ClauseDatabase extends HashMap<String, FamilyClausesList> implement
         }
 
         public boolean hasNext() {
-            if (workingList != null && workingList.hasNext())
+            if (workingList != null && workingList.hasNext()) {
                 return true;
+            }
             if (values.hasNext()) {
                 workingList = values.next().iterator();
                 return hasNext(); //start again on next workingList
@@ -106,9 +109,11 @@ public class ClauseDatabase extends HashMap<String, FamilyClausesList> implement
         }
 
         public synchronized ClauseInfo next() {
-            if (workingList.hasNext())
+            if (workingList.hasNext()) {
                 return workingList.next();
-            else return null;
+            } else {
+                return null;
+            }
         }
 
         public void remove() {

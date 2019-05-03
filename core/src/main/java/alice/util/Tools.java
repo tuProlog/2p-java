@@ -59,10 +59,11 @@ public class Tools extends Object {
      * of the specified prefix
      */
     public static String getOpt(String[] args, String prefix) {
-        for (int i = 0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++) {
             if (args[i].equals(prefix)) {
                 return args[i + 1];
             }
+        }
         return null;
     }
 
@@ -71,10 +72,11 @@ public class Tools extends Object {
      * the presence of the option of the specified prefix
      */
     public static boolean isOpt(String[] args, String prefix) {
-        for (int i = 0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++) {
             if (args[i].equals(prefix)) {
                 return true;
             }
+        }
         return false;
     }
 

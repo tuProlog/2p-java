@@ -13,22 +13,26 @@ public class VersionInfo {
         String vmName = System.getProperty("java.vm.name");
 
         if (vmName.contains("Java")) //"Java HotSpot(TM) Client VM"
+        {
             return "Java";
-        else if (vmName.equals("IKVM.NET"))
+        } else if (vmName.equals("IKVM.NET")) {
             return ".NET";
-        else
+        } else {
             throw new RuntimeException();
+        }
     }
 
     public static String getSpecificVersion() {
         String vmName = System.getProperty("java.vm.name");
 
         if (vmName.contains("Java")) //"Java HotSpot(TM) Client VM"
+        {
             return JAVA_SPECIFIC_VERSION;
-        else if (vmName.equals("IKVM.NET"))
+        } else if (vmName.equals("IKVM.NET")) {
             return NET_SPECIFIC_VERSION;
-        else
+        } else {
             throw new RuntimeException();
+        }
     }
 
     public static String getCompleteVersion() {

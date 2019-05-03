@@ -70,7 +70,7 @@ public class Engine implements IEngine {
     public String toString() {
         try {
             return "ExecutionStack: \n" + currentContext + "\n" +
-                    "ChoicePointStore: \n" + choicePointSelector + "\n\n";
+                   "ChoicePointStore: \n" + choicePointSelector + "\n\n";
         } catch (Exception ex) {
             return "";
         }

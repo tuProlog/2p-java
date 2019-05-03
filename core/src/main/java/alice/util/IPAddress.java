@@ -21,7 +21,7 @@ public class IPAddress extends Object {
         int index = address.indexOf(':');
         if (index != -1) {
             try {
-                return Integer.parseInt(address.substring(index + 1, address.length()));
+                return Integer.parseInt(address.substring(index + 1));
             } catch (Exception ex) {
             }
         }

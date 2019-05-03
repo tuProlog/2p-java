@@ -51,8 +51,9 @@ class TermIterator implements Iterator<Term>, java.io.Serializable {
         if (hasNext) {
             if (next == null) {
                 next = parser.nextTerm(true);
-                if (next == null)
+                if (next == null) {
                     throw new NoSuchElementException();
+                }
             }
             hasNext = false;
             Term temp = next;
@@ -72,11 +73,13 @@ class TermIterator implements Iterator<Term>, java.io.Serializable {
      *                              existence of the next term, a syntax error is encountered.
      */
     public boolean hasNext() {
-        if (hasNext)
+        if (hasNext) {
             return hasNext;
+        }
         next = parser.nextTerm(true);
-        if (next != null)
+        if (next != null) {
             hasNext = true;
+        }
         return hasNext;
     }
 

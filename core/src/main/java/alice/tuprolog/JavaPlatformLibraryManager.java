@@ -27,8 +27,9 @@ public class JavaPlatformLibraryManager extends AbstractPlatformLibraryManager i
             for (int i = 0; i < paths.length; i++) {
                 File file = new File(paths[i]);
 
-                if (paths[i].contains(".class"))
+                if (paths[i].contains(".class")) {
                     file = new File(paths[i].substring(0, paths[i].lastIndexOf(File.separator) + 1));
+                }
 
                 urls[i] = (file.toURI().toURL());
             }

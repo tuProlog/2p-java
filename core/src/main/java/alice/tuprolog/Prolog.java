@@ -230,15 +230,17 @@ public class Prolog implements IProlog, Serializable {
         Prolog p = null;
         if (jsonString.contains("FullEngineState")) {
             brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
-        } else
+        } else {
             return p;
+        }
         try {
             p = new Prolog(((FullEngineState) brain).getLibraries());
             p.setTheory(new Theory(((FullEngineState) brain).getDynTheory()));
             p.opManager = new OperatorManager();
             LinkedList<Operator> l = ((FullEngineState) brain).getOp();
-            for (Operator o : l)
+            for (Operator o : l) {
                 p.opManager.opNew(o.name, o.type, o.prio);
+            }
         } catch (InvalidLibraryException e) {
             e.printStackTrace();
             return null;
@@ -270,7 +272,7 @@ public class Prolog implements IProlog, Serializable {
         return alice.util.VersionInfo.getEngineVersion();
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         if (args.length == 1 || args.length == 2) {
             try {
                 String text = Tools.loadText(args[0]);
@@ -384,8 +386,9 @@ public class Prolog implements IProlog, Serializable {
             this.theoryManager.serializeLibraries((FullEngineState) brain);
             this.theoryManager.serializeDynDataBase((FullEngineState) brain);
             ((FullEngineState) brain).setOp((LinkedList<Operator>) this.opManager.getOperators());
-        } else
+        } else {
             brain = new ReducedEngineState();
+        }
 
         this.theoryManager.serializeTimestamp(brain);
         this.engineManager.serializeQueryState(brain);
@@ -649,7 +652,9 @@ public class Prolog implements IProlog, Serializable {
      **/
 
     public SolveInfo solve(Term g) {
-        if (g == null) return null;
+        if (g == null) {
+            return null;
+        }
 
         SolveInfo sinfo = engineManager.solve(g);
 
@@ -660,7 +665,9 @@ public class Prolog implements IProlog, Serializable {
     }
 
     public SolveInfo solve(Term g, long maxTime) {
-        if (g == null) return null;
+        if (g == null) {
+            return null;
+        }
 
         SolveInfo sinfo = engineManager.solve(g, maxTime);
 
@@ -715,8 +722,9 @@ public class Prolog implements IProlog, Serializable {
             QueryEvent ev = new QueryEvent(this, sinfo);
             notifyNewQueryResultAvailable(ev);
             return sinfo;
-        } else
+        } else {
             throw new NoMoreSolutionException();
+        }
     }
 
     public SolveInfo solveNext(long maxTime) throws NoMoreSolutionException {
@@ -725,8 +733,9 @@ public class Prolog implements IProlog, Serializable {
             QueryEvent ev = new QueryEvent(this, sinfo);
             notifyNewQueryResultAvailable(ev);
             return sinfo;
-        } else
+        } else {
             throw new NoMoreSolutionException();
+        }
     }
 
     /**
@@ -1340,8 +1349,9 @@ public class Prolog implements IProlog, Serializable {
     }
 
     final public void spawn() {
-        if (this.canSpawn)
+        if (this.canSpawn) {
             new PrologThread(this).run();
+        }
     }
 
     private void body() {

@@ -68,8 +68,9 @@ public class Parser implements IParser, Serializable {
      */
     public Parser(OperatorManager op, InputStream theoryText) {
         this(theoryText);
-        if (op != null)
+        if (op != null) {
             opManager = op;
+        }
     }
 
     /**
@@ -78,8 +79,9 @@ public class Parser implements IParser, Serializable {
      */
     public Parser(OperatorManager op, String theoryText, HashMap<Term, Integer> mapping) {
         this(theoryText, mapping);
-        if (op != null)
+        if (op != null) {
             opManager = op;
+        }
     }
 
     /**
@@ -88,8 +90,9 @@ public class Parser implements IParser, Serializable {
      */
     public Parser(OperatorManager op, String theoryText) {
         this(theoryText);
-        if (op != null)
+        if (op != null) {
             opManager = op;
+        }
     }
 
     /**
@@ -130,15 +133,18 @@ public class Parser implements IParser, Serializable {
         try {
             Parser p = new Parser(op, st);
             Token t = p.tokenizer.readToken();
-            if (t.isEOF())
+            if (t.isEOF()) {
                 throw new InvalidTermException("Term starts with EOF");
+            }
 
             p.tokenizer.unreadToken(t);
             Term term = p.expr(false);
-            if (term == null)
+            if (term == null) {
                 throw new InvalidTermException("Term is null");
-            if (!p.tokenizer.readToken().isEOF())
+            }
+            if (!p.tokenizer.readToken().isEOF()) {
                 throw new InvalidTermException("The entire string could not be read as one term");
+            }
             term.resolveTerm();
             return term;
         } catch (IOException ex) {
@@ -148,10 +154,11 @@ public class Parser implements IParser, Serializable {
 
     static Number parseInteger(String s) {
         long num = java.lang.Long.parseLong(s);
-        if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE)
+        if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) {
             return new Int((int) num);
-        else
+        } else {
             return new Long(num);
+        }
     }
 
     static Double parseFloat(String s) {
@@ -190,27 +197,30 @@ public class Parser implements IParser, Serializable {
     public Term nextTerm(boolean endNeeded) throws InvalidTermException {
         try {
             Token t = tokenizer.readToken();
-            if (t.isEOF())
+            if (t.isEOF()) {
                 return null;
+            }
 
             tokenizer.unreadToken(t);
             Term term = expr(false);
-            if (term == null)
+            if (term == null) {
                 throw new InvalidTermException("The parser is unable to finish.",
-                        tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                        tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                               tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                               tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+            }
 
-            if (endNeeded && tokenizer.readToken().getType() != Tokenizer.END)
+            if (endNeeded && tokenizer.readToken().getType() != Tokenizer.END) {
                 throw new InvalidTermException("The term '" + term + "' is not ended with a period.",
-                        tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                        tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                               tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                               tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+            }
 
             term.resolveTerm();
             return term;
         } catch (IOException ex) {
             throw new InvalidTermException("An I/O error occured.",
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
         }
     }
 
@@ -230,8 +240,12 @@ public class Parser implements IParser, Serializable {
             int YF = opManager.opPrio(t.seq, "yf");
 
             //YF and YFX has a higher priority than the left side expr and less then top limit
-            if (YF < leftSide.priority || YF > maxPriority) YF = -1;
-            if (YFX < leftSide.priority || YFX > maxPriority) YFX = -1;
+            if (YF < leftSide.priority || YF > maxPriority) {
+                YF = -1;
+            }
+            if (YFX < leftSide.priority || YFX > maxPriority) {
+                YFX = -1;
+            }
 
             //YFX has priority over YF
             if (YFX >= YF && YFX >= OperatorManager.OP_LOW) {
@@ -266,9 +280,15 @@ public class Parser implements IParser, Serializable {
 
             //check that no operator has a priority higher than permitted
             //or a lower priority than the left side expression
-            if (XFX > maxPriority || XFX < OperatorManager.OP_LOW) XFX = -1;
-            if (XFY > maxPriority || XFY < OperatorManager.OP_LOW) XFY = -1;
-            if (XF > maxPriority || XF < OperatorManager.OP_LOW) XF = -1;
+            if (XFX > maxPriority || XFX < OperatorManager.OP_LOW) {
+                XFX = -1;
+            }
+            if (XFY > maxPriority || XFY < OperatorManager.OP_LOW) {
+                XFY = -1;
+            }
+            if (XF > maxPriority || XF < OperatorManager.OP_LOW) {
+                XF = -1;
+            }
 
             //XFX
             boolean haveAttemptedXFX = false;
@@ -277,8 +297,9 @@ public class Parser implements IParser, Serializable {
                 if (found != null) {
                     left = identifyTerm(XFX, new Struct(operator.seq, left.result, found.result), tokenStart);
                     continue;
-                } else
+                } else {
                     haveAttemptedXFX = true;
+                }
             }
             //XFY
             if (XFY >= XF && XFY >= left.priority) {           //XFY has priority, or XFX has failed
@@ -290,7 +311,9 @@ public class Parser implements IParser, Serializable {
             }
             //XF
             if (XF >= left.priority) //XF has priority, or XFX and/or XFY has failed
+            {
                 return identifyTerm(XF, new Struct(operator.seq, left.result), tokenStart);
+            }
 
             //XFX did not have top priority, but XFY failed
             if (!haveAttemptedXFX && XFX >= left.priority) {
@@ -327,37 +350,45 @@ public class Parser implements IParser, Serializable {
 
             if (f.seq.equals("-")) {
                 Token t = tokenizer.readToken();
-                if (t.isNumber())
+                if (t.isNumber()) {
                     return identifyTerm(0, Parser.createNumber("-" + t.seq), tokenStart);
-                else
+                } else {
                     tokenizer.unreadToken(t);
+                }
             }
 
             //check that no operator has a priority higher than permitted
-            if (FY > maxPriority) FY = -1;
-            if (FX > maxPriority) FX = -1;
+            if (FY > maxPriority) {
+                FY = -1;
+            }
+            if (FX > maxPriority) {
+                FX = -1;
+            }
 
 
             //FX has priority over FY
             boolean haveAttemptedFX = false;
             if (FX >= FY && FX >= OperatorManager.OP_LOW) {
                 IdentifiedTerm found = exprA(FX - 1, commaIsEndMarker);    //op(fx, n) exprA(n - 1)
-                if (found != null)
+                if (found != null) {
                     return identifyTerm(FX, new Struct(f.seq, found.result), tokenStart);
-                else
+                } else {
                     haveAttemptedFX = true;
+                }
             }
             //FY has priority over FX, or FX has failed
             if (FY >= OperatorManager.OP_LOW) {
                 IdentifiedTerm found = exprA(FY, commaIsEndMarker); //op(fy,n) exprA(1200)  or   op(fy,n) exprA(n)
-                if (found != null)
+                if (found != null) {
                     return identifyTerm(FY, new Struct(f.seq, found.result), tokenStart);
+                }
             }
             //FY has priority over FX, but FY failed
             if (!haveAttemptedFX && FX >= OperatorManager.OP_LOW) {
                 IdentifiedTerm found = exprA(FX - 1, commaIsEndMarker);    //op(fx, n) exprA(n - 1)
-                if (found != null)
+                if (found != null) {
                     return identifyTerm(FX, new Struct(f.seq, found.result), tokenStart);
+                }
             }
         }
         tokenizer.unreadToken(f);
@@ -407,8 +438,9 @@ public class Parser implements IParser, Serializable {
 
             String functor = t1.seq;
             Token t2 = tokenizer.readToken(); //reading left par
-            if (!t2.isType(Tokenizer.LPAR))
+            if (!t2.isType(Tokenizer.LPAR)) {
                 throw new InvalidTermException("Something identified as functor misses its first left parenthesis");//todo check can be skipped
+            }
             LinkedList<Term> a = expr0_arglist(); //reading arguments
             Token t3 = tokenizer.readToken();
             if (t3.isType(Tokenizer.RPAR)) //reading right par
@@ -418,31 +450,34 @@ public class Parser implements IParser, Serializable {
                 return c;
             }
             throw new InvalidTermException("Missing right parenthesis '(" + a + "' -> here <-",
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
         }
 
         if (t1.isType(Tokenizer.LPAR)) {
             Term term = expr(false);
-            if (tokenizer.readToken().isType(Tokenizer.RPAR))
+            if (tokenizer.readToken().isType(Tokenizer.RPAR)) {
                 return term;
+            }
             throw new InvalidTermException("Missing right parenthesis '(" + term + "' -> here <-",
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
         }
 
         if (t1.isType(Tokenizer.LBRA)) {
             Token t2 = tokenizer.readToken();
-            if (t2.isType(Tokenizer.RBRA))
+            if (t2.isType(Tokenizer.RBRA)) {
                 return new Struct();
+            }
 
             tokenizer.unreadToken(t2);
             Term term = expr0_list();
-            if (tokenizer.readToken().isType(Tokenizer.RBRA))
+            if (tokenizer.readToken().isType(Tokenizer.RBRA)) {
                 return term;
+            }
             throw new InvalidTermException("Missing right bracket '[" + term + " ->' here <-",
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
         }
 
         if (t1.isType(Tokenizer.LBRA2)) {
@@ -461,29 +496,31 @@ public class Parser implements IParser, Serializable {
                 return b;
             }
             throw new InvalidTermException("Missing right braces '{" + arg + "' -> here <-",
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                    tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                           tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
         }
         throw new InvalidTermException("Unexpected token '" + t1.seq + "'",
-                tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                       tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                       tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
     }
 
     //todo make non-recursive?
     private Term expr0_list() throws InvalidTermException, IOException {
         Term head = expr(true);
         Token t = tokenizer.readToken();
-        if (",".equals(t.seq))
+        if (",".equals(t.seq)) {
             return new Struct(head, expr0_list());
-        if ("|".equals(t.seq))
+        }
+        if ("|".equals(t.seq)) {
             return new Struct(head, expr(true));
+        }
         if ("]".equals(t.seq)) {
             tokenizer.unreadToken(t);
             return new Struct(head, new Struct());
         }
         throw new InvalidTermException("The expression '" + head + "' is not followed by either a ',' or '|'  or ']'.",
-                tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                       tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                       tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
     }
 
     //todo make non-recursive
@@ -502,8 +539,8 @@ public class Parser implements IParser, Serializable {
             return l;
         }
         throw new InvalidTermException("The argument '" + head + "' is not followed by either a ',' or ')'.",
-                tokenizer.offsetToRowColumn(getCurrentOffset())[0],
-                tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
+                                       tokenizer.offsetToRowColumn(getCurrentOffset())[0],
+                                       tokenizer.offsetToRowColumn(getCurrentOffset())[1] - 1);
     }
 
     private IdentifiedTerm identifyTerm(int priority, Term term, int offset) {
@@ -512,8 +549,9 @@ public class Parser implements IParser, Serializable {
     }
 
     private void map(Term term, int offset) {
-        if (offsetsMap != null)
+        if (offsetsMap != null) {
             offsetsMap.put(term, offset);
+        }
     }
 
     public HashMap<Term, Integer> getTextMapping() {

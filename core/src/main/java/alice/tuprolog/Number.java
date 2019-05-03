@@ -39,8 +39,9 @@ public abstract class Number extends Term implements Comparable<Number> {
 
     public static Number createNumber(String s) {
         Term t = Term.createTerm(s);
-        if (t instanceof Number)
+        if (t instanceof Number) {
             return (Number) t;
+        }
         throw new InvalidTermException("Term " + t + " is not a number.");
     }
 

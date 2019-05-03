@@ -19,7 +19,9 @@ public class TermQueue {
         boolean found = false;
         do {
             found = search(t, engine, remove);
-            if (found) return true;
+            if (found) {
+                return true;
+            }
             er.setSolving(false);
             try {
                 wait();

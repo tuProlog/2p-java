@@ -172,8 +172,9 @@ public class EngineRunner implements java.io.Serializable, Runnable {
             //Alberto
             env.hasOpenAlternatives = sinfo.hasOpenAlternatives();
 
-            if (!sinfo.hasOpenAlternatives())
+            if (!sinfo.hasOpenAlternatives()) {
                 solveEnd();
+            }
 
             //Alberto
             env.nResultAsked = 0;
@@ -245,8 +246,9 @@ public class EngineRunner implements java.io.Serializable, Runnable {
 
             return sinfo;
 
-        } else
+        } else {
             throw new NoMoreSolutionException();
+        }
     }
 
     public SolveInfo solveNext(long maxTime) throws NoMoreSolutionException {
@@ -275,8 +277,9 @@ public class EngineRunner implements java.io.Serializable, Runnable {
 
             return sinfo;
 
-        } else
+        } else {
             throw new NoMoreSolutionException();
+        }
     }
 
 
@@ -296,9 +299,13 @@ public class EngineRunner implements java.io.Serializable, Runnable {
     }
 
     private void freeze() {
-        if (env == null) return;
+        if (env == null) {
+            return;
+        }
         try {
-            if (stackEnv.getLast() == env) return;
+            if (stackEnv.getLast() == env) {
+                return;
+            }
         } catch (NoSuchElementException e) {
         }
         stackEnv.addLast(env);
@@ -311,8 +318,10 @@ public class EngineRunner implements java.io.Serializable, Runnable {
 
     private void defreeze() {
         last_env = env;
-        if (stackEnv.isEmpty()) return;
-        env = (Engine) (stackEnv.removeLast());
+        if (stackEnv.isEmpty()) {
+            return;
+        }
+        env = stackEnv.removeLast();
     }
 
     List<ClauseInfo> find(Term t) {
@@ -343,7 +352,9 @@ public class EngineRunner implements java.io.Serializable, Runnable {
      * @return true if open alternatives are present
      */
     boolean hasOpenAlternatives() {
-        if (sinfo == null) return false;
+        if (sinfo == null) {
+            return false;
+        }
         return sinfo.hasOpenAlternatives();
     }
 
@@ -354,7 +365,9 @@ public class EngineRunner implements java.io.Serializable, Runnable {
      * @return true if the demonstration was stopped
      */
     boolean isHalted() {
-        if (sinfo == null) return false;
+        if (sinfo == null) {
+            return false;
+        }
         return sinfo.isHalted();
     }
 
@@ -368,9 +381,11 @@ public class EngineRunner implements java.io.Serializable, Runnable {
             threadSolve();
         }
         try {
-            while (hasOpenAlternatives())
-                if (next.get(countNext))
+            while (hasOpenAlternatives()) {
+                if (next.get(countNext)) {
                     threadSolveNext();
+                }
+            }
         } catch (NoMoreSolutionException e) {
             e.printStackTrace();
         }
@@ -405,12 +420,13 @@ public class EngineRunner implements java.io.Serializable, Runnable {
     public SolveInfo read() {
         lockVar.lock();
         try {
-            while (solving || sinfo == null)
+            while (solving || sinfo == null) {
                 try {
                     cond.await();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
         } finally {
             lockVar.unlock();
         }
@@ -496,8 +512,9 @@ public class EngineRunner implements java.io.Serializable, Runnable {
             //Alberto
             env.hasOpenAlternatives = sinfo.hasOpenAlternatives();
 
-            if (!sinfo.hasOpenAlternatives())
+            if (!sinfo.hasOpenAlternatives()) {
                 solveEnd();
+            }
 
             //Alberto
             env.nResultAsked = 0;

@@ -106,8 +106,9 @@ public abstract class Term implements Serializable {
             return JSONSerializerManager.fromJSON(jsonString, Long.class);
         } else if (jsonString.contains("Float")) {
             return JSONSerializerManager.fromJSON(jsonString, Float.class);
-        } else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -168,8 +169,9 @@ public abstract class Term implements Serializable {
      * the isEqual method.
      */
     public boolean equals(Object t) {
-        if (!(t instanceof Term))
+        if (!(t instanceof Term)) {
             return false;
+        }
         return isEqual((Term) t);
     }
 
@@ -189,10 +191,11 @@ public abstract class Term implements Serializable {
      * Tests if this term (as java object) is equal to another
      */
     public boolean isEqualObject(Term t) { //Alberto
-        if (!(t instanceof Term))
+        if (!(t instanceof Term)) {
             return false;
-        else
+        } else {
             return this == t;
+        }
     }
 
     /**

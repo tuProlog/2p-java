@@ -23,7 +23,7 @@ public class Generator {
     static {
         try {
             defineClassMethod = Proxy.class.getDeclaredMethod("defineClass0", ClassLoader.class,
-                    String.class, byte[].class, int.class, int.class);
+                                                              String.class, byte[].class, int.class, int.class);
             defineClassMethod.setAccessible(true);
         } catch (NoSuchMethodException e) {
             throw new ExceptionInInitializerError(e);

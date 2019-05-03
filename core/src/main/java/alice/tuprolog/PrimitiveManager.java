@@ -79,7 +79,7 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
     void deletePrimitiveInfo(IPrimitives src) {
         Iterator<PrimitiveInfo> it = libHashMap.remove(src).iterator();
         while (it.hasNext()) {
-            String k = ((PrimitiveInfo) it.next()).invalidate();
+            String k = it.next().invalidate();
             directiveHashMap.remove(k);
             predicateHashMap.remove(k);
             functorHashMap.remove(k);
@@ -109,8 +109,9 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
             } catch (InvocationTargetException ite) {
                 throw ite.getTargetException();
             }
-        } else
+        } else {
             return false;
+        }
     }
 
     public void identifyPredicate(Term term) {
@@ -148,13 +149,13 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
 
         switch (typeOfPrimitive) {
             case PrimitiveInfo.DIRECTIVE:
-                prim = (PrimitiveInfo) directiveHashMap.get(key);
+                prim = directiveHashMap.get(key);
                 break;
             case PrimitiveInfo.PREDICATE:
-                prim = (PrimitiveInfo) predicateHashMap.get(key);
+                prim = predicateHashMap.get(key);
                 break;
             case PrimitiveInfo.FUNCTOR:
-                prim = (PrimitiveInfo) functorHashMap.get(key);
+                prim = functorHashMap.get(key);
                 break;
         }
         t.setPrimitive(prim);
@@ -162,7 +163,7 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
 
     Library getLibraryDirective(String name, int nArgs) {
         try {
-            return (Library) ((PrimitiveInfo) directiveHashMap.get(name + "/" + nArgs)).getSource();
+            return (Library) directiveHashMap.get(name + "/" + nArgs).getSource();
         } catch (NullPointerException e) {
             return null;
         }
@@ -170,7 +171,7 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
 
     Library getLibraryPredicate(String name, int nArgs) {
         try {
-            return (Library) ((PrimitiveInfo) predicateHashMap.get(name + "/" + nArgs)).getSource();
+            return (Library) predicateHashMap.get(name + "/" + nArgs).getSource();
         } catch (NullPointerException e) {
             return null;
         }
@@ -178,7 +179,7 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
 
     Library getLibraryFunctor(String name, int nArgs) {
         try {
-            return (Library) ((PrimitiveInfo) functorHashMap.get(name + "/" + nArgs)).getSource();
+            return (Library) functorHashMap.get(name + "/" + nArgs).getSource();
         } catch (NullPointerException e) {
             return null;
         }

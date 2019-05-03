@@ -48,11 +48,15 @@ public class ChoicePointStore {
      * @return
      */
     protected boolean existChoicePoint() {
-        if (pointer == null) return false;
+        if (pointer == null) {
+            return false;
+        }
         ClauseStore clauses;
         do {
             clauses = pointer.compatibleGoals;
-            if (clauses.existCompatibleClause()) return true;
+            if (clauses.existCompatibleClause()) {
+                return true;
+            }
             pointer = pointer.prevChoicePointContext;
         } while (pointer != null);
         return false;

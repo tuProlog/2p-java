@@ -26,7 +26,9 @@ public class AndroidPlatformLibraryManager extends AbstractPlatformLibraryManage
 
         try {
             dexPath = paths[0];
-            loader = (ClassLoader) Class.forName("dalvik.system.DexClassLoader").getConstructor(String.class, String.class, String.class, ClassLoader.class).newInstance(dexPath, this.getOptimizedDirectory(), null, getClass().getClassLoader());
+            loader = (ClassLoader) Class.forName("dalvik.system.DexClassLoader")
+                                        .getConstructor(String.class, String.class, String.class, ClassLoader.class)
+                                        .newInstance(dexPath, this.getOptimizedDirectory(), null, getClass().getClassLoader());
             lib = (Library) Class.forName(className, true, loader).newInstance();
 
             String name = lib.getName();

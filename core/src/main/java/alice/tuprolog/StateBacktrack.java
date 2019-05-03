@@ -42,7 +42,9 @@ public class StateBacktrack extends State {
             e.nextState = c.END_FALSE;
             Struct goal = e.currentContext.currentGoal;
             if (!c.getTheoryManager().checkExistance(goal.getPredicateIndicator())) //Alberto
+            {
                 c.warn("The predicate " + goal.getPredicateIndicator() + " is unknown.");
+            }
             return;
         }
 
@@ -73,8 +75,9 @@ public class StateBacktrack extends State {
                 pointer = pointer.getTail();
             }
             curCtx.trailingVars = pointer;
-            if (curCtx.fatherCtx == null)
+            if (curCtx.fatherCtx == null) {
                 break;
+            }
             stopDeunify = curCtx.fatherVarsList;
             fatherIndex = curCtx.fatherGoalId;
             curCtx = curCtx.fatherCtx;

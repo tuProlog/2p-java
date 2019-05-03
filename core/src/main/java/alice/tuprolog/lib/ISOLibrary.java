@@ -34,11 +34,13 @@ public class ISOLibrary extends Library {
 
     public boolean atom_length_2(Term arg0, Term len) throws PrologError {
         arg0 = arg0.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
-        if (!arg0.isAtom())
+        }
+        if (!arg0.isAtom()) {
             throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
-                    arg0);
+                                         arg0);
+        }
         Struct atom = (Struct) arg0;
         return unify(len, new Int(atom.getName().length()));
     }
@@ -49,7 +51,7 @@ public class ISOLibrary extends Library {
         if (arg0 instanceof Var) {
             if (!arg1.isList()) {
                 throw PrologError.type_error(engine.getEngineManager(), 2,
-                        "list", arg1);
+                                             "list", arg1);
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
@@ -70,7 +72,6 @@ public class ISOLibrary extends Library {
 
                 } catch (Exception ex) {
                 }
-                ;
                 st = st.concat(st1);
                 list = (Struct) list.getTerm(1);
             }
@@ -78,7 +79,7 @@ public class ISOLibrary extends Library {
         } else {
             if (!arg0.isAtom()) {
                 throw PrologError.type_error(engine.getEngineManager(), 1,
-                        "atom", arg0);
+                                             "atom", arg0);
             }
             String st = ((Struct) arg0).getName();
             Term[] tlist = new Term[st.length()];
@@ -102,21 +103,24 @@ public class ISOLibrary extends Library {
         if (arg1 instanceof Var) {
             if (arg0.isAtom()) {
                 String st = ((Struct) arg0).getName();
-                if (st.length() <= 1)
+                if (st.length() <= 1) {
                     return unify(arg1, new Int(st.charAt(0)));
-                else
+                } else {
                     throw PrologError.type_error(engine.getEngineManager(), 1,
-                            "character", arg0);
-            } else
+                                                 "character", arg0);
+                }
+            } else {
                 throw PrologError.type_error(engine.getEngineManager(), 1,
-                        "character", arg0);
+                                             "character", arg0);
+            }
         } else if ((arg1 instanceof Int)
-                || (arg1 instanceof alice.tuprolog.Long)) {
+                   || (arg1 instanceof alice.tuprolog.Long)) {
             char c = (char) ((Number) arg1).intValue();
             return unify(arg0, new Struct("" + c));
-        } else
+        } else {
             throw PrologError.type_error(engine.getEngineManager(), 2,
-                    "integer", arg1);
+                                         "integer", arg1);
+        }
     }
 
     //
@@ -130,9 +134,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.sin(((Number) val0)
-                    .doubleValue()));
+                                                              .doubleValue()));
+        }
         return null;
     }
 
@@ -143,9 +148,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.cos(((Number) val0)
-                    .doubleValue()));
+                                                              .doubleValue()));
+        }
         return null;
     }
 
@@ -156,9 +162,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.exp(((Number) val0)
-                    .doubleValue()));
+                                                              .doubleValue()));
+        }
         return null;
     }
 
@@ -169,9 +176,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.atan(((Number) val0)
-                    .doubleValue()));
+                                                               .doubleValue()));
+        }
         return null;
     }
 
@@ -182,9 +190,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.log(((Number) val0)
-                    .doubleValue()));
+                                                              .doubleValue()));
+        }
         return null;
     }
 
@@ -195,9 +204,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.sqrt(((Number) val0)
-                    .doubleValue()));
+                                                               .doubleValue()));
+        }
         return null;
     }
 
@@ -208,12 +218,14 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long)
+        if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long) {
             return new alice.tuprolog.Int(Math.abs(((Number) val0).intValue()));
+        }
         if (val0 instanceof alice.tuprolog.Double
-                || val0 instanceof alice.tuprolog.Float)
+            || val0 instanceof alice.tuprolog.Float) {
             return new alice.tuprolog.Double(Math.abs(((Number) val0)
-                    .doubleValue()));
+                                                              .doubleValue()));
+        }
         return null;
     }
 
@@ -224,13 +236,15 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long)
+        if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long) {
             return new alice.tuprolog.Double(
                     ((Number) val0).intValue() > 0 ? 1.0 : -1.0);
+        }
         if (val0 instanceof alice.tuprolog.Double
-                || val0 instanceof alice.tuprolog.Float)
+            || val0 instanceof alice.tuprolog.Float) {
             return new alice.tuprolog.Double(
                     ((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
+        }
         return null;
     }
 
@@ -241,9 +255,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double((long) Math.rint(((Number) val0)
-                    .doubleValue()));
+                                                                      .doubleValue()));
+        }
         return null;
     }
 
@@ -268,8 +283,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Double(((Number) val0).doubleValue());
+        }
         return null;
     }
 
@@ -280,8 +296,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Int((int) Math.floor(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -292,9 +309,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new alice.tuprolog.Long(Math.round(((Number) val0)
-                    .doubleValue()));
+                                                              .doubleValue()));
+        }
         return null;
     }
 
@@ -305,8 +323,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Int((int) Math.rint(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -317,8 +336,9 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number)
+        if (val0 instanceof Number) {
             return new Int((int) Math.ceil(((Number) val0).doubleValue()));
+        }
         return null;
     }
 
@@ -331,9 +351,10 @@ public class ISOLibrary extends Library {
         } catch (Throwable e) {
 
         }
-        if (val0 instanceof Number && val1 instanceof Number)
+        if (val0 instanceof Number && val1 instanceof Number) {
             return new alice.tuprolog.Int(((Number) val0).intValue()
-                    / ((Number) val1).intValue());
+                                          / ((Number) val1).intValue());
+        }
         return null;
     }
 
@@ -367,7 +388,7 @@ public class ISOLibrary extends Library {
         }
         if (val0 instanceof Number && val1 instanceof Number) {
             return new alice.tuprolog.Double(Math.IEEEremainder(((Number) val0)
-                    .doubleValue(), ((Number) val1).doubleValue()));
+                                                                        .doubleValue(), ((Number) val1).doubleValue()));
         }
         return null;
     }
@@ -381,70 +402,74 @@ public class ISOLibrary extends Library {
                 // operators defined by the ISOLibrary theory
                 //
                 ":- op(  300, yfx,  'div'). \n"
-                        + ":- op(  400, yfx,  'mod'). \n"
-                        + ":- op(  400, yfx,  'rem'). \n"
-                        + ":- op(  200, fx,   'sin'). \n"
-                        + ":- op(  200, fx,   'cos'). \n"
-                        + ":- op(  200, fx,   'sqrt'). \n"
-                        + ":- op(  200, fx,   'atan'). \n"
-                        + ":- op(  200, fx,   'exp'). \n"
-                        + ":- op(  200, fx,   'log'). \n"
-                        +
-                        //
-                        // flags defined by the ISOLibrary theory
-                        //
-                        ":- flag(bounded, [true,false], true, false).\n"
-                        + ":- flag(max_integer, ["
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + "], "
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + ",false).\n"
-                        + ":- flag(min_integer, ["
-                        + new Integer(Integer.MIN_VALUE).toString()
-                        + "], "
-                        + new Integer(Integer.MIN_VALUE).toString()
-                        + ",false).\n"
-                        + ":- flag(integer_rounding_function, [up,down], down, false).\n"
-                        + ":- flag(char_conversion,[on,off],off,false).\n"
-                        + ":- flag(debug,[on,off],off,false).\n"
-                        + ":- flag(max_arity, ["
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + "], "
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + ",false).\n"
-                        + ":- flag(undefined_predicate, [error,fail,warning], fail, false).\n"
-                        + ":- flag(double_quotes, [atom,chars,codes], atom, false).\n"
-                        //
-                        //
-                        + "bound(X):-ground(X).\n                                                                                  "
-                        + "unbound(X):-not(ground(X)).\n                                                                          "
+                + ":- op(  400, yfx,  'mod'). \n"
+                + ":- op(  400, yfx,  'rem'). \n"
+                + ":- op(  200, fx,   'sin'). \n"
+                + ":- op(  200, fx,   'cos'). \n"
+                + ":- op(  200, fx,   'sqrt'). \n"
+                + ":- op(  200, fx,   'atan'). \n"
+                + ":- op(  200, fx,   'exp'). \n"
+                + ":- op(  200, fx,   'log'). \n"
+                +
+                //
+                // flags defined by the ISOLibrary theory
+                //
+                ":- flag(bounded, [true,false], true, false).\n"
+                + ":- flag(max_integer, ["
+                + new Integer(Integer.MAX_VALUE).toString()
+                + "], "
+                + new Integer(Integer.MAX_VALUE).toString()
+                + ",false).\n"
+                + ":- flag(min_integer, ["
+                + new Integer(Integer.MIN_VALUE).toString()
+                + "], "
+                + new Integer(Integer.MIN_VALUE).toString()
+                + ",false).\n"
+                + ":- flag(integer_rounding_function, [up,down], down, false).\n"
+                + ":- flag(char_conversion,[on,off],off,false).\n"
+                + ":- flag(debug,[on,off],off,false).\n"
+                + ":- flag(max_arity, ["
+                + new Integer(Integer.MAX_VALUE).toString()
+                + "], "
+                + new Integer(Integer.MAX_VALUE).toString()
+                + ",false).\n"
+                + ":- flag(undefined_predicate, [error,fail,warning], fail, false).\n"
+                + ":- flag(double_quotes, [atom,chars,codes], atom, false).\n"
+                //
+                //
+                +
+                "bound(X):-ground(X).\n                                                                                  "
+                +
+                "unbound(X):-not(ground(X)).\n                                                                          "
 
-                        //
-                        + "atom_concat(F,S,R) :- catch(atom_concat0(F,S,R), Error, false).\n"
-                        + "atom_concat0(F,S,R) :- var(R), !,(atom_chars(S,SL),append(FL,SL,RS),atom_chars(F,FL),atom_chars(R,RS)).  \n"
-                        + "atom_concat0(F,S,R) :-(atom_chars(R,RS), append(FL,SL,RS),atom_chars(F,FL),atom_chars(S,SL)).\n"
+                //
+                + "atom_concat(F,S,R) :- catch(atom_concat0(F,S,R), Error, false).\n"
+                +
+                "atom_concat0(F,S,R) :- var(R), !,(atom_chars(S,SL),append(FL,SL,RS),atom_chars(F,FL),atom_chars(R,RS)).  \n"
+                + "atom_concat0(F,S,R) :-(atom_chars(R,RS), append(FL,SL,RS),atom_chars(F,FL),atom_chars(S,SL)).\n"
 
-                        + "atom_codes(A,L):- catch(atom_codes0(A,L), Error, false).\n"
-                        + "atom_codes0(A,L):-nonvar(A),atom_chars(A,L1),!,chars_codes(L1,L).\n"
-                        + "atom_codes0(A,L):-nonvar(L), list(L), !,chars_codes(L1,L),atom_chars(A,L1).\n"
-                        + "chars_codes([],[]).\n"
-                        + "chars_codes([X|L1],[Y|L2]):-char_code(X,Y),chars_codes(L1,L2).\n"
+                + "atom_codes(A,L):- catch(atom_codes0(A,L), Error, false).\n"
+                + "atom_codes0(A,L):-nonvar(A),atom_chars(A,L1),!,chars_codes(L1,L).\n"
+                + "atom_codes0(A,L):-nonvar(L), list(L), !,chars_codes(L1,L),atom_chars(A,L1).\n"
+                + "chars_codes([],[]).\n"
+                + "chars_codes([X|L1],[Y|L2]):-char_code(X,Y),chars_codes(L1,L2).\n"
 
-                        + "sub_atom(Atom,B,L,A,Sub):- sub_atom_guard(Atom,B,L,A,Sub), sub_atom0(Atom,B,L,A,Sub).\n"
-                        + "sub_atom0(Atom,B,L,A,Sub):-atom_chars(Atom,L1),sub_list(L2,L1,B),atom_chars(Sub,L2),length(L2,L), length(L1,Len), A is Len-(B+L).\n"
-                        + "sub_list([],_,0).\n"
-                        + "sub_list([X|L1],[X|L2],0):- sub_list_seq(L1,L2).\n"
-                        + "sub_list(L1,[_|L2],N):- sub_list(L1,L2,M), N is M + 1.\n"
-                        + "sub_list_seq([],L).\n"
-                        + "sub_list_seq([X|L1],[X|L2]):-sub_list_seq(L1,L2).\n"
+                + "sub_atom(Atom,B,L,A,Sub):- sub_atom_guard(Atom,B,L,A,Sub), sub_atom0(Atom,B,L,A,Sub).\n"
+                +
+                "sub_atom0(Atom,B,L,A,Sub):-atom_chars(Atom,L1),sub_list(L2,L1,B),atom_chars(Sub,L2),length(L2,L), length(L1,Len), A is Len-(B+L).\n"
+                + "sub_list([],_,0).\n"
+                + "sub_list([X|L1],[X|L2],0):- sub_list_seq(L1,L2).\n"
+                + "sub_list(L1,[_|L2],N):- sub_list(L1,L2,M), N is M + 1.\n"
+                + "sub_list_seq([],L).\n"
+                + "sub_list_seq([X|L1],[X|L2]):-sub_list_seq(L1,L2).\n"
 
-                        + "number_chars(Number,List):-catch(number_chars0(Number,List), Error, false).\n"
-                        + "number_chars0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_chars(Struct,List).\n"
-                        + "number_chars0(Number,List):-atom_chars(Struct,List),num_atom(Number,Struct).\n"
+                + "number_chars(Number,List):-catch(number_chars0(Number,List), Error, false).\n"
+                + "number_chars0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_chars(Struct,List).\n"
+                + "number_chars0(Number,List):-atom_chars(Struct,List),num_atom(Number,Struct).\n"
 
-                        + "number_codes(Number,List):-catch(number_codes0(Number,List), Error, false).\n"
-                        + "number_codes0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_codes(Struct,List).\n"
-                        + "number_codes0(Number,List):-atom_codes(Struct,List),num_atom(Number,Struct).\n";
+                + "number_codes(Number,List):-catch(number_codes0(Number,List), Error, false).\n"
+                + "number_codes0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_codes(Struct,List).\n"
+                + "number_codes0(Number,List):-atom_codes(Struct,List),num_atom(Number,Struct).\n";
 
     }
 
@@ -453,8 +478,9 @@ public class ISOLibrary extends Library {
     public boolean sub_atom_guard_5(Term arg0, Term arg1, Term arg2, Term arg3, Term arg4)
             throws PrologError {
         arg0 = arg0.getTerm();
-        if (!arg0.isAtom())
+        if (!arg0.isAtom()) {
             throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+        }
         return true;
     }
 

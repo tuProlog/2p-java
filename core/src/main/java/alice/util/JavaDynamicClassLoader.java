@@ -23,9 +23,10 @@ public class JavaDynamicClassLoader extends AbstractDynamicClassLoader {
         Class<?> result = null;
         String classNameReplaced = className.replace(".", File.separator);
 
-        result = (Class<?>) classCache.get(className);
-        if (result != null)
+        result = classCache.get(className);
+        if (result != null) {
             return result;
+        }
         try {
             return findSystemClass(className);
         } catch (ClassNotFoundException e) {

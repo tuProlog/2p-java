@@ -35,8 +35,9 @@ public class ClauseStore {
     public static ClauseStore build(Term goal, List<Var> vars, List<ClauseInfo> familyClauses) {
         ClauseStore clauseStore = new ClauseStore(goal, vars);
         clauseStore.clauses = OneWayList.transform2(familyClauses);
-        if (clauseStore.clauses == null || !clauseStore.existCompatibleClause())
+        if (clauseStore.clauses == null || !clauseStore.existCompatibleClause()) {
             return null;
+        }
         return clauseStore;
     }
 
@@ -44,11 +45,14 @@ public class ClauseStore {
      * Restituisce la clausola da caricare
      */
     public ClauseInfo fetch() {
-        if (clauses == null) return null;
-        deunify(vars);
-        if (!checkCompatibility(goal))
+        if (clauses == null) {
             return null;
-        ClauseInfo clause = (ClauseInfo) clauses.getHead();
+        }
+        deunify(vars);
+        if (!checkCompatibility(goal)) {
+            return null;
+        }
+        ClauseInfo clause = clauses.getHead();
         clauses = clauses.getTail();
         haveAlternatives = checkCompatibility(goal);
         return clause;
@@ -84,7 +88,7 @@ public class ClauseStore {
         //deunifico le variabili termporaneamente
         Iterator<Var> it = varsToDeunify.iterator();
         while (it.hasNext()) {
-            Var v = ((Var) it.next());
+            Var v = it.next();
             saveUnifications.add(v.getLink());
             v.free();
         }
@@ -118,11 +122,15 @@ public class ClauseStore {
      * @param goal
      */
     private boolean checkCompatibility(Term goal) {
-        if (clauses == null) return false;
+        if (clauses == null) {
+            return false;
+        }
         ClauseInfo clause = null;
         do {
-            clause = (ClauseInfo) clauses.getHead();
-            if (goal.match(clause.getHead())) return true;
+            clause = clauses.getHead();
+            if (goal.match(clause.getHead())) {
+                return true;
+            }
             clauses = clauses.getTail();
         } while (clauses != null);
         return false;
@@ -130,8 +138,8 @@ public class ClauseStore {
 
     public String toString() {
         return "clauses: " + clauses + "\n" +
-                "goal: " + goal + "\n" +
-                "vars: " + vars + "\n";
+               "goal: " + goal + "\n" +
+               "vars: " + vars + "\n";
     }
 
     public List<ClauseInfo> getClauses() {

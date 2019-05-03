@@ -54,8 +54,9 @@ public class OperatorManager implements IOperatorManager, Serializable, Operator
     //Usato anche nel management JMX
     public synchronized void opNew(String name, String type, int prio) {
         final Operator op = new Operator(name, type, prio);
-        if (prio >= OP_LOW && prio <= OP_HIGH)
+        if (prio >= OP_LOW && prio <= OP_HIGH) {
             operatorList.addOperator(op);
+        }
     }
 
     /**
@@ -74,8 +75,9 @@ public class OperatorManager implements IOperatorManager, Serializable, Operator
     public synchronized int opNext(int prio) {
         int n = 0;
         for (Operator opFromList : operatorList) {
-            if (opFromList.prio > n && opFromList.prio < prio)
+            if (opFromList.prio > n && opFromList.prio < prio) {
                 n = opFromList.prio;
+            }
         }
         return n;
     }
@@ -132,8 +134,9 @@ public class OperatorManager implements IOperatorManager, Serializable, Operator
         public boolean addOperator(Operator op) {
             final String nameTypeKey = op.name + op.type;
             Operator matchingOp = nameTypeToKey.get(nameTypeKey);
-            if (matchingOp != null)
+            if (matchingOp != null) {
                 super.remove(matchingOp);       //removes found match from the main list
+            }
             nameTypeToKey.put(nameTypeKey, op); //writes over found match in nameTypeToKey map
             return super.add(op);               //adds new operator to the main list
         }
@@ -146,10 +149,10 @@ public class OperatorManager implements IOperatorManager, Serializable, Operator
         @Override
         public Object clone() {
             OperatorRegister or = (OperatorRegister) super.clone();
-            Iterator<Operator> ior = (Iterator<Operator>) or.iterator();
+            Iterator<Operator> ior = or.iterator();
             or.nameTypeToKey = new HashMap<String, Operator>();
             while (ior.hasNext()) {
-                Operator o = (Operator) ior.next();
+                Operator o = ior.next();
                 or.nameTypeToKey.put(o.name + o.type, o);
             }
             return or;

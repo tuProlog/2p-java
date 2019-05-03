@@ -148,8 +148,9 @@ public class SolveInfo implements Serializable {
      */
     public Term getTerm(String varName) throws NoSolutionException, UnknownVarException {
         Term t = getVarValue(varName);
-        if (t == null)
+        if (t == null) {
             throw new UnknownVarException();
+        }
         return t;
     }
 
@@ -161,14 +162,15 @@ public class SolveInfo implements Serializable {
         if (isSuccess) {
             Iterator<Var> it = bindings.iterator();
             while (it.hasNext()) {
-                Var v = (Var) it.next();
+                Var v = it.next();
                 if (v != null && v.getName().equals(varName)) {
                     return v.getTerm();
                 }
             }
             return null;
-        } else
+        } else {
             throw new NoSolutionException();
+        }
     }
 
     /**
@@ -187,19 +189,20 @@ public class SolveInfo implements Serializable {
             }
             Iterator<Var> it = bindings.iterator();
             while (it.hasNext()) {
-                Var v = (Var) it.next();
+                Var v = it.next();
                 if (v != null && !v.isAnonymous() && v.isBound() &&
-                        (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
+                    (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
                     st.append(v);
                     st.append("  ");
                 }
             }
             return st.toString().trim();
         } else {
-            if (endState == EngineRunner.HALT)
+            if (endState == EngineRunner.HALT) {
                 return ("halt.");
-            else
+            } else {
                 return "no.";
+            }
         }
     }
 

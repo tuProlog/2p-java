@@ -53,8 +53,9 @@ class Token implements Serializable {
     }
 
     public boolean isOperator(boolean commaIsEndMarker) {
-        if (commaIsEndMarker && ",".equals(seq))
+        if (commaIsEndMarker && ",".equals(seq)) {
             return false;
+        }
         return getAttribute() == Tokenizer.OPERATOR;
     }
 

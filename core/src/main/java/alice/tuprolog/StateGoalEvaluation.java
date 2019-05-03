@@ -43,7 +43,7 @@ public class StateGoalEvaluation extends State {
             try {
                 e.nextState = (primitive
                         .evalAsPredicate(e.currentContext.currentGoal)) ? c.GOAL_SELECTION
-                        : c.BACKTRACK;
+                                                                        : c.BACKTRACK;
             } catch (HaltException he) {
                 e.nextState = c.END_HALT;
             } catch (Throwable t) {

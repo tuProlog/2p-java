@@ -70,8 +70,9 @@ public class StateEnd extends State {
 
     void doJob(Engine e) {
         vars = new ArrayList<Var>();
-        if (e.startGoal != null)
+        if (e.startGoal != null) {
             goal = (Struct) e.startGoal.copyResult(e.goalVars, vars);
+        }
     }
 
 }

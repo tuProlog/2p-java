@@ -27,10 +27,11 @@ public class OutputStreamAdapter extends OutputStream {
     @Override
     public void write(int b) throws IOException {
 
-        if (b == -1)
+        if (b == -1) {
             writer.write(-1);
-        else
+        } else {
             writer.write(0xFF & b);
+        }
 
         flush();
     }

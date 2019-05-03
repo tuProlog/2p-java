@@ -68,7 +68,8 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
     static final int FUNCTOR = 0x0100;
     static final int OPERATOR = 0x0200;
     static final int EOF = 0x1000;
-    static final char[] GRAPHIC_CHARS = {'\\', '$', '&', '?', '^', '@', '#', '.', ',', ':', ';', '=', '<', '>', '+', '-', '*', '/', '~'};
+    static final char[] GRAPHIC_CHARS = {'\\', '$', '&', '?', '^', '@', '#', '.', ',', ':', ';', '=', '<', '>', '+',
+                                         '-', '*', '/', '~'};
     private static final long serialVersionUID = 1L;
 
     static {
@@ -147,8 +148,9 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
      */
     private static int isCharacterCodeConstantToken(int typec, String svalc) {
         if (svalc != null) {
-            if (svalc.length() == 1)
+            if (svalc.length() == 1) {
                 return (int) svalc.charAt(0);
+            }
             if (svalc.length() > 1) {
 // TODO the following charachters is not implemented:
 //                * 1 meta escape sequence (* 6.4.2.1 *) todo
@@ -159,9 +161,11 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
             }
         }
         if (typec == ' ' ||                       // space char (* 6.5.4 *)
-                Arrays.binarySearch(GRAPHIC_CHARS, (char) typec) >= 0)  // graphic char (* 6.5.1 *)
+            Arrays.binarySearch(GRAPHIC_CHARS, (char) typec) >= 0)  // graphic char (* 6.5.1 *)
 //            TODO solo char (* 6.5.3 *)
+        {
             return typec;
+        }
 
         return -1;
     }
@@ -222,8 +226,9 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
                 do {
                     typea = typeb;
                     typeb = tokenConsume();
-                    if (typea == -1 && typeb == -1)
+                    if (typea == -1 && typeb == -1) {
                         throw new InvalidTermException("Invalid multi-line comment statement");
+                    }
                 } while (typea != '*' || typeb != '/');
                 return readNextToken();
             } else {
@@ -237,25 +242,47 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
         /**/
 
         // syntactic charachters
-        if (typea == TT_EOF) return new Token("", Tokenizer.EOF);
-        if (typea == '(') return new Token("(", Tokenizer.LPAR);
-        if (typea == ')') return new Token(")", Tokenizer.RPAR);
-        if (typea == '{') return new Token("{", Tokenizer.LBRA2);
-        if (typea == '}') return new Token("}", Tokenizer.RBRA2);
-        if (typea == '[') return new Token("[", Tokenizer.LBRA);
-        if (typea == ']') return new Token("]", Tokenizer.RBRA);
-        if (typea == '|') return new Token("|", Tokenizer.BAR);
+        if (typea == TT_EOF) {
+            return new Token("", Tokenizer.EOF);
+        }
+        if (typea == '(') {
+            return new Token("(", Tokenizer.LPAR);
+        }
+        if (typea == ')') {
+            return new Token(")", Tokenizer.RPAR);
+        }
+        if (typea == '{') {
+            return new Token("{", Tokenizer.LBRA2);
+        }
+        if (typea == '}') {
+            return new Token("}", Tokenizer.RBRA2);
+        }
+        if (typea == '[') {
+            return new Token("[", Tokenizer.LBRA);
+        }
+        if (typea == ']') {
+            return new Token("]", Tokenizer.RBRA);
+        }
+        if (typea == '|') {
+            return new Token("|", Tokenizer.BAR);
+        }
 
-        if (typea == '!') return new Token("!", Tokenizer.ATOM);
-        if (typea == ',') return new Token(",", Tokenizer.OPERATOR);
+        if (typea == '!') {
+            return new Token("!", Tokenizer.ATOM);
+        }
+        if (typea == ',') {
+            return new Token(",", Tokenizer.OPERATOR);
+        }
 
-        if (typea == '.') { // check that '.' as end token is followed by a layout character, see ISO Standard 6.4.8 endnote
+        if (typea ==
+            '.') { // check that '.' as end token is followed by a layout character, see ISO Standard 6.4.8 endnote
             int typeb = tokenConsume();
 
-            if (Tokenizer.isWhite(typeb) || typeb == '%' || typeb == StreamTokenizer.TT_EOF)
+            if (Tokenizer.isWhite(typeb) || typeb == '%' || typeb == StreamTokenizer.TT_EOF) {
                 return new Token(".", Tokenizer.END);
-            else
+            } else {
                 tokenPushBack();
+            }
         }
 
         boolean isNumber = false;
@@ -264,19 +291,20 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
         if (typea == TT_WORD) {
             char firstChar = svala.charAt(0);
             // variable
-            if (Character.isUpperCase(firstChar) || '_' == firstChar)
+            if (Character.isUpperCase(firstChar) || '_' == firstChar) {
                 return new Token(svala, Tokenizer.VARIABLE);
-
-            else if (firstChar >= '0' && firstChar <= '9')    // all words starting with 0 or 9 must be a number
+            } else if (firstChar >= '0' && firstChar <= '9')    // all words starting with 0 or 9 must be a number
+            {
                 isNumber = true;                            // set type to number and handle later
-
-            else {                                            // otherwise, it must be an atom (or wrong)
+            } else {                                            // otherwise, it must be an atom (or wrong)
                 int typeb = tokenConsume();                    // lookahead 1 to identify what type of atom
                 tokenPushBack();                            // this does not skip whitespaces, only readNext does so.
-                if (typeb == '(')
+                if (typeb == '(') {
                     return new Token(svala, Tokenizer.ATOM | Tokenizer.FUNCTOR);
-                if (Tokenizer.isWhite(typeb))
+                }
+                if (Tokenizer.isWhite(typeb)) {
                     return new Token(svala, Tokenizer.ATOM | Tokenizer.OPERATOR);
+                }
                 return new Token(svala, Tokenizer.ATOM);
             }
         }
@@ -292,11 +320,14 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
                 if (typea == '\\') {
                     int typeb = tokenConsume();
                     if (typeb == '\n') // continuation escape sequence marker \\n
+                    {
                         continue;
+                    }
                     if (typeb == '\r') {
                         int typec = tokenConsume();
-                        if (typec == '\n')
+                        if (typec == '\n') {
                             continue; // continuation escape sequence marker \\r\n
+                        }
                         tokenPushBack();
                         continue; // continuation escape sequence marker \\r
                     }
@@ -313,15 +344,17 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
                         break; // otherwise, break on single quote
                     }
                 }
-                if (typea == '\n' || typea == '\r')
+                if (typea == '\n' || typea == '\r') {
                     throw new InvalidTermException("Line break in quote not allowed");
+                }
 
-                if (svala != null)
+                if (svala != null) {
                     quote.append(svala);
-                else
+                } else
                     /*Castagna 06/2011*/ {
-                    if (typea < 0)
+                    if (typea < 0) {
                         throw new InvalidTermException("Invalid string");
+                    }
 
                     quote.append((char) typea);
                 }
@@ -332,13 +365,15 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
 
             qType = qType == '\'' ? SQ_SEQUENCE : qType == '\"' ? DQ_SEQUENCE : SQ_SEQUENCE;
             if (qType == SQ_SEQUENCE) {
-                if (Parser.isAtom(quoteBody))
+                if (Parser.isAtom(quoteBody)) {
                     qType = ATOM;
+                }
                 int typeb = tokenConsume(); // lookahead 1 to identify what type of quote
                 tokenPushBack();            // nextToken() does not skip whitespaces, only readNext does so.
 
-                if (typeb == '(')
+                if (typeb == '(') {
                     return new Token(quoteBody, qType | FUNCTOR);
+                }
             }
             return new Token(quoteBody, qType);
         }
@@ -369,12 +404,18 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
 
                 // 1.a. complex integers
                 if (svala.startsWith("0")) {
-                    if (svala.indexOf('b') == 1)
-                        return new Token("" + java.lang.Long.parseLong(svala.substring(2), 2), Tokenizer.INTEGER); // try binary
-                    if (svala.indexOf('o') == 1)
-                        return new Token("" + java.lang.Long.parseLong(svala.substring(2), 8), Tokenizer.INTEGER); // try octal
-                    if (svala.indexOf('x') == 1)
-                        return new Token("" + java.lang.Long.parseLong(svala.substring(2), 16), Tokenizer.INTEGER); // try hex
+                    if (svala.indexOf('b') == 1) {
+                        return new Token(
+                                "" + java.lang.Long.parseLong(svala.substring(2), 2), Tokenizer.INTEGER); // try binary
+                    }
+                    if (svala.indexOf('o') == 1) {
+                        return new Token(
+                                "" + java.lang.Long.parseLong(svala.substring(2), 8), Tokenizer.INTEGER); // try octal
+                    }
+                    if (svala.indexOf('x') == 1) {
+                        return new Token(
+                                "" + java.lang.Long.parseLong(svala.substring(2), 16), Tokenizer.INTEGER); // try hex
+                    }
                 }
 
                 int typeb = tokenConsume();
@@ -393,8 +434,9 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
                     int typec = tokenConsume(); // lookahead 2
                     String svalc = sval;
                     int intVal;
-                    if ((intVal = isCharacterCodeConstantToken(typec, svalc)) != -1)
+                    if ((intVal = isCharacterCodeConstantToken(typec, svalc)) != -1) {
                         return new Token("" + intVal, Tokenizer.INTEGER);
+                    }
                     throw new InvalidTermException("Character code constant starting with 0'<X> cannot be recognized.");
                 }
 
@@ -402,8 +444,9 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
                 java.lang.Long.parseLong(svala); // throws an exception if not
 
                 // 2.b first int is followed by a period
-                if (typeb != '.')
+                if (typeb != '.') {
                     throw new InvalidTermException("A number starting with 0-9 cannot be rcognized as an int and does not have a fraction '.'");
+                }
 
                 int typec = tokenConsume();
                 String svalc = sval;
@@ -417,8 +460,9 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
 
                 // 2.d checking for exponent
                 int exponent = svalc.indexOf("E");
-                if (exponent == -1)
+                if (exponent == -1) {
                     exponent = svalc.indexOf("e");
+                }
 
                 if (exponent >= 1) {                                  // the float must have a valid exponent
                     if (exponent == svalc.length() - 1) {             // the exponent must be signed exponent
@@ -460,8 +504,9 @@ public class Tokenizer extends StreamTokenizer implements Serializable {
     }
 
     public int[] offsetToRowColumn(int offset) {
-        if (text == null || text.length() <= 0)
+        if (text == null || text.length() <= 0) {
             return new int[]{super.lineno(), -1};
+        }
 
         String newText = removeTrailing(text, tokenOffset);
         int lno = 0;

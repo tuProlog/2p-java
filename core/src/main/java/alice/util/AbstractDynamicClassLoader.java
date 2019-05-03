@@ -37,33 +37,39 @@ public abstract class AbstractDynamicClassLoader extends ClassLoader {
     }
 
     public void addURLs(URL[] urls) throws MalformedURLException {
-        if (urls == null)
+        if (urls == null) {
             throw new IllegalArgumentException("Array URLs must not be null.");
+        }
         for (URL url : urls) {
-            if (!listURLs.contains(url))
+            if (!listURLs.contains(url)) {
                 listURLs.add(url);
+            }
         }
     }
 
     public void removeURL(URL url) throws IllegalArgumentException {
-        if (!listURLs.contains(url))
+        if (!listURLs.contains(url)) {
             throw new IllegalArgumentException("URL: " + url + "not found.");
+        }
         listURLs.remove(url);
     }
 
     public void removeURLs(URL[] urls) throws IllegalArgumentException {
-        if (urls == null)
+        if (urls == null) {
             throw new IllegalArgumentException("Array URLs must not be null.");
+        }
         for (URL url : urls) {
-            if (!listURLs.contains(url))
+            if (!listURLs.contains(url)) {
                 throw new IllegalArgumentException("URL: " + url + "not found.");
+            }
             listURLs.remove(url);
         }
     }
 
     public void removeAllURLs() {
-        if (!listURLs.isEmpty())
+        if (!listURLs.isEmpty()) {
             listURLs.clear();
+        }
     }
 
     public URL[] getURLs() {
@@ -91,8 +97,9 @@ public abstract class AbstractDynamicClassLoader extends ClassLoader {
     }
 
     public void setClassCacheEntry(Class<?> cls) {
-        if (classCache.contains(cls))
+        if (classCache.contains(cls)) {
             classCache.remove(cls.getName());
+        }
         classCache.put(cls.getName(), cls);
     }
 

@@ -14,7 +14,9 @@ public class OneWayList<E> {
     }
 
     public static <T> OneWayList<T> transform(List<T> list) {
-        if (list.isEmpty()) return null;
+        if (list.isEmpty()) {
+            return null;
+        }
         return new OneWayList<T>(list.remove(0), transform(list));
     }
 
@@ -71,24 +73,38 @@ public class OneWayList<E> {
     }
 
     public OneWayList<E> get(int index) {
-        if (tail == null) throw new NoSuchElementException();
-        if (index <= 0) return this;
+        if (tail == null) {
+            throw new NoSuchElementException();
+        }
+        if (index <= 0) {
+            return this;
+        }
         return tail.get(index - 1);
     }
 
     public String toString() {
         String elem;
-        if (head == null) elem = "null";
-        else elem = head.toString();
-        if (tail == null) return "[" + elem + "]";
+        if (head == null) {
+            elem = "null";
+        } else {
+            elem = head.toString();
+        }
+        if (tail == null) {
+            return "[" + elem + "]";
+        }
         return "[" + tail.toString(elem) + "]";
     }
 
     private String toString(String elems) {
         String elem;
-        if (head == null) elem = "null";
-        else elem = head.toString();
-        if (tail == null) return elems + "," + elem;
+        if (head == null) {
+            elem = "null";
+        } else {
+            elem = head.toString();
+        }
+        if (tail == null) {
+            return elems + "," + elem;
+        }
         return elems + "," + tail.toString(elem);
     }
 

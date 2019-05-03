@@ -84,7 +84,7 @@ public class SubGoalStore {
 
     public String toString() {
         return "goals: " + goals + " "
-                + "index: " + index;
+               + "index: " + index;
     }
 
     public SubGoalTree getSubGoals() {

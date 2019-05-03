@@ -20,18 +20,21 @@ public class InspectionUtils {
         Method[] methods = type.getMethods();
         for (int i = 0; i < methods.length; i++) {
             // Has to be named the same of course.
-            if (!methods[i].getName().equals(methodName))
+            if (!methods[i].getName().equals(methodName)) {
                 continue;
+            }
 
             Class<?>[] types = methods[i].getParameterTypes();
 
             // Does it have the same number of arguments that we're looking for.
-            if (types.length != parms.length)
+            if (types.length != parms.length) {
                 continue;
+            }
 
             // Check for type compatibility
-            if (InspectionUtils.areTypesCompatible(types, parms))
+            if (InspectionUtils.areTypesCompatible(types, parms)) {
                 return methods[i];
+            }
         }
         return null;
     }
@@ -44,23 +47,27 @@ public class InspectionUtils {
      * isAssignableFrom check as if it passed.
      */
     public static boolean areTypesCompatible(Class<?>[] targets, Class<?>[] sources) {
-        if (targets.length != sources.length)
+        if (targets.length != sources.length) {
             return (false);
+        }
 
         for (int i = 0; i < targets.length; i++) {
-            if (sources[i] == null)
+            if (sources[i] == null) {
                 continue;
+            }
 
             if (targets[i].isInterface()) {
                 Class<?>[] interfaces = sources[i].getInterfaces();
                 for (Class<?> in : interfaces) {
-                    if (targets[i].equals(in))
+                    if (targets[i].equals(in)) {
                         return true;
+                    }
                 }
             }
 
-            if (!translateFromPrimitive(targets[i]).isAssignableFrom(translateFromPrimitive(sources[i])))
+            if (!translateFromPrimitive(targets[i]).isAssignableFrom(translateFromPrimitive(sources[i]))) {
                 return false;
+            }
         }
         return true;
     }
@@ -71,25 +78,34 @@ public class InspectionUtils {
      * passed class is not a primitive then it is just returned.
      */
     public static Class<?> translateFromPrimitive(Class<?> primitive) {
-        if (!primitive.isPrimitive())
+        if (!primitive.isPrimitive()) {
             return (primitive);
+        }
 
-        if (Boolean.TYPE.equals(primitive))
+        if (Boolean.TYPE.equals(primitive)) {
             return (Boolean.class);
-        if (Character.TYPE.equals(primitive))
+        }
+        if (Character.TYPE.equals(primitive)) {
             return (Character.class);
-        if (Byte.TYPE.equals(primitive))
+        }
+        if (Byte.TYPE.equals(primitive)) {
             return (Byte.class);
-        if (Short.TYPE.equals(primitive))
+        }
+        if (Short.TYPE.equals(primitive)) {
             return (Short.class);
-        if (Integer.TYPE.equals(primitive))
+        }
+        if (Integer.TYPE.equals(primitive)) {
             return (Integer.class);
-        if (Long.TYPE.equals(primitive))
+        }
+        if (Long.TYPE.equals(primitive)) {
             return (Long.class);
-        if (Float.TYPE.equals(primitive))
+        }
+        if (Float.TYPE.equals(primitive)) {
             return (Float.class);
-        if (Double.TYPE.equals(primitive))
+        }
+        if (Double.TYPE.equals(primitive)) {
             return (Double.class);
+        }
 
         throw new RuntimeException("Error translating type:" + primitive);
     }

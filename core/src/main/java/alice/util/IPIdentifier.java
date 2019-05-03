@@ -21,7 +21,7 @@ public class IPIdentifier {
         int index = name.indexOf(':');
         if (index != -1) {
             try {
-                return Integer.parseInt(name.substring(index + 1, name.length()));
+                return Integer.parseInt(name.substring(index + 1));
             } catch (Exception ex) {
             }
         }
@@ -34,7 +34,7 @@ public class IPIdentifier {
         if (index_port != -1) {
             return name.substring(index_at + 1, index_port);
         } else if (index_at != -1) {
-            return name.substring(index_at + 1, name.length());
+            return name.substring(index_at + 1);
         } else {
             // its a name
             return "";
@@ -64,7 +64,7 @@ public class IPIdentifier {
         if (index_at == -1) {
             return "";
         } else {
-            return name.substring(index_at + 1, name.length());
+            return name.substring(index_at + 1);
         }
     }
 

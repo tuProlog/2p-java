@@ -18,10 +18,11 @@ public class StateException extends State {
 
     void doJob(Engine e) {
         String errorType = e.currentContext.currentGoal.getName();
-        if (errorType.equals("throw"))
+        if (errorType.equals("throw")) {
             prologError(e);
-        else
+        } else {
             javaException(e);
+        }
     }
 
     private void prologError(Engine e) {
@@ -38,7 +39,7 @@ public class StateException extends State {
             // subgoal catch/3 il cui secondo argomento unifica con l?argomento
             // dell?eccezione lanciata
             if (e.currentContext.currentGoal.match(catchTerm)
-                    && e.currentContext.currentGoal.getArg(1).match(errorTerm)) {
+                && e.currentContext.currentGoal.getArg(1).match(errorTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
                 // catch/3
 
@@ -50,7 +51,9 @@ public class StateException extends State {
                 List<Var> unifiedVars = e.currentContext.trailingVars
                         .getHead();
                 e.currentContext.currentGoal.getArg(1).unify(unifiedVars,
-                        unifiedVars, errorTerm, c.getMediator().getFlagManager().isOccursCheckEnabled());
+                                                             unifiedVars, errorTerm, c.getMediator()
+                                                                                      .getFlagManager()
+                                                                                      .isOccursCheckEnabled());
 
                 // inserisco il gestore dell?errore in testa alla lista dei
                 // subgoal da eseguire, come definito dal terzo argomento di
@@ -69,8 +72,9 @@ public class StateException extends State {
                 // they are converted to execution of a call/1 predicate.
                 // This enables the dynamic linking of built-ins for
                 // terms coming from outside the demonstration context.
-                if (handlerTerm != curHandlerTerm)
+                if (handlerTerm != curHandlerTerm) {
                     handlerTerm = new Struct("call", curHandlerTerm);
+                }
                 Struct handler = (Struct) handlerTerm;
                 c.identify(handler);
                 SubGoalTree sgt = new SubGoalTree();
@@ -108,8 +112,8 @@ public class StateException extends State {
             // subgoal java_catch/3 che abbia un catcher unificabile con
             // l'argomento dell'eccezione lanciata
             if (e.currentContext.currentGoal.match(javaCatchTerm)
-                    && javaMatch(e.currentContext.currentGoal.getArg(1),
-                    exceptionTerm)) {
+                && javaMatch(e.currentContext.currentGoal.getArg(1),
+                             exceptionTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
                 // java_catch/3
 
@@ -121,7 +125,7 @@ public class StateException extends State {
                 List<Var> unifiedVars = e.currentContext.trailingVars
                         .getHead();
                 Term handlerTerm = javaUnify(e.currentContext.currentGoal
-                        .getArg(1), exceptionTerm, unifiedVars);
+                                                     .getArg(1), exceptionTerm, unifiedVars);
                 if (handlerTerm == null) {
                     e.nextState = c.END_FALSE;
                     return;
@@ -143,9 +147,9 @@ public class StateException extends State {
                 boolean isFinally = true;
                 if (curFinallyTerm instanceof Int) {
                     Int finallyInt = (Int) curFinallyTerm;
-                    if (finallyInt.intValue() == 0)
+                    if (finallyInt.intValue() == 0) {
                         isFinally = false;
-                    else {
+                    } else {
                         // errore di sintassi, esco
                         e.nextState = c.END_FALSE;
                         return;
@@ -159,10 +163,12 @@ public class StateException extends State {
                 // they are converted to execution of a call/1 predicate.
                 // This enables the dynamic linking of built-ins for
                 // terms coming from outside the demonstration context.
-                if (handlerTerm != curHandlerTerm)
+                if (handlerTerm != curHandlerTerm) {
                     handlerTerm = new Struct("call", curHandlerTerm);
-                if (finallyTerm != curFinallyTerm)
+                }
+                if (finallyTerm != curFinallyTerm) {
                     finallyTerm = new Struct("call", curFinallyTerm);
+                }
 
                 Struct handler = (Struct) handlerTerm;
                 c.identify(handler);
@@ -196,21 +202,26 @@ public class StateException extends State {
     // verifica se c'? un catcher unificabile con l'argomento dell'eccezione
     // lanciata
     private boolean javaMatch(Term arg1, Term exceptionTerm) {
-        if (!arg1.isList())
+        if (!arg1.isList()) {
             return false;
+        }
         Struct list = (Struct) arg1;
-        if (list.isEmptyList())
+        if (list.isEmptyList()) {
             return false;
+        }
         Iterator<? extends Term> it = list.listIterator();
         while (it.hasNext()) {
-            Term nextTerm = (Term) it.next();
-            if (!nextTerm.isCompound())
+            Term nextTerm = it.next();
+            if (!nextTerm.isCompound()) {
                 continue;
+            }
             Struct element = (Struct) nextTerm;
-            if (!element.getName().equals(","))
+            if (!element.getName().equals(",")) {
                 continue;
-            if (element.getArity() != 2)
+            }
+            if (element.getArity() != 2) {
                 continue;
+            }
             if (element.getArg(0).match(exceptionTerm)) {
                 return true;
             }
@@ -225,16 +236,21 @@ public class StateException extends State {
         Iterator<? extends Term> it = list.listIterator();
         while (it.hasNext()) {
             Term nextTerm = it.next();
-            if (!nextTerm.isCompound())
+            if (!nextTerm.isCompound()) {
                 continue;
+            }
             Struct element = (Struct) nextTerm;
-            if (!element.getName().equals(","))
+            if (!element.getName().equals(",")) {
                 continue;
-            if (element.getArity() != 2)
+            }
+            if (element.getArity() != 2) {
                 continue;
+            }
             if (element.getArg(0).match(exceptionTerm)) {
                 element.getArg(0)
-                        .unify(unifiedVars, unifiedVars, exceptionTerm, c.getMediator().getFlagManager().isOccursCheckEnabled());
+                       .unify(unifiedVars, unifiedVars, exceptionTerm, c.getMediator()
+                                                                        .getFlagManager()
+                                                                        .isOccursCheckEnabled());
                 return element.getArg(1);
             }
         }

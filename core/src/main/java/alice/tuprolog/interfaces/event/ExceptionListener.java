@@ -6,6 +6,6 @@ import alice.tuprolog.event.ExceptionEvent;
 import java.util.EventListener;
 
 public interface ExceptionListener extends EventListener {
-    public abstract void onException(ExceptionEvent e);
+    void onException(ExceptionEvent e);
 }
 /**/

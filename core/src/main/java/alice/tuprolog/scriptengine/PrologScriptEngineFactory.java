@@ -101,7 +101,7 @@ public class PrologScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public String getMethodCallSyntax(String obj, String methodName, String... args) {
-        String result = new String();
+        String result = "";
 
         result += obj + " <- " + methodName;
 
@@ -124,10 +124,11 @@ public class PrologScriptEngineFactory implements ScriptEngineFactory {
     @Override
     public String getProgram(String... instr) {
 
-        String program = new String();
+        String program = "";
 
-        for (int i = 0; i < instr.length; i++)
+        for (int i = 0; i < instr.length; i++) {
             program += instr[i] + (i == instr.length - 1 ? "." : ",");
+        }
 
         return program;
     }

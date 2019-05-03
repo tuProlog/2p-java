@@ -68,7 +68,7 @@ public class Var extends Term {
             name = null;
             completeName = new StringBuilder();
         } else if (Character.isUpperCase(n.charAt(0)) ||
-                (n.startsWith(ANY))) {
+                   (n.startsWith(ANY))) {
             name = n;
             completeName = new StringBuilder(n);
         } else {
@@ -105,7 +105,9 @@ public class Var extends Term {
         //this.isCyclic = isCyclic;
         fingerPrint = getFingerprint();
         link = null;
-        if (id < 0) id = Var.ORIGINAL;
+        if (id < 0) {
+            id = Var.ORIGINAL;
+        }
         rename(id, alias);
     }
 
@@ -157,7 +159,7 @@ public class Var extends Term {
     Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
         Term tt = getTerm();
         if (tt == this) {
-            Var v = (Var) (vMap.get(this));
+            Var v = vMap.get(this);
             if (v == null) {
                 //No occurence of v before
                 v = new Var(name, idExecCtx, 0, internalTimestamp/*, this.isCyclic*/);
@@ -173,7 +175,7 @@ public class Var extends Term {
     public Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx) {
         Term tt = getTerm();
         if (tt == this) {
-            Var v = (Var) (vMap.get(this));
+            Var v = vMap.get(this);
             if (v == null) {
                 //No occurence of v before
                 v = this; //!!!
@@ -215,7 +217,9 @@ public class Var extends Term {
         if (t instanceof Struct) {
             v.link = t.copy(vMap, substMap);
         }
-        if (t instanceof Number) v.link = t;
+        if (t instanceof Number) {
+            v.link = t;
+        }
         return v;
     }
 
@@ -343,10 +347,11 @@ public class Var extends Term {
 
     public boolean isList() {
         Term t = getTerm();
-        if (t == this)
+        if (t == this) {
             return false;
-        else
+        } else {
             return t.isList();
+        }
     }
 
     public boolean isGround() {
@@ -497,7 +502,9 @@ public class Var extends Term {
         Term tt = getTerm();
         if (tt == this) {
             t = t.getTerm();
-            if (!(t instanceof Var)) return false;
+            if (!(t instanceof Var)) {
+                return false;
+            }
             return fingerPrint > ((Var) t).fingerPrint; //Alberto
         } else {
             return tt.isGreater(t);

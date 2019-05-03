@@ -144,15 +144,17 @@ public class PrimitiveInfo {
     }
 
     public String toString() {
-        return "[ primitive: method " + method.getName() + " - " + primitive_args + " - N args: " + primitive_args.length + " - " + source.getClass().getName() + " ]\n";
+        return "[ primitive: method " + method.getName() + " - " + primitive_args + " - N args: " +
+               primitive_args.length + " - " + source.getClass().getName() + " ]\n";
     }
 
     //Alberto
     public String toStringFlat() {
         String s = "[ primitive: method " + method.getName() + " - ";
         for (int i = 0; i < this.primitive_args.length; i++) {
-            if (this.primitive_args[i] == null)
+            if (this.primitive_args[i] == null) {
                 continue;
+            }
             s = s + this.primitive_args[i].toString() + " ";
         }
         s = s + "- N args: " + primitive_args.length + " - " + source.getClass().getName() + " ]\n";

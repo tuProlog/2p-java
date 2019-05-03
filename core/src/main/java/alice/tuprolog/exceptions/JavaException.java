@@ -22,25 +22,28 @@ public class JavaException extends Throwable {
         // Cause
         Term causeTerm = null;
         Throwable cause = e.getCause();
-        if (cause != null)
+        if (cause != null) {
             causeTerm = new Struct(cause.toString());
-        else
+        } else {
             causeTerm = new Int(0);
+        }
         // Message
         Term messageTerm = null;
         String message = e.getMessage();
-        if (message != null)
+        if (message != null) {
             messageTerm = new Struct(message);
-        else
+        } else {
             messageTerm = new Int(0);
+        }
         // StackTrace
         Struct stackTraceTerm = new Struct();
         StackTraceElement[] elements = e.getStackTrace();
-        for (StackTraceElement element : elements)
+        for (StackTraceElement element : elements) {
             stackTraceTerm.append(new Struct(element.toString()));
+        }
         // return
         return new Struct(java_exception, causeTerm, messageTerm,
-                stackTraceTerm);
+                          stackTraceTerm);
     }
 
 }

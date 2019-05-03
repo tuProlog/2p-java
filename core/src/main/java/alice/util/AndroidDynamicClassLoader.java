@@ -47,8 +47,8 @@ public class AndroidDynamicClassLoader extends AbstractDynamicClassLoader {
              * in the method loadLibrary(Strin, String[]).
              */
             classLoader = (ClassLoader) Class.forName("dalvik.system.DexClassLoader")
-                    .getConstructor(String.class, String.class, String.class, ClassLoader.class)
-                    .newInstance(dexPath, "/data/data/alice.tuprologx.android/app_dex", null, getParent());
+                                             .getConstructor(String.class, String.class, String.class, ClassLoader.class)
+                                             .newInstance(dexPath, "/data/data/alice.tuprologx.android/app_dex", null, getParent());
         } catch (Exception e) {
             throw new ClassNotFoundException(className);
         }

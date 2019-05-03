@@ -9,8 +9,8 @@ import com.google.gson.GsonBuilder;
 public class JSONSerializerManager implements JSONSerializerManagerMXBean {
 
     static Gson gson = new GsonBuilder() //Mandatory for serializing query obj!
-            .registerTypeAdapter(Term.class, new JSONMarshaller())
-            .create();
+                                         .registerTypeAdapter(Term.class, new JSONMarshaller())
+                                         .create();
     /**
      * @author Alberto Sita
      */

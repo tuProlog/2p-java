@@ -27,7 +27,7 @@ public class SubGoalTree extends AbstractSubGoalTree implements Iterable<Abstrac
     }
 
     public AbstractSubGoalTree getChild(int i) {
-        return (AbstractSubGoalTree) terms.get(i);
+        return terms.get(i);
     }
 
     public Iterator<AbstractSubGoalTree> iterator() {
@@ -49,10 +49,11 @@ public class SubGoalTree extends AbstractSubGoalTree implements Iterable<Abstrac
     public String toString() {
         String result = " [ ";
         Iterator<AbstractSubGoalTree> i = terms.iterator();
-        if (i.hasNext())
-            result += ((AbstractSubGoalTree) i.next()).toString();
+        if (i.hasNext()) {
+            result += i.next().toString();
+        }
         while (i.hasNext()) {
-            result += " , " + ((AbstractSubGoalTree) i.next()).toString();
+            result += " , " + i.next().toString();
         }
         return result + " ] ";
     }

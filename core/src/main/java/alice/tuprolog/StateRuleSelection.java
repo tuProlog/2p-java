@@ -55,8 +55,9 @@ public class StateRuleSelection extends State {
                 e.nextState = c.BACKTRACK;
                 return;
             }
-        } else
+        } else {
             clauseStore = alternative.compatibleGoals;
+        }
 
         /*-----------------------------------------------------
          * Scelgo una regola fra quelle potenzialmente compatibili.
@@ -94,10 +95,12 @@ public class StateRuleSelection extends State {
                         ec.choicePointAfterCut = choicePoint.prevChoicePointContext.prevChoicePointContext;
                         currentGoal = choicePoint.prevChoicePointContext.executionContext.currentGoal;
                         choicePoint = choicePoint.prevChoicePointContext;
-                    } else
+                    } else {
                         break;
-                } else
+                    }
+                } else {
                     break;
+                }
             }
         }
 
@@ -122,8 +125,9 @@ public class StateRuleSelection extends State {
         }
 
         //Alberto
-        if (!ec.tryToPerformTailRecursionOptimization(e))
+        if (!ec.tryToPerformTailRecursionOptimization(e)) {
             ec.updateContextAndDepth(e);
+        }
 
         ec.saveParentState();
         e.currentContext = ec;

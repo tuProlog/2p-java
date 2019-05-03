@@ -53,10 +53,10 @@ public class ExecutionContext {
 
     public String toString() {
         return "        id: " + id + "\n" +
-                "      currentGoal: " + currentGoal + "\n" +
-                "           clause: " + clause + "\n" +
-                "     subGoalStore: " + goalsToEval + "\n" +
-                "     trailingVars: " + trailingVars + "\n";
+               "      currentGoal: " + currentGoal + "\n" +
+               "           clause: " + clause + "\n" +
+               "     subGoalStore: " + goalsToEval + "\n" +
+               "     trailingVars: " + trailingVars + "\n";
     }
 
     public int getDepth() {
@@ -114,12 +114,16 @@ public class ExecutionContext {
 
     //Alberto
     boolean tryToPerformTailRecursionOptimization(Engine e) {
-        if (!haveAlternatives && e.currentContext.goalsToEval.getCurSGId() == null && !e.currentContext.goalsToEval.haveSubGoals() && !(e.currentContext.currentGoal.getName().equalsIgnoreCase("catch") || e.currentContext.currentGoal.getName().equalsIgnoreCase("java_catch"))) {
+        if (!haveAlternatives && e.currentContext.goalsToEval.getCurSGId() == null &&
+            !e.currentContext.goalsToEval.haveSubGoals() &&
+            !(e.currentContext.currentGoal.getName().equalsIgnoreCase("catch") ||
+              e.currentContext.currentGoal.getName().equalsIgnoreCase("java_catch"))) {
             fatherCtx = e.currentContext.fatherCtx;
             depth = e.currentContext.depth;
             return true;
-        } else
+        } else {
             return false;
+        }
     }
 
     //Alberto

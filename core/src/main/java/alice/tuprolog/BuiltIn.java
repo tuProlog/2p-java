@@ -74,13 +74,16 @@ public class BuiltIn extends Library {
      * corresponds to T.
      */
     static Term convertTermToGoal(Term term) {
-        if (term instanceof Number)
+        if (term instanceof Number) {
             return null;
-        if (term instanceof Var && ((Var) term).getLink() instanceof Number)
+        }
+        if (term instanceof Var && ((Var) term).getLink() instanceof Number) {
             return null;
+        }
         term = term.getTerm();
-        if (term instanceof Var)
+        if (term instanceof Var) {
             return new Struct("call", term);
+        }
         if (term instanceof Struct) {
             Struct s = (Struct) term;
             String pi = s.getPredicateIndicator();
@@ -88,8 +91,9 @@ public class BuiltIn extends Library {
                 for (int i = 0; i < s.getArity(); i++) {
                     Term t = s.getArg(i);
                     Term arg = convertTermToGoal(t);
-                    if (arg == null)
+                    if (arg == null) {
                         return null;
+                    }
                     s.setArg(i, arg);
                 }
             }
@@ -102,12 +106,12 @@ public class BuiltIn extends Library {
      */
     public String[][] getSynonymMap() {
         return new String[][]{{"!", "cut", "predicate"},
-                {"=", "unify", "predicate"},
-                {"\\=", "deunify", "predicate"},
-                {",", "comma", "predicate"}, {"op", "$op", "predicate"},
-                {"solve", "initialization", "directive"},
-                {"consult", "include", "directive"},
-                {"load_library", "$load_library", "directive"}};
+                              {"=", "unify", "predicate"},
+                              {"\\=", "deunify", "predicate"},
+                              {",", "comma", "predicate"}, {"op", "$op", "predicate"},
+                              {"solve", "initialization", "directive"},
+                              {"consult", "include", "directive"},
+                              {"load_library", "$load_library", "directive"}};
     }
 
     public boolean fail_0() {
@@ -136,20 +140,22 @@ public class BuiltIn extends Library {
                 for (int i = 0; i < (((Struct) arg0).toList().listSize()) - 1; i++) {
                     Term argi = ((Struct) arg0).getArg(i);
                     if (!(argi instanceof Struct)) {
-                        if (argi instanceof Var)
+                        if (argi instanceof Var) {
                             throw PrologError.instantiation_error(engineManager, 1);
-                        else
+                        } else {
                             throw PrologError.type_error(engineManager, 1, "clause", arg0);
+                        }
                     }
                 }
             }
             theoryManager.assertA((Struct) arg0, true, null, false);
             return true;
         }
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        else
+        } else {
             throw PrologError.type_error(engineManager, 1, "clause", arg0);
+        }
     }
 
     public boolean assertz_1(Term arg0) throws PrologError {
@@ -159,29 +165,32 @@ public class BuiltIn extends Library {
                 for (int i = 0; i < (((Struct) arg0).toList().listSize()) - 1; i++) {
                     Term argi = ((Struct) arg0).getArg(i);
                     if (!(argi instanceof Struct)) {
-                        if (argi instanceof Var)
+                        if (argi instanceof Var) {
                             throw PrologError.instantiation_error(engineManager, 1);
-                        else
+                        } else {
                             throw PrologError.type_error(engineManager, 1, "clause", arg0);
+                        }
                     }
                 }
             }
             theoryManager.assertZ((Struct) arg0, true, null, false);
             return true;
         }
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        else
+        } else {
             throw PrologError.type_error(engineManager, 1, "clause", arg0);
+        }
     }
 
     public boolean $retract_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (!(arg0 instanceof Struct)) {
-            if (arg0 instanceof Var)
+            if (arg0 instanceof Var) {
                 throw PrologError.instantiation_error(engineManager, 1);
-            else
+            } else {
                 throw PrologError.type_error(engineManager, 1, "clause", arg0);
+            }
         }
         Struct sarg0 = (Struct) arg0;
         ClauseInfo c = theoryManager.retract(sarg0);
@@ -201,23 +210,27 @@ public class BuiltIn extends Library {
 
     public boolean abolish_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        if (!(arg0 instanceof Struct) || !arg0.isGround())
+        }
+        if (!(arg0 instanceof Struct) || !arg0.isGround()) {
             throw PrologError.type_error(engineManager, 1, "predicate_indicator", arg0);
+        }
 
-        if (((Struct) arg0).getArg(0).toString().equals("abolish"))
+        if (((Struct) arg0).getArg(0).toString().equals("abolish")) {
             throw PrologError.permission_error(engineManager, "modify", "static_procedure", arg0, new Struct(""));
+        }
 
         return theoryManager.abolish((Struct) arg0);
     }
 
     public boolean halt_1(Term arg0) throws PrologError {
-        if (arg0 instanceof Int)
+        if (arg0 instanceof Int) {
             System.exit(((Int) arg0).intValue());
-        if (arg0 instanceof Var)
+        }
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        else {
+        } else {
             throw PrologError.type_error(engineManager, 1, "integer", arg0);
         }
     }
@@ -228,17 +241,18 @@ public class BuiltIn extends Library {
     public boolean load_library_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (!arg0.isAtom()) {
-            if (arg0 instanceof Var)
+            if (arg0 instanceof Var) {
                 throw PrologError.instantiation_error(engineManager, 1);
-            else
+            } else {
                 throw PrologError.type_error(engineManager, 1, "atom", arg0);
+            }
         }
         try {
             libraryManager.loadLibrary(((Struct) arg0).getName());
             return true;
         } catch (Exception ex) {
             throw PrologError.existence_error(engineManager, 1, "class", arg0,
-                    new Struct(ex.getMessage()));
+                                              new Struct(ex.getMessage()));
         }
     }
 
@@ -249,10 +263,11 @@ public class BuiltIn extends Library {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
         if (!arg0.isAtom()) {
-            if (arg0 instanceof Var)
+            if (arg0 instanceof Var) {
                 throw PrologError.instantiation_error(engineManager, 1);
-            else
+            } else {
                 throw PrologError.type_error(engineManager, 1, "atom", arg0);
+            }
         }
         if (!arg1.isList()) {
             throw PrologError.type_error(engineManager, 2, "list", arg1);
@@ -260,19 +275,20 @@ public class BuiltIn extends Library {
 
         try {
             String[] paths = getStringArrayFromStruct((Struct) arg1);
-            if (paths == null || paths.length == 0)
+            if (paths == null || paths.length == 0) {
                 throw PrologError.existence_error(engineManager, 2, "paths", arg1, new Struct("Invalid paths' list."));
+            }
             libraryManager.loadLibrary(((Struct) arg0).getName(), paths);
             return true;
 
         } catch (Exception ex) {
             throw PrologError.existence_error(engineManager, 1, "class", arg0,
-                    new Struct(ex.getMessage()));
+                                              new Struct(ex.getMessage()));
         }
     }
 
     private String[] getStringArrayFromStruct(Struct list) {
-        String args[] = new String[list.listSize()];
+        String[] args = new String[list.listSize()];
         Iterator<? extends Term> it = list.listIterator();
         int count = 0;
         while (it.hasNext()) {
@@ -288,17 +304,18 @@ public class BuiltIn extends Library {
     public boolean unload_library_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (!arg0.isAtom()) {
-            if (arg0 instanceof Var)
+            if (arg0 instanceof Var) {
                 throw PrologError.instantiation_error(engineManager, 1);
-            else
+            } else {
                 throw PrologError.type_error(engineManager, 1, "atom", arg0);
+            }
         }
         try {
             libraryManager.unloadLibrary(((Struct) arg0).getName());
             return true;
         } catch (Exception ex) {
             throw PrologError.existence_error(engineManager, 1, "class", arg0,
-                    new Struct(ex.getMessage()));
+                                              new Struct(ex.getMessage()));
         }
     }
 
@@ -326,13 +343,16 @@ public class BuiltIn extends Library {
      */
     public boolean $call_1(Term goal) throws PrologError {
         goal = goal.getTerm();
-        if (goal instanceof Var)
+        if (goal instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        if (!isCallable(goal))
+        }
+        if (!isCallable(goal)) {
             throw PrologError.type_error(engineManager, 1, "callable", goal);
+        }
         goal = convertTermToGoal(goal);
-        if (goal == null)
+        if (goal == null) {
             throw PrologError.type_error(engineManager, 1, "callable", goal);
+        }
         engineManager.identify(goal);
         engineManager.pushSubGoal(ClauseInfo.extractBody(goal));
         return true;
@@ -350,24 +370,27 @@ public class BuiltIn extends Library {
         // errore durante la valutazione
         if (t instanceof ArithmeticException) {
             ArithmeticException cause = (ArithmeticException) t;
-            if (cause.getMessage().equals("/ by zero"))
+            if (cause.getMessage().equals("/ by zero")) {
                 throw PrologError.evaluation_error(engineManager, 2, "zero_divisor");
+            }
         }
     }
 
     public boolean is_2(Term arg0, Term arg1) throws PrologError {
-        if (arg1.getTerm() instanceof Var)
+        if (arg1.getTerm() instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 2);
+        }
         Term val1 = null;
         try {
             val1 = evalExpression(arg1);
         } catch (Throwable t) {
             handleError(t);
         }
-        if (val1 == null)
+        if (val1 == null) {
             throw PrologError.type_error(engineManager, 2, "evaluable", arg1.getTerm());
-        else
+        } else {
             return unify(arg0.getTerm(), val1);
+        }
     }
 
     public boolean unify_2(Term arg0, Term arg1) {
@@ -383,8 +406,9 @@ public class BuiltIn extends Library {
         // transform arg0 to a list, unify it with arg1
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
+        }
         if (arg0 instanceof Struct) {
             Term val0 = ((Struct) arg0).toList();
             return (val0 != null && unify(arg1, val0));
@@ -397,14 +421,16 @@ public class BuiltIn extends Library {
         // provided as arg1, and unify it with arg0
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        if (arg1 instanceof Var)
+        if (arg1 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 2);
+        }
         if (!arg1.isList()) {
             throw PrologError.type_error(engineManager, 2, "list", arg1);
         }
         Term val1 = ((Struct) arg1).fromList();
-        if (val1 == null)
+        if (val1 == null) {
             return false;
+        }
         return (unify(arg0, val1));
     }
 
@@ -420,8 +446,9 @@ public class BuiltIn extends Library {
         // append arg0 to arg1
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        if (arg1 instanceof Var)
+        if (arg1 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 2);
+        }
         if (!arg1.isList()) {
             throw PrologError.type_error(engineManager, 2, "list", arg1);
         }
@@ -434,10 +461,12 @@ public class BuiltIn extends Library {
         // list arg1
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        if (!arg1.isList())
+        }
+        if (!arg1.isList()) {
             throw PrologError.type_error(engineManager, 2, "list", arg1);
+        }
         List<ClauseInfo> l = null;
         try {
             l = theoryManager.find(arg0);
@@ -446,7 +475,7 @@ public class BuiltIn extends Library {
         }
         java.util.Iterator<ClauseInfo> it = l.iterator();
         while (it.hasNext()) {
-            ClauseInfo b = (ClauseInfo) it.next();
+            ClauseInfo b = it.next();
             if (match(arg0, b.getHead())) {
                 b.getClause().resolveTerm();
                 ((Struct) arg1).append(b.getClause());
@@ -459,24 +488,31 @@ public class BuiltIn extends Library {
     public boolean set_prolog_flag_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        if (arg1 instanceof Var)
+        }
+        if (arg1 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 2);
-        if ((!arg0.isAtom() && !(arg0 instanceof Struct)))
+        }
+        if ((!arg0.isAtom() && !(arg0 instanceof Struct))) {
             throw PrologError.type_error(engineManager, 1, "struct", arg0);
-        if (!arg1.isGround())
+        }
+        if (!arg1.isGround()) {
             throw PrologError.type_error(engineManager, 2, "ground", arg1);
+        }
         String name = arg0.toString();
-        if (flagManager.getFlag(name) == null)
+        if (flagManager.getFlag(name) == null) {
             throw PrologError.domain_error(engineManager, 1, "prolog_flag",
-                    arg0);
-        if (!flagManager.isValidValue(name, arg1))
+                                           arg0);
+        }
+        if (!flagManager.isValidValue(name, arg1)) {
             throw PrologError
                     .domain_error(engineManager, 2, "flag_value", arg1);
-        if (!flagManager.isModifiable(name))
+        }
+        if (!flagManager.isModifiable(name)) {
             throw PrologError.permission_error(engineManager, "modify", "flag",
-                    arg0, new Int(0));
+                                               arg0, new Int(0));
+        }
         return flagManager.setFlag(name, arg1);
     }
 
@@ -484,16 +520,18 @@ public class BuiltIn extends Library {
     public boolean get_prolog_flag_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
+        }
         if (!arg0.isAtom() && !(arg0 instanceof Struct)) {
             throw PrologError.type_error(engineManager, 1, "struct", arg0);
         }
         String name = arg0.toString();
         Term value = flagManager.getFlag(name);
-        if (value == null)
+        if (value == null) {
             throw PrologError.domain_error(engineManager, 1, "prolog_flag",
-                    arg0);
+                                           arg0);
+        }
         return unify(value, arg1);
     }
 
@@ -501,37 +539,46 @@ public class BuiltIn extends Library {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
         arg2 = arg2.getTerm();
-        if (arg0 instanceof Var)
+        if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
-        if (arg1 instanceof Var)
+        }
+        if (arg1 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 2);
-        if (arg2 instanceof Var)
+        }
+        if (arg2 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 3);
-        if (!(arg0 instanceof Int))
+        }
+        if (!(arg0 instanceof Int)) {
             throw PrologError.type_error(engineManager, 1, "integer", arg0);
-        if (!arg1.isAtom())
+        }
+        if (!arg1.isAtom()) {
             throw PrologError.type_error(engineManager, 2, "atom", arg1);
-        if (!arg2.isAtom() && !arg2.isList())
+        }
+        if (!arg2.isAtom() && !arg2.isList()) {
             throw PrologError.type_error(engineManager, 3, "atom_or_atom_list",
-                    arg2);
+                                         arg2);
+        }
         int priority = ((Int) arg0).intValue();
-        if (priority < OperatorManager.OP_LOW || priority > OperatorManager.OP_HIGH)
+        if (priority < OperatorManager.OP_LOW || priority > OperatorManager.OP_HIGH) {
             throw PrologError.domain_error(engineManager, 1, "operator_priority", arg0);
+        }
         String specifier = ((Struct) arg1).getName();
         if (!specifier.equals("fx") && !specifier.equals("fy")
-                && !specifier.equals("xf") && !specifier.equals("yf")
-                && !specifier.equals("xfx") && !specifier.equals("yfx")
-                && !specifier.equals("xfy"))
+            && !specifier.equals("xf") && !specifier.equals("yf")
+            && !specifier.equals("xfx") && !specifier.equals("yfx")
+            && !specifier.equals("xfy")) {
             throw PrologError.domain_error(engineManager, 2,
-                    "operator_specifier", arg1);
+                                           "operator_specifier", arg1);
+        }
         if (arg2.isList()) {
             for (Iterator<? extends Term> operators = ((Struct) arg2).listIterator(); operators
                     .hasNext(); ) {
                 Struct operator = (Struct) operators.next();
                 operatorManager.opNew(operator.getName(), specifier, priority);
             }
-        } else
+        } else {
             operatorManager.opNew(((Struct) arg2).getName(), specifier, priority);
+        }
         return true;
     }
 
@@ -550,13 +597,13 @@ public class BuiltIn extends Library {
         flagDefault = flagDefault.getTerm();
         flagModifiable = flagModifiable.getTerm();
         if (flagSet.isList()
-                && (flagModifiable.equals(Term.TRUE) || flagModifiable
+            && (flagModifiable.equals(Term.TRUE) || flagModifiable
                 .equals(Term.FALSE))) {
             // TODO libName che futuro deve avere?? --------------------
             String libName = "";
 
             flagManager.defineFlag(flagName.toString(), (Struct) flagSet,
-                    flagDefault, flagModifiable.equals(Term.TRUE), libName);
+                                   flagDefault, flagModifiable.equals(Term.TRUE), libName);
         }
     }
 
@@ -570,11 +617,12 @@ public class BuiltIn extends Library {
 
     public void $load_library_1(Term lib) throws InvalidLibraryException {
         lib = lib.getTerm();
-        if (lib.isAtom())
+        if (lib.isAtom()) {
             libraryManager.loadLibrary(((Struct) lib).getName());
+        }
     }
 
-    public void include_1(Term theory) throws FileNotFoundException,
+    public void include_1(Term theory) throws
             InvalidTheoryException, IOException {
         theory = theory.getTerm();
         String path = alice.util.Tools.removeApices(theory.toString());

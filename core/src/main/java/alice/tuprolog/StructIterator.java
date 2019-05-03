@@ -40,8 +40,9 @@ class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
     }
 
     public Term next() {
-        if (list.isEmptyList())
+        if (list.isEmptyList()) {
             throw new NoSuchElementException();
+        }
         // Using Struct#getTerm(int) instead of Struct#listHead and Struct#listTail
         // to avoid redundant Struct#isList calls since it is only possible to get
         // a StructIterator on a Struct instance which is already a list.

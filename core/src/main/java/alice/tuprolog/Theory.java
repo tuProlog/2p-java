@@ -89,10 +89,11 @@ public class Theory implements Serializable {
     }
 
     public Iterator<? extends Term> iterator(Prolog engine) {
-        if (isTextual())
+        if (isTextual()) {
             return new Parser(engine.getOperatorManager(), theory).iterator();
-        else
+        } else {
             return clauseList.listIterator();
+        }
     }
 
     /**
@@ -107,16 +108,17 @@ public class Theory implements Serializable {
             theory += th.theory;
         } else if (!th.isTextual() && !isTextual()) {
             Struct otherClauseList = th.getClauseListRepresentation();
-            if (clauseList.isEmptyList())
+            if (clauseList.isEmptyList()) {
                 clauseList = otherClauseList;
-            else {
+            } else {
                 Struct p = clauseList, q;
-                while (!(q = (Struct) p.getArg(1)).isEmptyList())
+                while (!(q = (Struct) p.getArg(1)).isEmptyList()) {
                     p = q;
+                }
                 p.setArg(1, otherClauseList);
             }
         } else if (!isTextual() && th.isTextual()) {
-            theory = theory.toString() + "\n" + th;
+            theory = theory + "\n" + th;
             clauseList = null;
         } else if (isTextual() && !th.isTextual()) {
             theory += th.toString();

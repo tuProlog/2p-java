@@ -28,8 +28,9 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
     private PrimitiveManager primitiveManager;
 
     protected static URL getClassResource(Class<?> klass) {
-        if (klass == null)
+        if (klass == null) {
             return null;
+        }
 
         return klass.getClassLoader().getResource(klass.getName().replace('.', '/') + ".class");
     }
@@ -117,7 +118,7 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
     public synchronized String[] getCurrentLibraries() {
         String[] libs = new String[currentLibraries.size()];
         for (int i = 0; i < libs.length; i++) {
-            libs[i] = ((Library) currentLibraries.get(i)).getName();
+            libs[i] = currentLibraries.get(i).getName();
         }
 
         return libs;
@@ -128,7 +129,7 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
         boolean found = false;
         Iterator<Library> it = currentLibraries.listIterator();
         while (it.hasNext()) {
-            Library lib = (Library) it.next();
+            Library lib = it.next();
             if (lib.getName().equals(name)) {
                 found = true;
                 it.remove();
@@ -143,8 +144,7 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
             throw new InvalidLibraryException();
         }
 
-        if (externalLibraries.containsKey(name))
-            externalLibraries.remove(name);
+        externalLibraries.remove(name);
 
         theoryManager.removeLibraryTheory(name);
         theoryManager.rebindPrimitives();
@@ -200,7 +200,7 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
     public synchronized String fetchCurrentLibraries() {
         String[] libs = new String[currentLibraries.size()];
         for (int i = 0; i < libs.length; i++) {
-            libs[i] = ((Library) currentLibraries.get(i)).getName();
+            libs[i] = currentLibraries.get(i).getName();
         }
 
         return JSONSerializerManager.toJSON(libs);

@@ -81,8 +81,9 @@ public final class PrologMXBeanServer implements PrologMXBeanServerMXBean {
             server.registerMBean(new JSONSerializerManager(), jsonManagerName);
             server.registerMBean(prolog.getLibraryManager(), libraryManagerName);
             server.registerMBean(this, thisServerName);
-            if (adaptor != null && !adaptor.isEmpty())
+            if (adaptor != null && !adaptor.isEmpty()) {
                 startAdaptor(host, port, adaptor, credentialFile, SSLconfigFile);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return;
@@ -186,8 +187,9 @@ public final class PrologMXBeanServer implements PrologMXBeanServerMXBean {
     }
 
     public void stopAdaptor(String adaptor) {
-        if (adaptor == null || adaptor.isEmpty())
+        if (adaptor == null || adaptor.isEmpty()) {
             return;
+        }
         if (adaptor.equalsIgnoreCase(PrologMXBeanServer.HTTP_ADAPTOR)) {
             getHttpAdaptor().stop();
         }// else...

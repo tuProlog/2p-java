@@ -82,8 +82,9 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
             if (staticDBase.containsKey(key)) {
                 engine.warn("A static predicate with signature " + key + " has been overriden.");
             }
-        } else
+        } else {
             staticDBase.addFirst(key, d);
+        }
         engine.spy("INSERTA: " + d.getClause() + "\n");
     }
 
@@ -98,8 +99,9 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
             if (staticDBase.containsKey(key)) {
                 engine.warn("A static predicate with signature " + key + " has been overriden.");
             }
-        } else
+        } else {
             staticDBase.addLast(key, d);
+        }
         engine.spy("INSERTZ: " + d.getClause() + "\n");
     }
 
@@ -128,8 +130,9 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
             familyQuery = retractDBase.get("ctxId " + ctx.getId());
         }
 
-        if (familyQuery == null)
+        if (familyQuery == null) {
             return null;
+        }
         //fa la retract dalla teoria base
         if (family != null) {
             for (Iterator<ClauseInfo> it = family.iterator(); it.hasNext(); ) {
@@ -157,17 +160,21 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
      * predicate indicator passed as a parameter
      */
     public synchronized boolean abolish(Struct pi) {
-        if (!(pi instanceof Struct) || !pi.isGround() || !(pi.getArity() == 2))
+        if (!(pi instanceof Struct) || !pi.isGround() || !(pi.getArity() == 2)) {
             throw new IllegalArgumentException(pi + " is not a valid Struct");
-        if (!pi.getName().equals("/"))
-            throw new IllegalArgumentException(pi + " has not the valid predicate name. Espected '/' but was " + pi.getName());
+        }
+        if (!pi.getName().equals("/")) {
+            throw new IllegalArgumentException(
+                    pi + " has not the valid predicate name. Espected '/' but was " + pi.getName());
+        }
 
         String arg0 = Tools.removeApices(pi.getArg(0).toString());
         String arg1 = Tools.removeApices(pi.getArg(1).toString());
         String key = arg0 + "/" + arg1;
         List<ClauseInfo> abolished = dynamicDBase.abolish(key); /* Reviewed by Paolo Contessi: LinkedList -> List */
-        if (abolished != null)
+        if (abolished != null) {
             engine.spy("ABOLISHED: " + key + " number of clauses=" + abolished.size() + "\n");
+        }
         return true;
     }
 
@@ -181,8 +188,9 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
     public synchronized List<ClauseInfo> find(Term headt) {
         if (headt instanceof Struct) {
             List<ClauseInfo> list = dynamicDBase.getPredicates(headt);
-            if (list.isEmpty())
+            if (list.isEmpty()) {
                 list = staticDBase.getPredicates(headt);
+            }
             return list;
         }
 
@@ -206,15 +214,17 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
             for (Iterator<? extends Term> it = theory.iterator(engine); it.hasNext(); ) {
                 clause++;
                 Struct d = (Struct) it.next();
-                if (!runDirective(d))
+                if (!runDirective(d)) {
                     assertZ(d, dynamicTheory, libName, true);
+                }
             }
         } catch (InvalidTermException e) {
             throw new InvalidTheoryException(e.getMessage(), clause, e.line, e.pos);
         }
 
-        if (libName == null)
+        if (libName == null) {
             lastConsultedTheory = theory;
+        }
     }
 
     /**
@@ -256,14 +266,16 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
 
 
     private boolean runDirective(Struct c) {
-        if ("':-'".equals(c.getName()) || ":-".equals(c.getName()) && c.getArity() == 1 && c.getTerm(0) instanceof Struct) {
+        if ("':-'".equals(c.getName()) ||
+            ":-".equals(c.getName()) && c.getArity() == 1 && c.getTerm(0) instanceof Struct) {
             Struct dir = (Struct) c.getTerm(0);
             try {
-                if (!primitiveManager.evalAsDirective(dir))
+                if (!primitiveManager.evalAsDirective(dir)) {
                     engine.warn("The directive " + dir.getPredicateIndicator() + " is unknown.");
+                }
             } catch (Throwable t) {
                 engine.warn("An exception has been thrown during the execution of the " +
-                        dir.getPredicateIndicator() + " directive.\n" + t.getMessage());
+                            dir.getPredicateIndicator() + " directive.\n" + t.getMessage());
             }
             return true;
         }
@@ -276,8 +288,9 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
     private Struct toClause(Struct t) {        //PRIMITIVE
         // TODO bad, slow way of cloning. requires approx twice the time necessary
         t = (Struct) Term.createTerm(t.toString(), this.engine.getOperatorManager());
-        if (!t.isClause())
+        if (!t.isClause()) {
             t = new Struct(":-", t, new Struct("true"));
+        }
         primitiveManager.identifyPredicate(t);
         return t;
     }
@@ -286,8 +299,8 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         Struct s = null;
         while (!startGoalStack.empty()) {
             s = (s == null) ?
-                    (Struct) startGoalStack.pop() :
-                    new Struct(",", (Struct) startGoalStack.pop(), s);
+                (Struct) startGoalStack.pop() :
+                new Struct(",", startGoalStack.pop(), s);
         }
         if (s != null) {
             try {
@@ -328,11 +341,12 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
             ClauseInfo d = dynamicClauses.next();
             buffer.append(d.toString(engine.getOperatorManager())).append("\n");
         }
-        if (!onlyDynamic)
+        if (!onlyDynamic) {
             for (Iterator<ClauseInfo> staticClauses = staticDBase.iterator(); staticClauses.hasNext(); ) {
                 ClauseInfo d = staticClauses.next();
                 buffer.append(d.toString(engine.getOperatorManager())).append("\n");
             }
+        }
         return buffer.toString();
     }
 
