@@ -21,54 +21,60 @@ import java.util.ArrayList;
 
 /**
  * A repository for history of goals which resolution has been asked for.
- * 
- * @author    <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
- * @version    1.0 - Tuesday 6th July, 2004
+ *
+ * @author <a href="mailto:giulio.piancastelli@studio.unibo.it">Giulio Piancastelli</a>
+ * @version 1.0 - Tuesday 6th July, 2004
  */
 
 class History {
-    
+
     private ArrayList<String> history;
     private int index;
-    
+
     public History() {
         history = new ArrayList<String>(1);
         history.add("");
         index = 0;
     }
-    
+
     public void add(String item) {
         index = history.size() - 1;
         history.add(index, item);
     }
-    
+
     /**
      * Get the previous element in history. If the lower bound of the
      * history is crossed, the first element in history is returned.
-     * 
+     *
      * @return The previous element in history, or the first element
      * in history if its lower bound is crossed.
      */
     public String previous() {
-        if (history.size() == 0) return "";
+        if (history.size() == 0) {
+            return "";
+        }
         index--;
-        if (index < 0)
+        if (index < 0) {
             index = 0;
+        }
         return (String) history.get(index);
     }
 
     /**
      * Get the next element in history. If the upper bound of
      * the history is crossed, an empty element is returned.
-     * 
+     *
      * @return The next element in history, or an empty element
      * if history's upper bound is crossed.
      */
     public String next() {
-        if (history.size() == 0) return "";
+        if (history.size() == 0) {
+            return "";
+        }
         index++;
-        if (index >= history.size())
+        if (index >= history.size()) {
             index = history.size() - 1;
+        }
         return (String) history.get(index);
     }
 
