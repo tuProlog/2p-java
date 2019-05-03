@@ -1,8 +1,20 @@
 package alice.tuprolog;
 
-import junit.framework.TestCase;
-
 import java.util.List;
+
+import alice.tuprolog.ClauseInfo;
+import alice.tuprolog.Int;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Theory;
+import alice.tuprolog.TheoryManager;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.exceptions.NoMoreSolutionException;
+import alice.tuprolog.exceptions.NoSolutionException;
+import alice.tuprolog.exceptions.PrologException;
+import junit.framework.TestCase;
 
 public class TheoryManagerTestCase extends TestCase {
 

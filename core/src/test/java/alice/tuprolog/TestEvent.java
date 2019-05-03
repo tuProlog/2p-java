@@ -4,6 +4,9 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
 import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.event.PrologEventAdapter;
 import alice.tuprolog.event.QueryEvent;
@@ -11,26 +14,22 @@ import alice.tuprolog.event.TheoryEvent;
 
 class MyListener extends PrologEventAdapter {
     
-    @Override
-	public void theoryChanged(TheoryEvent ev){
+    public void theoryChanged(TheoryEvent ev){
         System.out.println("THEORY CHANGED: \n old: \n"+
                 ev.getOldTheory()+"\n new: \n"+ev.getNewTheory());
     }
     
-    @Override
-	public void newQueryResultAvailable(QueryEvent ev){
+    public void newQueryResultAvailable(QueryEvent ev){
         System.out.println("NEW QUERY RESULT AVAILABLE: \nquery\n "+
                 ev.getSolveInfo().getQuery().toString()+"\nresult\n"+
                 ev.getSolveInfo());
     }
     
-    @Override
-	public void libraryLoaded(LibraryEvent ev){
+    public void libraryLoaded(LibraryEvent ev){
         System.out.println("NEW LIB loaded: "+ev.getLibraryName());
     }
 
-    @Override
-	public void libraryUnloaded(LibraryEvent ev){
+    public void libraryUnloaded(LibraryEvent ev){
         System.out.println("LIB unloaded: "+ev.getLibraryName());
     }
 

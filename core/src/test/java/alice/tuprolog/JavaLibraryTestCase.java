@@ -1,13 +1,21 @@
 package alice.tuprolog;
 
-import alice.tuprolog.lib.InvalidObjectIdException;
-import alice.tuprolog.lib.OOLibrary;
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+import alice.tuprolog.Library;
+import alice.tuprolog.PrimitiveInfo;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Struct;
+import alice.tuprolog.Theory;
+import alice.tuprolog.exceptions.InvalidObjectIdException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.PrologException;
+import alice.tuprolog.lib.OOLibrary;
+import junit.framework.TestCase;
 
 public class JavaLibraryTestCase extends TestCase {
 	String theory = null;
@@ -44,7 +52,7 @@ public class JavaLibraryTestCase extends TestCase {
 		Prolog engine = new Prolog();
 		OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
 		String theory = "demo(C) :- \n" +
-				"java_object('TestCounter', [], C), \n" +
+				"java_object('alice.tuprolog.TestCounter', [], C), \n" +
 				"C <- update, \n" +
 				"C <- update. \n";			
 		engine.setTheory(new Theory(theory));

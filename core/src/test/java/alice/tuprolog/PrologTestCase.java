@@ -1,7 +1,12 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Library;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
 import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.SpyListener;
+import alice.tuprolog.exceptions.InvalidLibraryException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.interfaces.event.SpyListener;
 import junit.framework.TestCase;
 
 public class PrologTestCase extends TestCase {
@@ -59,11 +64,9 @@ public class PrologTestCase extends TestCase {
 	public void testSpyListenerManagement() {
 		Prolog engine = new Prolog();
 		SpyListener listener1 = new SpyListener() {
-			@Override
 			public void onSpy(SpyEvent e) {}
 		};
 		SpyListener listener2 = new SpyListener() {
-			@Override
 			public void onSpy(SpyEvent e) {}
 		};
 		engine.addSpyListener(listener1);

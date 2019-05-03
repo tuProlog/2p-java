@@ -1,10 +1,14 @@
 package alice.tuprolog;
 
-import alice.tuprolog.lib.IOLibrary;
-import junit.framework.TestCase;
-
 import java.util.List;
 import java.util.Map;
+
+import alice.tuprolog.Library;
+import alice.tuprolog.PrimitiveInfo;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.lib.IOLibrary;
+import junit.framework.TestCase;
 
 public class IOLibraryTestCase extends TestCase {
 	

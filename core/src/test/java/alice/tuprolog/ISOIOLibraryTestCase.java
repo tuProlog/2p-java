@@ -1,13 +1,23 @@
 package alice.tuprolog;
 
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
+import static org.junit.Assert.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.*;
-
-import static org.junit.Assert.*;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
+import alice.tuprolog.event.OutputEvent;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.interfaces.event.OutputListener;
 
 // Based on the work of Sara Sabioni
 public class ISOIOLibraryTestCase {

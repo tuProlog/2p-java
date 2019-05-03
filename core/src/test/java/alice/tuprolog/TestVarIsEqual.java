@@ -1,10 +1,10 @@
 package alice.tuprolog;
 
-import alice.tuprolog.event.OutputEvent;
-import alice.tuprolog.event.OutputListener;
 import junit.framework.TestCase;
-
-
+import alice.tuprolog.event.OutputEvent;
+import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.MalformedGoalException;
+import alice.tuprolog.interfaces.event.*;
 
 /**
  * @author George S. Cowan
@@ -16,8 +16,7 @@ public class TestVarIsEqual extends TestCase {
   String yes = "yes.\n";
   private SysoutListener sysoutListener = new SysoutListener();
   
-  @Override
-protected void setUp() throws Exception {
+  protected void setUp() throws Exception {
     super.setUp();
     core = new Prolog();
     core.addOutputListener(sysoutListener);
@@ -26,8 +25,7 @@ protected void setUp() throws Exception {
   private class SysoutListener implements OutputListener {
     public StringBuilder builder = new StringBuilder("");
     
-    @Override
-	public void onOutput(OutputEvent ev) {
+    public void onOutput(OutputEvent ev) {
       builder.append(ev.getMsg());
     }
     public String getAllOutput() {

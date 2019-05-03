@@ -1,5 +1,9 @@
 package alice.tuprolog;
 
+import alice.tuprolog.Prolog;
+import alice.tuprolog.SolveInfo;
+import alice.tuprolog.Theory;
+
 class PrologThread extends Thread {
 	Prolog core;
 	String goal;
@@ -8,7 +12,6 @@ class PrologThread extends Thread {
 		this.goal = goal;
 	}
 
-	@Override
 	public void run(){
 		try {
 			System.out.println("STARTING...");

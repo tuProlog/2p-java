@@ -20,15 +20,18 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.Int;
+import alice.tuprolog.Number;
+import alice.tuprolog.Term;
+
 public class TestLibrary extends StringLibrary {
 	private static final long serialVersionUID = 1L;
 
-	@Override
 	public String getName() {
 		return "TestLibraryName";
 	}
 
-	public Term sum_2(java.lang.Number arg0, java.lang.Number arg1){
+	public Term sum_2(Number arg0, Number arg1){
 		int a0 = arg0.intValue();
 		int a1 = arg1.intValue();
 		return new Int(a0+a1);
