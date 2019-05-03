@@ -22,9 +22,9 @@ public abstract class Term<X extends Term<?>> {
 			//return (Z)new Int((Integer)o);
 			return uncheckedCast(new Int((Integer)o));
 		}
-		else if (o instanceof Double) {
+		else if (o instanceof java.lang.Double) {
 			//return (Z)new Double((java.lang.Double)o);
-			return uncheckedCast(new Double((Double)o));
+			return uncheckedCast(new Double((java.lang.Double)o));
 		}
 		else if (o instanceof String) {
 			//return (Z)new Atom((String)o);

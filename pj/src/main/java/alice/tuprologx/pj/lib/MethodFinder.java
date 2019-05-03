@@ -93,7 +93,7 @@ public final class MethodFinder {
     /**
      * {@inheritDoc}
      *
-     * @see Object#equals(Object)
+     * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(final Object o) {
         if (this == o) {
@@ -302,7 +302,7 @@ public final class MethodFinder {
 
     /**
      * {@inheritDoc}
-     * @see Object#hashCode()
+     * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
         return clazz.hashCode();

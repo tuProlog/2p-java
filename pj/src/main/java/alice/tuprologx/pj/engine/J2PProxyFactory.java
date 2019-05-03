@@ -279,7 +279,7 @@ public class J2PProxyFactory extends ProxyFactory {
         // synchronized (proxyCache) {
             Map<CacheKey,CacheKey> cacheForTheLoader = proxyCache.get(cl);
             if (cacheForTheLoader == null) {
-                cacheForTheLoader = new HashMap<CacheKey, CacheKey>();
+                cacheForTheLoader = new HashMap<J2PProxyFactory.CacheKey, J2PProxyFactory.CacheKey>();
                 proxyCache.put(cl, cacheForTheLoader);
                 cacheForTheLoader.put(key, key);
             }

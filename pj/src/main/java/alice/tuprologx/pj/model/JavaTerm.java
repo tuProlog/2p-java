@@ -74,7 +74,7 @@ public class JavaTerm<O> extends Compound<JavaTerm<O>> {
     private static Vector<Term<?>>  getProperties(Object _object) {
         Vector<Term<?>> termArr = null;
         try {
-            termArr = new Vector<Term<?>>();
+            termArr = new java.util.Vector<Term<?>>();
             java.beans.BeanInfo binfo = java.beans.Introspector.getBeanInfo(_object.getClass());
             int count = 0;
             for (java.beans.PropertyDescriptor pdesc : binfo.getPropertyDescriptors()) {

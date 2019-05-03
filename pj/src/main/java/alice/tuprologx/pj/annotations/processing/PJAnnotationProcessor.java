@@ -443,11 +443,11 @@ public class PJAnnotationProcessor extends ElementScanner6<Void,Void> implements
     }
 
     public Set<String> getSupportedOptions() {
-        return new TreeSet<String>();
+        return new java.util.TreeSet<String>();
     }
 
     public Set<String> getSupportedAnnotationTypes() {
-        return new TreeSet<String>(Arrays.asList(supportedAnnotations));
+        return new java.util.TreeSet<String>(Arrays.asList(supportedAnnotations));        
     }
     
     private class TypeParser {

@@ -20,7 +20,7 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
         _theRest = uncheckedCast(new Nil());
     }
 
-    protected Cons(String name, List<Term<?>> termList) {
+    protected Cons(String name, java.util.List<Term<?>> termList) {
         initFromList(termList);
         _theName = name;        
     }
@@ -71,7 +71,7 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
             Cons<?, ?> theTuple = (Cons<?,?>)Cons.this;	
             public Term<?> next() {
                 if (theTuple == null) {
-                    throw new NoSuchElementException();
+                    throw new java.util.NoSuchElementException();
                 }
                 Term<?> head = theTuple.getHead();
                 theTuple=(theTuple.getRest() instanceof Cons ? (Cons<?,?>)theTuple.getRest() : null);
@@ -84,7 +84,7 @@ public class Cons<H extends Term<?>, R extends Compound<?>> extends Compound<Con
         };
     }
     
-    private void initFromList(List<Term<?>> termList) {
+    private void initFromList(java.util.List<Term<?>> termList) {
         if (!termList.isEmpty()) {
             // _theHead = (H)termList.remove(0);  
             _theHead = uncheckedCast(termList.remove(0));

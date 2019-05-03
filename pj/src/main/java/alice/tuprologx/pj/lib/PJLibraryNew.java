@@ -557,14 +557,14 @@ public class PJLibraryNew extends OOLibrary {
 			// first check for primitive types
 			if (fc.equals(Integer.TYPE) || fc.equals(Byte.TYPE)) {
 				int value = field.getInt(obj);
-				return unify(what, new Int(value));
-			} else if (fc.equals(Long.TYPE)) {
+				return unify(what, new alice.tuprolog.Int(value));
+			} else if (fc.equals(java.lang.Long.TYPE)) {
 				long value = field.getLong(obj);
 				return unify(what, new alice.tuprolog.Long(value));
-			} else if (fc.equals(Float.TYPE)) {
+			} else if (fc.equals(java.lang.Float.TYPE)) {
 				float value = field.getFloat(obj);
 				return unify(what, new alice.tuprolog.Float(value));
-			} else if (fc.equals(Double.TYPE)) {
+			} else if (fc.equals(java.lang.Double.TYPE)) {
 				double value = field.getDouble(obj);
 				return unify(what, new alice.tuprolog.Double(value));
 			} else {
@@ -634,17 +634,17 @@ public class PJLibraryNew extends OOLibrary {
 			} else if (term instanceof Number) {
 				Number t = (Number) term;
 				if (t instanceof Int) {
-					values[i] = new Integer(t.intValue());
-					types[i] = Integer.TYPE;
+					values[i] = new java.lang.Integer(t.intValue());
+					types[i] = java.lang.Integer.TYPE;
 				} else if (t instanceof alice.tuprolog.Double) {
-					values[i] = new Double(t.doubleValue());
-					types[i] = Double.TYPE;
+					values[i] = new java.lang.Double(t.doubleValue());
+					types[i] = java.lang.Double.TYPE;
 				} else if (t instanceof alice.tuprolog.Long) {
-					values[i] = new Long(t.longValue());
-					types[i] = Long.TYPE;
+					values[i] = new java.lang.Long(t.longValue());
+					types[i] = java.lang.Long.TYPE;
 				} else if (t instanceof alice.tuprolog.Float) {
-					values[i] = new Float(t.floatValue());
-					types[i] = Float.TYPE;
+					values[i] = new java.lang.Float(t.floatValue());
+					types[i] = java.lang.Float.TYPE;
 				}
 			} else if (term instanceof Struct) {
 				// argument descriptors
@@ -694,12 +694,12 @@ public class PJLibraryNew extends OOLibrary {
 				return unify(id, new Int(((Short) obj).intValue()));
 			} else if (Integer.class.isInstance(obj)) {
 				return unify(id, new Int(((Integer) obj).intValue()));
-			} else if (Long.class.isInstance(obj)) {
-				return unify(id, new alice.tuprolog.Long(((Long) obj).longValue()));
-			} else if (Float.class.isInstance(obj)) {
-				return unify(id, new alice.tuprolog.Float(((Float) obj).floatValue()));
-			} else if (Double.class.isInstance(obj)) {
-				return unify(id, new alice.tuprolog.Double(((Double) obj).doubleValue()));
+			} else if (java.lang.Long.class.isInstance(obj)) {
+				return unify(id, new alice.tuprolog.Long(((java.lang.Long) obj).longValue()));
+			} else if (java.lang.Float.class.isInstance(obj)) {
+				return unify(id, new alice.tuprolog.Float(((java.lang.Float) obj).floatValue()));
+			} else if (java.lang.Double.class.isInstance(obj)) {
+				return unify(id, new alice.tuprolog.Double(((java.lang.Double) obj).doubleValue()));
 			} else if (String.class.isInstance(obj)) {
 				return unify(id, new Struct((String) obj));
 			} else if (Character.class.isInstance(obj)) {
@@ -784,15 +784,15 @@ public class PJLibraryNew extends OOLibrary {
 					} else if (castTo_name.equals("char")) {
 						types[i] = Character.TYPE;
 					} else if (castTo_name.equals("int")) {
-						types[i] = Integer.TYPE;
+						types[i] = java.lang.Integer.TYPE;
 					} else if (castTo_name.equals("long")) {
-						types[i] = Long.TYPE;
+						types[i] = java.lang.Long.TYPE;
 					} else if (castTo_name.equals("float")) {
-						types[i] = Float.TYPE;
+						types[i] = java.lang.Float.TYPE;
 					} else if (castTo_name.equals("double")) {
-						types[i] = Double.TYPE;
+						types[i] = java.lang.Double.TYPE;
 					} else if (castTo_name.equals("boolean")) {
-						types[i] = Boolean.TYPE;
+						types[i] = java.lang.Boolean.TYPE;
 					} else {
 						try {
 							types[i] = (Class.forName(castTo_name));
@@ -815,14 +815,14 @@ public class PJLibraryNew extends OOLibrary {
 					values[i] = new Integer(num.intValue());
 					types[i] = Integer.TYPE;
 				} else if (castTo_name.equals("long")) {
-					values[i] = new Long(num.longValue());
-					types[i] = Long.TYPE;
+					values[i] = new java.lang.Long(num.longValue());
+					types[i] = java.lang.Long.TYPE;
 				} else if (castTo_name.equals("float")) {
-					values[i] = new Float(num.floatValue());
-					types[i] = Float.TYPE;
+					values[i] = new java.lang.Float(num.floatValue());
+					types[i] = java.lang.Float.TYPE;
 				} else if (castTo_name.equals("double")) {
-					values[i] = new Double(num.doubleValue());
-					types[i] = Double.TYPE;
+					values[i] = new java.lang.Double(num.doubleValue());
+					types[i] = java.lang.Double.TYPE;
 				} else {
 					return false;
 				}

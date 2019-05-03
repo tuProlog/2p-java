@@ -155,7 +155,7 @@ public class PrologInvocationContext {
     
     
     
-    public Object dispatch(PJProlog _engine, Object[] args) throws NoSolutionException {
+    public Object dispatch(alice.tuprologx.pj.engine.PJProlog _engine, Object[] args) throws NoSolutionException {
 	try {                            
             Term<?> theGoal = buildGoal(args);  
             if (trace) {

@@ -15,7 +15,7 @@ import java.util.*;
  */
 public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X> {
 //public class List<X extends Term<?>> extends Compound<List<X>> {
-	protected Vector<X> _theList;
+	protected java.util.Vector<X> _theList;
         
         public final static List<?> NIL = new List<Term<?>>(new Vector<Term<?>>());
         
@@ -83,8 +83,8 @@ public class List<X extends Term<?>> extends Term<List<X>> implements Iterable<X
             return _theList.iterator();
         }
         
-        public static List<Atom> tokenize(StringTokenizer stok) {
-            Vector<String> tokens = new Vector<String>();
+        public static List<Atom> tokenize(java.util.StringTokenizer stok) {            
+            java.util.Vector<String> tokens = new java.util.Vector<String>();      
             while (stok.hasMoreTokens()) {
                 tokens.add(stok.nextToken());
             }
