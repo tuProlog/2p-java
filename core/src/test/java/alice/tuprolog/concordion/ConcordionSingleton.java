@@ -1,298 +1,305 @@
 package alice.tuprolog.concordion;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import alice.tuprolog.Prolog;
-import alice.tuprolog.SolveInfo;
-import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
-import alice.tuprolog.Var;
+import alice.tuprolog.*;
 import alice.tuprolog.event.ExceptionEvent;
 import alice.tuprolog.exceptions.PrologException;
 import alice.tuprolog.interfaces.event.ExceptionListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConcordionSingleton {
 
-	private static ConcordionSingleton singleton;
-	private String exceptionFounded = "";
-
-	private ConcordionSingleton() {
-	}
-
-	public static ConcordionSingleton getInstance() {
-		if (singleton == null) {
-			singleton = new ConcordionSingleton();
-		}
-
-		return singleton;
-	}
-
-	private boolean exFounded = false; // variable used to found an exception
-	private ExceptionListener ex = new ExceptionListener() {
+    private static ConcordionSingleton singleton;
+    private String exceptionFounded = "";
+    private boolean exFounded = false; // variable used to found an exception
+    private ExceptionListener ex = new ExceptionListener() {
+
+        @Override
+        public void onException(ExceptionEvent e) {
+            exFounded = true;
+            exceptionFounded = e.getMsg();
+
+        }
+    };
+
+    private ConcordionSingleton() {
+    }
+
+    public static ConcordionSingleton getInstance() {
+        if (singleton == null) {
+            singleton = new ConcordionSingleton();
+        }
+
+        return singleton;
+    }
+
+    /* If there isn't a theory, insert null in the tag <td> */
+    public boolean success(String goal, String theory) throws Exception {
+
+        Prolog engine = new Prolog();
+        if (!theory.equalsIgnoreCase("null")) {
+            engine.setTheory(new Theory(theory));
+        }
+        SolveInfo info = engine.solve(goal);
+        return info.isSuccess();
+    }
+
+    /* Return true if there is an exception */
+    public boolean successWithException(String goal, String theory)
+            throws PrologException {
+
+        Prolog engine = null;
+        @SuppressWarnings("unused")
+        SolveInfo info = null;
+        exFounded = false;
+        engine = new Prolog();
+        if (!theory.equalsIgnoreCase("null")) {
+            engine.setTheory(new Theory(theory));
+        }
+        engine.addExceptionListener(ex);
+        info = engine.solve(goal);
+        //System.out.println(engine.getErrors());
+        return exFounded;
+
+    }
+
+    /* Return type of error */
+    public String successWithExceptionAndText(String goal, String theory)
+            throws PrologException {
+
+        Prolog engine = null;
+        @SuppressWarnings("unused")
+        SolveInfo info = null;
+        exFounded = false;
+        engine = new Prolog();
+        if (!theory.equalsIgnoreCase("null")) {
+            engine.setTheory(new Theory(theory));
+        }
+        engine.addExceptionListener(ex);
+        info = engine.solve(goal);
+        if (exFounded) {
+            return exceptionFounded;
+        } else {
+            return "No Errors!";
+        }
+
+    }
+
+    /* Return the first result (With or Without replace) */
+    public String successAndResult(String goal, String theory, String variable)
+            throws Exception {
+
+        return successAndResultVerifyReplace(goal, theory, variable, true);
+
+    }
 
-		@Override
-		public void onException(ExceptionEvent e) {
-			exFounded = true;
-			exceptionFounded = e.getMsg();
-
-		}
-	};
+    public String successAndResultWithoutReplace(String goal, String theory,
+                                                 String variable) throws Exception {
 
-	/* If there isn't a theory, insert null in the tag <td> */
-	public boolean success(String goal, String theory) throws Exception {
+        return successAndResultVerifyReplace(goal, theory, variable, false);
 
-		Prolog engine = new Prolog();
-		if (!theory.equalsIgnoreCase("null"))
-			engine.setTheory(new Theory(theory));
-		SolveInfo info = engine.solve(goal);
-		return info.isSuccess();
-	}
+    }
+
+    /* Return the first result of goal (With or Without replace), with limit */
+    public boolean successAndResultsWithLimit(String goal, String theory,
+                                              String variable, String solution, int maxSolutions)
+            throws Exception {
+
+        return successAndResultsWithLimitVerifyReplace(goal, theory, variable,
+                                                       solution, true, maxSolutions);
+
+    }
+
+    public boolean successAndResultsWithLimitWithoutReplace(String goal,
+                                                            String theory, String variable, String solution,
+                                                            int maxSolutions) throws Exception {
 
-	/* Return true if there is an exception */
-	public boolean successWithException(String goal, String theory)
-			throws PrologException {
+        return successAndResultsWithLimitVerifyReplace(goal, theory, variable,
+                                                       solution, false, maxSolutions);
 
-		Prolog engine = null;
-		@SuppressWarnings("unused")
-		SolveInfo info = null;
-		exFounded = false;
-		engine = new Prolog();
-		if (!theory.equalsIgnoreCase("null"))
-			engine.setTheory(new Theory(theory));
-		engine.addExceptionListener(ex);
-		info = engine.solve(goal);
-		//System.out.println(engine.getErrors());
-		return exFounded;
+    }
 
-	}
+    /* Check the result in the list(infinite) */
+    private boolean successAndResultsWithLimitVerifyReplace(String goal,
+                                                            String theory, String variable, String solution, boolean replace,
+                                                            int maxSolutions) throws Exception {
 
-	/* Return type of error */
-	public String successWithExceptionAndText(String goal, String theory)
-			throws PrologException {
+        Prolog engine = new Prolog();
+        SolveInfo info = null;
+        List<String> results = new ArrayList<String>();
 
-		Prolog engine = null;
-		@SuppressWarnings("unused")
-		SolveInfo info = null;
-		exFounded = false;
-		engine = new Prolog();
-		if (!theory.equalsIgnoreCase("null"))
-			engine.setTheory(new Theory(theory));
-		engine.addExceptionListener(ex);
-		info = engine.solve(goal);
-		if (exFounded)
-			return exceptionFounded;
-		else
-			return "No Errors!";
 
-	}
+        if (!theory.equalsIgnoreCase("null")) {
+            engine.setTheory(new Theory(theory));
+        }
+        info = engine.solve(goal);
+        while (info.isSuccess() && maxSolutions != 0) {
 
-	/* Return the first result (With or Without replace) */
-	public String successAndResult(String goal, String theory, String variable)
-			throws Exception {
+            for (Var var : info.getBindingVars()) {
 
-		return successAndResultVerifyReplace(goal, theory, variable, true);
+                if ((var.toString()).startsWith(variable)) {
 
-	}
+                    variable = (replace == true ? replaceForVariable(
+                            var.toString(), ' ') : var.toString());
 
-	public String successAndResultWithoutReplace(String goal, String theory,
-			String variable) throws Exception {
+                    Term t = info.getVarValue(variable);
+                    results.add(replace == true ? replaceUnderscore(t
+                                                                            .toString()) : t.toString());
 
-		return successAndResultVerifyReplace(goal, theory, variable, false);
+                }
 
-	}
+            }
 
-	/* Return the first result of goal (With or Without replace), with limit */
-	public boolean successAndResultsWithLimit(String goal, String theory,
-			String variable, String solution, int maxSolutions)
-			throws Exception {
+            if (replace) {
+                variable = replaceForVariable(variable, '_');
+            }
+            Term t = info.getVarValue(variable);
+            results.add(replace == true ? replaceUnderscore(t.toString()) : t
+                    .toString());
 
-		return successAndResultsWithLimitVerifyReplace(goal, theory, variable,
-				solution, true, maxSolutions);
+            if (engine.hasOpenAlternatives()) {
+                info = engine.solveNext();
+            } else {
+                break;
+            }
+            maxSolutions--;
+        }
 
-	}
+        //System.out.println(results.toString());
+        return results.contains(solution);
 
-	public boolean successAndResultsWithLimitWithoutReplace(String goal,
-			String theory, String variable, String solution,
-			int maxSolutions) throws Exception {
+    }
 
-		return successAndResultsWithLimitVerifyReplace(goal, theory, variable,
-				solution, false, maxSolutions);
+    private boolean successAndResultsVerifyReplace(String goal, String theory,
+                                                   String variable, String solution, boolean replace) throws Exception {
 
-	}
+        Prolog engine = new Prolog();
+        SolveInfo info = null;
+        List<String> results = new ArrayList<String>();
 
-	/* Check the result in the list(infinite) */
-	private boolean successAndResultsWithLimitVerifyReplace(String goal,
-			String theory, String variable, String solution, boolean replace,
-			int maxSolutions) throws Exception {
+        if (!theory.equalsIgnoreCase("null")) {
+            engine.setTheory(new Theory(theory));
+        }
+        info = engine.solve(goal);
+        while (info.isSuccess()) {
 
-		Prolog engine = new Prolog();
-		SolveInfo info = null;
-		List<String> results = new ArrayList<String>();
+            for (Var var : info.getBindingVars()) {
+                if ((var.toString()).startsWith(variable)) {
 
+                    variable = replaceForVariable(var.toString(), ' ');
+                    Term t = info.getVarValue(variable);
+                    results.add(replace == true ? replaceUnderscore(t
+                                                                            .toString()) : t.toString());
 
-		if (!theory.equalsIgnoreCase("null"))
-			engine.setTheory(new Theory(theory));
-		info = engine.solve(goal);
-		while (info.isSuccess() && maxSolutions != 0) {
 
-			for (Var var : info.getBindingVars()) {
+                }
 
-				if ((var.toString()).startsWith(variable)) {
+            }
+            variable = replaceForVariable(variable, '_');
+            Term t = info.getVarValue(variable);
+            results.add(replace == true ? replaceUnderscore(t.toString()) : t
+                    .toString());
 
-					variable = (replace == true ? replaceForVariable(
-							var.toString(), ' ') : var.toString());
+            if (engine.hasOpenAlternatives()) {
+                info = engine.solveNext();
+            } else {
+                break;
+            }
+        }
+        System.out.println(results.toString());
+        return results.contains(solution);
 
-					Term t = info.getVarValue(variable);
-					results.add(replace == true ? replaceUnderscore(t
-							.toString()) : t.toString());
+    }
 
-				}
+    /* Check the result in the list(not infinite) */
+    public boolean successAndResults(String goal, String theory,
+                                     String variable, String solution) throws Exception {
 
-			}
+        return successAndResultsVerifyReplace(goal, theory, variable, solution,
+                                              true);
 
-			if (replace)
-				variable = replaceForVariable(variable, '_');
-			Term t = info.getVarValue(variable);
-			results.add(replace == true ? replaceUnderscore(t.toString()) : t
-					.toString());
+    }
 
-			if (engine.hasOpenAlternatives()) {
-				info = engine.solveNext();
-			} else {
-				break;
-			}
-			maxSolutions--;
-		}
+    public boolean successAndResultsWithoutReplace(String goal, String theory,
+                                                   String variable, String solution) throws Exception {
 
-		//System.out.println(results.toString());
-		return results.contains(solution);
+        return successAndResultsVerifyReplace(goal, theory, variable, solution,
+                                              false);
 
-	}
+    }
 
-	private boolean successAndResultsVerifyReplace(String goal, String theory,
-			String variable, String solution, boolean replace) throws Exception {
+    /* Return the first result of goal */
+    private String successAndResultVerifyReplace(String goal, String theory,
+                                                 String variable, boolean replace) throws Exception {
 
-		Prolog engine = new Prolog();
-		SolveInfo info = null;
-		List<String> results = new ArrayList<String>();
+        Prolog engine = new Prolog();
+        if (!theory.equalsIgnoreCase("null")) {
+            engine.setTheory(new Theory(theory));
+        }
+        SolveInfo info = engine.solve(goal);
+        for (Var var : info.getBindingVars()) {
+            if ((var.toString()).startsWith(variable)) {
 
-		if (!theory.equalsIgnoreCase("null"))
-			engine.setTheory(new Theory(theory));
-		info = engine.solve(goal);
-		while (info.isSuccess()) {
+                variable = replaceForVariable(var.toString(), ' ');
+                Term t = info.getVarValue(variable);
+                System.out.println(t.toString());
+                return (replace == true ? replaceUnderscore(t.toString()) : t
+                        .toString());
 
-			for (Var var : info.getBindingVars()) {
-				if ((var.toString()).startsWith(variable)) {
+            }
 
-					variable = replaceForVariable(var.toString(), ' ');
-					Term t = info.getVarValue(variable);
-					results.add(replace == true ? replaceUnderscore(t
-							.toString()) : t.toString());
-					
+        }
+        variable = replaceForVariable(variable, '_');
+        Term t = info.getVarValue(variable);
+        return (replace == true ? replaceUnderscore(t.toString()) : t
+                .toString());
+    }
 
-				}
+    private String replaceForVariable(String query, char car) {
 
-			}
-			variable = replaceForVariable(variable, '_');
-			Term t = info.getVarValue(variable);
-			results.add(replace == true ? replaceUnderscore(t.toString()) : t
-					.toString());
+        String result = "";
+        for (int i = 0; i < query.length(); i++) {
 
-			if (engine.hasOpenAlternatives()) {
-				info = engine.solveNext();
-			} else {
-				break;
-			}
-		}
-		System.out.println(results.toString());
-		return results.contains(solution);
+            if (query.charAt(i) == car) {
+                return result;
+            }
+            result += (query.charAt(i) + "");
 
-	}
+        }
 
-	/* Check the result in the list(not infinite) */
-	public boolean successAndResults(String goal, String theory,
-			String variable, String solution) throws Exception {
+        return result;
 
-		return successAndResultsVerifyReplace(goal, theory, variable, solution,
-				true);
+    }
 
-	}
+    private String replaceUnderscore(String query) {
 
-	public boolean successAndResultsWithoutReplace(String goal, String theory,
-			String variable, String solution) throws Exception {
+        String result = "";
+        boolean trovato = false;
+        for (int i = 0; i < query.length(); i++) {
 
-		return successAndResultsVerifyReplace(goal, theory, variable, solution,
-				false);
+            if (query.charAt(i) == ',' || query.charAt(i) == ')'
+                || query.charAt(i) == ']') {
+                trovato = false;
+            }
+            if (!trovato) {
+                result += (query.charAt(i) + "");
+            }
+            if (query.charAt(i) == '_') {
+                trovato = true;
+            }
 
-	}
+        }
 
-	/* Return the first result of goal */
-	private String successAndResultVerifyReplace(String goal, String theory,
-			String variable, boolean replace) throws Exception {
+        return result;
+    }
 
-		Prolog engine = new Prolog();
-		if (!theory.equalsIgnoreCase("null"))
-			engine.setTheory(new Theory(theory));
-		SolveInfo info = engine.solve(goal);
-		for (Var var : info.getBindingVars()) {
-			if ((var.toString()).startsWith(variable)) {
 
-				variable = replaceForVariable(var.toString(), ' ');
-				Term t = info.getVarValue(variable);
-				 System.out.println(t.toString());
-				return (replace == true ? replaceUnderscore(t.toString()) : t
-						.toString());
+    public Term value(String evaluable) throws Exception {
+        Prolog engine = new Prolog();
+        SolveInfo result = engine.solve("X is " + evaluable);
+        return result.getVarValue("X");
+    }
 
-			}
-
-		}
-		variable = replaceForVariable(variable, '_');
-		Term t = info.getVarValue(variable);
-		return (replace == true ? replaceUnderscore(t.toString()) : t
-				.toString());
-	}
-
-	private String replaceForVariable(String query, char car) {
-
-		String result = "";
-		for (int i = 0; i < query.length(); i++) {
-
-			if (query.charAt(i) == car)
-				return result;
-			result += (query.charAt(i) + "");
-
-		}
-
-		return result;
-
-	}
-
-	private String replaceUnderscore(String query) {
-
-		String result = "";
-		boolean trovato = false;
-		for (int i = 0; i < query.length(); i++) {
-
-			if (query.charAt(i) == ',' || query.charAt(i) == ')'
-					|| query.charAt(i) == ']')
-				trovato = false;
-			if (!trovato)
-				result += (query.charAt(i) + "");
-			if (query.charAt(i) == '_')
-				trovato = true;
-
-		}
-
-		return result;
-	}
-	
-	
-	 public Term value(String evaluable) throws Exception {
-	        Prolog engine = new Prolog();
-	        SolveInfo result = engine.solve("X is " + evaluable);
-	        return result.getVarValue("X");
-	    }
-	
 
 }

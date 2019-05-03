@@ -8,6 +8,6 @@ import org.junit.runner.RunWith;
 @RunWith(ConcordionRunner.class)
 public class General {
 
-	/* Only HTML */
+    /* Only HTML */
 
 }

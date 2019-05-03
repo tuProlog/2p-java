@@ -1,6 +1,6 @@
 /*
  * Created on Nov 5, 2003
- * 
+ *
  * Copyright (C)aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
@@ -20,26 +20,22 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.Int;
-import alice.tuprolog.Number;
-import alice.tuprolog.Term;
-
 public class TestLibrary extends StringLibrary {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public String getName() {
-		return "TestLibraryName";
-	}
+    public String getName() {
+        return "TestLibraryName";
+    }
 
-	public Term sum_2(Number arg0, Number arg1){
-		int a0 = arg0.intValue();
-		int a1 = arg1.intValue();
-		return new Int(a0+a1);
-	}
-	
-	public boolean println_1(Term arg0){
-		getEngine().stdOutput(arg0.toString());
-		return true;
-	}
-	
+    public Term sum_2(Number arg0, Number arg1) {
+        int a0 = arg0.intValue();
+        int a1 = arg1.intValue();
+        return new Int(a0 + a1);
+    }
+
+    public boolean println_1(Term arg0) {
+        getEngine().stdOutput(arg0.toString());
+        return true;
+    }
+
 }

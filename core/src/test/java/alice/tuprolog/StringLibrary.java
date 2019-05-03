@@ -1,6 +1,6 @@
 /*
  * Created on Nov 5, 2003
- * 
+ *
  * Copyright (C)aliCE team at deis.unibo.it
  *
  * This library is free software; you can redistribute it and/or
@@ -20,15 +20,11 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.Library;
-import alice.tuprolog.Struct;
-import alice.tuprolog.Term;
-
 public class StringLibrary extends Library {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public boolean to_lower_case_2(Term arg0, Term arg1){
-		String dest = arg0.toString().toLowerCase();
-		return unify(arg1, new Struct(dest));
-	} 
+    public boolean to_lower_case_2(Term arg0, Term arg1) {
+        String dest = arg0.toString().toLowerCase();
+        return unify(arg1, new Struct(dest));
+    }
 }
