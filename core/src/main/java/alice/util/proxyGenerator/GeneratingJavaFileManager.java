@@ -1,20 +1,21 @@
 package alice.util.proxyGenerator;
+
 import javax.tools.*;
-import java.io.*;
+import java.io.IOException;
 
 class GeneratingJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
-	
-  private final GeneratedClassFile gcf;
 
-  public GeneratingJavaFileManager(StandardJavaFileManager sjfm, GeneratedClassFile gcf) {
-    super(sjfm);
-    this.gcf = gcf;
-  }
+    private final GeneratedClassFile gcf;
 
-  public JavaFileObject getJavaFileForOutput( Location location, String className, JavaFileObject.Kind kind, 
-		                                      FileObject sibling) throws IOException {
-    return gcf;
-  }
+    public GeneratingJavaFileManager(StandardJavaFileManager sjfm, GeneratedClassFile gcf) {
+        super(sjfm);
+        this.gcf = gcf;
+    }
+
+    public JavaFileObject getJavaFileForOutput(Location location, String className, JavaFileObject.Kind kind,
+                                               FileObject sibling) throws IOException {
+        return gcf;
+    }
 }
   
 

@@ -1,23 +1,25 @@
 package alice.util.proxyGenerator;
-import javax.tools.*;
-import java.io.*;
-import java.net.*;
+
+import javax.tools.SimpleJavaFileObject;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.net.URI;
 
 class GeneratedClassFile extends SimpleJavaFileObject {
-  
-	private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-  public GeneratedClassFile() {
-    super(URI.create("generated.class"), Kind.CLASS);
-  }
+    private final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-  public OutputStream openOutputStream() {
-    return outputStream;
-  }
+    public GeneratedClassFile() {
+        super(URI.create("generated.class"), Kind.CLASS);
+    }
 
-  public byte[] getClassAsBytes() {
-    return outputStream.toByteArray();
-  }
+    public OutputStream openOutputStream() {
+        return outputStream;
+    }
+
+    public byte[] getClassAsBytes() {
+        return outputStream.toByteArray();
+    }
 }
   
 

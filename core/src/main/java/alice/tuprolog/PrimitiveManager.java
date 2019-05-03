@@ -18,87 +18,88 @@
 
 package alice.tuprolog;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.IPrimitives;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.management.interfaces.PrimitiveManagerMXBean;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
+
 
 /**
  * Administration of primitive predicates
+ *
  * @author Alex Benini
  */
 public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBean {
-    
-    private Map<IPrimitives,List<PrimitiveInfo>> libHashMap;
-    private Map<String,PrimitiveInfo> directiveHashMap;
-    private Map<String,PrimitiveInfo> predicateHashMap;
-    private Map<String,PrimitiveInfo> functorHashMap;
-    
+
+    private Map<IPrimitives, List<PrimitiveInfo>> libHashMap;
+    private Map<String, PrimitiveInfo> directiveHashMap;
+    private Map<String, PrimitiveInfo> predicateHashMap;
+    private Map<String, PrimitiveInfo> functorHashMap;
+
     public PrimitiveManager() {
-        libHashMap        = Collections.synchronizedMap(new IdentityHashMap<IPrimitives, List<PrimitiveInfo>>());
-        directiveHashMap  = Collections.synchronizedMap(new HashMap<String,PrimitiveInfo>());
-        predicateHashMap  = Collections.synchronizedMap(new HashMap<String,PrimitiveInfo>());
-        functorHashMap    = Collections.synchronizedMap(new HashMap<String,PrimitiveInfo>());
+        libHashMap = Collections.synchronizedMap(new IdentityHashMap<IPrimitives, List<PrimitiveInfo>>());
+        directiveHashMap = Collections.synchronizedMap(new HashMap<String, PrimitiveInfo>());
+        predicateHashMap = Collections.synchronizedMap(new HashMap<String, PrimitiveInfo>());
+        functorHashMap = Collections.synchronizedMap(new HashMap<String, PrimitiveInfo>());
     }
-    
+
     /**
      * Config this Manager
      */
     void initialize(Prolog vm) {
-        createPrimitiveInfo(new BuiltIn(vm)); 
+        createPrimitiveInfo(new BuiltIn(vm));
     }
-    
+
     void createPrimitiveInfo(IPrimitives src) {
-        Map<Integer,List<PrimitiveInfo>> prims = src.getPrimitives();
+        Map<Integer, List<PrimitiveInfo>> prims = src.getPrimitives();
         Iterator<PrimitiveInfo> it = prims.get(PrimitiveInfo.DIRECTIVE).iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             PrimitiveInfo p = it.next();
-            directiveHashMap.put(p.getKey(),p);
+            directiveHashMap.put(p.getKey(), p);
         }
         it = prims.get(PrimitiveInfo.PREDICATE).iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             PrimitiveInfo p = it.next();
-            predicateHashMap.put(p.getKey(),p);
+            predicateHashMap.put(p.getKey(), p);
         }
         it = prims.get(PrimitiveInfo.FUNCTOR).iterator();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             PrimitiveInfo p = it.next();
-            functorHashMap.put(p.getKey(),p);
+            functorHashMap.put(p.getKey(), p);
         }
         List<PrimitiveInfo> primOfLib = new LinkedList<PrimitiveInfo>(prims.get(PrimitiveInfo.DIRECTIVE));
         primOfLib.addAll(prims.get(PrimitiveInfo.PREDICATE));
         primOfLib.addAll(prims.get(PrimitiveInfo.FUNCTOR));
-        libHashMap.put(src,primOfLib);
+        libHashMap.put(src, primOfLib);
     }
-    
+
     void deletePrimitiveInfo(IPrimitives src) {
         Iterator<PrimitiveInfo> it = libHashMap.remove(src).iterator();
-        while(it.hasNext()) {
-            String k = ((PrimitiveInfo)it.next()).invalidate();
+        while (it.hasNext()) {
+            String k = ((PrimitiveInfo) it.next()).invalidate();
             directiveHashMap.remove(k);
             predicateHashMap.remove(k);
             functorHashMap.remove(k);
         }
     }
-    
+
     /**
      * Identifies the term passed as argument.
-     *
+     * <p>
      * This involves identifying structs representing builtin
      * predicates and functors, and setting up related structures and links
      *
-     * @parm term the term to be identified
      * @return term with the identified built-in directive
+     * @parm term the term to be identified
      */
     public Term identifyDirective(Term term) {
-        identify(term,PrimitiveInfo.DIRECTIVE);
+        identify(term, PrimitiveInfo.DIRECTIVE);
         return term;
     }
-    
+
     public boolean evalAsDirective(Struct d) throws Throwable {
         PrimitiveInfo pd = ((Struct) identifyDirective(d)).getPrimitive();
         if (pd != null) {
@@ -111,15 +112,15 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
         } else
             return false;
     }
-    
+
     public void identifyPredicate(Term term) {
-        identify(term,PrimitiveInfo.PREDICATE);
+        identify(term, PrimitiveInfo.PREDICATE);
     }
-    
+
     public void identifyFunctor(Term term) {
-        identify(term,PrimitiveInfo.FUNCTOR);
+        identify(term, PrimitiveInfo.FUNCTOR);
     }
-    
+
     private void identify(Term term, int typeOfPrimitive) {
         if (term == null) {
             return;
@@ -129,81 +130,81 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
             return;
         }
         Struct t = (Struct) term;
-        
+
         int arity = t.getArity();
         String name = t.getName();
-        
+
         if (name.equals(",") || name.equals("':-'") || name.equals(":-")) {
             for (int c = 0; c < arity; c++) {
-                identify( t.getArg(c), PrimitiveInfo.PREDICATE);
+                identify(t.getArg(c), PrimitiveInfo.PREDICATE);
             }
         } else {
             for (int c = 0; c < arity; c++) {
-                identify( t.getArg(c), PrimitiveInfo.FUNCTOR);
-            }                        
-        }  
+                identify(t.getArg(c), PrimitiveInfo.FUNCTOR);
+            }
+        }
         PrimitiveInfo prim = null;
         String key = name + "/" + arity;
-        
+
         switch (typeOfPrimitive) {
-        case PrimitiveInfo.DIRECTIVE :
-            prim = (PrimitiveInfo)directiveHashMap.get(key);                
-            break;
-        case PrimitiveInfo.PREDICATE :
-            prim = (PrimitiveInfo)predicateHashMap.get(key);                
-            break;
-        case PrimitiveInfo.FUNCTOR :
-            prim = (PrimitiveInfo)functorHashMap.get(key);
-            break;
+            case PrimitiveInfo.DIRECTIVE:
+                prim = (PrimitiveInfo) directiveHashMap.get(key);
+                break;
+            case PrimitiveInfo.PREDICATE:
+                prim = (PrimitiveInfo) predicateHashMap.get(key);
+                break;
+            case PrimitiveInfo.FUNCTOR:
+                prim = (PrimitiveInfo) functorHashMap.get(key);
+                break;
         }
         t.setPrimitive(prim);
     }
-    
+
     Library getLibraryDirective(String name, int nArgs) {
         try {
-            return (Library)( (PrimitiveInfo)directiveHashMap.get(name + "/" + nArgs)).getSource();            
-        } catch(NullPointerException e) {
+            return (Library) ((PrimitiveInfo) directiveHashMap.get(name + "/" + nArgs)).getSource();
+        } catch (NullPointerException e) {
             return null;
         }
     }
-    
+
     Library getLibraryPredicate(String name, int nArgs) {
         try {
-            return (Library)( (PrimitiveInfo)predicateHashMap.get(name + "/" + nArgs)).getSource();            
-        } catch(NullPointerException e) {
+            return (Library) ((PrimitiveInfo) predicateHashMap.get(name + "/" + nArgs)).getSource();
+        } catch (NullPointerException e) {
             return null;
         }
     }
-    
+
     Library getLibraryFunctor(String name, int nArgs) {
         try {
-            return (Library)( (PrimitiveInfo)functorHashMap.get(name + "/" + nArgs)).getSource();
-        } catch(NullPointerException e) {
+            return (Library) ((PrimitiveInfo) functorHashMap.get(name + "/" + nArgs)).getSource();
+        } catch (NullPointerException e) {
             return null;
         }
     }
-    
+
     public boolean containsTerm(String name, int nArgs) {
-		return (functorHashMap.containsKey(name + "/" + nArgs) || predicateHashMap.containsKey(name + "/" + nArgs));
-	}
+        return (functorHashMap.containsKey(name + "/" + nArgs) || predicateHashMap.containsKey(name + "/" + nArgs));
+    }
 
     /// Management
 
-	@Override
-	public synchronized String fetchDirectiveInfo(String directive) {
-		String info = directiveHashMap.get(directive).toStringFlat();
-		return JSONSerializerManager.toJSON(info);
-	}
+    @Override
+    public synchronized String fetchDirectiveInfo(String directive) {
+        String info = directiveHashMap.get(directive).toStringFlat();
+        return JSONSerializerManager.toJSON(info);
+    }
 
-	@Override
-	public synchronized String fetchFunctorInfo(String functor) {
-		String info = functorHashMap.get(functor).toStringFlat();
-		return JSONSerializerManager.toJSON(info);
-	}
+    @Override
+    public synchronized String fetchFunctorInfo(String functor) {
+        String info = functorHashMap.get(functor).toStringFlat();
+        return JSONSerializerManager.toJSON(info);
+    }
 
-	@Override
-	public synchronized String fetchPredicateInfo(String predicate) {
-		String info =  predicateHashMap.get(predicate).toStringFlat();
-		return JSONSerializerManager.toJSON(info);
-	}
+    @Override
+    public synchronized String fetchPredicateInfo(String predicate) {
+        String info = predicateHashMap.get(predicate).toStringFlat();
+        return JSONSerializerManager.toJSON(info);
+    }
 }

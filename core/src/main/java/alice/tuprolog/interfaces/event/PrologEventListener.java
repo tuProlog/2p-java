@@ -16,11 +16,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog.interfaces.event;
-import java.util.*;
 
 import alice.tuprolog.event.LibraryEvent;
 import alice.tuprolog.event.QueryEvent;
 import alice.tuprolog.event.TheoryEvent;
+
+import java.util.EventListener;
 
 
 /**
@@ -30,7 +31,10 @@ import alice.tuprolog.event.TheoryEvent;
  */
 public interface PrologEventListener extends EventListener {
     void theoryChanged(TheoryEvent e);
+
     void libraryLoaded(LibraryEvent e);
+
     void libraryUnloaded(LibraryEvent e);
+
     void newQueryResultAvailable(QueryEvent e);
 }

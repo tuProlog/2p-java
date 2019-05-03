@@ -16,9 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog.interfaces.event;
-import java.util.*;
 
 import alice.tuprolog.event.LibraryEvent;
+
+import java.util.EventListener;
 
 /**
  * Listener for library events
@@ -27,5 +28,6 @@ import alice.tuprolog.event.LibraryEvent;
  */
 public interface LibraryListener extends EventListener {
     void libraryLoaded(LibraryEvent e);
+
     void libraryUnloaded(LibraryEvent e);
 }

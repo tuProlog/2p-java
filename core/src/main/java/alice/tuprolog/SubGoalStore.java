@@ -8,7 +8,7 @@ public class SubGoalStore {
     private SubGoalTree commaStruct;
     private int index;
     private DefaultSubGoalId curSGId;
-    private boolean fetched=false;
+    private boolean fetched = false;
 
     public SubGoalStore() {
         commaStruct = goals = new SubGoalTree();
@@ -18,7 +18,7 @@ public class SubGoalStore {
 
     public boolean load(SubGoalTree subGoals) {
         commaStruct = subGoals;
-        goals=commaStruct.copy();
+        goals = commaStruct.copy();
         return true;
     }
 
@@ -49,11 +49,11 @@ public class SubGoalStore {
      * Restituisce la clausola da caricare
      */
     public Term fetch() {
-        fetched=true;
-        if (index >= commaStruct.size()) {      
-            if (curSGId == null) {              
+        fetched = true;
+        if (index >= commaStruct.size()) {
+            if (curSGId == null) {
                 return null;
-            } else {                            
+            } else {
                 popSubGoal(curSGId);
                 return fetch();
             }
@@ -84,7 +84,7 @@ public class SubGoalStore {
 
     public String toString() {
         return "goals: " + goals + " "
-             + "index: " + index;
+                + "index: " + index;
     }
 
     public SubGoalTree getSubGoals() {
@@ -94,13 +94,13 @@ public class SubGoalStore {
     public int getIndexNextSubGoal() {
         return index;
     }
-    
-    public boolean getFetched(){
+
+    public boolean getFetched() {
         return fetched;
     }
-    
+
     public DefaultSubGoalId getCurSGId() {
         return curSGId;
     }
-        
+
 }

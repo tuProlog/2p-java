@@ -16,9 +16,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog.interfaces.event;
-import java.util.*;
 
 import alice.tuprolog.event.TheoryEvent;
+
+import java.util.EventListener;
 
 /**
  * Listener for theory events

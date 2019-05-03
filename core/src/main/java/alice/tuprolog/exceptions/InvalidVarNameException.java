@@ -23,12 +23,13 @@ import alice.tuprolog.Var;
  * This exeption means that a not valid tuProlog variable has been specified.
  *
  * @see Var
- * @deprecated Use InvalidTermException with a meaningful message instead. 
+ * @deprecated Use InvalidTermException with a meaningful message instead.
  */
 public class InvalidVarNameException extends InvalidTermException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+
     public InvalidVarNameException(String message) {
         super(message);
     }
-    
+
 }

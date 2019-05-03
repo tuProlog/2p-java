@@ -14,28 +14,28 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
 
     private LinkedList<ClauseInfo> varsClauses;
 
-    public FamilyClausesIndex(){
+    public FamilyClausesIndex() {
         super();
         varsClauses = new LinkedList<ClauseInfo>();
     }
 
-    private Node<K,LinkedList<ClauseInfo>> createNewNode(K key, ClauseInfo clause, boolean first){
+    private Node<K, LinkedList<ClauseInfo>> createNewNode(K key, ClauseInfo clause, boolean first) {
         LinkedList<ClauseInfo> list = new LinkedList<ClauseInfo>(varsClauses);
 
-        if(first){
+        if (first) {
             list.addFirst(clause);
         } else {
             list.addLast(clause);
         }
-        
-        return new Node<K,LinkedList<ClauseInfo>>(key, list, Color.RED, null, null);
+
+        return new Node<K, LinkedList<ClauseInfo>>(key, list, Color.RED, null, null);
     }
 
     /**
-     * @deprecated 
+     * @deprecated
      */
     @Override
-    public void insert(K key, LinkedList<ClauseInfo> value){
+    public void insert(K key, LinkedList<ClauseInfo> value) {
         super.insert(key, value);
     }
 
@@ -46,32 +46,32 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
      * Se l'indice non ha nodi?
      * Se aggiungo un nuovo nodo
      */
-    public void insertAsShared(ClauseInfo clause, boolean first){
-        if(first){
+    public void insertAsShared(ClauseInfo clause, boolean first) {
+        if (first) {
             varsClauses.addFirst(clause);
         } else {
             varsClauses.addLast(clause);
         }
 
         //Aggiorna tutti i nodi che ci sono
-        if(root != null){
+        if (root != null) {
             LinkedList<Node<K, LinkedList<ClauseInfo>>> buf = new LinkedList<Node<K, LinkedList<ClauseInfo>>>();
             buf.add(root);
 
-            while(buf.size() > 0){
+            while (buf.size() > 0) {
                 Node<K, LinkedList<ClauseInfo>> n = buf.remove();
-                
-                if(first){
+
+                if (first) {
                     n.value.addFirst(clause);
                 } else {
                     n.value.addLast(clause);
                 }
 
-                if(n.left != null){
+                if (n.left != null) {
                     buf.addLast(n.left);
                 }
 
-                if(n.right != null){
+                if (n.right != null) {
                     buf.addLast(n.right);
                 }
             }
@@ -84,20 +84,20 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
      * <code>first</code> parameter is used to decide if it is the first or
      * the last clause to be retrieved.
      *
-     * @param key       The key of the index
-     * @param clause    The value to be binded to the given key
-     * @param first     If the clause must be binded as first or last element
+     * @param key    The key of the index
+     * @param clause The value to be binded to the given key
+     * @param first  If the clause must be binded as first or last element
      */
-    public void insert(K key, ClauseInfo clause, boolean first){
+    public void insert(K key, ClauseInfo clause, boolean first) {
         Node<K, LinkedList<ClauseInfo>> insertedNode = null;
         if (root == null) {
             insertedNode = root = createNewNode(key, clause, first);
         } else {
-            Node<K,LinkedList<ClauseInfo>> n = root;
+            Node<K, LinkedList<ClauseInfo>> n = root;
             while (true) {
                 int compResult = key.compareTo(n.key);
                 if (compResult == 0) {
-                    if(first){
+                    if (first) {
                         n.value.addFirst(clause);
                     } else {
                         n.value.addLast(clause);
@@ -105,7 +105,7 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
                     return;
                 } else if (compResult < 0) {
                     if (n.left == null) {
-                        insertedNode = n.left = createNewNode(key, clause,first);
+                        insertedNode = n.left = createNewNode(key, clause, first);
                         break;
                     } else {
                         n = n.left;
@@ -113,14 +113,14 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
                 } else {
                     assert compResult > 0;
                     if (n.right == null) {
-                        insertedNode = n.right = createNewNode(key, clause,first);
+                        insertedNode = n.right = createNewNode(key, clause, first);
                         break;
                     } else {
                         n = n.right;
                     }
                 }
             }
-            
+
             insertedNode.parent = n;
         }
         insertCase1(insertedNode);
@@ -130,33 +130,33 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
     /**
      * Removes all clauses related to the given key
      *
-     * @param key   The key
+     * @param key The key
      */
-    public void remove(K key,ClauseInfo clause ){
-        super.delete(key,clause);
+    public void remove(K key, ClauseInfo clause) {
+        super.delete(key, clause);
     }
 
-    public void removeShared(ClauseInfo clause){
-        if(varsClauses.remove(clause)){
-            if(root != null){
-                if(root != null){
-            LinkedList<Node<K, LinkedList<ClauseInfo>>> buf = new LinkedList<Node<K, LinkedList<ClauseInfo>>>();
-            buf.add(root);
+    public void removeShared(ClauseInfo clause) {
+        if (varsClauses.remove(clause)) {
+            if (root != null) {
+                if (root != null) {
+                    LinkedList<Node<K, LinkedList<ClauseInfo>>> buf = new LinkedList<Node<K, LinkedList<ClauseInfo>>>();
+                    buf.add(root);
 
-            while(buf.size() > 0){
-                Node<K, LinkedList<ClauseInfo>> n = buf.remove();
-                
-                n.value.remove(clause);
+                    while (buf.size() > 0) {
+                        Node<K, LinkedList<ClauseInfo>> n = buf.remove();
 
-                if(n.left != null){
-                    buf.addLast(n.left);
+                        n.value.remove(clause);
+
+                        if (n.left != null) {
+                            buf.addLast(n.left);
+                        }
+
+                        if (n.right != null) {
+                            buf.addLast(n.right);
+                        }
+                    }
                 }
-
-                if(n.right != null){
-                    buf.addLast(n.right);
-                }
-            }
-        }
             }
         } else {
             throw new IllegalArgumentException("Invalid clause: not registered in this index");
@@ -166,16 +166,16 @@ class FamilyClausesIndex<K extends Comparable<? super K>>
     /**
      * Retrieves all the clauses related to the key
      *
-     * @param key   The key
-     * @return      The related clauses
+     * @param key The key
+     * @return The related clauses
      */
-    public LinkedList<ClauseInfo> get(K key){
+    public LinkedList<ClauseInfo> get(K key) {
         LinkedList<ClauseInfo> res = null;
-        if(root != null){
+        if (root != null) {
             res = super.lookup(key);
-        } 
+        }
 
-        if(res == null){
+        if (res == null) {
             return varsClauses;
         }
         return res;

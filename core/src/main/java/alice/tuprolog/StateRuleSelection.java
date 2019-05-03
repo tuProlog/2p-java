@@ -17,24 +17,21 @@
  */
 package alice.tuprolog;
 
-import java.util.List;
-import java.util.ArrayList;
-
-import alice.tuprolog.ClauseInfo;
-import alice.tuprolog.Struct;
 import alice.util.OneWayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Alex Benini
- *
  */
 public class StateRuleSelection extends State {
-    
+
     public StateRuleSelection(EngineRunner c) {
         this.c = c;
         stateName = "Init";
     }
-    
+
     /* (non-Javadoc)
      * @see alice.tuprolog.AbstractRunState#doJob()
      */
@@ -52,20 +49,20 @@ public class StateRuleSelection extends State {
             /* from normal evaluation */
             fromBacktracking = false;
             List<Var> varsList = new ArrayList<Var>();
-            e.currentContext.trailingVars = new OneWayList<List<Var>>(varsList,e.currentContext.trailingVars);
+            e.currentContext.trailingVars = new OneWayList<List<Var>>(varsList, e.currentContext.trailingVars);
             clauseStore = ClauseStore.build(goal, varsList, c.find(goal));
-            if (clauseStore == null){
+            if (clauseStore == null) {
                 e.nextState = c.BACKTRACK;
                 return;
             }
         } else
             clauseStore = alternative.compatibleGoals;
-        
+
         /*-----------------------------------------------------
          * Scelgo una regola fra quelle potenzialmente compatibili.
          */
         ClauseInfo clause = clauseStore.fetch();
-        
+
         /*-----------------------------------------------------
          * Build ExecutionContext and ChoicePointContext
          */
@@ -76,7 +73,7 @@ public class StateRuleSelection extends State {
         clause.performCopy(ec.getId());
         ec.headClause = clause.getHeadCopy();
         ec.goalsToEval = new SubGoalStore();
-        ec.goalsToEval.load( clause.getBodyCopy() );
+        ec.goalsToEval.load(clause.getBodyCopy());
         // The following block encodes cut functionalities, and hardcodes the
         // special treatment that ISO Standard reserves for goal disjunction:
         // section 7.8.6.1 prescribes that ;/2 must be transparent to cut.
@@ -103,13 +100,13 @@ public class StateRuleSelection extends State {
                     break;
             }
         }
-            
+
         Struct curGoal = curCtx.currentGoal;
         List<Var> unifiedVars = e.currentContext.trailingVars.getHead();
-        curGoal.unify(unifiedVars,unifiedVars,ec.headClause, c.getMediator().getFlagManager().isOccursCheckEnabled());
-        
+        curGoal.unify(unifiedVars, unifiedVars, ec.headClause, c.getMediator().getFlagManager().isOccursCheckEnabled());
+
         ec.haveAlternatives = clauseStore.haveAlternatives();
-        
+
         //creazione cpc
         if (ec.haveAlternatives && !fromBacktracking) {
             ChoicePointContext cpc = new ChoicePointContext();
@@ -120,17 +117,17 @@ public class StateRuleSelection extends State {
             e.choicePointSelector.add(cpc);
         }
         //distruzione cpc
-        if (!ec.haveAlternatives && fromBacktracking) {            
+        if (!ec.haveAlternatives && fromBacktracking) {
             e.choicePointSelector.removeUnusedChoicePoints();
         }
-        
+
         //Alberto
-        if(!ec.tryToPerformTailRecursionOptimization(e))
-        	ec.updateContextAndDepth(e);
-        
+        if (!ec.tryToPerformTailRecursionOptimization(e))
+            ec.updateContextAndDepth(e);
+
         ec.saveParentState();
         e.currentContext = ec;
         e.nextState = c.GOAL_SELECTION;
     }
-    
+
 }

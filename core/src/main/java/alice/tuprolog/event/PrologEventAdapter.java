@@ -22,10 +22,7 @@ import alice.tuprolog.interfaces.event.QueryListener;
 import alice.tuprolog.interfaces.event.TheoryListener;
 
 /**
- * 
- *
  * @author aricci
- *
  */
 public abstract class PrologEventAdapter implements TheoryListener, QueryListener, LibraryListener {
 

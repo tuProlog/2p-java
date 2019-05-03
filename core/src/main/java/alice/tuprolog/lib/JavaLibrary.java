@@ -19,7 +19,6 @@
 package alice.tuprolog.lib;
 
 /**
- * 
  * @deprecated From tuProlog 3.0, use alice.tuprolog.lib.OOLibrary.
  */
 @SuppressWarnings("serial")

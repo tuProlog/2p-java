@@ -18,10 +18,10 @@
 
 package alice.tuprolog;
 
+import alice.tuprolog.exceptions.InvalidTermException;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import alice.tuprolog.exceptions.InvalidTermException;
 
 /**
  * This class represents an iterator of terms from Prolog text embedded
@@ -34,19 +34,19 @@ import alice.tuprolog.exceptions.InvalidTermException;
  * of already produced terms.
  */
 class TermIterator implements Iterator<Term>, java.io.Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
+
+    private static final long serialVersionUID = 1L;
+
     private Parser parser;
     private boolean hasNext;
     private Term next;
-    
+
     TermIterator(Parser p) {
         parser = p;
         next = parser.nextTerm(true);
-        hasNext = (next != null);    
+        hasNext = (next != null);
     }
-    
+
     public Term next() {
         if (hasNext) {
             if (next == null) {
@@ -58,19 +58,18 @@ class TermIterator implements Iterator<Term>, java.io.Serializable {
             Term temp = next;
             next = null;
             return temp;
-        } else
-            if (hasNext()) {
-                hasNext = false;
-                Term temp = next;
-                next = null;
-                return temp;
-            }
+        } else if (hasNext()) {
+            hasNext = false;
+            Term temp = next;
+            next = null;
+            return temp;
+        }
         throw new NoSuchElementException();
     }
-    
+
     /**
      * @throws InvalidTermException if, while the parser checks for the
-     * existence of the next term, a syntax error is encountered.
+     *                              existence of the next term, a syntax error is encountered.
      */
     public boolean hasNext() {
         if (hasNext)
@@ -80,9 +79,9 @@ class TermIterator implements Iterator<Term>, java.io.Serializable {
             hasNext = true;
         return hasNext;
     }
-    
+
     public void remove() {
         throw new UnsupportedOperationException();
     }
-    
+
 }

@@ -23,29 +23,28 @@ import java.io.Serializable;
 /**
  * This class defines a tuProlog operator, in terms of a name,
  * a type, and a  priority.
- *
  */
 final public class Operator implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
     /**
-	 * operator name
-	 */
+     * operator name
+     */
     public String name;
-    
+
     /**
-	 * type(xf,yf,fx,fy,xfx,xfy,yfy,yfx
-	 */
+     * type(xf,yf,fx,fy,xfx,xfy,yfy,yfx
+     */
     public String type;
-    
+
     /**
-	 * priority
-	 */
+     * priority
+     */
     public int prio;
-    
-    public Operator(String name_,String type_,int prio_) {
+
+    public Operator(String name_, String type_, int prio_) {
         name = name_;
         type = type_;
         prio = prio_;
     }
-    
+
 }

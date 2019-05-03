@@ -4,58 +4,59 @@
  */
 package alice.tuprolog.scriptengine;
 
+import alice.util.VersionInfo;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-
-import alice.util.VersionInfo;
 
 /**
-* Implementation of the ScriptEngineFactory interface
-* @author Andrea Bucaletti
-*/
+ * Implementation of the ScriptEngineFactory interface
+ *
+ * @author Andrea Bucaletti
+ */
 public class PrologScriptEngineFactory implements ScriptEngineFactory {
-    
+
     public static final PrologScriptEngineFactory DEFAULT_FACTORY;
-    
+
     private static final String ENGINE_NAME;
     private static final String ENGINE_VERSION;
-    
+
     private static final String LANGUAGE_NAME;
     private static final String LANGUAGE_VERSION;
-    
+
     private static final List<String> EXTENSIONS;
     private static final List<String> MIME_TYPES;
     private static final List<String> NAMES;
-    
+
     private static final HashMap<String, String> PARAMETERS;
-    
+
     static {
-    	DEFAULT_FACTORY = new PrologScriptEngineFactory();
-    	
-    	ENGINE_NAME = "tuProlog";
-    	ENGINE_VERSION = VersionInfo.getEngineVersion();
-    	
-    	LANGUAGE_NAME = "Prolog";
-    	LANGUAGE_VERSION = VersionInfo.getEngineVersion();
-    	
-    	EXTENSIONS = Collections.unmodifiableList(Arrays.asList("pro", "pl", "2p"));
-    	
-    	MIME_TYPES  = Collections.unmodifiableList(Arrays.asList("text/plain"));
-    	
-    	NAMES = Collections.unmodifiableList(Arrays.asList("tuProlog", "Prolog", "prolog"));
-    	
-    	PARAMETERS = new HashMap<>();
-    	
-    	PARAMETERS.put("ENGINE", ENGINE_NAME);
-    	PARAMETERS.put("ENGINE_VERSION", ENGINE_VERSION);
-    	PARAMETERS.put("NAME", NAMES.get(0));
-    	PARAMETERS.put("LANGUAGE", LANGUAGE_NAME);
-    	PARAMETERS.put("LANGUAGE_VERSION", LANGUAGE_VERSION);
-    	PARAMETERS.put("THREADING", null);
+        DEFAULT_FACTORY = new PrologScriptEngineFactory();
+
+        ENGINE_NAME = "tuProlog";
+        ENGINE_VERSION = VersionInfo.getEngineVersion();
+
+        LANGUAGE_NAME = "Prolog";
+        LANGUAGE_VERSION = VersionInfo.getEngineVersion();
+
+        EXTENSIONS = Collections.unmodifiableList(Arrays.asList("pro", "pl", "2p"));
+
+        MIME_TYPES = Collections.unmodifiableList(Arrays.asList("text/plain"));
+
+        NAMES = Collections.unmodifiableList(Arrays.asList("tuProlog", "Prolog", "prolog"));
+
+        PARAMETERS = new HashMap<>();
+
+        PARAMETERS.put("ENGINE", ENGINE_NAME);
+        PARAMETERS.put("ENGINE_VERSION", ENGINE_VERSION);
+        PARAMETERS.put("NAME", NAMES.get(0));
+        PARAMETERS.put("LANGUAGE", LANGUAGE_NAME);
+        PARAMETERS.put("LANGUAGE_VERSION", LANGUAGE_VERSION);
+        PARAMETERS.put("THREADING", null);
     }
 
     @Override
@@ -90,7 +91,7 @@ public class PrologScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public String getLanguageVersion() {
-    	return LANGUAGE_VERSION;
+        return LANGUAGE_VERSION;
     }
 
     @Override
@@ -101,17 +102,17 @@ public class PrologScriptEngineFactory implements ScriptEngineFactory {
     @Override
     public String getMethodCallSyntax(String obj, String methodName, String... args) {
         String result = new String();
-        
+
         result += obj + " <- " + methodName;
-        
-        if(args.length > 0) {
+
+        if (args.length > 0) {
             result += "(";
-            
-            for(int i = 0; i < args.length; i++) {
+
+            for (int i = 0; i < args.length; i++) {
                 result += args[i] + (i == args.length - 1 ? ")" : ", ");
             }
         }
-        
+
         return result;
     }
 
@@ -122,13 +123,13 @@ public class PrologScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public String getProgram(String... instr) {
-        
-    	String program = new String();
-        
-    	for(int i = 0; i < instr.length; i++)
-    		program += instr[i] + (i == instr.length - 1 ? "." : ",");
-    	
-    	return program;
+
+        String program = new String();
+
+        for (int i = 0; i < instr.length; i++)
+            program += instr[i] + (i == instr.length - 1 ? "." : ",");
+
+        return program;
     }
 
     @Override

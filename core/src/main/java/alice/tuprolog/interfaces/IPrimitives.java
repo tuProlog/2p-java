@@ -17,21 +17,21 @@
  */
 package alice.tuprolog.interfaces;
 
-import java.util.Map;
-
 import alice.tuprolog.PrimitiveInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Template for predicate
+ *
  * @author Alex Benini
  */
 public interface IPrimitives {
-    
+
     /**
      * gets the list of primitives defined in the library
      */
-    Map<Integer,List<PrimitiveInfo>> getPrimitives();
-    
+    Map<Integer, List<PrimitiveInfo>> getPrimitives();
+
 }

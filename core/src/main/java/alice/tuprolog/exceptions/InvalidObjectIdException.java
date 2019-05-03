@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package alice.tuprolog.exceptions;
+
 import alice.tuprolog.lib.OOLibrary;
 
 /**
@@ -23,11 +24,7 @@ import alice.tuprolog.lib.OOLibrary;
  * to register an object in the JavaLibrary
  *
  * @see OOLibrary
- *
- *
- *
- *
  */
 public class InvalidObjectIdException extends PrologException {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 }

@@ -18,18 +18,19 @@
 
 package alice.tuprolog.lib;
 
-import alice.tuprolog.*;
+import alice.tuprolog.Library;
+import alice.tuprolog.PrologError;
+import alice.tuprolog.Term;
+import alice.tuprolog.Var;
 
 /**
  * Library for managing DCGs.
- * 
+ * <p>
  * Library/Theory dependency: BasicLibrary
- * 
- * 
- * 
  */
 public class DCGLibrary extends Library {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+
     public DCGLibrary() {
     }
 

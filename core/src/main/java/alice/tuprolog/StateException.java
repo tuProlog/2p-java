@@ -109,7 +109,7 @@ public class StateException extends State {
             // l'argomento dell'eccezione lanciata
             if (e.currentContext.currentGoal.match(javaCatchTerm)
                     && javaMatch(e.currentContext.currentGoal.getArg(1),
-                            exceptionTerm)) {
+                    exceptionTerm)) {
                 // ho identificato l?ExecutionContext con il corretto subgoal
                 // java_catch/3
 

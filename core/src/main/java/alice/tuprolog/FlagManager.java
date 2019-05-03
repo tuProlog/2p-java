@@ -17,31 +17,30 @@
  */
 package alice.tuprolog;
 
-import java.util.*;
-
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.management.interfaces.FlagManagerMXBean;
 
+import java.util.ArrayList;
+
 /**
  * Administrator of flags declared
- * 
+ *
  * @author Alex Benini
  */
 class FlagManager implements FlagManagerMXBean {
-	
+
+    /**
+     * mediator owner of the manager
+     */
+    protected Prolog mediator;
     /* flag list */
     private ArrayList<Flag> flags;
 
-    /**
-	 * mediator owner of the manager
-	 */
-    protected Prolog mediator;
-
     FlagManager() { //Alberto
         flags = new ArrayList<Flag>();
-        
+
         //occursCheck flag -> a default è on!
         Struct s = new Struct();
         s.append(new Struct("on"));
@@ -60,7 +59,7 @@ class FlagManager implements FlagManagerMXBean {
      * Defines a new flag
      */
     public synchronized boolean defineFlag(String name, Struct valueList, Term defValue,
-            boolean modifiable, String libName) {
+                                           boolean modifiable, String libName) {
         flags.add(new Flag(name, valueList, defValue, modifiable, libName));
         return true;
     }
@@ -130,89 +129,89 @@ class FlagManager implements FlagManagerMXBean {
     }
 
     //Alberto
-	public synchronized boolean isOccursCheckEnabled() {
-		for(Flag f : flags){
-			if(f.getName().equals("occursCheck")){
-				if(f.getValue().toString().equals("on"))
-					return true;
-				else return false;
-			}
-		}
-		return false;
-	}
-	
-	//Alberto
-	public void serializeFlags(AbstractEngineState brain) {
-		if(brain instanceof FullEngineState){
-			ArrayList<String> a = new ArrayList<String>();
-			for(Flag f : flags){
-				a.add(JSONSerializerManager.toJSON(f));
-			}
-			((FullEngineState) brain).setFlags(a);
-		}
-	}
+    public synchronized boolean isOccursCheckEnabled() {
+        for (Flag f : flags) {
+            if (f.getName().equals("occursCheck")) {
+                if (f.getValue().toString().equals("on"))
+                    return true;
+                else return false;
+            }
+        }
+        return false;
+    }
 
-	//Alberto
-	public void reloadFlags(FullEngineState brain) {
-		ArrayList<String> a = brain.getFlags();
-		ArrayList<Flag> f = new ArrayList<Flag>();
-		for(String s : a){
-			Flag fl = JSONSerializerManager.fromJSON(s, Flag.class);
-			f.add(fl);
-		}
-		flags = f;
-	}
-	
-	///Management
+    //Alberto
+    public void serializeFlags(AbstractEngineState brain) {
+        if (brain instanceof FullEngineState) {
+            ArrayList<String> a = new ArrayList<String>();
+            for (Flag f : flags) {
+                a.add(JSONSerializerManager.toJSON(f));
+            }
+            ((FullEngineState) brain).setFlags(a);
+        }
+    }
 
-	//Alberto
-	@Override
-	public synchronized String fetchAllPrologFlags() {
-		return getPrologFlagList().toJSON();
-	}
+    //Alberto
+    public void reloadFlags(FullEngineState brain) {
+        ArrayList<String> a = brain.getFlags();
+        ArrayList<Flag> f = new ArrayList<Flag>();
+        for (String s : a) {
+            Flag fl = JSONSerializerManager.fromJSON(s, Flag.class);
+            f.add(fl);
+        }
+        flags = f;
+    }
 
-	//Alberto
-	@Override
-	public synchronized boolean configurePrologFlag(String name, String term) {
-		Parser parser = new Parser(mediator.getOperatorManager(), term);
-		Term t = parser.nextTerm(true);
-		return setFlag(name, t);
-	}
+    ///Management
 
-	//Alberto
-	@Override
-	public synchronized String fetchPrologFlag(String name) {
-		return getFlag(name).toJSON();
-	}
+    //Alberto
+    @Override
+    public synchronized String fetchAllPrologFlags() {
+        return getPrologFlagList().toJSON();
+    }
 
-	//Alberto
-	@Override
-	public synchronized boolean validValue(String name, String term) {
-		Parser parser = new Parser(mediator.getOperatorManager(), term);
-		Term t = parser.nextTerm(true);
-		return isValidValue(name, t);
-	}
+    //Alberto
+    @Override
+    public synchronized boolean configurePrologFlag(String name, String term) {
+        Parser parser = new Parser(mediator.getOperatorManager(), term);
+        Term t = parser.nextTerm(true);
+        return setFlag(name, t);
+    }
 
-	//Alberto
-	@Override
-	public synchronized void reset() {
-		flags = new ArrayList<Flag>();
+    //Alberto
+    @Override
+    public synchronized String fetchPrologFlag(String name) {
+        return getFlag(name).toJSON();
+    }
+
+    //Alberto
+    @Override
+    public synchronized boolean validValue(String name, String term) {
+        Parser parser = new Parser(mediator.getOperatorManager(), term);
+        Term t = parser.nextTerm(true);
+        return isValidValue(name, t);
+    }
+
+    //Alberto
+    @Override
+    public synchronized void reset() {
+        flags = new ArrayList<Flag>();
         Struct s = new Struct();
         s.append(new Struct("on"));
         s.append(new Struct("off"));
         defineFlag("occursCheck", s, new Struct("on"), true, "BuiltIn");
-	}
+    }
 
-	//Alberto
-	@Override
-	public synchronized boolean occursCheckIsEnabled() {
-		return isOccursCheckEnabled();
-	}
+    //Alberto
+    @Override
+    public synchronized boolean occursCheckIsEnabled() {
+        return isOccursCheckEnabled();
+    }
 
-	//Alberto
-	@Override
-	public synchronized boolean modifiable(String name) {
-		return isModifiable(name);
-	}
-	
+    //Alberto
+    @Override
+    public synchronized boolean modifiable(String name) {
+        return isModifiable(name);
+    }
+
 }

@@ -1,11 +1,8 @@
 package alice.tuprolog;
 
 import alice.util.ReadOnlyLinkedList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+
+import java.util.*;
 
 /**
  * <code>FamilyClausesList</code> is a common <code>LinkedList</code>
@@ -14,368 +11,366 @@ import java.util.ListIterator;
  * goal compatible clauses are returned
  *
  * @author Paolo Contessi
- * @since 2.2
- * 
  * @see LinkedList
+ * @since 2.2
  */
 class FamilyClausesList extends LinkedList<ClauseInfo> {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private FamilyClausesIndex<Number> numCompClausesIndex;
-	private FamilyClausesIndex<String> constantCompClausesIndex;
-	private FamilyClausesIndex<String> structCompClausesIndex;
-	private LinkedList<ClauseInfo> listCompClausesList;
 
-	public FamilyClausesList(){
-		super();
+    private static final long serialVersionUID = 1L;
 
-		numCompClausesIndex = new FamilyClausesIndex<Number>();
-		constantCompClausesIndex = new FamilyClausesIndex<String>();
-		structCompClausesIndex = new FamilyClausesIndex<String>();
+    private FamilyClausesIndex<Number> numCompClausesIndex;
+    private FamilyClausesIndex<String> constantCompClausesIndex;
+    private FamilyClausesIndex<String> structCompClausesIndex;
+    private LinkedList<ClauseInfo> listCompClausesList;
 
-		listCompClausesList = new LinkedList<ClauseInfo>();
-	}
+    public FamilyClausesList() {
+        super();
 
-	/**
-	 * Adds the given clause as first of the family
-	 *
-	 * @param ci    The clause to be added (with related informations)
-	 */
-	@Override
-	public void addFirst(ClauseInfo ci){
-		super.addFirst(ci);
+        numCompClausesIndex = new FamilyClausesIndex<Number>();
+        constantCompClausesIndex = new FamilyClausesIndex<String>();
+        structCompClausesIndex = new FamilyClausesIndex<String>();
 
-		// Add first in type related storage
-		register(ci, true);
-	}
+        listCompClausesList = new LinkedList<ClauseInfo>();
+    }
 
-	/**
-	 * Adds the given clause as last of the family
-	 *
-	 * @param ci    The clause to be added (with related informations)
-	 */
-	@Override
-	public void addLast(ClauseInfo ci){
-		super.addLast(ci);
+    /**
+     * Adds the given clause as first of the family
+     *
+     * @param ci The clause to be added (with related informations)
+     */
+    @Override
+    public void addFirst(ClauseInfo ci) {
+        super.addFirst(ci);
 
-		// Add last in type related storage
-		register(ci, false);
-	}
+        // Add first in type related storage
+        register(ci, true);
+    }
 
-	@Override
-	public boolean add(ClauseInfo o) {
-		addLast(o);
+    /**
+     * Adds the given clause as last of the family
+     *
+     * @param ci The clause to be added (with related informations)
+     */
+    @Override
+    public void addLast(ClauseInfo ci) {
+        super.addLast(ci);
 
-		return true;
-	}
+        // Add last in type related storage
+        register(ci, false);
+    }
 
-	/**
-	 * @deprecated 
-	 */
-	@Override
-	public boolean addAll(int index, Collection<? extends ClauseInfo> c) {
-		throw new UnsupportedOperationException("Not supported.");
-	}
+    @Override
+    public boolean add(ClauseInfo o) {
+        addLast(o);
 
-	/**
-	 * @deprecated
-	 */
-	@Override
-	public void add(int index, ClauseInfo element) {
-		throw new UnsupportedOperationException("Not supported.");
-	}
+        return true;
+    }
 
-	/**
-	 * @deprecated
-	 */
-	@Override
-	public ClauseInfo set(int index, ClauseInfo element) {
-		throw new UnsupportedOperationException("Not supported.");
-	}
+    /**
+     * @deprecated
+     */
+    @Override
+    public boolean addAll(int index, Collection<? extends ClauseInfo> c) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
 
-	@Override
-	public ClauseInfo removeFirst() {
-		ClauseInfo ci = getFirst();
-		if (remove(ci)){
-			return ci;
-		}
+    /**
+     * @deprecated
+     */
+    @Override
+    public void add(int index, ClauseInfo element) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
 
-		return null;
-	}
+    /**
+     * @deprecated
+     */
+    @Override
+    public ClauseInfo set(int index, ClauseInfo element) {
+        throw new UnsupportedOperationException("Not supported.");
+    }
 
-	@Override
-	public ClauseInfo removeLast() {
-		ClauseInfo ci = getLast();
-		if (remove(ci)){
-			return ci;
-		}
+    @Override
+    public ClauseInfo removeFirst() {
+        ClauseInfo ci = getFirst();
+        if (remove(ci)) {
+            return ci;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	@Override
-	public ClauseInfo remove(){
-		return removeFirst();
-	}
+    @Override
+    public ClauseInfo removeLast() {
+        ClauseInfo ci = getLast();
+        if (remove(ci)) {
+            return ci;
+        }
 
-	@Override
-	public ClauseInfo remove(int index){
-		ClauseInfo ci = super.get(index);
+        return null;
+    }
 
-		if(remove(ci)){
-			return ci;
-		}
+    @Override
+    public ClauseInfo remove() {
+        return removeFirst();
+    }
 
-		return null;
-	}
+    @Override
+    public ClauseInfo remove(int index) {
+        ClauseInfo ci = super.get(index);
 
-	@Override
-	public boolean remove(Object ci){
-		if(super.remove((ClauseInfo) ci))
-		{
-			unregister((ClauseInfo) ci);
+        if (remove(ci)) {
+            return ci;
+        }
 
-			return true;
-		}
-		return false;
-	}
+        return null;
+    }
 
-	@Override
-	public void clear(){
-		while(size() > 0){
-			removeFirst();
-		}
-	}
+    @Override
+    public boolean remove(Object ci) {
+        if (super.remove((ClauseInfo) ci)) {
+            unregister((ClauseInfo) ci);
 
-	/**
-	 * Retrieves a sublist of all the clauses of the same family as the goal
-	 * and which, in all probability, could match with the given goal
-	 *
-	 * @param goal  The goal to be resolved
-	 * @return      The list of goal-compatible predicates
-	 */
-	public List<ClauseInfo> get(Term goal){
-		// Gets the correct list and encapsulates it in ReadOnlyLinkedList
-		if(goal instanceof Struct){
-			Struct g = (Struct) goal.getTerm();
+            return true;
+        }
+        return false;
+    }
 
-			/*
-			 * If no arguments no optimization can be applied
-			 * (and probably no optimization is needed)
-			 */
-			if(g.getArity() == 0){
-				return new ReadOnlyLinkedList<ClauseInfo>(this);
-			}
+    @Override
+    public void clear() {
+        while (size() > 0) {
+            removeFirst();
+        }
+    }
 
-			/* Retrieves first argument and checks type */
-			Term t = g.getArg(0).getTerm();
-			if(t instanceof Var){
-				/*
-				 * if first argument is an unbounded variable,
-				 * no reasoning is possible, all family must be returned
-				 */
-				return new ReadOnlyLinkedList<ClauseInfo>(this);
-			} else if(t.isAtomic()){
-				if(t instanceof Number){
-					/* retrieves clauses whose first argument is numeric (or Var)
-					 * and same as goal's first argument, if no clauses
-					 * are retrieved, all clauses with a variable
-					 * as first argument
-					 */
-					return new ReadOnlyLinkedList<ClauseInfo>(numCompClausesIndex.get((Number) t));
-				} else if(t instanceof Struct){
-					/* retrieves clauses whose first argument is a constant (or Var)
-					 * and same as goal's first argument, if no clauses
-					 * are retrieved, all clauses with a variable
-					 * as first argument
-					 */
-					return new ReadOnlyLinkedList<ClauseInfo>(constantCompClausesIndex.get(((Struct) t).getName()));
-				}
-			} else if(t instanceof Struct){
-				if(isAList((Struct) t)){
-					/* retrieves clauses which has a list  (or Var) as first argument */
-					return new ReadOnlyLinkedList<ClauseInfo>(listCompClausesList);
-				} else {
-					/* retrieves clauses whose first argument is a struct (or Var)
-					 * and same as goal's first argument, if no clauses
-					 * are retrieved, all clauses with a variable
-					 * as first argument
-					 */
-					return new ReadOnlyLinkedList<ClauseInfo>(structCompClausesIndex.get(((Struct) t).getPredicateIndicator()));
-				}
-			}
-		}
+    /**
+     * Retrieves a sublist of all the clauses of the same family as the goal
+     * and which, in all probability, could match with the given goal
+     *
+     * @param goal The goal to be resolved
+     * @return The list of goal-compatible predicates
+     */
+    public List<ClauseInfo> get(Term goal) {
+        // Gets the correct list and encapsulates it in ReadOnlyLinkedList
+        if (goal instanceof Struct) {
+            Struct g = (Struct) goal.getTerm();
 
-		/* Default behaviour: no optimization done */
-		return new ReadOnlyLinkedList<ClauseInfo>(this);
-	}
+            /*
+             * If no arguments no optimization can be applied
+             * (and probably no optimization is needed)
+             */
+            if (g.getArity() == 0) {
+                return new ReadOnlyLinkedList<ClauseInfo>(this);
+            }
 
-	@Override
-	public Iterator<ClauseInfo> iterator(){
-		return listIterator(0);
-	}
+            /* Retrieves first argument and checks type */
+            Term t = g.getArg(0).getTerm();
+            if (t instanceof Var) {
+                /*
+                 * if first argument is an unbounded variable,
+                 * no reasoning is possible, all family must be returned
+                 */
+                return new ReadOnlyLinkedList<ClauseInfo>(this);
+            } else if (t.isAtomic()) {
+                if (t instanceof Number) {
+                    /* retrieves clauses whose first argument is numeric (or Var)
+                     * and same as goal's first argument, if no clauses
+                     * are retrieved, all clauses with a variable
+                     * as first argument
+                     */
+                    return new ReadOnlyLinkedList<ClauseInfo>(numCompClausesIndex.get((Number) t));
+                } else if (t instanceof Struct) {
+                    /* retrieves clauses whose first argument is a constant (or Var)
+                     * and same as goal's first argument, if no clauses
+                     * are retrieved, all clauses with a variable
+                     * as first argument
+                     */
+                    return new ReadOnlyLinkedList<ClauseInfo>(constantCompClausesIndex.get(((Struct) t).getName()));
+                }
+            } else if (t instanceof Struct) {
+                if (isAList((Struct) t)) {
+                    /* retrieves clauses which has a list  (or Var) as first argument */
+                    return new ReadOnlyLinkedList<ClauseInfo>(listCompClausesList);
+                } else {
+                    /* retrieves clauses whose first argument is a struct (or Var)
+                     * and same as goal's first argument, if no clauses
+                     * are retrieved, all clauses with a variable
+                     * as first argument
+                     */
+                    return new ReadOnlyLinkedList<ClauseInfo>(structCompClausesIndex.get(((Struct) t).getPredicateIndicator()));
+                }
+            }
+        }
 
-	@Override
-	public ListIterator<ClauseInfo> listIterator(){
-		return new ListItr(this,0).getIt();
-	}
+        /* Default behaviour: no optimization done */
+        return new ReadOnlyLinkedList<ClauseInfo>(this);
+    }
 
-	private ListIterator<ClauseInfo> superListIterator(int index){
-		return super.listIterator(index);
-	}
+    @Override
+    public Iterator<ClauseInfo> iterator() {
+        return listIterator(0);
+    }
 
-	@Override
-	public ListIterator<ClauseInfo> listIterator(int index){
-		return new ListItr(this,index).getIt();
-	}
+    @Override
+    public ListIterator<ClauseInfo> listIterator() {
+        return new ListItr(this, 0).getIt();
+    }
 
-	private boolean isAList(Struct t) {
-		/*
-		 * Checks if a Struct is also a list.
-		 * A list can be an empty list, or a Struct with name equals to "."
-		 * and arity equals to 2.
-		 */
-		return t.isEmptyList() || (t.getName().equals(".") && t.getArity() == 2);
+    private ListIterator<ClauseInfo> superListIterator(int index) {
+        return super.listIterator(index);
+    }
 
-	}
+    @Override
+    public ListIterator<ClauseInfo> listIterator(int index) {
+        return new ListItr(this, index).getIt();
+    }
 
-	// Updates indexes, storing informations about the last added clause
-	private void register(ClauseInfo ci, boolean first){
-		// See FamilyClausesList.get(Term): same concept
-		Term clause = ci.getHead();
-		if(clause instanceof Struct){
-			Struct g = (Struct) clause.getTerm();
+    private boolean isAList(Struct t) {
+        /*
+         * Checks if a Struct is also a list.
+         * A list can be an empty list, or a Struct with name equals to "."
+         * and arity equals to 2.
+         */
+        return t.isEmptyList() || (t.getName().equals(".") && t.getArity() == 2);
 
-			if(g.getArity() == 0){
-				return;
-			}
+    }
 
-			Term t = g.getArg(0).getTerm();
-			if(t instanceof Var){
-				numCompClausesIndex.insertAsShared(ci, first);
-				constantCompClausesIndex.insertAsShared(ci, first);
-				structCompClausesIndex.insertAsShared(ci, first);
+    // Updates indexes, storing informations about the last added clause
+    private void register(ClauseInfo ci, boolean first) {
+        // See FamilyClausesList.get(Term): same concept
+        Term clause = ci.getHead();
+        if (clause instanceof Struct) {
+            Struct g = (Struct) clause.getTerm();
 
-				if(first){
-					listCompClausesList.addFirst(ci);
-				} else {
-					listCompClausesList.addLast(ci);
-				}
-			} else if(t.isAtomic()){
-				if(t instanceof Number){
-					numCompClausesIndex.insert((Number) t,ci, first);
-				} else if(t instanceof Struct){
-					constantCompClausesIndex.insert(((Struct) t).getName(), ci, first);
-				}
-			} else if(t instanceof Struct){
-				if(isAList((Struct) t)){
-					if(first){
-						listCompClausesList.addFirst(ci);
-					} else {
-						listCompClausesList.addLast(ci);
-					}
-				} else {
-					structCompClausesIndex.insert(((Struct) t).getPredicateIndicator(), ci, first);
-				}
-			}
-		}
-	}
+            if (g.getArity() == 0) {
+                return;
+            }
 
-	// Updates indexes, deleting informations about the last removed clause
-	public void unregister(ClauseInfo ci) {
-		Term clause = ci.getHead();
-		if(clause instanceof Struct){
-			Struct g = (Struct) clause.getTerm();
+            Term t = g.getArg(0).getTerm();
+            if (t instanceof Var) {
+                numCompClausesIndex.insertAsShared(ci, first);
+                constantCompClausesIndex.insertAsShared(ci, first);
+                structCompClausesIndex.insertAsShared(ci, first);
 
-			if(g.getArity() == 0){
-				return;
-			}
+                if (first) {
+                    listCompClausesList.addFirst(ci);
+                } else {
+                    listCompClausesList.addLast(ci);
+                }
+            } else if (t.isAtomic()) {
+                if (t instanceof Number) {
+                    numCompClausesIndex.insert((Number) t, ci, first);
+                } else if (t instanceof Struct) {
+                    constantCompClausesIndex.insert(((Struct) t).getName(), ci, first);
+                }
+            } else if (t instanceof Struct) {
+                if (isAList((Struct) t)) {
+                    if (first) {
+                        listCompClausesList.addFirst(ci);
+                    } else {
+                        listCompClausesList.addLast(ci);
+                    }
+                } else {
+                    structCompClausesIndex.insert(((Struct) t).getPredicateIndicator(), ci, first);
+                }
+            }
+        }
+    }
 
-			Term t = g.getArg(0).getTerm();
-			if(t instanceof Var){
-				numCompClausesIndex.removeShared(ci);
-				constantCompClausesIndex.removeShared(ci);
-				structCompClausesIndex.removeShared(ci);
+    // Updates indexes, deleting informations about the last removed clause
+    public void unregister(ClauseInfo ci) {
+        Term clause = ci.getHead();
+        if (clause instanceof Struct) {
+            Struct g = (Struct) clause.getTerm();
 
-				listCompClausesList.remove(ci);
-			} else if(t.isAtomic()){
-				if(t instanceof Number){
-					numCompClausesIndex.delete((Number) t,ci);
-				} else if(t instanceof Struct){
-					constantCompClausesIndex.delete(((Struct) t).getName(),ci);
-				}
-			} else if(t instanceof Struct){
-				if(t.isList()){
-					listCompClausesList.remove(ci);
-				} else {
-					structCompClausesIndex.delete(((Struct) t).getPredicateIndicator(),ci);
-				}
-			}
-		}
-	}
+            if (g.getArity() == 0) {
+                return;
+            }
 
-	private class ListItr implements ListIterator<ClauseInfo> {
+            Term t = g.getArg(0).getTerm();
+            if (t instanceof Var) {
+                numCompClausesIndex.removeShared(ci);
+                constantCompClausesIndex.removeShared(ci);
+                structCompClausesIndex.removeShared(ci);
 
-		private ListIterator<ClauseInfo> it;
-		private LinkedList<ClauseInfo> l;
-		private int currentIndex = 0;
+                listCompClausesList.remove(ci);
+            } else if (t.isAtomic()) {
+                if (t instanceof Number) {
+                    numCompClausesIndex.delete((Number) t, ci);
+                } else if (t instanceof Struct) {
+                    constantCompClausesIndex.delete(((Struct) t).getName(), ci);
+                }
+            } else if (t instanceof Struct) {
+                if (t.isList()) {
+                    listCompClausesList.remove(ci);
+                } else {
+                    structCompClausesIndex.delete(((Struct) t).getPredicateIndicator(), ci);
+                }
+            }
+        }
+    }
 
-		public ListItr(FamilyClausesList list, int index){
-			l = list;
-			it = list.superListIterator(index);
-		}
+    private class ListItr implements ListIterator<ClauseInfo> {
 
-		public boolean hasNext() {
-			return it.hasNext();
-		}
+        private ListIterator<ClauseInfo> it;
+        private LinkedList<ClauseInfo> l;
+        private int currentIndex = 0;
 
-		public ClauseInfo next() {
-			// Alessandro Montanari - alessandro.montanar5@studio.unibo.it
-			currentIndex = it.nextIndex();
+        public ListItr(FamilyClausesList list, int index) {
+            l = list;
+            it = list.superListIterator(index);
+        }
 
-			return it.next();
-		}
+        public boolean hasNext() {
+            return it.hasNext();
+        }
 
-		public boolean hasPrevious() {
-			return it.hasPrevious();
-		}
+        public ClauseInfo next() {
+            // Alessandro Montanari - alessandro.montanar5@studio.unibo.it
+            currentIndex = it.nextIndex();
 
-		public ClauseInfo previous() {
-			// Alessandro Montanari - alessandro.montanar5@studio.unibo.it
-			currentIndex = it.previousIndex();
+            return it.next();
+        }
 
-			return it.previous();
-		}
+        public boolean hasPrevious() {
+            return it.hasPrevious();
+        }
 
-		public int nextIndex() {
-			return it.nextIndex();
-		}
+        public ClauseInfo previous() {
+            // Alessandro Montanari - alessandro.montanar5@studio.unibo.it
+            currentIndex = it.previousIndex();
 
-		public int previousIndex() {
-			return it.previousIndex();
-		}
+            return it.previous();
+        }
 
-		public void remove() {
-			// Alessandro Montanari - alessandro.montanar5@studio.unibo.it
-			ClauseInfo ci = l.get(currentIndex);
+        public int nextIndex() {
+            return it.nextIndex();
+        }
 
-			it.remove();
+        public int previousIndex() {
+            return it.previousIndex();
+        }
 
-			unregister(ci);
-		}
+        public void remove() {
+            // Alessandro Montanari - alessandro.montanar5@studio.unibo.it
+            ClauseInfo ci = l.get(currentIndex);
 
-		public void set(ClauseInfo o) {
-			it.set(o);
-		}
+            it.remove();
 
-		public void add(ClauseInfo o) {
-			l.addLast(o);
+            unregister(ci);
+        }
 
-		}
+        public void set(ClauseInfo o) {
+            it.set(o);
+        }
 
-		public ListIterator<ClauseInfo> getIt(){
-			return this;
-		}    
-	}
+        public void add(ClauseInfo o) {
+            l.addLast(o);
+
+        }
+
+        public ListIterator<ClauseInfo> getIt() {
+            return this;
+        }
+    }
 }
