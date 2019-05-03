@@ -11,7 +11,7 @@
 //    `java-library`
 //}
 
-version = "4.0.0"
+version = "3.5.1"
 group = "it.unibo.tuprolog"
 
 repositories {
