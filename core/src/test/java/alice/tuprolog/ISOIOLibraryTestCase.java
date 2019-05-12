@@ -4,10 +4,15 @@ import alice.tuprolog.event.OutputEvent;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.exceptions.MalformedGoalException;
 import alice.tuprolog.interfaces.event.OutputListener;
+import alice.tuprolog.lib.BasicLibrary;
+import alice.tuprolog.lib.ISOIOLibrary;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 import static org.junit.Assert.*;
 
@@ -25,23 +30,22 @@ public class ISOIOLibraryTestCase {
     public static void initTest() {
         try {
             engine = new Prolog(new String[]{
-                    "alice.tuprolog.lib.BasicLibrary",
+                    BasicLibrary.class.getName(),
                     //"alice.tuprolog.lib.IOLibrary",
-                    "alice.tuprolog.lib.ISOIOLibrary"});
+                    ISOIOLibrary.class.getName()
+            });
 
-            File file = new File(".");
-            writePath = file.getCanonicalPath()
-                        + File.separator + "test"
-                        + File.separator + "unit"
-                        + File.separator + "writeFile.txt";
-            readPath = file.getCanonicalPath()
-                       + File.separator + "test"
-                       + File.separator + "unit"
-                       + File.separator + "readFile.txt";
-            binPath = file.getCanonicalPath()
-                      + File.separator + "test"
-                      + File.separator + "unit"
-                      + File.separator + "binFile.bin";
+            writePath = ISOIOLibraryTestCase.class.getResource("/writeFile.txt").getPath();
+            readPath = ISOIOLibraryTestCase.class.getResource("/readFile.txt").getPath();
+            binPath = ISOIOLibraryTestCase.class.getResource("/binFile.bin").getPath();
+//                    file.getCanonicalPath()
+//                       + File.separator + "test"
+//                       + File.separator + "unit"
+//                       + File.separator + "readFile.txt";
+//            binPath = file.getCanonicalPath()
+//                      + File.separator + "test"
+//                      + File.separator + "unit"
+//                      + File.separator + "binFile.bin";
         } catch (Exception e) {
             e.printStackTrace();
         }
