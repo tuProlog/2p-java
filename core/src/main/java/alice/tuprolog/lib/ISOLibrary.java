@@ -56,8 +56,7 @@ public class ISOLibrary extends Library {
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
             if (!arg1.isList()) {
-                throw PrologError.type_error(engine.getEngineManager(), 2,
-                                             "list", arg1);
+                throw PrologError.type_error(engine.getEngineManager(), 2, "list", arg1);
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
@@ -66,26 +65,25 @@ public class ISOLibrary extends Library {
             String st = "";
             while (!(list.isEmptyList())) {
                 String st1 = list.getTerm(0).toString();
-                try {
-                    if (st1.startsWith("'") && st1.endsWith("'")) {
-                        st1 = st1.substring(1, st1.length() - 1);
-                    }
+//                try {
+                if (st1.startsWith("'") && st1.endsWith("'")) {
+                    st1 = st1.substring(1, st1.length() - 1);
+                }
                     /*else
                     {
                     	byte[] b= st1.getBytes();
                     	st1=""+b[0];
                     }*/
 
-                } catch (Exception ex) {
-                }
+//                } catch (Exception ex) {
+//                }
                 st = st.concat(st1);
                 list = (Struct) list.getTerm(1);
             }
             return unify(arg0, new Struct(st));
         } else {
             if (!arg0.isAtom()) {
-                throw PrologError.type_error(engine.getEngineManager(), 1,
-                                             "atom", arg0);
+                throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
             }
             String st = ((Struct) arg0).getName();
             Term[] tlist = new Term[st.length()];
@@ -99,6 +97,46 @@ public class ISOLibrary extends Library {
              * Struct( ch, list); }
              */
 
+            return unify(arg1, list);
+        }
+    }
+
+    public boolean atom_codes_2(Term arg0, Term arg1) throws PrologError {
+        arg0 = arg0.getTerm();
+        arg1 = arg1.getTerm();
+        if (arg0 instanceof Var) {
+            if (!arg1.isList()) {
+                throw PrologError.type_error(engine.getEngineManager(), 2, "list", arg1);
+            }
+            Struct list = (Struct) arg1;
+            if (list.isEmptyList()) {
+                return unify(arg0, new Struct(""));
+            }
+            StringBuilder sb = new StringBuilder();
+            while (!(list.isEmptyList())) {
+                Term code = list.listHead();
+
+                if (code instanceof Var && ((Var) code).isBound()) {
+                    code = code.getTerm();
+                }
+
+                if (code instanceof alice.tuprolog.Number) {
+                    sb.append((char) ((Number) code).intValue());
+                }
+
+                list = list.listTail();
+            }
+            return unify(arg0, new Struct(sb.toString()));
+        } else {
+            if (!arg0.isAtom()) {
+                throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+            }
+            String st = ((Struct) arg0).getName();
+            Term[] codesList = new Term[st.length()];
+            for (int i = 0; i < st.length(); i++) {
+                codesList[i] = new Int(st.charAt(i));
+            }
+            Struct list = new Struct(codesList);
             return unify(arg1, list);
         }
     }
@@ -450,13 +488,12 @@ public class ISOLibrary extends Library {
 
                 //
                 + "atom_concat(F,S,R) :- catch(atom_concat0(F,S,R), Error, false).\n"
-                +
-                "atom_concat0(F,S,R) :- var(R), !,(atom_chars(S,SL),append(FL,SL,RS),atom_chars(F,FL),atom_chars(R,RS)).  \n"
+                        + "atom_concat0(F,S,R) :- var(R), !,(atom_chars(S,SL),append(FL,SL,RS),atom_chars(F,FL),atom_chars(R,RS)).  \n"
                 + "atom_concat0(F,S,R) :-(atom_chars(R,RS), append(FL,SL,RS),atom_chars(F,FL),atom_chars(S,SL)).\n"
 
-                + "atom_codes(A,L):- catch(atom_codes0(A,L), Error, false).\n"
-                + "atom_codes0(A,L):-nonvar(A),atom_chars(A,L1),!,chars_codes(L1,L).\n"
-                + "atom_codes0(A,L):-nonvar(L), list(L), !,chars_codes(L1,L),atom_chars(A,L1).\n"
+//                + "atom_codes(A,L):- catch(atom_codes0(A,L), Error, false).\n"
+//                + "atom_codes0(A,L):-nonvar(A),atom_chars(A,L1),!,chars_codes(L1,L).\n"
+//                + "atom_codes0(A,L):-nonvar(L), list(L), !,chars_codes(L1,L),atom_chars(A,L1).\n"
                 + "chars_codes([],[]).\n"
                 + "chars_codes([X|L1],[Y|L2]):-char_code(X,Y),chars_codes(L1,L2).\n"
 
