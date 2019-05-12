@@ -110,10 +110,7 @@ public class JavaDynamicClassLoaderTestCase {
         File file = new File(".");
         // Array paths contains a valid path
         if (valid) {
-            paths[0] = file.getCanonicalPath()
-                       + File.separator + "test"
-                       + File.separator + "unit"
-                       + File.separator + "TestURLClassLoader.jar";
+            paths[0] = getClass().getResource("/TestURLClassLoader.jar").getPath();
         }
         paths[1] = file.getCanonicalPath();
     }
