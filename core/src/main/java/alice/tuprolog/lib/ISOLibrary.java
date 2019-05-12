@@ -38,11 +38,17 @@ public class ISOLibrary extends Library {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!arg0.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
-                                         arg0);
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
         }
-        Struct atom = (Struct) arg0;
-        return unify(len, new Int(atom.getName().length()));
+        if (len instanceof Var && ((Var) len).isBound()) {
+            len = len.getTerm();
+        }
+        if (len instanceof Var || len instanceof Int || len instanceof alice.tuprolog.Long) {
+            Struct atom = (Struct) arg0;
+            return unify(len, new Int(atom.getName().length()));
+        } else {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+        }
     }
 
     public boolean atom_chars_2(Term arg0, Term arg1) throws PrologError {
