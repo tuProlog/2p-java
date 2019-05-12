@@ -8,7 +8,10 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 public class JavaLibraryTestCase extends TestCase {
@@ -214,7 +217,19 @@ public class JavaLibraryTestCase extends TestCase {
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         assertEquals(true, info.getTerm("Value").isList());
-        assertEquals("[" + paths + "]", info.getTerm("Value").toString());
+
+        final Term value = info.getTerm("Value");
+        assertTrue(value.isList());
+        final Struct valueStruct = (Struct) value;
+        final String[] pathArray = paths.split(",");
+        assertEquals(pathArray.length, valueStruct.listSize());
+        int j = 0;
+        for (Iterator<? extends Term> i = valueStruct.listIterator(); i.hasNext(); j++) {
+            assertEquals(
+                    new File(pathArray[j].replace("'", "")),
+                    new File(i.next().toString().replace("'", ""))
+            );
+        }
 
 //		// Test if get_classpath(PathList) unifies with the DynamicURLClassLoader urls
 //		theory =  "demo(P) :- set_classpath([" + paths + "]), get_classpath([" + paths + "]).";
@@ -342,14 +357,8 @@ public class JavaLibraryTestCase extends TestCase {
         // Array paths contains a valid path
         if (valid) {
             paths = "'" + file.getCanonicalPath() + "'," +
-                    "'" + file.getCanonicalPath()
-                    + File.separator + "test"
-                    + File.separator + "unit"
-                    + File.separator + "TestURLClassLoader.jar'";
-            paths += "," + "'" + file.getCanonicalPath()
-                     + File.separator + "test"
-                     + File.separator + "unit"
-                     + File.separator + "TestInterfaces.jar'";
+                    "'" + getClass().getResource("/TestURLClassLoader.jar").getPath() + "'," +
+                    "'" + getClass().getResource("/TestInterfaces.jar").getPath() + "'";
         }
         // Array paths does not contain a valid path
         else {
