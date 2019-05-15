@@ -19,6 +19,15 @@ package alice.tuprolog.lib;
 
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
+import alice.util.Tools;
+
+import javax.tools.Tool;
+import java.lang.Double;
+import java.lang.Long;
+import java.util.Iterator;
+
+import static alice.util.Tools.removeApices;
+import static alice.util.Tools.unescape;
 
 /**
  * This class represents a tuProlog library providing most of the built-ins
@@ -60,48 +69,80 @@ public class ISOLibrary extends Library {
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
-                throw PrologError.syntax_error(engine.getEngineManager(), -1, -1, -1, arg1);
+                throw PrologError.domain_error(engine.getEngineManager(), 2, "[Char | Chars]", arg1);
             }
-            String st = "";
-            while (!(list.isEmptyList())) {
-                String st1 = list.getTerm(0).toString();
-//                try {
-                if (st1.startsWith("'") && st1.endsWith("'")) {
-                    st1 = st1.substring(1, st1.length() - 1);
-                }
-                    /*else
-                    {
-                    	byte[] b= st1.getBytes();
-                    	st1=""+b[0];
-                    }*/
+            StringBuilder sb = new StringBuilder();
 
-//                } catch (Exception ex) {
-//                }
-                st = st.concat(st1);
-                list = (Struct) list.getTerm(1);
+            for (Iterator<? extends Term> i = list.listIterator(); i.hasNext(); ) {
+                Term charTerm = i.next();
+                if (charTerm instanceof Struct) {
+                    Struct charAtom = (Struct) charTerm;
+                    if (charAtom.isAtom()) {
+                        String rawCharString = charAtom.getName();
+                        if (rawCharString.equals("''")) {
+                            sb.append("'");
+                            continue;
+                        }
+
+                        String charString = unescape(removeApices(rawCharString));
+                        if (charString.length() == 1) {
+                            sb.append(charString);
+                            continue;
+                        }
+                    }
+                }
+                throw PrologError.domain_error(engine.getEngineManager(), 2, "[char | Chars]", arg1);
             }
-            return unify(arg0, new Struct(st));
+
+            String numString = sb.toString().trim();
+
+            if (numString.contains("'")) {
+                numString = numString.replace("0'", "");
+                return unify(arg0, new alice.tuprolog.Int(numString.charAt(0)));
+            }
+
+            try {
+
+                if (numString.contains(".")) {
+                    double val = Double.parseDouble(numString);
+                    return unify(arg0, new alice.tuprolog.Double(val));
+                }
+
+                int radix = 10;
+
+                if (numString.contains("x") || numString.contains("X")) {
+                    radix = 16;
+                    numString = numString.replace("0x", "").replace("0X", "");
+                } else if (numString.contains("o") || numString.contains("O")) {
+                    radix = 8;
+                    numString = numString.replace("0o", "").replace("0O", "");
+                } else if (numString.contains("b") || numString.contains("B")) {
+                    radix = 2;
+                    numString = numString.replace("0b", "").replace("0B", "");
+                }
+
+                long val = Long.parseLong(numString, radix);
+                return unify(arg0, new alice.tuprolog.Long(val));
+            } catch (NumberFormatException e) {
+                throw PrologError.domain_error(engine.getEngineManager(), 2, "[digit | Digits]", arg1);
+            }
+
         } else {
-            if (!arg0.isAtom()) {
-                throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+            if (!(arg0 instanceof Number)) {
+                throw PrologError.type_error(engine.getEngineManager(), 1, "number", arg0);
             }
-            String st = ((Struct) arg0).getName();
-            Term[] tlist = new Term[st.length()];
-            for (int i = 0; i < st.length(); i++) {
-                tlist[i] = new Struct(new String(new char[]{st.charAt(i)}));
+            String string = arg0.toString();
+            Term[] numberList = new Term[string.length()];
+            for (int i = 0; i < string.length(); i++) {
+                numberList[i] = new Struct(new String(new char[]{string.charAt(i)}));
             }
-            Struct list = new Struct(tlist);
-            /*
-             * for (int i=0; i<st.length(); i++){ Struct ch=new Struct(new
-             * String(new char[]{ st.charAt(st.length()-i-1)} )); list=new
-             * Struct( ch, list); }
-             */
+            Struct list = new Struct(numberList);
 
             return unify(arg1, list);
         }
     }
 
-    public boolean atom_chars_2(Term arg0, Term arg1) throws PrologError {
+    public boolean  atom_chars_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
@@ -556,9 +597,9 @@ public class ISOLibrary extends Library {
                         + "sub_list_seq([],L).\n"
                         + "sub_list_seq([X|L1],[X|L2]):-sub_list_seq(L1,L2).\n"
 
-                        + "number_chars(Number,List):-catch(number_chars0(Number,List), Error, false).\n"
-                        + "number_chars0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_chars(Struct,List).\n"
-                        + "number_chars0(Number,List):-atom_chars(Struct,List),num_atom(Number,Struct).\n"
+//                        + "number_chars(Number,List):-catch(number_chars0(Number,List), Error, false).\n"
+//                        + "number_chars0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_chars(Struct,List).\n"
+//                        + "number_chars0(Number,List):-atom_chars(Struct,List),num_atom(Number,Struct).\n"
 
                         + "number_codes(Number,List):-catch(number_codes0(Number,List), Error, false).\n"
                         + "number_codes0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_codes(Struct,List).\n"

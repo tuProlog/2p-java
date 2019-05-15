@@ -9,10 +9,7 @@
  */
 package alice.util;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * miscellaneous static services
@@ -85,6 +82,41 @@ public class Tools extends Object {
             return st.substring(1, st.length() - 1);
         } else {
             return st;
+        }
+    }
+
+    private static char escapedOf(int repr) {
+        switch (repr) {
+            case 't': return '\t';
+            case 'n': return '\n';
+            case 'r': return '\r';
+            case 'f': return '\f';
+            case 'b': return '\b';
+            case '\\': return '\\';
+            case '"': return '"';
+            case '\'': return '\'';
+            default: throw new IllegalArgumentException("Invalid escape char: " + repr);
+        }
+    }
+
+    public static String unescape(String string) {
+        StringReader sr = new StringReader(string);
+        StringBuilder sb = new StringBuilder(string.length());
+        try {
+            for (int c; (c = sr.read()) >= 0;) {
+                if (c == '\\') {
+                    if ((c = sr.read()) >= 0) {
+                        sb.append(escapedOf(c));
+                    } else {
+                        sb.append('\\');
+                    }
+                } else {
+                    sb.append((char) c);
+                }
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 }
