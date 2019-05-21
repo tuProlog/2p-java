@@ -2,6 +2,7 @@ package alice.tuprolog.concordion;
 
 import alice.tuprolog.Term;
 import alice.tuprolog.exceptions.PrologException;
+import alice.tuprolog.lib.ISOIOLibrary;
 import org.concordion.api.extension.ConcordionExtension;
 import org.concordion.api.extension.Extension;
 import org.concordion.ext.EmbedExtension;
@@ -13,13 +14,17 @@ import org.junit.runner.RunWith;
 @RunWith(ConcordionRunner.class)
 public class StreamSelectionandControl {
 
+    private static final String[] ISO_IO_LIB = new String[] {
+            ISOIOLibrary.class.getName()
+    };
+
     @Extension
     public ConcordionExtension extension = new EmbedExtension().withNamespace(
             "myns", "http://com.myco/myns");
 
     public boolean success(String goal, String theory) throws Exception {
 
-        return ConcordionSingleton.getInstance().success(goal, theory);
+        return ConcordionSingleton.getInstance().success(goal, theory, ISO_IO_LIB);
 
     }
 
@@ -32,31 +37,25 @@ public class StreamSelectionandControl {
     public boolean successWithException(String goal, String theory)
             throws PrologException {
 
-        return ConcordionSingleton.getInstance().successWithException(goal,
-                                                                      theory);
+        return ConcordionSingleton.getInstance().successWithException(goal, theory, ISO_IO_LIB);
 
     }
 
     public String successWithExceptionAndText(String goal, String theory)
             throws PrologException {
 
-        return ConcordionSingleton.getInstance().successWithExceptionAndText(
-                goal, theory);
+        return ConcordionSingleton.getInstance().successWithExceptionAndText(goal, theory, ISO_IO_LIB);
 
     }
 
-    public String successAndResult(String goal, String theory, String variable)
-            throws Exception {
+    public String successAndResult(String goal, String theory, String variable) throws Exception {
 
-        return ConcordionSingleton.getInstance().successAndResult(goal, theory,
-                                                                  variable);
+        return ConcordionSingleton.getInstance().successAndResult(goal, theory, variable, ISO_IO_LIB);
     }
 
-    public String successAndResultWithoutReplace(String goal, String theory,
-                                                 String variable) throws Exception {
+    public String successAndResultWithoutReplace(String goal, String theory, String variable) throws Exception {
 
-        return ConcordionSingleton.getInstance()
-                                  .successAndResultWithoutReplace(goal, theory, variable);
+        return ConcordionSingleton.getInstance().successAndResultWithoutReplace(goal, theory, variable, ISO_IO_LIB);
     }
 
     public boolean successAndResultsWithLimit(String goal, String theory,
@@ -64,7 +63,7 @@ public class StreamSelectionandControl {
             throws Exception {
 
         return ConcordionSingleton.getInstance().successAndResultsWithLimit(
-                goal, theory, variable, solution, maxSolutions);
+                goal, theory, variable, solution, maxSolutions, ISO_IO_LIB);
 
     }
 
@@ -74,7 +73,7 @@ public class StreamSelectionandControl {
 
         return ConcordionSingleton.getInstance()
                                   .successAndResultsWithLimitWithoutReplace(goal, theory,
-                                                                            variable, solution, maxSolutions);
+                                                                            variable, solution, maxSolutions, ISO_IO_LIB);
 
     }
 
@@ -82,7 +81,7 @@ public class StreamSelectionandControl {
                                      String variable, String solution) throws Exception {
 
         return ConcordionSingleton.getInstance().successAndResults(goal,
-                                                                   theory, variable, solution);
+                                                                   theory, variable, solution, ISO_IO_LIB);
 
     }
 
@@ -91,7 +90,7 @@ public class StreamSelectionandControl {
 
         return ConcordionSingleton.getInstance()
                                   .successAndResultsWithoutReplace(goal, theory, variable,
-                                                                   solution);
+                                                                   solution, ISO_IO_LIB);
 
     }
 

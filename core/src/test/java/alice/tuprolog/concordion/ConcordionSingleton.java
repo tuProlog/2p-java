@@ -2,6 +2,7 @@ package alice.tuprolog.concordion;
 
 import alice.tuprolog.*;
 import alice.tuprolog.event.ExceptionEvent;
+import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.PrologException;
 import alice.tuprolog.interfaces.event.ExceptionListener;
 
@@ -26,6 +27,18 @@ public class ConcordionSingleton {
     private ConcordionSingleton() {
     }
 
+    private static void loadAllLibraries(Prolog engine, String[] libraryNames) {
+        try {
+            if (libraryNames.length > 0) {
+                for (int i = 0; i < libraryNames.length; i++) {
+                        engine.loadLibrary(libraryNames[i]);
+                }
+            }
+        } catch (InvalidLibraryException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static ConcordionSingleton getInstance() {
         if (singleton == null) {
             singleton = new ConcordionSingleton();
@@ -35,9 +48,10 @@ public class ConcordionSingleton {
     }
 
     /* If there isn't a theory, insert null in the tag <td> */
-    public boolean success(String goal, String theory) throws Exception {
+    public boolean success(String goal, String theory, String... libraryNames) throws Exception {
 
         Prolog engine = new Prolog();
+        loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
             engine.setTheory(new Theory(theory));
         }
@@ -46,14 +60,14 @@ public class ConcordionSingleton {
     }
 
     /* Return true if there is an exception */
-    public boolean successWithException(String goal, String theory)
-            throws PrologException {
+    public boolean successWithException(String goal, String theory, String... libraryNames) throws PrologException {
 
         Prolog engine = null;
         @SuppressWarnings("unused")
         SolveInfo info = null;
         exFounded = false;
         engine = new Prolog();
+        loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
             engine.setTheory(new Theory(theory));
         }
@@ -65,14 +79,14 @@ public class ConcordionSingleton {
     }
 
     /* Return type of error */
-    public String successWithExceptionAndText(String goal, String theory)
-            throws PrologException {
+    public String successWithExceptionAndText(String goal, String theory, String... libraryNames) throws PrologException {
 
         Prolog engine = null;
         @SuppressWarnings("unused")
         SolveInfo info = null;
         exFounded = false;
         engine = new Prolog();
+        loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
             engine.setTheory(new Theory(theory));
         }
@@ -87,45 +101,43 @@ public class ConcordionSingleton {
     }
 
     /* Return the first result (With or Without replace) */
-    public String successAndResult(String goal, String theory, String variable)
-            throws Exception {
+    public String successAndResult(String goal, String theory, String variable, String... libraryNames) throws Exception {
 
-        return successAndResultVerifyReplace(goal, theory, variable, true);
+        return successAndResultVerifyReplace(goal, theory, variable, true, libraryNames);
 
     }
 
-    public String successAndResultWithoutReplace(String goal, String theory,
-                                                 String variable) throws Exception {
+    public String successAndResultWithoutReplace(String goal, String theory, String variable, String... libraryNames) throws Exception {
 
-        return successAndResultVerifyReplace(goal, theory, variable, false);
+        return successAndResultVerifyReplace(goal, theory, variable, false, libraryNames);
 
     }
 
     /* Return the first result of goal (With or Without replace), with limit */
     public boolean successAndResultsWithLimit(String goal, String theory,
-                                              String variable, String solution, int maxSolutions)
-            throws Exception {
+                                              String variable, String solution, int maxSolutions, String... libraryNames) throws Exception {
 
         return successAndResultsWithLimitVerifyReplace(goal, theory, variable,
-                                                       solution, true, maxSolutions);
+                                                       solution, true, maxSolutions, libraryNames);
 
     }
 
     public boolean successAndResultsWithLimitWithoutReplace(String goal,
                                                             String theory, String variable, String solution,
-                                                            int maxSolutions) throws Exception {
+                                                            int maxSolutions, String... libraryNames) throws Exception {
 
         return successAndResultsWithLimitVerifyReplace(goal, theory, variable,
-                                                       solution, false, maxSolutions);
+                                                       solution, false, maxSolutions, libraryNames);
 
     }
 
     /* Check the result in the list(infinite) */
     private boolean successAndResultsWithLimitVerifyReplace(String goal,
                                                             String theory, String variable, String solution, boolean replace,
-                                                            int maxSolutions) throws Exception {
+                                                            int maxSolutions, String... libraryNames) throws Exception {
 
         Prolog engine = new Prolog();
+        loadAllLibraries(engine, libraryNames);
         SolveInfo info = null;
         List<String> results = new ArrayList<String>();
 
@@ -172,9 +184,10 @@ public class ConcordionSingleton {
     }
 
     private boolean successAndResultsVerifyReplace(String goal, String theory,
-                                                   String variable, String solution, boolean replace) throws Exception {
+                                                   String variable, String solution, boolean replace, String... libraryNames) throws Exception {
 
         Prolog engine = new Prolog();
+        loadAllLibraries(engine, libraryNames);
         SolveInfo info = null;
         List<String> results = new ArrayList<String>();
 
@@ -214,26 +227,25 @@ public class ConcordionSingleton {
 
     /* Check the result in the list(not infinite) */
     public boolean successAndResults(String goal, String theory,
-                                     String variable, String solution) throws Exception {
+                                     String variable, String solution, String... libraryNames) throws Exception {
 
-        return successAndResultsVerifyReplace(goal, theory, variable, solution,
-                                              true);
+        return successAndResultsVerifyReplace(goal, theory, variable, solution,true, libraryNames);
 
     }
 
     public boolean successAndResultsWithoutReplace(String goal, String theory,
-                                                   String variable, String solution) throws Exception {
+                                                   String variable, String solution, String... libraryNames) throws Exception {
 
-        return successAndResultsVerifyReplace(goal, theory, variable, solution,
-                                              false);
+        return successAndResultsVerifyReplace(goal, theory, variable, solution,false, libraryNames);
 
     }
 
     /* Return the first result of goal */
     private String successAndResultVerifyReplace(String goal, String theory,
-                                                 String variable, boolean replace) throws Exception {
+                                                 String variable, boolean replace, String... libraryNames) throws Exception {
 
         Prolog engine = new Prolog();
+        loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
             engine.setTheory(new Theory(theory));
         }
