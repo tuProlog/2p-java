@@ -11,6 +11,7 @@ dependencies {
     implementation("mx4j", "mx4j-tools", "3.0.1")
 
     testImplementation("junit", "junit", "4.12")
+    testImplementation("pl.pragmatists", "JUnitParams", "1.1.1")
     testImplementation("org.concordion", "concordion", "2.+")
     testImplementation("org.concordion", "concordion-embed-extension", "1.2.0")
 }

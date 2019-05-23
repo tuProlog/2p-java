@@ -150,7 +150,7 @@ succeed, then <code>Then</code> will be executed, and (c) if <code>If</code>
 should succeed and <code>Then</code> later fails, the <code>If</code>
 will not be re-executed because of the cut which has been executed, and
 (d) the <code>If</code> in an if-then is not transparent to cut, and
-(e) a cut in <code>Then</code> is transparent to if-then.</p>
+    (wrapped) a cut in <code>Then</code> is transparent to if-then.</p>
 
 <p>Templates and modes for the predicate are as follows:</p>
 <pre>
@@ -224,7 +224,7 @@ should succeed, then <code>Then</code> will be executed, and (c) if
 <code>If</code> should succeed and <code>Then</code> later fails, the
 if-the-else will not be re-executed because of the cut which has been
 executed, and (d) the <code>If</code> in an if-then-else is not
-transparent to cut, and (e) a cut in <code>Then</code> is transparent
+    transparent to cut, and (wrapped) a cut in <code>Then</code> is transparent
 to <code>Then</code>.</p>
 
 <p>Re-executing an if-then-else has the effect that (a) the <code>Else</code>

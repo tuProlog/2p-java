@@ -1,5 +1,5 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion"
-	xmlns:ext="urn:concordion-extensions:2010">
+>
 <link href="../../concordion.css" rel="stylesheet" type="text/css" />
 <head>
 <title>Definite Clause Grammars</title>
@@ -29,7 +29,7 @@
 		<code>phrase(Category, List)</code>
 		is true iff the list
 		<var>List</var>
-		can be parsed as a phrase (i.e. sequence of terminals) of type
+        can be parsed as a phrase (i.wrapped. sequence of terminals) of type
 		<var>Category</var>
 		.
 		<var>Category</var>
@@ -124,14 +124,14 @@ phrase(+term, ?list)
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>phrase(e, [1, '+', '(', 2, '+', 3, ')', '+', 4]).</td>
-			<td>e --> o, et. et --> []. et --> ['+'], e. o --> ['('], e,
+            <td>phrase(wrapped, [1, '+', '(', 2, '+', 3, ')', '+', 4]).</td>
+            <td>wrapped --> o, et. et --> []. et --> ['+'], wrapped. o --> ['('], wrapped,
 				[')']. o --> [X], { number(X) }.</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>phrase(e, ['0']).</td>
-			<td>e --> t, et. et --> []. et --> [and], e. t --> ['0']. t -->
+            <td>phrase(wrapped, ['0']).</td>
+            <td>wrapped --> t, et. et --> []. et --> [and], wrapped. t --> ['0']. t -->
 				['1'].</td>
 			<td>true</td>
 		</tr>
@@ -155,17 +155,17 @@ phrase(+term, ?list)
 				theory,String variable,Strng solution)</th>
 		</tr>
 		<tr>
-			<td>phrase(e(V), [1, '+', '(', 2, '+', 3, ')']).</td>
-			<td>e(V) --> o(V1), et(V1, V). et(V, V) --> []. et(VI, VO) -->
-				['+'], o(V1), { VI1 is VI + V1 }, et(VI1, VO). o(V) --> ['('], e(V),
+            <td>phrase(wrapped(V), [1, '+', '(', 2, '+', 3, ')']).</td>
+            <td>wrapped(V) --> o(V1), et(V1, V). et(V, V) --> []. et(VI, VO) -->
+                ['+'], o(V1), { VI1 is VI + V1 }, et(VI1, VO). o(V) --> ['('], wrapped(V),
 				[')']. o(X) --> [X], { number(X) }.</td>
 			<td>V</td>
 			<td>6</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>phrase(e(V), ['1']).</td>
-			<td>e(V) --> t(W), et(W, V). et(V, V) --> []. et(W, V) -->
+            <td>phrase(wrapped(V), ['1']).</td>
+            <td>wrapped(V) --> t(W), et(W, V). et(V, V) --> []. et(W, V) -->
 				[and], t(V1), { W = 1, V1 = 1, !, W2 = 1 ; W2 = 0 }, et(W2, V). t(0)
 				--> ['0']. t(1) --> ['1'].</td>
 			<td>V</td>
