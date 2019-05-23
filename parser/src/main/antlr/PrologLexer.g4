@@ -14,29 +14,27 @@ import static alice.tuprolog.parser.dynamic.Associativity.*;
 tokens { VARIABLE }
 
 INTEGER
-    : '0'
-    | [1-9] (Digits? | '_' + Digits)
+    : Neg? Digit+
     ;
 
 HEX
-    : '0' [xX] [0-9a-fA-F] ([0-9a-fA-F_]* [0-9a-fA-F])?
+    : Neg? Zero 'x' HexDigit+
     ;
 
 OCT
-    : '0' '_'* [0-7] ([0-7_]* [0-7])?
+    : Neg? Zero 'o' OctDigit+
     ;
 
 BINARY
-    : '0' [bB] [01] ([01_]* [01])?
+    : Neg? Zero 'b' BinDigit+
     ;
 
 FLOAT
-    : (Digits '.' Digits? | '.' Digits) ExponentPart? [fFdD]?
-    | Digits (ExponentPart [fFdD]? | [fFdD])
+    : Neg? Digit+ '.' Digit+ ( 'E' Sign? Digit+ )?
     ;
 
-HEX_FLOAT
-    : '0' [xX] (HexDigits '.'? | HexDigits? '.' HexDigits) [pP] [+-]? Digits [fFdD]?
+CHAR
+    : Neg? Zero '\'' .
     ;
 
 BOOL
@@ -65,7 +63,7 @@ RSQUARE
     ;
 
 EMPTY_LIST
-    : '[' Ws* ']'
+    : LSQUARE Ws* RSQUARE
     ;
 
 LBRACE
@@ -76,16 +74,20 @@ RBRACE
     : '}'
     ;
 
-//EMPTY_SET
-//    : '{' Ws* '}'
-//    ;
+EMPTY_SET
+    : LBRACE Ws* RBRACE
+    ;
 
 VARIABLE
     : [_A-Z] [_A-Za-z0-9]*
     ;
 
-STRING
-    : ('"' .*? '"' | '\'' .*? '\'') { setText(substring(getText(), 1, -1)); }
+SQ_STRING
+    : '\'' String '\'' { setText(substring(getText(), 1, -1)); }
+    ;
+
+DQ_STRING
+    : '"' String '"' { setText(substring(getText(), 1, -1)); }
     ;
 
 COMMA
@@ -96,16 +98,28 @@ PIPE
     : '|'
     ;
 
+CUT
+    : '!'
+    ;
+
+FULL_STOP
+    : '.' [ \t]* (COMMENT? FullStopTerminator)
+    ;
+
+fragment FullStopTerminator
+    : EOF | LINE_COMMENT | [\n\r]+
+    ;
+
 WHITE_SPACES
     : Ws+ -> skip
     ;
 
 COMMENT
-    : '/*' .*? '*/' -> channel(HIDDEN)
+    : '/*' .*? '*/' -> skip
     ;
 
 LINE_COMMENT
-    : '%' ~[\r\n]* -> channel(HIDDEN)
+    : '%' (~[\r\n])* -> skip
     ;
 
 OPERATOR
@@ -116,30 +130,60 @@ ATOM
     : (Symbols | Atom) { !isOperator(getText()) }?
     ;
 
+fragment String
+    : .*?
+    ;
+
+fragment Symbols
+    : NotReserved (Symbol* NotReserved)?
+    | '!' '!'+
+    ;
+
+fragment NotReserved
+    : [#$&*+;/\\:<=>?@^~°.] | '-'
+    ;
+
+fragment Reserved
+    : COMMA | PIPE | LPAR | RPAR | LBRACE | RBRACE | LSQUARE | RSQUARE
+    ;
+
 fragment Atom
     : [a-z][A-Za-z0-9_]*
     ;
 
-fragment Symbols
-    : '!' | [#$&*+-.;/\\:<=>?@^~°][#$&*+-.;/\\:<=>?@^~°!|]*
+fragment Symbol
+    : NotReserved
+    | Reserved
     ;
 
 fragment Ws
     : [ \t\r\n]
     ;
 
-fragment ExponentPart
-    : [eE] [+-]? Digits
+fragment OctDigit
+    : [0-7]
     ;
 
-fragment HexDigits
-    : HexDigit ((HexDigit | '_')* HexDigit)?
+fragment BinDigit
+    : [0-1]
     ;
 
 fragment HexDigit
     : [0-9a-fA-F]
     ;
 
-fragment Digits
-    : [0-9] ([0-9_]* [0-9])?
+fragment Digit
+    : [0-9]
+    ;
+
+fragment Zero
+    : '0'
+    ;
+
+fragment Sign
+    : '+' | '-'
+    ;
+
+fragment Neg
+    : '-'
     ;

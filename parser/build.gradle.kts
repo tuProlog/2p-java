@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    antlr("org.antlr:antlr4:4.5")
+    antlr("org.antlr:antlr4:4.7.2")
 //    api("org.javatuples:javatuples:1.2")
 //    api("org.apache.commons:commons-collections4:4.3")
 //    implementation("org.apache.commons:commons-lang3:3.8.1")
