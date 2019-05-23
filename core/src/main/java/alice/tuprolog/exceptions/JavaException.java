@@ -7,21 +7,26 @@ import alice.tuprolog.Term;
 /**
  * @author Matteo Iuliani
  */
-public class JavaException extends Throwable {
-    private static final long serialVersionUID = 1L;
-    // eccezione Java che rappresenta l'argomento di java_throw/1
-    private Throwable e;
+public class JavaException extends PrologException {
 
-    public JavaException(Throwable e) {
-        this.e = e;
+    // eccezione Java che rappresenta l'argomento di java_throw/1
+    private Throwable wrapped;
+
+    public JavaException(Throwable wrapped) {
+        this.wrapped = wrapped;
     }
 
+    public Struct toStruct() {
+        return getException();
+    }
+
+    @Deprecated
     public Struct getException() {
         // java_exception
-        String java_exception = e.getClass().getName();
+        String java_exception = wrapped.getClass().getName();
         // Cause
         Term causeTerm = null;
-        Throwable cause = e.getCause();
+        Throwable cause = wrapped.getCause();
         if (cause != null) {
             causeTerm = new Struct(cause.toString());
         } else {
@@ -29,7 +34,7 @@ public class JavaException extends Throwable {
         }
         // Message
         Term messageTerm = null;
-        String message = e.getMessage();
+        String message = wrapped.getMessage();
         if (message != null) {
             messageTerm = new Struct(message);
         } else {
@@ -37,7 +42,7 @@ public class JavaException extends Throwable {
         }
         // StackTrace
         Struct stackTraceTerm = new Struct();
-        StackTraceElement[] elements = e.getStackTrace();
+        StackTraceElement[] elements = wrapped.getStackTrace();
         for (StackTraceElement element : elements) {
             stackTraceTerm.append(new Struct(element.toString()));
         }

@@ -25,31 +25,44 @@ import alice.tuprolog.Theory;
  * @see Theory
  */
 public class InvalidTheoryException extends PrologException {
-    private static final long serialVersionUID = 1L;
-    public int line = -1;
-    public int pos = -1;
-    /*Castagna 06/2011*/
-    public int clause = -1;
-    /**/
+
+    @Deprecated
+    public final int line;
+
+    @Deprecated
+    public final int pos;
+
+    @Deprecated
+    public final int clause;
 
     public InvalidTheoryException() {
+        this(null, -1, -1, -1);
     }
 
     public InvalidTheoryException(int line, int pos) {
-        this.line = line;
-        this.pos = pos;
+        this(null, -1, line, pos);
     }
 
     public InvalidTheoryException(String message) {
-        super(message);
+        this(message, -1, -1, -1);
     }
 
-    /*Castagna 06/2011*/
     public InvalidTheoryException(String message, int clause, int line, int pos) {
         super(message);
         this.clause = clause;
         this.line = line;
         this.pos = pos;
     }
-    /**/
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getPositionInLine() {
+        return pos;
+    }
+
+    public int getClause() {
+        return clause;
+    }
 }

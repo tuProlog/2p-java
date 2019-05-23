@@ -25,5 +25,22 @@ import alice.tuprolog.SolveInfo;
  * @see SolveInfo
  */
 public class NoSolutionException extends PrologException {
-    private static final long serialVersionUID = 1L;
+    public NoSolutionException() {
+    }
+
+    public NoSolutionException(final String message) {
+        super(message);
+    }
+
+    public NoSolutionException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public NoSolutionException(final Throwable cause) {
+        super(cause);
+    }
+
+    public NoSolutionException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

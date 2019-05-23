@@ -18,25 +18,26 @@
 package alice.tuprolog.exceptions;
 
 /**
- * This exception means that a not well formed goal has been specified.
+ * Base class for tuProlog runtime exceptions.
  */
-public class UnknownVarException extends PrologException {
-    public UnknownVarException() {
+public class PrologRuntimeException extends RuntimeException {
+
+    public PrologRuntimeException() {
     }
 
-    public UnknownVarException(final String message) {
+    public PrologRuntimeException(final String message) {
         super(message);
     }
 
-    public UnknownVarException(final String message, final Throwable cause) {
+    public PrologRuntimeException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
-    public UnknownVarException(final Throwable cause) {
+    public PrologRuntimeException(final Throwable cause) {
         super(cause);
     }
 
-    public UnknownVarException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+    public PrologRuntimeException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

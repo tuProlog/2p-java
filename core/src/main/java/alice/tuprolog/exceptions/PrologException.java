@@ -22,13 +22,23 @@ package alice.tuprolog.exceptions;
  * also for representing generic 2P exceptions.
  */
 public class PrologException extends Exception {
-    private static final long serialVersionUID = 1L;
 
     public PrologException() {
     }
 
-    public PrologException(String st) {
-        super(st);
+    public PrologException(final String message) {
+        super(message);
     }
 
+    public PrologException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public PrologException(final Throwable cause) {
+        super(cause);
+    }
+
+    public PrologException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

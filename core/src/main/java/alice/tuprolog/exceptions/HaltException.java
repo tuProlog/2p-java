@@ -26,8 +26,7 @@ import alice.tuprolog.SolveInfo;
  * @see SolveInfo
  */
 public class HaltException extends PrologException {
-    private static final long serialVersionUID = 1L;
-    private int value;
+    private final int value;
 
     public HaltException() {
         value = 0;

@@ -25,12 +25,13 @@ import alice.tuprolog.Library;
  * @see Library
  */
 public class InvalidLibraryException extends PrologException {
-    private static final long serialVersionUID = 1L;
-    private String libraryName;
-    private int line;
-    private int pos;
+
+    private final String libraryName;
+    private final int line;
+    private final int pos;
 
     public InvalidLibraryException() {
+        this(null, -1, -1);
     }
 
     public InvalidLibraryException(String libName, int line, int pos) {
@@ -47,7 +48,12 @@ public class InvalidLibraryException extends PrologException {
         return line;
     }
 
+    @Deprecated
     public int getPos() {
+        return pos;
+    }
+
+    public int getPositionInLine() {
         return pos;
     }
 

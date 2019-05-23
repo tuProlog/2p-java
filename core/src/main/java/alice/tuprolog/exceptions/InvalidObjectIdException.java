@@ -26,5 +26,22 @@ import alice.tuprolog.lib.OOLibrary;
  * @see OOLibrary
  */
 public class InvalidObjectIdException extends PrologException {
-    private static final long serialVersionUID = 1L;
+    public InvalidObjectIdException() {
+    }
+
+    public InvalidObjectIdException(final String message) {
+        super(message);
+    }
+
+    public InvalidObjectIdException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvalidObjectIdException(final Throwable cause) {
+        super(cause);
+    }
+
+    public InvalidObjectIdException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

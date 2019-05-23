@@ -21,5 +21,22 @@ package alice.tuprolog.exceptions;
  * This exception means that a not well formed goal has been specified.
  */
 public class MalformedGoalException extends PrologException {
-    private static final long serialVersionUID = 1L;
+    public MalformedGoalException() {
+    }
+
+    public MalformedGoalException(final String message) {
+        super(message);
+    }
+
+    public MalformedGoalException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public MalformedGoalException(final Throwable cause) {
+        super(cause);
+    }
+
+    public MalformedGoalException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
 }

@@ -21,24 +21,29 @@ package alice.tuprolog.exceptions;
  * This exception means that a method has been passed an argument
  * containing an invalid Prolog term.
  */
-public class InvalidTermException extends IllegalArgumentException {
+public class InvalidTermException extends PrologRuntimeException {
 
-    private static final long serialVersionUID = 1L;
+    @Deprecated
+    public final int line;
 
-    /*Castagna 06/2011*/
-    public int line = -1;
-    public int pos = -1;
-    /**/
+    @Deprecated
+    public final int pos;
 
     public InvalidTermException(String message) {
-        super(message);
+        this(message, -1, -1);
     }
 
-    /*Castagna 06/2011*/
     public InvalidTermException(String message, int line, int pos) {
         super(message);
         this.line = line;
         this.pos = pos;
     }
-    /**/
+
+    public int getLine() {
+        return line;
+    }
+
+    public int getPositionInLine() {
+        return pos;
+    }
 }
