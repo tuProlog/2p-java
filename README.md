@@ -5,11 +5,11 @@
 - You can start the tuProlog IDE by running
 
 ```bash
-./gradlew runIde
+./gradlew ide
 ```
 
 - You can start the tuProlog CLI by running
 
 ```bash
-./gradlew runRepl -q
+./gradlew repl -q
 ```
