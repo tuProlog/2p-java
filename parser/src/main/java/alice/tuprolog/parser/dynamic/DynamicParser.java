@@ -1,4 +1,4 @@
-package alice.tuprolog.dynamic;
+package alice.tuprolog.parser.dynamic;
 
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.Token;

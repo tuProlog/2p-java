@@ -31,7 +31,7 @@ public class InvalidLibraryException extends PrologException {
     private final int pos;
 
     public InvalidLibraryException() {
-        this(null, -1, -1);
+        this(null, 0, 0);
     }
 
     public InvalidLibraryException(String libName, int line, int pos) {

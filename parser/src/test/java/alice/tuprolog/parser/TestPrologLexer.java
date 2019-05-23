@@ -1,5 +1,6 @@
-import alice.tuprolog.PrologLexer;
-import alice.tuprolog.dynamic.DynamicLexer;
+package alice.tuprolog.parser;
+
+import alice.tuprolog.parser.dynamic.DynamicLexer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.Token;

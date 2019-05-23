@@ -1,4 +1,4 @@
-package alice.tuprolog;
+package alice.tuprolog.parser;
 
 public class ParsingException extends RuntimeException {
     private final String input;

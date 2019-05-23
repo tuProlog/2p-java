@@ -7,10 +7,10 @@ options {
 
 
 @header {
-package alice.tuprolog;
+package alice.tuprolog.parser;
 import java.util.*;
-import alice.tuprolog.dynamic.*;
-import static alice.tuprolog.dynamic.Associativity.*;
+import alice.tuprolog.parser.dynamic.*;
+import static alice.tuprolog.parser.dynamic.Associativity.*;
 import org.antlr.v4.runtime.RuleContext;
 }
 
@@ -140,7 +140,7 @@ locals[boolean isNum, boolean isVar, boolean isList, boolean isStruct, boolean i
     | variable { $isVar = true; }
     | structure { $isStruct = true; }
     | list { $isList = true;  }
-//    | set { $isSet = true;  }
+    | set { $isSet = true;  }
     ;
 
 number
@@ -181,7 +181,7 @@ locals[int length = 0, boolean hasTail]
     : LSQUARE items+=expression[P0, NO_COMMA] { $length++; } (COMMA items+=expression[P0, NO_COMMA] { $length++; })* (PIPE { $hasTail = true; } tail=expression[P0, WITH_COMMA])? RSQUARE
     ;
 
-//set
-//locals[int length = 0, boolean hasTail]
-//    : LBRACE items+=expression[P0] { $length++; } (COMMA items+=expression[P0] { $length++; })* RBRACE
-//    ;
+set
+locals[int length = 0, boolean hasTail]
+    : LBRACE items+=expression[P0, NO_COMMA] { $length++; } (COMMA items+=expression[P0, NO_COMMA] { $length++; })* RBRACE
+    ;

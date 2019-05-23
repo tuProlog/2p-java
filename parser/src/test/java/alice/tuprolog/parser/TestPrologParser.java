@@ -1,10 +1,10 @@
-import alice.tuprolog.PrologLexer;
-import alice.tuprolog.PrologParser;
-import alice.tuprolog.PrologParser.NumberContext;
-import alice.tuprolog.PrologParser.SingletonExpressionContext;
-import alice.tuprolog.PrologParser.SingletonTermContext;
-import alice.tuprolog.PrologParser.TermContext;
-import alice.tuprolog.dynamic.DynamicLexer;
+package alice.tuprolog.parser;
+
+import alice.tuprolog.parser.PrologParser.NumberContext;
+import alice.tuprolog.parser.PrologParser.SingletonExpressionContext;
+import alice.tuprolog.parser.PrologParser.SingletonTermContext;
+import alice.tuprolog.parser.PrologParser.TermContext;
+import alice.tuprolog.parser.dynamic.DynamicLexer;
 import org.antlr.v4.runtime.*;
 import org.junit.Assert;
 import org.junit.Test;

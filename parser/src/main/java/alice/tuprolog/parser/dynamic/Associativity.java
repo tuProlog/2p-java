@@ -1,4 +1,4 @@
-package alice.tuprolog.dynamic;
+package alice.tuprolog.parser.dynamic;
 
 import java.util.EnumSet;
 

@@ -5,10 +5,10 @@ options {
 }
 
 @header {
-package alice.tuprolog;
+package alice.tuprolog.parser;
 import java.util.*;
-import alice.tuprolog.dynamic.*;
-import static alice.tuprolog.dynamic.Associativity.*;
+import alice.tuprolog.parser.dynamic.*;
+import static alice.tuprolog.parser.dynamic.Associativity.*;
 }
 
 tokens { VARIABLE }

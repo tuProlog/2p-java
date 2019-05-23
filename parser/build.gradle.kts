@@ -9,10 +9,10 @@ repositories {
 
 dependencies {
     antlr("org.antlr:antlr4:4.5")
-    testCompile("pl.pragmatists:JUnitParams:1.1.1")
-    api("org.javatuples:javatuples:1.2")
-    api("org.apache.commons:commons-collections4:4.3")
-    implementation("org.apache.commons:commons-lang3:3.8.1")
+//    api("org.javatuples:javatuples:1.2")
+//    api("org.apache.commons:commons-collections4:4.3")
+//    implementation("org.apache.commons:commons-lang3:3.8.1")
+    testImplementation("pl.pragmatists:JUnitParams:1.1.1")
 }
 
 configure<JavaPluginConvention> {
@@ -22,6 +22,6 @@ configure<JavaPluginConvention> {
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
     arguments = arguments + listOf("-visitor", "-long-messages")
-    outputDirectory = File("${project.buildDir}/generated-src/antlr/main/it/unibo/tuprolog2/parser")
+    outputDirectory = File("${project.buildDir}/generated-src/antlr/main/alice/tuprolog/parser")
 }
 
