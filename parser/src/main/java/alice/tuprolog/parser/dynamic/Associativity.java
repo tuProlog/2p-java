@@ -5,6 +5,10 @@ import java.util.EnumSet;
 public enum Associativity {
     XF, YF, XFX, XFY, YFX, FX, FY;
 
+    public static Associativity values(int i) {
+        return values()[i];
+    }
+
     public static EnumSet<Associativity> X_FIRST = EnumSet.of(XF, XFX, XFY, FX);
     public static EnumSet<Associativity> Y_FIRST = EnumSet.of(YF, YFX, FY);
 
