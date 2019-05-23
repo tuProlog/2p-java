@@ -154,7 +154,7 @@ public class Struct extends Term {
     /**
      * Builds a list specifying the elements
      */
-    public Struct(Term[] argList) {
+    public Struct(Term... argList) {
         this(argList, 0);
     }
 
