@@ -2,7 +2,7 @@ package SpyFrame;
 
 import alice.tuprolog.*;
 import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.event.SpyListener;
+import alice.tuprolog.interfaces.event.SpyListener;
 import alice.tuprologx.spyframe.TermFrame;
 
 import java.util.List;

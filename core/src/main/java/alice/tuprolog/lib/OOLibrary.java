@@ -34,7 +34,6 @@ import java.io.Serializable;
 import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -470,62 +469,66 @@ public class OOLibrary extends Library {
         className = className.getTerm();
         Struct arg = (Struct) argl.getTerm();
         id = id.getTerm();
+        if (!className.isAtom()) {
+            throw new JavaException(new ClassNotFoundException(
+                    "Java class not found: " + className));
+        }
+        String clName = ((Struct) className).getName();
+        // check for array type
+        if (clName.endsWith("[]")) {
+            Object[] list = getArrayFromList(arg);
+            int nargs = ((Number) list[0]).intValue();
+            if (java_array(clName, nargs, id)) {
+                return true;
+            } else {
+                throw new JavaException(new Exception());
+            }
+        }
+        Signature args = parseArg(getArrayFromList(arg));
+        if (args == null) {
+            throw new IllegalArgumentException(
+                    "Illegal constructor arguments  " + arg);
+        }
+        // object creation with argument described in args
         try {
-            if (!className.isAtom()) {
-                throw new JavaException(new ClassNotFoundException(
-                        "Java class not found: " + className));
+            Class<?> cl = Class.forName(clName, true, dynamicLoader);
+            Object[] args_value = args.getValues();
+            Constructor<?> co = lookupConstructor(cl, args.getTypes(), args_value);
+            if (co == null) {
+                getEngine().warn("Constructor not found: class " + clName);
+                throw new JavaException(new NoSuchMethodException(
+                        "Constructor not found: class " + clName));
             }
-            String clName = ((Struct) className).getName();
-            // check for array type
-            if (clName.endsWith("[]")) {
-                Object[] list = getArrayFromList(arg);
-                int nargs = ((Number) list[0]).intValue();
-                if (java_array(clName, nargs, id)) {
-                    return true;
-                } else {
-                    throw new JavaException(new Exception());
-                }
-            }
-            Signature args = parseArg(getArrayFromList(arg));
-            if (args == null) {
-                throw new IllegalArgumentException(
-                        "Illegal constructor arguments  " + arg);
-            }
-            // object creation with argument described in args
-            try {
-                Class<?> cl = Class.forName(clName, true, dynamicLoader);
-                Object[] args_value = args.getValues();
-                Constructor<?> co = lookupConstructor(cl, args.getTypes(), args_value);
-                if (co == null) {
-                    getEngine().warn("Constructor not found: class " + clName);
-                    throw new JavaException(new NoSuchMethodException(
-                            "Constructor not found: class " + clName));
-                }
 
-                Object obj = co.newInstance(args_value);
-                if (bindDynamicObject(id, obj)) {
-                    return true;
-                } else {
-                    throw new JavaException(new Exception());
-                }
-            } catch (ClassNotFoundException ex) {
-                getEngine().warn("Java class not found: " + clName);
-                throw new JavaException(ex);
-            } catch (InvocationTargetException ex) {
-                getEngine().warn("Invalid constructor arguments.");
-                throw new JavaException(ex);
-            } catch (NoSuchMethodException ex) {
-                getEngine().warn("Constructor not found: " + args.getTypes());
-                throw new JavaException(ex);
-            } catch (InstantiationException ex) {
-                getEngine().warn(
-                        "Objects of class " + clName
-                        + " cannot be instantiated");
-                throw new JavaException(ex);
-            } catch (IllegalArgumentException ex) {
-                getEngine().warn("Illegal constructor arguments  " + args);
-                throw new JavaException(ex);
+            Object obj = co.newInstance(args_value);
+            if (bindDynamicObject(id, obj)) {
+                return true;
+            } else {
+                throw new JavaException(new Exception());
             }
+        } catch (JavaException ex) {
+            throw ex;
+        } catch (ClassNotFoundException ex) {
+            getEngine().warn("Java class not found: " + clName);
+            throw new JavaException(ex);
+        } catch (InvocationTargetException ex) {
+            getEngine().warn("Invalid constructor arguments.");
+            throw new JavaException(ex);
+        } catch (NoSuchMethodException ex) {
+            getEngine().warn("Constructor not found: " + args.getTypes());
+            throw new JavaException(ex);
+        } catch (InstantiationException ex) {
+            getEngine().warn(
+                    "Objects of class " + clName
+                    + " cannot be instantiated");
+            throw new JavaException(ex);
+        } catch (IllegalArgumentException ex) {
+            getEngine().warn("Illegal constructor arguments  " + args);
+            throw new JavaException(ex);
+        } catch (IllegalAccessException e) {
+            getEngine().warn(
+                    "Illegal access exception in calling constructor for class " + clName + " with arguments " + args);
+            throw new JavaException(e);
         } catch (Exception ex) {
             throw new JavaException(ex);
         }
@@ -616,6 +619,14 @@ public class OOLibrary extends Library {
         return new_class_4(clSource, clName, clPathes, id);
     }
 
+    private File getJavaHomePath() {
+        return new File(System.getProperty("java.home"));
+    }
+
+    private File getJavaCPath() {
+        return new File(System.getProperty("java.home"), "bin" + File.separator + "javac");
+    }
+
     /**
      * The java class/4 creates, compiles and loads a new Java class from a source text
      *
@@ -659,15 +670,22 @@ public class OOLibrary extends Library {
                         "(creation of " + fullClassPath + ".java fail failed)");
                 throw new JavaException(ex);
             }
-            String cmd = "javac " + cp + " " + fullClassPath + ".java";
 
             try {
-                Process jc = Runtime.getRuntime().exec(cmd);
+
+                final File javac = getJavaCPath();
+                if (!javac.exists()) {
+                    final String message = "Compilation of java sources failed because no javac could be found in '" +
+                                           getJavaHomePath().getPath() + "/bin'";
+                    getEngine().warn(message);
+                    throw new IOException(message);
+                }
+                final String javacPath = javac.getAbsolutePath();
+                Process jc = Runtime.getRuntime().exec(javacPath + " " + fullClassPath + ".java");
                 int res = jc.waitFor();
                 if (res != 0) {
                     getEngine().warn("Compilation of java sources failed");
-                    getEngine().warn(
-                            "(java compiler (javac) has stopped with errors)");
+                    getEngine().warn("(java compiler (javac) has stopped with errors)");
                     throw new IOException("Compilation of java sources failed");
                 }
             } catch (IOException ex) {
@@ -702,6 +720,8 @@ public class OOLibrary extends Library {
                         + fullClassName + " )");
                 throw new JavaException(ex);
             }
+        } catch (JavaException ex) {
+            throw ex;
         } catch (Exception ex) {
             throw new JavaException(ex);
         }
@@ -809,6 +829,8 @@ public class OOLibrary extends Library {
             } else {
                 throw new JavaException(new Exception());
             }
+        } catch (JavaException ex) {
+            throw ex;
         } catch (InvocationTargetException ex) {
             getEngine().warn(
                     "Method failed: " + methodName + " - ( signature: " + args

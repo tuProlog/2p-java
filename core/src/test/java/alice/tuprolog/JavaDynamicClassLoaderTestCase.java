@@ -9,6 +9,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -18,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
  *
  * @author Alessio Mercurio
  */
-public class JavaDynamicClassLoaderTestCase {
+public class JavaDynamicClassLoaderTestCase extends BaseTestWithFiles {
 
     final static int PATHS_NUMBER = 2;
     String[] paths = new String[PATHS_NUMBER];
@@ -68,7 +70,7 @@ public class JavaDynamicClassLoaderTestCase {
     @Test(expected = ClassNotFoundException.class)
     public void InvalidPathTest() throws ClassNotFoundException, IOException {
         JavaDynamicClassLoader loader = null;
-        URL url = new File(".").toURI().toURL();
+        URL url = getTempDirectory().toURI().toURL();
         loader = new JavaDynamicClassLoader(new URL[]{url}, this.getClass().getClassLoader());
         loader.loadClass("Counter");
     }
@@ -107,10 +109,10 @@ public class JavaDynamicClassLoaderTestCase {
     }
 
     private void setPath(boolean valid) throws IOException {
-        File file = new File(".");
+        File file = getTempDirectory();
         // Array paths contains a valid path
         if (valid) {
-            paths[0] = getClass().getResource("TestURLClassLoader.jar").getPath();
+            paths[0] = getClass().getResource("/TestURLClassLoader.jar").getPath();
         }
         paths[1] = file.getCanonicalPath();
     }
@@ -123,5 +125,10 @@ public class JavaDynamicClassLoaderTestCase {
             urls[i] = (directory.toURI().toURL());
         }
         return urls;
+    }
+
+    @Override
+    protected List<String> getResources() {
+        return Arrays.asList("/TestURLClassLoader.jar");
     }
 }
