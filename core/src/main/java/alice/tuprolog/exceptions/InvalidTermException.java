@@ -39,6 +39,14 @@ public class InvalidTermException extends PrologRuntimeException {
         this.pos = pos;
     }
 
+    public String getInput() {
+        return null;
+    }
+
+    public String getOffendingSymbol() {
+        return null;
+    }
+
     public int getLine() {
         return line;
     }
