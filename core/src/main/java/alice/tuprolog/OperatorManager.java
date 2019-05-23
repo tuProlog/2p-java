@@ -30,8 +30,19 @@ import java.util.*;
  *
  * @see Operator
  */
-@SuppressWarnings("serial")
 public class OperatorManager implements IOperatorManager, Serializable, OperatorManagerMXBean {
+
+    @Deprecated
+    public OperatorManager() {
+    }
+
+    public static OperatorManager empty() {
+        return new OperatorManager();
+    }
+
+    public static OperatorManager defaultOperators() {
+        return new DefaultOperatorManager();
+    }
 
     /**
      * lowest operator priority
@@ -41,7 +52,7 @@ public class OperatorManager implements IOperatorManager, Serializable, Operator
      * highest operator priority
      */
     public static final int OP_HIGH = 1200;
-    private static final long serialVersionUID = 1L;
+
     /**
      * current known operators
      */
