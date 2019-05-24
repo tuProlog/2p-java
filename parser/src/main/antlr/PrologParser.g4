@@ -199,8 +199,8 @@ locals[int arity = 0, boolean isTruth, boolean isList, boolean isSet, boolean is
     | functor=EMPTY_SET { $isSet = true; }
     | functor=DQ_STRING { $isString = true; }
     | functor=SQ_STRING { $isString = true; } (LPAR args+=expression[P0, NO_COMMA] { $arity++; } (COMMA args+=expression[P0, NO_COMMA] { $arity++; })* RPAR)?
+    | /* { !lookaheadIs(PREFIX) }? */ functor=(OPERATOR|COMMA|PIPE|SIGN) (LPAR args+=expression[P0, NO_COMMA] { $arity++; } (COMMA args+=expression[P0, NO_COMMA] { $arity++; })* RPAR)?
     | functor=(ATOM|EMPTY_SET) (LPAR args+=expression[P0, NO_COMMA] { $arity++; } (COMMA args+=expression[P0, NO_COMMA] { $arity++; })* RPAR)?
-    | { !lookaheadIs(PREFIX) }? functor=(OPERATOR|COMMA|PIPE) (LPAR args+=expression[P0, NO_COMMA] { $arity++; } (COMMA args+=expression[P0, NO_COMMA] { $arity++; })* RPAR)?
     ;
 
 list
