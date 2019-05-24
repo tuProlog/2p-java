@@ -1,4 +1,4 @@
-package alice.tuprolog.parsing;
+package alice.tuprolog.parser;
 
 import alice.tuprolog.Double;
 import alice.tuprolog.*;

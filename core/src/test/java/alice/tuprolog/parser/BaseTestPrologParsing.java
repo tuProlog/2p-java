@@ -1,4 +1,4 @@
-package alice.tuprolog.parsing;
+package alice.tuprolog.parser;
 
 import alice.tuprolog.OperatorManager;
 import alice.tuprolog.Term;

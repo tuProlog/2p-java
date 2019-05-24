@@ -39,6 +39,29 @@ public class InvalidPrologException extends PrologRuntimeException {
         this.pos = pos;
     }
 
+    public InvalidPrologException(final String message, final Throwable cause, final int line, final int pos) {
+        super(message, cause);
+        this.line = line;
+        this.pos = pos;
+    }
+
+    public InvalidPrologException(final Throwable cause, final int line, final int pos) {
+        super(cause);
+        this.line = line;
+        this.pos = pos;
+    }
+
+    public InvalidPrologException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace, final int line, final int pos) {
+        super(message, cause, enableSuppression, writableStackTrace);
+        this.line = line;
+        this.pos = pos;
+    }
+
+    public InvalidPrologException(final int line, final int pos) {
+        this.line = line;
+        this.pos = pos;
+    }
+
     public String getInput() {
         return null;
     }

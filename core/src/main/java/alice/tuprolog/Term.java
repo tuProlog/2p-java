@@ -434,4 +434,8 @@ public abstract class Term implements Serializable {
     public String toJSON() {
         return JSONSerializerManager.toJSON(this);
     }
+
+    public <T extends Term> T castTo(Class<T> klass) {
+        return klass.cast(this);
+    }
 }
