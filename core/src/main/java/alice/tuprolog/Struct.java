@@ -307,7 +307,7 @@ public class Struct extends Term {
     }
 
     public boolean isList() {
-        return name.equals(".") && (arity == 2 || arity == 0);
+        return name.equals(".") && arity == 2 || isEmptyList();
 //        return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
     }
 
