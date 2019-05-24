@@ -34,11 +34,11 @@ import org.antlr.v4.runtime.RuleContext;
 }
 
 singletonTerm
-    : term EOF
+    : term FULL_STOP? EOF
     ;
 
 singletonExpression
-    : expression[P0, WITH_COMMA] EOF
+    : expression[P0, WITH_COMMA] FULL_STOP? EOF
     ;
 
 theory
