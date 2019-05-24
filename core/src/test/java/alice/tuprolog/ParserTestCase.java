@@ -20,15 +20,29 @@ public class ParserTestCase extends TestCase {
         }
     }
 
-    public void testUnaryPlusOperator() {
-        Term t = Term.createTerm("n(+100)");
+//    public void testUnaryPlusOperator() {
+//        Term t = Term.createTerm("n(+100)");
+//        // SICStus Prolog interprets "n(+100)" as "n(100)"
+//        // GNU Prolog interprets "n(+100)" as "n(+(100))"
+//        // The ISO Standard says + is not a unary operator
+//        try {
+//            fail("test not implemented");
+//        } catch (InvalidTermException e) {
+//        }
+//    }
+
+    public void testUnaryPlusOperator() throws InvalidTermException {
         // SICStus Prolog interprets "n(+100)" as "n(100)"
         // GNU Prolog interprets "n(+100)" as "n(+(100))"
         // The ISO Standard says + is not a unary operator
-        try {
-            fail("test not implemented");
-        } catch (InvalidTermException e) {
-        }
+        Term t = Term.createTerm("n(+100)");
+        Struct result = new Struct("n", new Int(100));
+        assertEquals(result, t);
+
+        t = Term.createTerm("n(+(100))");
+
+        result = new Struct("n", new Struct("+", new Int(100)));
+        assertEquals(result, t);
     }
 
     public void testUnaryMinusOperator() throws InvalidTermException {
@@ -36,7 +50,7 @@ public class ParserTestCase extends TestCase {
         Struct result = new Struct("n", new Int(-100));
         assertEquals(result, t);
 
-        t = Term.createTerm("n(- 100)");
+        t = Term.createTerm("n(-(100))");
 
         result = new Struct("n", new Struct("-", new Int(100)));
         assertEquals(result, t);

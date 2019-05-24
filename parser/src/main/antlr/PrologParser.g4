@@ -150,9 +150,9 @@ locals[boolean isTerm, Associativity associativity, int newBottom]
 
 op[Associativity associativity]
 returns[int priority]
-    : symbol=OPERATOR { $priority = getOperatorPriority($symbol, $associativity); }
-    | symbol=COMMA { $priority = getOperatorPriority($symbol, $associativity); }
-    | symbol=PIPE { $priority = getOperatorPriority($symbol, $associativity); }
+    : symbol=(OPERATOR|COMMA|PIPE|SIGN) { $priority = getOperatorPriority($symbol, $associativity); }
+//    | symbol=COMMA { $priority = getOperatorPriority($symbol, $associativity); }
+//    | symbol=PIPE { $priority = getOperatorPriority($symbol, $associativity); }
     ;
 
 term
@@ -173,16 +173,17 @@ locals[boolean isInt, boolean isReal]
 
 integer
 locals[boolean isHex, boolean isOct, boolean isBin, boolean isChar]
-    : value=INTEGER
-    | value=HEX { $isHex = true; }
-    | value=OCT { $isOct = true; }
-    | value=BINARY { $isBin = true; }
-    | value=CHAR { $isChar = true; }
+    : sign=SIGN?
+        ( value=INTEGER
+        | value=HEX { $isHex = true; }
+        | value=OCT { $isOct = true; }
+        | value=BINARY { $isBin = true; }
+        | value=CHAR { $isChar = true; }
+        )
     ;
 
 real
-locals[boolean isHex]
-    : value=FLOAT
+    : sign=SIGN? value=FLOAT
     ;
 
 variable

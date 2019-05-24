@@ -14,27 +14,31 @@ import static alice.tuprolog.parser.dynamic.Associativity.*;
 tokens { VARIABLE }
 
 INTEGER
-    : Neg? Digit+
+    : Digit+
     ;
 
 HEX
-    : Neg? Zero 'x' HexDigit+
+    : Zero [xX] HexDigit+
     ;
 
 OCT
-    : Neg? Zero 'o' OctDigit+
+    : Zero [oO] OctDigit+
     ;
 
 BINARY
-    : Neg? Zero 'b' BinDigit+
+    : Zero [bB] BinDigit+
+    ;
+
+SIGN
+    : '+' | '-'
     ;
 
 FLOAT
-    : Neg? Digit+ '.' Digit+ ( 'E' Sign? Digit+ )?
+    : Digit+ '.' Digit+ ( [eE] SIGN? Digit+ )?
     ;
 
 CHAR
-    : Neg? Zero '\'' .
+    : Zero '\'' .
     ;
 
 BOOL
@@ -178,12 +182,4 @@ fragment Digit
 
 fragment Zero
     : '0'
-    ;
-
-fragment Sign
-    : '+' | '-'
-    ;
-
-fragment Neg
-    : '-'
     ;

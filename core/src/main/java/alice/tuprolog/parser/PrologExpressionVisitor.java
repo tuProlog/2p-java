@@ -68,10 +68,10 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
 
     @Override
     public Term visitSet(SetContext ctx) {
-        if (ctx.length > 0) {
-            return new Struct("{}", ctx.items.stream().map(it -> it.accept(this)).toArray(Term[]::new));
+        if (ctx.length == 1) {
+            return new Struct("{}", ctx.items.get(0).accept(this));
         } else {
-            return new Struct("{}");
+            return new Struct("{}", createConjunction(ctx.items.stream().map(this::visitExpression)));
         }
     }
 
@@ -246,23 +246,27 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
     private java.lang.Number parseInteger(IntegerContext ctx) {
         final String str = ctx.value.getText();
         int base;
-        final String clean;
+        String clean;
 
         if (ctx.isBin) {
             base = 2;
-            clean = BIN_PREFIX.matcher(str).replaceAll("");
+            clean = str.substring(2);
         } else if (ctx.isOct) {
             base = 8;
-            clean = OCT_PREFIX.matcher(str).replaceAll("");
+            clean = str.substring(2);
         } else if (ctx.isHex) {
             base = 16;
-            clean = HEX_PREFIX.matcher(str).replaceAll("");
+            clean = str.substring(2);
         } else if (ctx.isChar) {
-            clean = CHAR_PREFIX.matcher(str).replaceAll("");
+            clean = str.substring(2);
             return (int) clean.charAt(0);
         } else {
             base = 10;
             clean = str;
+        }
+
+        if (ctx.sign != null) {
+            clean = ctx.sign.getText() + clean;
         }
 
         try {
@@ -289,8 +293,12 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
 
     @Override
     public Term visitReal(PrologParser.RealContext ctx) {
+        String raw = ctx.value.getText();
+        if (ctx.sign != null) {
+            raw = raw + ctx.sign.getText();
+        }
         try {
-            return new alice.tuprolog.Double(Double.parseDouble(ctx.value.getText()));
+            return new alice.tuprolog.Double(Double.parseDouble(raw));
         } catch (NumberFormatException notAFloating) {
             throw new ParsingException(ctx.value, notAFloating);
         }
@@ -300,7 +308,16 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
     public Term visitStructure(PrologParser.StructureContext ctx) {
         if (ctx.isList) {
             return new Struct();
-        } else if (ctx.arity == 0) {
+        } else if (ctx.isSet) {
+//            if (ctx.arity == 0) {
+            return new Struct("{}");
+//            } else if (ctx.arity == 1) {
+//                return new Struct("{}", ctx.args.get(0).accept(this));
+//            } else {
+//                return new Struct("{}", createConjunction(ctx.args.stream().map(this::visitExpression)));
+//            }
+        }
+        if (ctx.arity == 0) {
             return new Struct(ctx.functor.getText());
         } else {
             return new Struct(ctx.functor.getText(), ctx.args.stream().map(this::visitExpression).toArray(Term[]::new));
@@ -315,14 +332,31 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
         } else {
             return new Struct(terms.toArray(Term[]::new));
         }
+        return createListExact(terms);
+    }
+
+    private Struct createConjunction(Stream<Term> terms) {
         final List<Term> termsList = terms.collect(Collectors.toList());
         int i = termsList.size() - 1;
-        Term result = new Struct(termsList.get(i - 1), termsList.get(i));
+        Struct result = new Struct(",", termsList.get(i - 1), termsList.get(i));
+        for (i -= 2; i >= 0; i--) {
+            result = new Struct(",", termsList.get(i), result);
+        }
+        return result;
+    }
+
+    private Struct createListExact(Stream<Term> terms) {
+        final List<Term> termsList = terms.collect(Collectors.toList());
+        int i = termsList.size() - 1;
+        Struct result = new Struct(termsList.get(i - 1), termsList.get(i));
         for (i -= 2; i >= 0; i--) {
             result = new Struct(termsList.get(i), result);
         }
         return result;
     }
 
+    private Struct createList(Stream<Term> terms) {
+        return new Struct(terms.iterator());
+    }
 
 }

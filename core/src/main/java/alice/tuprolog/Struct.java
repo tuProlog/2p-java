@@ -22,6 +22,7 @@ import alice.tuprolog.interfaces.TermVisitor;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 //import java.util.ArrayList;
 
@@ -306,7 +307,8 @@ public class Struct extends Term {
     }
 
     public boolean isList() {
-        return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
+        return name.equals(".") && (arity == 2 || arity == 0);
+//        return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
     }
 
     public boolean isGround() {
@@ -513,6 +515,14 @@ public class Struct extends Term {
         return name.equals("[]") && arity == 0;
     }
 
+    public boolean isEmptySet() {
+        return name.equals("{}") && arity == 0;
+    }
+
+    public boolean isSet() {
+        return name.equals("{}");
+    }
+
     /**
      * Gets the head of this structure, which is supposed to be a list.
      *
@@ -552,16 +562,17 @@ public class Struct extends Term {
      * </p>
      */
     public int listSize() {
-        if (!isList()) {
-            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
-        }
-        Struct t = this;
-        int count = 0;
-        while (!t.isEmptyList()) {
-            count++;
-            t = (Struct) t.arg[1].getTerm();
-        }
-        return count;
+//        if (!isList()) {
+//            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
+//        }
+//        Struct t = this;
+//        int count = 0;
+//        while (!t.isEmptyList()) {
+//            count++;
+//            t = (Struct) t.arg[1].getTerm();
+//        }
+//        return count;
+        return (int) listStream().count();
     }
 
     /**
@@ -573,10 +584,18 @@ public class Struct extends Term {
      * </p>
      */
     public Iterator<? extends Term> listIterator() {
+//        if (!isList()) {
+//            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
+//        }
+        return listStream().iterator();
+//        return new StructIterator(this);
+    }
+
+    public Stream<? extends Term> listStream() {
         if (!isList()) {
             throw new UnsupportedOperationException("The structure " + this + " is not a list.");
         }
-        return new StructIterator(this);
+        return Stream.of(this).flatMap(it -> it.isList() ? listStream() : Stream.of(it.arg));
     }
 
     // hidden services
@@ -728,11 +747,11 @@ public class Struct extends Term {
         // empty list case
         if (isEmptyList()) {
             return "[]";
-        }
-        // list case
-        if (name.equals(".") && arity == 2) {
+        } else if (isEmptySet()) {
+            return "{}";
+        } else if (this.isList()) {
             return ("[" + toString0() + "]");
-        } else if (name.equals("{}")) {
+        } else if (isSet()) {
             return ("{" + toString0_bracket() + "}");
         } else {
             String s = (isFunctorAtomic() ? name : "'" + name + "'");
@@ -758,11 +777,14 @@ public class Struct extends Term {
     private String toString0() {
         Term h = arg[0].getTerm();
         Term t = arg[1].getTerm();
-        if (t.isList()) {
-            Struct tl = (Struct) t;
-            if (tl.isEmptyList()) {
+        if (t.isEmptyList()) {
+            if (h instanceof Var) {
+                return ((Var) h).toStringFlattened();
+            } else {
                 return h.toString();
             }
+        } else if (t.isList()) {
+            Struct tl = (Struct) t;
             if (h instanceof Var) {
                 return (((Var) h).toStringFlattened() + "," + tl.toString0());
             } else {
