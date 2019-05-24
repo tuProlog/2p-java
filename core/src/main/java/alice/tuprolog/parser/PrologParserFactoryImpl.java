@@ -18,9 +18,9 @@ import java.io.Reader;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-class ParserFactoryImpl implements ParserFactory {
+class PrologParserFactoryImpl implements PrologParserFactory {
 
-    public static ParserFactoryImpl INSTANCE = new ParserFactoryImpl();
+    public static PrologParserFactoryImpl INSTANCE = new PrologParserFactoryImpl();
 
     private static ANTLRErrorListener newErrorListener(Object whileParsing) {
         return new BaseErrorListener() {
@@ -40,7 +40,7 @@ class ParserFactoryImpl implements ParserFactory {
 
     }
 
-    private ParserFactoryImpl() {
+    private PrologParserFactoryImpl() {
 
     }
 

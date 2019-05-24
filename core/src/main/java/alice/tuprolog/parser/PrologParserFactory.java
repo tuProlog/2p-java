@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.util.stream.Stream;
 
-public interface ParserFactory {
+public interface PrologParserFactory {
 
-    static ParserFactory getInstance() {
-        return ParserFactoryImpl.INSTANCE;
+    static PrologParserFactory getInstance() {
+        return PrologParserFactoryImpl.INSTANCE;
     }
 
     PrologParser.SingletonExpressionContext parseExpression(String string);
