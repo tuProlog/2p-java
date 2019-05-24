@@ -20,8 +20,10 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.JSONSerializerManager;
+import alice.tuprolog.parser.ParsingException;
+import alice.tuprolog.parser.PrologExpressionVisitor;
+import alice.tuprolog.parser.PrologParserFactory;
 
-import javax.lang.model.type.ArrayType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -146,7 +148,7 @@ public class Theory implements Serializable {
     }
 
     private List<Term> slitPrologList() {
-        final List clauses = new LinkedList<>();
+        final List<Term> clauses = new LinkedList<>();
         for (Iterator<? extends Term> i = clauseList.listIterator(); i.hasNext();) {
             final Term it = i.next();
             if (!(it instanceof Struct)) {
@@ -158,15 +160,24 @@ public class Theory implements Serializable {
     }
 
     private List<Term> parseText() {
-        throw new IllegalStateException("parsing not implemented");
+        try {
+            return PrologParserFactory.getInstance()
+                    .parseClausesWithStandardOperators(theory)
+                    .map(PrologExpressionVisitor.asFunction())
+                    .collect(Collectors.toList());
+        } catch (ParsingException e) {
+            throw e.toInvalidTermException();
+        }
     }
 
     public List<Term> getClauses() {
         if (clauses == null) {
             if (clauseList != null) {
                 clauses = slitPrologList();
-            } else {
+            } else if (theory != null) {
                 clauses = parseText();
+            } else {
+                throw new IllegalStateException();
             }
         }
 
