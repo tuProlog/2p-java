@@ -21,6 +21,9 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
+import alice.tuprolog.parser.ParsingException;
+import alice.tuprolog.parser.PrologExpressionVisitor;
+import alice.tuprolog.parser.PrologParserFactory;
 import alice.util.OneWayList;
 
 import java.io.Serializable;
@@ -54,7 +57,13 @@ public abstract class Term implements Serializable {
      * @throws InvalidTermException if the string does not represent a valid term
      */
     public static Term createTerm(String st) {
-        throw new IllegalStateException("not implemented");
+        try {
+            return PrologParserFactory.getInstance()
+                    .parseExpressionWithStandardOperators(st)
+                    .accept(PrologExpressionVisitor.getInstance());
+        } catch (ParsingException e) {
+            throw e.toInvalidTermException();
+        }
     }
 
     /**
@@ -75,7 +84,13 @@ public abstract class Term implements Serializable {
      * @throws InvalidTermException if the string does not represent a valid term
      */
     public static Term createTerm(String st, OperatorManager op) {
-        throw new IllegalStateException("not implemented");
+        try {
+            return PrologParserFactory.getInstance()
+                    .parseExpression(st, op)
+                    .accept(PrologExpressionVisitor.getInstance());
+        } catch (ParsingException e) {
+            throw e.toInvalidTermException();
+        }
     }
 
     /**
@@ -187,17 +202,6 @@ public abstract class Term implements Serializable {
      */
     public boolean isEqual(Term t) { //Alberto
         return this.toString().equals(t.toString());
-    }
-
-    /**
-     * Tests if this term (as java object) is equal to another
-     */
-    public boolean isEqualObject(Term t) { //Alberto
-        if (!(t instanceof Term)) {
-            return false;
-        } else {
-            return this == t;
-        }
     }
 
     /**

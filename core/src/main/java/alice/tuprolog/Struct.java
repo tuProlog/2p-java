@@ -21,6 +21,7 @@ import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 //import java.util.ArrayList;
 
@@ -139,30 +140,19 @@ public class Struct extends Term {
         resolved = true;
     }
 
-    /**
-     * Builds a list providing head and tail
-     */
-    public Struct(Term h, Term t) {
-        this(".", 2);
-        arg[0] = h;
-        arg[1] = t;
-    }
+    private static final Pattern ATOM_REGEX = Pattern.compile("^[a-z][a-zA-Z0-9_]*$");
 
     public Struct(Collection<? extends Term> terms) {
         this(terms.iterator());
     }
 
-    public Struct(Iterator<? extends Term> i) {
+    /**
+     * Builds a list providing head and tail
+     */
+    public Struct(Term h, Term t) {
         this(".", 2);
-        if (i.hasNext()) {
-            arg[0] = i.next();
-            arg[1] = new Struct(i);
-        } else {
-            // build an empty list
-            name = "[]";
-            arity = 0;
-            arg = null;
-        }
+        arg[0] = Objects.requireNonNull(h);
+        arg[1] = Objects.requireNonNull(t);
     }
 
     /**
@@ -172,10 +162,23 @@ public class Struct extends Term {
         this(argList, 0);
     }
 
+    public Struct(Iterator<? extends Term> i) {
+        this(".", 2);
+        if (i.hasNext()) {
+            arg[0] = Objects.requireNonNull(i.next());
+            arg[1] = new Struct(i);
+        } else {
+            // build an empty list
+            name = "[]";
+            arity = 0;
+            arg = null;
+        }
+    }
+
     private Struct(Term[] argList, int index) {
         this(".", 2);
         if (index < argList.length) {
-            arg[0] = argList[index];
+            arg[0] = Objects.requireNonNull(argList[index]);
             arg[1] = new Struct(argList, index + 1);
         } else {
             // build an empty list
@@ -194,32 +197,16 @@ public class Struct extends Term {
         if (arity > 0) {
             arg = new Term[arity];
             for (int c = 0; c < arity; c++) {
-                arg[c] = al.removeFirst();
+                arg[c] = Objects.requireNonNull(al.removeFirst());
             }
         }
         predicateIndicator = name + "/" + arity;
         resolved = false;
     }
 
-    private Struct(int arity_) {
-        arity = arity_;
-        arg = new Term[arity];
-    }
-
-    private Struct(String name_, int arity_) {
-        if (name_ == null) {
-            throw new InvalidTermException("The functor of a Struct cannot be null");
-        }
-        if (name_.length() == 0 && arity_ > 0) {
-            throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string");
-        }
-        name = name_;
-        arity = arity_;
-        if (arity > 0) {
-            arg = new Term[arity];
-        }
-        predicateIndicator = name + "/" + arity;
-        resolved = false;
+    private Struct(int arity) {
+        this.arity = arity;
+        arg = new Term[this.arity];
     }
 
     /**
@@ -710,8 +697,24 @@ public class Struct extends Term {
         primitive = b;
     }
 
+    private Struct(String name, int arity) {
+        if (name == null) {
+            throw new InvalidTermException("The functor of a Struct cannot be null");
+        }
+        if (name.length() == 0 && arity > 0) {
+            throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string");
+        }
+        this.name = name;
+        this.arity = arity;
+        if (this.arity > 0) {
+            arg = new Term[this.arity];
+        }
+        predicateIndicator = this.name + "/" + this.arity;
+        resolved = false;
+    }
+
     public boolean isFunctorAtomic() {
-        throw new IllegalStateException("not implemented");
+        return ATOM_REGEX.matcher(getName()).matches();
     }
 
 

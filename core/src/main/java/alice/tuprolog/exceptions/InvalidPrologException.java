@@ -24,42 +24,31 @@ package alice.tuprolog.exceptions;
 public class InvalidPrologException extends PrologRuntimeException {
 
     @Deprecated
-    public final int line;
+    public int line = -1;
 
     @Deprecated
-    public final int pos;
+    public int pos = -1;
+
+    private String offendingSymbol;
+    private String input;
+
+    public InvalidPrologException() {
+    }
 
     public InvalidPrologException(String message) {
-        this(message, -1, -1);
-    }
-
-    public InvalidPrologException(String message, int line, int pos) {
         super(message);
-        this.line = line;
-        this.pos = pos;
     }
 
-    public InvalidPrologException(final String message, final Throwable cause, final int line, final int pos) {
+    public InvalidPrologException(String message, Throwable cause) {
         super(message, cause);
-        this.line = line;
-        this.pos = pos;
     }
 
-    public InvalidPrologException(final Throwable cause, final int line, final int pos) {
+    public InvalidPrologException(Throwable cause) {
         super(cause);
-        this.line = line;
-        this.pos = pos;
     }
 
-    public InvalidPrologException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace, final int line, final int pos) {
+    public InvalidPrologException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.line = line;
-        this.pos = pos;
-    }
-
-    public InvalidPrologException(final int line, final int pos) {
-        this.line = line;
-        this.pos = pos;
     }
 
     public String getInput() {
@@ -76,5 +65,25 @@ public class InvalidPrologException extends PrologRuntimeException {
 
     public int getPositionInLine() {
         return pos;
+    }
+
+    public InvalidPrologException setLine(int line) {
+        this.line = line;
+        return this;
+    }
+
+    public InvalidPrologException setPositionInLine(int pos) {
+        this.pos = pos;
+        return this;
+    }
+
+    public InvalidPrologException setOffendingSymbol(String offendingSymbol) {
+        this.offendingSymbol = offendingSymbol;
+        return this;
+    }
+
+    public InvalidPrologException setInput(String input) {
+        this.input = input;
+        return this;
     }
 }

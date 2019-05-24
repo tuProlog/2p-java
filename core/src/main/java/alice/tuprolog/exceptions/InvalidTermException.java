@@ -22,11 +22,42 @@ package alice.tuprolog.exceptions;
  * containing an invalid Prolog term.
  */
 public class InvalidTermException extends InvalidPrologException {
-    public InvalidTermException(final String message) {
+    public InvalidTermException() {
+    }
+
+    public InvalidTermException(String message) {
         super(message);
     }
 
-    public InvalidTermException(final String message, final int line, final int pos) {
-        super(message, line, pos);
+    public InvalidTermException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvalidTermException(Throwable cause) {
+        super(cause);
+    }
+
+    public InvalidTermException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    @Override
+    public InvalidTermException setLine(int line) {
+        return (InvalidTermException) super.setLine(line);
+    }
+
+    @Override
+    public InvalidTermException setPositionInLine(int pos) {
+        return (InvalidTermException) super.setPositionInLine(pos);
+    }
+
+    @Override
+    public InvalidTermException setOffendingSymbol(String offendingSymbol) {
+        return (InvalidTermException) super.setOffendingSymbol(offendingSymbol);
+    }
+
+    @Override
+    public InvalidTermException setInput(String input) {
+        return (InvalidTermException) super.setInput(input);
     }
 }

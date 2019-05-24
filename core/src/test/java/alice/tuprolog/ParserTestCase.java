@@ -62,7 +62,7 @@ public class ParserTestCase extends TestCase {
     }
 
     public void testUnivOperator() throws InvalidTermException {
-        Term t = Term.createTerm("p =.. q.");
+        Term t = Term.createTerm("p =.. q");
         Struct result = new Struct("=..", new Struct("p"), new Struct("q"));
         assertEquals(result, t);
     }

@@ -1,5 +1,7 @@
 package alice.tuprolog.parser;
 
+import alice.tuprolog.exceptions.InvalidTermException;
+import alice.tuprolog.exceptions.InvalidTheoryException;
 import org.antlr.v4.runtime.Token;
 
 public class ParsingException extends RuntimeException {
@@ -29,7 +31,7 @@ public class ParsingException extends RuntimeException {
     }
 
     public ParsingException(Token token, Throwable throwable) {
-        this(null, token.getText(), token.getLine(), token.getCharPositionInLine(), null, throwable);
+        this(null, token.getText(), token.getLine(), token.getCharPositionInLine(), "", throwable);
     }
 
     public Object getInput() {
@@ -72,5 +74,22 @@ public class ParsingException extends RuntimeException {
                ", column=" + column +
                ", offendingSymbol='" + offendingSymbol + '\'' +
                '}';
+    }
+
+    public InvalidTermException toInvalidTermException() {
+        return new InvalidTermException(getMessage(), this)
+                .setOffendingSymbol(getOffendingSymbol())
+                .setInput(getInput() != null ? getInput().toString() : null)
+                .setLine(getLine())
+                .setPositionInLine(getColumn());
+    }
+
+    public InvalidTheoryException toInvalidTheoryException(int clause) {
+        return new InvalidTheoryException(getMessage(), this)
+                .setOffendingSymbol(getOffendingSymbol())
+                .setInput(getInput().toString())
+                .setLine(getLine())
+                .setPositionInLine(getColumn())
+                .setClause(clause);
     }
 }

@@ -17,24 +17,25 @@ import java.util.stream.Stream;
 
 import static alice.tuprolog.parser.dynamic.Associativity.*;
 
-public class TermVisitor extends PrologParserBaseVisitor<Term> {
+public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
 
     private static final Pattern BIN_PREFIX = Pattern.compile("(0b)|(0B)");
     private static final Pattern HEX_PREFIX = Pattern.compile("(0b)|(0B)");
     private static final Pattern OCT_PREFIX = Pattern.compile("(0b)|(0B)");
     private static final Pattern CHAR_PREFIX = Pattern.compile("0'");
 
-    private static final TermVisitor INSTANCE = new TermVisitor();
+    private static final PrologExpressionVisitor INSTANCE = new PrologExpressionVisitor();
 
-    public static TermVisitor getInstance() {
+    private PrologExpressionVisitor() {
+    }
+
+    public static PrologExpressionVisitor getInstance() {
         return INSTANCE;
     }
 
     public static <T extends ParserRuleContext> Function<T, Term> asFunction() {
-        return it -> it.accept(TermVisitor.getInstance());
+        return it -> it.accept(PrologExpressionVisitor.getInstance());
     }
-
-    private TermVisitor() {}
 
     @Override
     public Term visitClause(ClauseContext ctx) {
@@ -124,7 +125,7 @@ public class TermVisitor extends PrologParserBaseVisitor<Term> {
                     result = infixRight(operands, operators);
                     break;
                 case YFX:
-                    result = infixRight(operands, operators);
+                    result = infixLeft(operands, operators);
                     break;
                 case XFX:
                     result = infixNonAssociative(operands, operators);
@@ -200,15 +201,16 @@ public class TermVisitor extends PrologParserBaseVisitor<Term> {
         return result;
     }
 
+    private Stream<Term> streamOfOperands(PrologParser.ExpressionContext ctx) {
+        return Stream.<RuleContext>concat(Stream.of(ctx.left), ctx.right.stream()).map(it -> it.accept(this));
+    }
+
+    private Stream<String> streamOfOperators(PrologParser.ExpressionContext ctx) {
+        return ctx.operators.stream().map(op -> op.symbol.getText());
+    }
 
     private Term visitInfixLeftAssociativeExpression(PrologParser.ExpressionContext ctx) {
-        final Stream<Term> operands = Stream.<RuleContext>concat(Stream.of(ctx.left), ctx.right.stream())
-                .map(it -> it.accept(this));
-
-        final Stream<String> operators = ctx.operators.stream()
-                .map(op -> op.symbol.getText());
-
-        return infixLeft(operands, operators);
+        return infixLeft(streamOfOperands(ctx), streamOfOperators(ctx));
     }
 
     private Term infixLeft(Stream<Term> terms, Stream<String> ops) {
@@ -225,13 +227,7 @@ public class TermVisitor extends PrologParserBaseVisitor<Term> {
     }
 
     private Term visitInfixRightAssociativeExpression(PrologParser.ExpressionContext ctx) {
-        final Stream<Term> operands = Stream.<RuleContext>concat(Stream.of(ctx.left), ctx.right.stream())
-                .map(it -> it.accept(this));
-
-        final Stream<String> operators = ctx.operators.stream()
-                .map(op -> op.symbol.getText());
-
-        return infixRight(operands, operators);
+        return infixRight(streamOfOperands(ctx), streamOfOperators(ctx));
     }
 
     private Term infixRight(Stream<Term> terms, Stream<String> ops) {
@@ -263,9 +259,10 @@ public class TermVisitor extends PrologParserBaseVisitor<Term> {
             clean = HEX_PREFIX.matcher(str).replaceAll("");
         } else if (ctx.isChar) {
             clean = CHAR_PREFIX.matcher(str).replaceAll("");
-            return Integer.valueOf(clean.charAt(0));
+            return (int) clean.charAt(0);
         } else {
-            throw new IllegalStateException();
+            base = 10;
+            clean = str;
         }
 
         try {
@@ -315,7 +312,17 @@ public class TermVisitor extends PrologParserBaseVisitor<Term> {
         Stream<Term> terms = ctx.items.stream().map(this::visitExpression);
         if (ctx.hasTail) {
             terms = Stream.concat(terms, Stream.of(this.visitExpression(ctx.tail)));
+        } else {
+            return new Struct(terms.toArray(Term[]::new));
         }
-        return new Struct(terms.toArray(Term[]::new));
+        final List<Term> termsList = terms.collect(Collectors.toList());
+        int i = termsList.size() - 1;
+        Term result = new Struct(termsList.get(i - 1), termsList.get(i));
+        for (i -= 2; i >= 0; i--) {
+            result = new Struct(termsList.get(i), result);
+        }
+        return result;
     }
+
+
 }
