@@ -687,8 +687,7 @@ public class Prolog implements IProlog, Serializable {
 
     public SolveInfo solve(String st) throws MalformedGoalException {
         try {
-            Parser p = new Parser(opManager, st);
-            Term t = p.nextTerm(true);
+            Term t = Term.createTerm(st, opManager);
             return solve(t);
         } catch (InvalidTermException ex) {
             System.out.println(ex.toString());
@@ -699,8 +698,7 @@ public class Prolog implements IProlog, Serializable {
     //Alberto
     public SolveInfo solve(String st, long maxTime) throws MalformedGoalException {
         try {
-            Parser p = new Parser(opManager, st);
-            Term t = p.nextTerm(true);
+            Term t = Term.createTerm(st, opManager);
             return solve(t, maxTime);
         } catch (InvalidTermException ex) {
             System.out.println(ex.toString());
@@ -820,7 +818,7 @@ public class Prolog implements IProlog, Serializable {
      */
 
     public Term toTerm(String st) throws InvalidTermException {    //no syn
-        return Parser.parseSingleTerm(st, opManager);
+        return Term.createTerm(st, opManager);
     }
 
     /**
@@ -1338,8 +1336,7 @@ public class Prolog implements IProlog, Serializable {
 
     public Term termSolve(String st) {
         try {
-            Parser p = new Parser(opManager, st);
-            Term t = p.nextTerm(true);
+            Term t = Term.createTerm(st, opManager);
             return t;
         } catch (InvalidTermException e) {
             String s = "null";

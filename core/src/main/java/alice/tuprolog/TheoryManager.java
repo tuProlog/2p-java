@@ -415,27 +415,21 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         consult(th, dynamicTheory, libName);
     }
 
-    //Alberto
     @Override
     public synchronized void assertA(String clause, boolean dyn, String libName, boolean backtrackable) {
-        Parser parser = new Parser(engine.getOperatorManager(), clause);
-        Struct s = (Struct) parser.nextTerm(true);
+        Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         assertA(s, dyn, libName, backtrackable);
     }
 
-    //Alberto
     @Override
     public synchronized void assertZ(String clause, boolean dyn, String libName, boolean backtrackable) {
-        Parser parser = new Parser(engine.getOperatorManager(), clause);
-        Struct s = (Struct) parser.nextTerm(true);
+        Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         assertZ(s, dyn, libName, backtrackable);
     }
 
-    //Alberto
     @Override
     public synchronized void retract(String clause) {
-        Parser parser = new Parser(engine.getOperatorManager(), clause);
-        Struct s = (Struct) parser.nextTerm(true);
+        Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         retract(s);
     }
 

@@ -54,12 +54,13 @@ public abstract class Term implements Serializable {
      * @throws InvalidTermException if the string does not represent a valid term
      */
     public static Term createTerm(String st) {
-        return Parser.parseSingleTerm(st);
+        throw new IllegalStateException("not implemented");
     }
 
     /**
      * @deprecated Use {@link Term#createTerm(String)} instead.
      */
+    @Deprecated
     public static Term parse(String st) {
         return Term.createTerm(st);
     }
@@ -74,12 +75,13 @@ public abstract class Term implements Serializable {
      * @throws InvalidTermException if the string does not represent a valid term
      */
     public static Term createTerm(String st, OperatorManager op) {
-        return Parser.parseSingleTerm(st, op);
+        throw new IllegalStateException("not implemented");
     }
 
     /**
      * @deprecated Use {@link Term#createTerm(String, OperatorManager)} instead.
      */
+    @Deprecated
     public static Term parse(String st, OperatorManager op) {
         return Term.createTerm(st, op);
     }
@@ -88,8 +90,8 @@ public abstract class Term implements Serializable {
      * Gets an iterator providing
      * a term stream from a source text
      */
-    public static java.util.Iterator<Term> getIterator(String text) {
-        return new Parser(text).iterator();
+    public static Iterator<Term> getIterator(String text) {
+        throw new IllegalStateException("not implemented");
     }
 
     //Alberto

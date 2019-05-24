@@ -35,8 +35,16 @@ public class OperatorManager implements Serializable {
         return new OperatorManager();
     }
 
-    public static OperatorManager defaultOperators() {
+    public static OperatorManager standardOperators() {
         return new DefaultOperatorManager();
+    }
+
+    public static OperatorManager with(Operator op, Operator ops) {
+        return new OperatorManager().add(op).addAll(ops);
+    }
+
+    public static OperatorManager standardOperatorsPlus(Operator op, Operator... ops) {
+        return standardOperators().add(op).addAll(ops);
     }
 
     private final SortedSet<Operator> operators;

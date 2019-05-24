@@ -171,8 +171,7 @@ class FlagManager implements FlagManagerMXBean {
     //Alberto
     @Override
     public synchronized boolean configurePrologFlag(String name, String term) {
-        Parser parser = new Parser(mediator.getOperatorManager(), term);
-        Term t = parser.nextTerm(true);
+        Term t = Term.createTerm(term, mediator.getOperatorManager());
         return setFlag(name, t);
     }
 
@@ -185,15 +184,14 @@ class FlagManager implements FlagManagerMXBean {
     //Alberto
     @Override
     public synchronized boolean validValue(String name, String term) {
-        Parser parser = new Parser(mediator.getOperatorManager(), term);
-        Term t = parser.nextTerm(true);
+        Term t = Term.createTerm(term, mediator.getOperatorManager());
         return isValidValue(name, t);
     }
 
     //Alberto
     @Override
     public synchronized void reset() {
-        flags = new ArrayList<Flag>();
+        flags = new ArrayList<>();
         Struct s = new Struct();
         s.append(new Struct("on"));
         s.append(new Struct("off"));

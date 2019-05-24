@@ -21,10 +21,12 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.JSONSerializerManager;
 
+import javax.lang.model.type.ArrayType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Iterator;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents prolog theory which can be provided
@@ -37,16 +39,52 @@ import java.util.Iterator;
  */
 public class Theory implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static Theory empty() {
+        return new Theory();
+    }
+
+    public static Theory lazy(String source) {
+        return new Theory(source);
+    }
+
+    public static Theory parse(String source) {
+        Theory t = new Theory(source);
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory lazy(InputStream source) throws IOException {
+        return new Theory(source);
+    }
+
+    public static Theory parse(InputStream source) throws IOException {
+        Theory t = new Theory(source);
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory fromPrologList(Struct clauses) {
+        return new Theory(clauses);
+    }
+
+    public static Theory of(Term... terms) {
+        return new Theory(Arrays.asList(terms));
+    }
+
+    public static Theory of(Collection<? extends Term> terms) {
+        return new Theory(terms);
+    }
 
     private String theory;
     private Struct clauseList;
+    private List<Term> clauses;
 
     /**
      * Creates a theory getting its source text from an input stream
      *
      * @param is the input stream acting as source
      */
+    @Deprecated
     public Theory(InputStream is) throws IOException {
         byte[] info = new byte[is.available()];
         is.read(info);
@@ -57,30 +95,49 @@ public class Theory implements Serializable {
      * Creates a theory from its source text
      *
      * @param theory the source text
-     * @throws s InvalidTheoryException if theory is null
+     * @throws InvalidTheoryException if theory is null
      */
-    public Theory(String theory) throws InvalidTheoryException {
+    @Deprecated
+    public Theory(String theory) {
         if (theory == null) {
             throw new InvalidTheoryException();
         }
         this.theory = theory;
     }
 
+    @Deprecated
     Theory() {
-        this.theory = "";
+        this("", Collections.emptyList());
     }
 
     /**
      * Creates a theory from a clause list
      *
      * @param clauseList the source text
-     * @throws s InvalidTheoryException if clauseList is null or is not a prolog list
+     * @throws InvalidTheoryException if clauseList is null or is not a prolog list
      */
-    public Theory(Struct clauseList) throws InvalidTheoryException {
+    @Deprecated
+    public Theory(Struct clauseList) {
         if (clauseList == null || !clauseList.isList()) {
             throw new InvalidTheoryException();
         }
         this.clauseList = clauseList;
+    }
+
+    private Theory(Collection<? extends Term> clauses) {
+        if (clauses == null) {
+            throw new InvalidTheoryException();
+        }
+        this.clauses = clauses.stream().peek(it -> {
+            if (!(it instanceof Struct)) {
+                throw new InvalidTheoryException();
+            }
+        }).collect(Collectors.toList());
+    }
+
+    private Theory(String text, Collection<? extends Term> clauses) {
+        this(Objects.requireNonNull(clauses));
+        this.theory = Objects.requireNonNull(text);
     }
 
     //Alberto
@@ -88,43 +145,65 @@ public class Theory implements Serializable {
         return JSONSerializerManager.fromJSON(jsonString, Theory.class);
     }
 
-    public Iterator<? extends Term> iterator(Prolog engine) {
-        if (isTextual()) {
-            return new Parser(engine.getOperatorManager(), theory).iterator();
-        } else {
-            return clauseList.listIterator();
+    private List<Term> slitPrologList() {
+        final List clauses = new LinkedList<>();
+        for (Iterator<? extends Term> i = clauseList.listIterator(); i.hasNext();) {
+            final Term it = i.next();
+            if (!(it instanceof Struct)) {
+                throw new InvalidTheoryException();
+            }
+            clauses.add(it);
         }
+        return clauses;
+    }
+
+    private List<Term> parseText() {
+        throw new IllegalStateException("parsing not implemented");
+    }
+
+    public List<Term> getClauses() {
+        if (clauses == null) {
+            if (clauseList != null) {
+                clauses = slitPrologList();
+            } else {
+                clauses = parseText();
+            }
+        }
+
+        return clauses;
+    }
+
+    private void setClauses(List<Term> terms) {
+        this.clauses = terms;
+        this.clauseList = new Struct(clauses);
+    }
+
+    public String getText() {
+        if (theory == null) {
+            theory = clauses.stream().map(Term::toString).collect(Collectors.joining(".\n", "", ".\n"));
+        }
+
+        return theory;
+    }
+
+    private void setText(String text) {
+        this.theory = text;
+    }
+
+    public Iterator<? extends Term> iterator(Prolog engine) {
+        return getClauses().iterator();
     }
 
     /**
      * Adds (appends) a theory to this.
      *
-     * @param th is the theory to be appended
-     * @throws s InvalidTheoryException if the theory object are not compatibles (they are
+     * @param other is the theory to be appended
+     * @throws InvalidTheoryException if the theory object are not compatibles (they are
      *           compatibles when both have been built from texts or both from clause lists)
      */
-    public void append(Theory th) throws InvalidTheoryException {
-        if (th.isTextual() && isTextual()) {
-            theory += th.theory;
-        } else if (!th.isTextual() && !isTextual()) {
-            Struct otherClauseList = th.getClauseListRepresentation();
-            if (clauseList.isEmptyList()) {
-                clauseList = otherClauseList;
-            } else {
-                Struct p = clauseList, q;
-                while (!(q = (Struct) p.getArg(1)).isEmptyList()) {
-                    p = q;
-                }
-                p.setArg(1, otherClauseList);
-            }
-        } else if (!isTextual() && th.isTextual()) {
-            theory = theory + "\n" + th;
-            clauseList = null;
-        } else if (isTextual() && !th.isTextual()) {
-            theory += th.toString();
-        } else {
-            throw new InvalidTheoryException();
-        }
+    public void append(Theory other) {
+        setText(getText() + other.getText());
+        getClauses().addAll(other.getClauses());
     }
 
     /**
@@ -135,16 +214,41 @@ public class Theory implements Serializable {
         return theory != null;
     }
 
+    boolean isParsed() {
+        return clauses != null;
+    }
+
+
     Struct getClauseListRepresentation() {
+        if (clauseList == null) {
+            clauseList = new Struct(getClauses());
+        }
         return clauseList;
     }
 
     public String toString() {
-        return theory != null ? theory : clauseList.toString();
+        return getText();
     }
 
     //Alberto
     public String toJSON() {
         return JSONSerializerManager.toJSON(this);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Theory theory = (Theory) o;
+        return Objects.equals(getClauses(), theory.getClauses());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClauses());
     }
 }

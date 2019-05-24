@@ -20,10 +20,7 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 //import java.util.ArrayList;
 
@@ -149,6 +146,23 @@ public class Struct extends Term {
         this(".", 2);
         arg[0] = h;
         arg[1] = t;
+    }
+
+    public Struct(Collection<? extends Term> terms) {
+        this(terms.iterator());
+    }
+
+    public Struct(Iterator<? extends Term> i) {
+        this(".", 2);
+        if (i.hasNext()) {
+            arg[0] = i.next();
+            arg[1] = new Struct(i);
+        } else {
+            // build an empty list
+            name = "[]";
+            arity = 0;
+            arg = null;
+        }
     }
 
     /**
@@ -696,6 +710,11 @@ public class Struct extends Term {
         primitive = b;
     }
 
+    public boolean isFunctorAtomic() {
+        throw new IllegalStateException("not implemented");
+    }
+
+
     /**
      * Gets the string representation of this structure
      * <p>
@@ -713,7 +732,7 @@ public class Struct extends Term {
         } else if (name.equals("{}")) {
             return ("{" + toString0_bracket() + "}");
         } else {
-            String s = (Parser.isAtom(name) ? name : "'" + name + "'");
+            String s = (isFunctorAtomic() ? name : "'" + name + "'");
             if (arity > 0) {
                 s = s + "(";
                 for (int c = 1; c < arity; c++) {
@@ -876,7 +895,7 @@ public class Struct extends Term {
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
         }
-        v = (Parser.isAtom(name) ? name : "'" + name + "'");
+        v = (isFunctorAtomic()? name : "'" + name + "'");
         if (arity == 0) {
             return v;
         }
