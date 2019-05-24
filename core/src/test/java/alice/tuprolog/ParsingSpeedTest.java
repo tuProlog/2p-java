@@ -9,7 +9,7 @@ public class ParsingSpeedTest {
         long start = System.currentTimeMillis();
         OperatorManager om = new Prolog().getOperatorManager();
         for (int i = 0; i < repetitions; i++) {
-            Parser.parseSingleTerm("A ; B :- A =.. ['->', C, T], !, (C, !, T ; B)", om);
+            Term.createTerm("A ; B :- A =.. ['->', C, T], !, (C, !, T ; B)", om);
         }
         long time = System.currentTimeMillis() - start;
         System.out.println("Time parsing " + repetitions + " terms: " + time + " milliseconds.");

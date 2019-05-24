@@ -15,7 +15,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 public class TestPrologParser {
 
     private static PrologLexer lexerForString(String input) {
@@ -69,6 +68,26 @@ public class TestPrologParser {
 
     private static PrologParser createParser(String string) {
         return new PrologParser(tokenStreamFromLexer(lexerForString(string)));
+    }
+
+    public final static class AssertionOn<T> {
+        private final T object;
+
+        public AssertionOn(T object) {
+            this.object = object;
+        }
+
+        public <U> AssertionOn<U> andThenAssert(Function<T, U> getter, Consumer<U> asserter) {
+            final U property = getter.apply(object);
+            asserter.accept(property);
+            return new AssertionOn<>(property);
+        }
+
+        public <U> AssertionOn<U> andThenAssert(Function<T, U> getter, Predicate<U> asserter) {
+            final U property = getter.apply(object);
+            Assert.assertTrue(asserter.test(property));
+            return new AssertionOn<>(property);
+        }
     }
 
     public static <T, U> AssertionOn<U> assertionOn(T object, Function<T, U> getter, Consumer<U> asserter) {
@@ -138,7 +157,7 @@ public class TestPrologParser {
                          && n.arity == 0
                          && n.isString && !n.isList && !n.isTruth
                          && n.functor.getText().equals("a")
-                         && n.functor.getType() == PrologLexer.STRING
+                         && (n.functor.getType() == PrologLexer.DQ_STRING || n.functor.getType() == PrologLexer.SQ_STRING)
             );
         });
 
@@ -235,25 +254,5 @@ public class TestPrologParser {
                     i -> Integer.parseInt(i.value.getText()) == 1
             );
         });
-    }
-
-    public final static class AssertionOn<T> {
-        private final T object;
-
-        public AssertionOn(T object) {
-            this.object = object;
-        }
-
-        public <U> AssertionOn<U> andThenAssert(Function<T, U> getter, Consumer<U> asserter) {
-            final U property = getter.apply(object);
-            asserter.accept(property);
-            return new AssertionOn<>(property);
-        }
-
-        public <U> AssertionOn<U> andThenAssert(Function<T, U> getter, Predicate<U> asserter) {
-            final U property = getter.apply(object);
-            Assert.assertTrue(asserter.test(property));
-            return new AssertionOn<>(property);
-        }
     }
 }

@@ -21,7 +21,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
 
     @Override
     protected OperatorManager getOperatorManager() {
-        OperatorManager om = OperatorManager.defaultOperators();
+        OperatorManager om = OperatorManager.standardOperators();
         om.opNew("++", "yf", 100);
         om.opNew("--", "yf", 100);
         om.opNew("fails", "xf", 50);

@@ -17,37 +17,41 @@
  */
 package alice.tuprolog.exceptions;
 
-import alice.tuprolog.Theory;
-
 /**
- * This exceptions means that a not valid tuProlog theory has been specified
- *
- * @see Theory
+ * This exception means that a method has been passed an argument
+ * containing an invalid Prolog term.
  */
-public class InvalidTheoryException extends InvalidPrologException {
+public class InvalidPrologException extends PrologRuntimeException {
 
     @Deprecated
-    public final int clause;
+    public final int line;
 
-    public InvalidTheoryException() {
-        this(null, -1, -1, -1);
+    @Deprecated
+    public final int pos;
+
+    public InvalidPrologException(String message) {
+        this(message, -1, -1);
     }
 
-    public InvalidTheoryException(int line, int pos) {
-        this(null, -1, line, pos);
+    public InvalidPrologException(String message, int line, int pos) {
+        super(message);
+        this.line = line;
+        this.pos = pos;
     }
 
-    public InvalidTheoryException(String message) {
-        this(message, -1, -1, -1);
+    public String getInput() {
+        return null;
     }
 
-    public InvalidTheoryException(String message, int clause, int line, int pos) {
-        super(message, line, pos);
-        this.clause = clause;
+    public String getOffendingSymbol() {
+        return null;
     }
 
+    public int getLine() {
+        return line;
+    }
 
-    public int getClause() {
-        return clause;
+    public int getPositionInLine() {
+        return pos;
     }
 }
