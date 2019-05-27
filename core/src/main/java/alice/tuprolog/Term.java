@@ -60,7 +60,7 @@ public abstract class Term implements Serializable {
         try {
             return PrologParserFactory.getInstance()
                     .parseExpressionWithStandardOperators(st)
-                    .accept(PrologExpressionVisitor.getInstance());
+                    .accept(PrologExpressionVisitor.get());
         } catch (ParsingException e) {
             throw e.toInvalidTermException();
         }
@@ -87,7 +87,7 @@ public abstract class Term implements Serializable {
         try {
             return PrologParserFactory.getInstance()
                     .parseExpression(st, op)
-                    .accept(PrologExpressionVisitor.getInstance());
+                    .accept(PrologExpressionVisitor.get());
         } catch (ParsingException e) {
             throw e.toInvalidTermException();
         }

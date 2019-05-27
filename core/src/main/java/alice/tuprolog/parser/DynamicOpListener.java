@@ -38,7 +38,7 @@ class DynamicOpListener extends PrologParserBaseListener {
         final ExpressionContext expr = ctx.expression();
 
         if (expr.op != null && ":-".equals(expr.op.symbol.getText()) && Associativity.PREFIX.contains(expr.associativity)) {
-            final Struct directive = ctx.accept(PrologExpressionVisitor.getInstance()).castTo(Struct.class);
+            final Struct directive = ctx.accept(PrologExpressionVisitor.get()).castTo(Struct.class);
 
             if (directive.getArity() == 1 && directive.getArg(0).isStruct()) {
                 final Struct op = directive.getArg(0).castTo(Struct.class);

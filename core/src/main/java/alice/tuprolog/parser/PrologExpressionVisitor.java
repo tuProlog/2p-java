@@ -8,8 +8,10 @@ import alice.tuprolog.parser.PrologParser.*;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -26,15 +28,30 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
 
     private static final PrologExpressionVisitor INSTANCE = new PrologExpressionVisitor();
 
+    private Map<String, Var> variables = new HashMap<>();
+
     private PrologExpressionVisitor() {
     }
 
-    public static PrologExpressionVisitor getInstance() {
-        return INSTANCE;
+    protected Var getVarByName(String name) {
+        if ("_".equals(name)) {
+            return new Var();
+        } else {
+            Var variable = variables.get(name);
+            if (variable == null) {
+                variables.put(name, variable = new Var(name));
+            }
+            return variable;
+        }
+    }
+
+    public static PrologExpressionVisitor get() {
+//        return INSTANCE;
+        return new PrologExpressionVisitor();
     }
 
     public static <T extends ParserRuleContext> Function<T, Term> asFunction() {
-        return it -> it.accept(PrologExpressionVisitor.getInstance());
+        return it -> it.accept(PrologExpressionVisitor.get());
     }
 
     @Override
@@ -77,7 +94,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
 
     @Override
     public Term visitVariable(VariableContext ctx) {
-        return new Var(ctx.value.getText());
+        return getVarByName(ctx.value.getText());
     }
 
     @Override

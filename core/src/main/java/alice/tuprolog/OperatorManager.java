@@ -19,6 +19,7 @@
 package alice.tuprolog;
 
 import alice.tuprolog.parser.dynamic.Associativity;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.*;
@@ -47,13 +48,6 @@ public class OperatorManager implements Serializable {
         return standardOperators().add(op).addAll(ops);
     }
 
-    private final SortedSet<Operator> operators;
-
-    @Deprecated
-    public OperatorManager() {
-        this(Collections.emptyList());
-    }
-
     /**
      * lowest operator priority
      */
@@ -63,8 +57,23 @@ public class OperatorManager implements Serializable {
      */
     public static final int OP_HIGH = 1200;
 
+    private final Map<Pair<String, Associativity>, Operator> index;
+//    private final SortedSet<Operator> operators;
+
+    @Deprecated
+    public OperatorManager() {
+        this(Collections.emptyList());
+    }
+
     private OperatorManager(Collection<Operator> operators) {
-        this.operators = new TreeSet<>(operators);
+//        this.operators = new TreeSet<>();
+        this.index = new HashMap<>();
+        addAll(operators);
+    }
+
+    private OperatorManager(Map<Pair<String, Associativity>, Operator> operators) {
+//        this.operators = new TreeSet<>();
+        this.index = operators;
     }
 
     /**
@@ -100,7 +109,7 @@ public class OperatorManager implements Serializable {
     }
 
     public OperatorManager addAll(OperatorManager other) {
-        return addAll(Objects.requireNonNull(other).operators);
+        return addAll(Objects.requireNonNull(other).getOperators());
     }
 
     /**
@@ -111,7 +120,8 @@ public class OperatorManager implements Serializable {
         Objects.requireNonNull(operator);
 
         if (operator.getPriority() >= OP_LOW && operator.getPriority() <= OP_HIGH) {
-            operators.add(operator);
+//            operators.add(operator);
+            index.put(Pair.of(operator.getName(), operator.getAssociativity()), operator);
         } else {
             throw new IllegalArgumentException(
                     "Illegal priority for " + operator + " it must be in the range " + OP_LOW + ".." + OP_HIGH);
@@ -130,9 +140,8 @@ public class OperatorManager implements Serializable {
 
     public int getOperatorPriority(String name, Associativity type) {
         Objects.requireNonNull(name);
-        return operators.subSet(Operator.of(name, type, OP_HIGH), Operator.of(name, type, OP_LOW))
-                        .first()
-                        .getPriority();
+        Operator op = index.get(Pair.of(name, type));
+        return op == null ? 0 : op.getPriority();
     }
 
     public int getOperatorPriority(String name, String type) {
@@ -142,17 +151,17 @@ public class OperatorManager implements Serializable {
     /**
      * Returns the priority nearest (lower) to the priority of a defined operator
      */
-    @Deprecated
-    public int opNext(int prio) {
-        return getNearestPriority(prio);
-    }
+//    @Deprecated
+//    public int opNext(int prio) {
+//        return getNearestPriority(prio);
+//    }
 
-    public int getNearestPriority(int priority) {
-        return operators.subSet(
-                Operator.of("", Associativity.values(0), OP_HIGH + 1),
-                Operator.of("", Associativity.values(0), priority - 1)
-        ).last().getPriority();
-    }
+//    public int getNearestPriority(int priority) {
+//        return operators.subSet(
+//                Operator.of("", Associativity.values(0), OP_HIGH + 1),
+//                Operator.of("", Associativity.values(0), priority - 1)
+//        ).last().getPriority();
+//    }
 
     /**
      * Gets the list of the operators currently defined
@@ -160,21 +169,22 @@ public class OperatorManager implements Serializable {
      * @return the list of the operators
      */
     public List<Operator> getOperators() {
-        return new ArrayList<>(operators);
+        return new ArrayList<>(index.values());
     }
 
     public OperatorManager clone() {
-        return new OperatorManager(operators);
+        return new OperatorManager(new HashMap<>(index));
     }
 
     @Deprecated
     public void reset() {
-        operators.clear();
+//        operators.clear();
+        index.clear();
     }
 
 
     public OperatorManager clear() {
-        operators.clear();
+        reset();
         return this;
     }
 
