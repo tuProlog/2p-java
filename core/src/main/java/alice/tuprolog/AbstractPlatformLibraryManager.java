@@ -87,9 +87,9 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
 
             return lib;
         } catch (InvalidTheoryException ex) {
-            throw new InvalidLibraryException(lib.getName(), ex.line, ex.pos);
+            throw new InvalidLibraryException(lib.getName(), ex.getLine(), ex.getPositionInLine(), ex.getCause());
         } catch (Exception ex) {
-            throw new InvalidLibraryException(lib.getName(), -1, -1);
+            throw new InvalidLibraryException(lib.getName(), -1, -1, ex);
         }
     }
 

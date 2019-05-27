@@ -58,32 +58,32 @@ public abstract class DynamicLexer extends org.antlr.v4.runtime.Lexer {
         return string.substring(1, string.length() - 1);
     }
 
-    public char escapeChar(int repr) {
+    public String escapeChar(int repr) {
         switch (repr) {
             case 'a':
-                return '\u0007';
+                return "\u0007";
             case 'b':
-                return '\b';
+                return "\b";
             case 'f':
-                return '\f';
+                return "\f";
             case 'n':
-                return '\n';
+                return "\n";
             case 'r':
-                return '\r';
+                return "\r";
             case 't':
-                return '\t';
+                return "\t";
             case 'v':
-                return '\u000b';
+                return "\u000b";
             case '\\':
-                return '\\';
+                return "\\";
             case '"':
-                return '"';
+                return "\"";
             case '`':
-                return '`';
+                return "`";
             case '\'':
-                return '\'';
+                return "\'";
             default:
-                throw new IllegalArgumentException("Invalid escape char: " + repr);
+                return "\\" + ((char) repr);
         }
     }
 
@@ -129,8 +129,9 @@ public abstract class DynamicLexer extends org.antlr.v4.runtime.Lexer {
                 } else if (i < last - 1 && lookahead == '\r' && string.charAt(i + 2) == '\n') {
                     i += 2;
                 } else {
-                    sb.append(escapeChar(lookahead));
-                    i += 1;
+                    final String escaped = escapeChar(lookahead);
+                    sb.append(escaped);
+                    i += escaped.length();
                 }
             } else if ((stringType == StringType.DOUBLE_QUOTED && currentChar == '"' && lookahead == '"')
                         || (stringType == StringType.SINGLE_QUOTED && currentChar == '\'' && lookahead == '\'')) {
