@@ -255,14 +255,81 @@ public class ParserTestCase extends TestCase {
         }
     }
 
-    // TODO More tests on Parser
+    public void testSingleQuotedEscaping() {
+        String input = "'a''b'";
+        Struct result = new Struct("a'b");
+        Term t = Term.createTerm(input);
+        assertEquals(result, t);
 
-    // Character code for Integer representation
+        input = "'a\"\"b'";
+        result = new Struct("a\"\"b");
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+    }
 
-    // :-op(500, yfx, v). 3v2 NOT CORRECT, 3 v 2 CORRECT
-    // 3+2 CORRECT, 3 + 2 CORRECT
+    public void testDoubleQuotedEscaping() {
+        String input = "\"a\"\"b\"";
+        Struct result = new Struct("a\"b");
+        Term t = Term.createTerm(input);
+        assertEquals(result, t);
 
-    // +(2, 3) is now acceptable
-    // what about f(+)
+        input = "\"a''b\"";
+        result = new Struct("a''b");
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+    }
 
+    public void testMultilineSingleQuotedStrings() throws InvalidTermException {
+        String input = "'a \\\n b'";
+        Struct result = new Struct("a  b");
+        Term t = Term.createTerm(input);
+        assertEquals(result, t);
+
+        input = "'a \\\r\n b'";
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+    }
+
+    public void testEscapeHexChar() throws InvalidTermException {
+        char c = 'G';
+
+        String input = "'ab\\x" + Integer.toString(c, 16) + "\\c'";
+        Struct result = new Struct("ab" + c +"c");
+        Term t = Term.createTerm(input);
+        assertEquals(result, t);
+
+        input = "'ab\\X" + Integer.toString(c, 16) + "\\c'";
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+
+        input = "\"ab\\x" + Integer.toString(c, 16) + "\\c\"";
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+
+        input = "\"ab\\X" + Integer.toString(c, 16) + "\\c\"";
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+    }
+
+    public void testEscapeOctChar() throws InvalidTermException {
+        char c = 'G';
+
+        String input = "'ab\\" + Integer.toString(c, 8) + "\\c'";
+        Struct result = new Struct("ab" + c +"c");
+        Term t = Term.createTerm(input);
+        assertEquals(result, t);
+
+        input = "\"ab\\" + Integer.toString(c, 8) + "\\c\"";
+        t = Term.createTerm(input);
+        assertEquals(result, t);
+
+    }
+
+    public void testStringEscaping() throws InvalidTermException {
+        String input = "'\\a\\b\\f\\n\\r\\t\\v\\\\'\\\"\\`'";
+        Struct result = new Struct("\u0007\b\f\n\r\t\u000b\\'\"`");
+        Term t = Term.createTerm(input);
+        assertEquals(result, t);
+
+    }
 }

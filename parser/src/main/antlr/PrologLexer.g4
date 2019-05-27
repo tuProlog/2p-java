@@ -9,6 +9,7 @@ package alice.tuprolog.parser;
 import java.util.*;
 import alice.tuprolog.parser.dynamic.*;
 import static alice.tuprolog.parser.dynamic.Associativity.*;
+import static alice.tuprolog.parser.dynamic.StringType.*;
 }
 
 tokens { VARIABLE }
@@ -87,11 +88,11 @@ VARIABLE
     ;
 
 SQ_STRING
-    : '\'' String '\'' { setText(substring(getText(), 1, -1)); }
+    : '\'' ((~[\n']) | Escapable | DoubleSQ)* '\'' { setText(escape(unquote(getText()), SINGLE_QUOTED)); }
     ;
 
 DQ_STRING
-    : '"' String '"' { setText(substring(getText(), 1, -1)); }
+    : '"' ((~[\n"]) | Escapable | DoubleDQ)* '"' { setText(escape(unquote(getText()), DOUBLE_QUOTED)); }
     ;
 
 COMMA
@@ -134,13 +135,27 @@ ATOM
     : (Symbols | Atom) { !isOperator(getText()) }?
     ;
 
-fragment String
-    : .*?
-    ;
-
 fragment Symbols
     : NotReserved (Symbol* NotReserved)?
     | '!' '!'+
+    ;
+
+fragment Escapable
+    : '\\'
+        ( [abfnrtv'`"]
+        | '\\'
+        | ('\r'? '\n')
+        | (OctDigit+ '\\')
+        | (HexDigit+ '\\')
+        )
+    ;
+
+fragment DoubleSQ
+    : '\'\''
+    ;
+
+fragment DoubleDQ
+    : '""'
     ;
 
 fragment NotReserved
