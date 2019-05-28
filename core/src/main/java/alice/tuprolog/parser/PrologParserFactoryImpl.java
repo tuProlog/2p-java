@@ -8,6 +8,7 @@ import alice.tuprolog.parser.PrologParser.OptClauseContext;
 import alice.tuprolog.parser.PrologParser.SingletonExpressionContext;
 import alice.tuprolog.parser.PrologParser.SingletonTermContext;
 import alice.util.ExceptionalFunction;
+import com.codepoetics.protonpack.StreamUtils;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 class PrologParserFactoryImpl implements PrologParserFactory {
@@ -176,14 +178,14 @@ class PrologParserFactoryImpl implements PrologParserFactory {
         }
     }
 
-    private Stream<ClauseContext> parseClauses(PrologParser parser, Object input) {
+    private OptClauseContext parseClause(PrologParser parser, Object input) {
         int mark = -1, index = -1;
 
         try {
             mark = parser.getTokenStream().mark();
             index = Math.max(parser.getTokenStream().index(), 0);
 
-            return parseClauses(parser.optClause(), parser, input);
+            return parser.optClause();
 
         } catch (ParseCancellationException ex) {
             if (parser.getInterpreter().getPredictionMode() == PredictionMode.SLL) {
@@ -192,7 +194,7 @@ class PrologParserFactoryImpl implements PrologParserFactory {
                 parser.setErrorHandler(new DefaultErrorStrategy());
                 parser.addErrorListener(newErrorListener(input));
 
-                return parseClauses(parser.optClause(), parser, input);
+                return parser.optClause();
 
             } else if (ex.getCause() instanceof RecognitionException) {
                 throw (RecognitionException) ex.getCause();
@@ -204,13 +206,17 @@ class PrologParserFactoryImpl implements PrologParserFactory {
         }
     }
 
-    private Stream<ClauseContext> parseClauses(OptClauseContext result, PrologParser parser, Object input) {
-        if (result.isOver) {
-            return Stream.empty();
-        } else {
-            return Stream.of(result.clause())
-                         .flatMap(c -> Stream.concat(Stream.of(c), parseClauses(parser, input)));
-        }
+    private Stream<ClauseContext> parseClauses(PrologParser parser, Object source) {
+        Stream<OptClauseContext> optClauses = IntStream.iterate(0, i -> i + 1)
+                 .mapToObj(i -> {
+                     try {
+                         return parseClause(parser, source);
+                     } catch (ParsingException e) {
+                         throw e.toInvalidTheoryException(i);
+                     }
+                 });
+        return StreamUtils.takeUntil(optClauses, it -> it.isOver)
+                .map(OptClauseContext::clause);
     }
 
     @Override
