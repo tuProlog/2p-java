@@ -28,6 +28,7 @@ import alice.util.OneWayList;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Stream;
 
 //import java.util.ArrayList;
 
@@ -106,7 +107,17 @@ public abstract class Term implements Serializable {
      * a term stream from a source text
      */
     public static Iterator<Term> getIterator(String text) {
-        throw new IllegalStateException("not implemented");
+        return createTerms(text).iterator();
+    }
+
+    public static Stream<Term> createTerms(String text) {
+        try {
+            return PrologParserFactory.getInstance()
+                                      .parseClausesWithStandardOperators(text)
+                                      .map(PrologExpressionVisitor.asFunction());
+        } catch (ParsingException e) {
+            throw e.toInvalidTermException();
+        }
     }
 
     //Alberto

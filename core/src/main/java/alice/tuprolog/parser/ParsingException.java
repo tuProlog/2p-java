@@ -9,6 +9,7 @@ public class ParsingException extends RuntimeException {
     private int line;
     private int column;
     private String offendingSymbol;
+    private int clauseIndex = -1;
 
     public ParsingException(Object input, String offendingSymbol, int line, int column, String message, Throwable throwable) {
         super(message, throwable);
@@ -66,6 +67,14 @@ public class ParsingException extends RuntimeException {
         this.offendingSymbol = offendingSymbol;
     }
 
+    public int getClauseIndex() {
+        return clauseIndex;
+    }
+
+    public void setClauseIndex(final int clauseIndex) {
+        this.clauseIndex = clauseIndex;
+    }
+
     @Override
     public String toString() {
         return "ParsingException{" +
@@ -82,6 +91,10 @@ public class ParsingException extends RuntimeException {
                 .setInput(getInput() != null ? getInput().toString() : null)
                 .setLine(getLine())
                 .setPositionInLine(getColumn());
+    }
+
+    public InvalidTheoryException toInvalidTheoryException() {
+        return toInvalidTheoryException(getClauseIndex());
     }
 
     public InvalidTheoryException toInvalidTheoryException(int clause) {

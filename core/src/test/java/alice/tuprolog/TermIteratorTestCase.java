@@ -94,6 +94,7 @@ public class TermIteratorTestCase extends TestCase {
         assertEquals(secondTerm, i1.next());
         try {
             i1.hasNext();
+            i1.next();
             fail();
         } catch (InvalidTermException expected) {
         }

@@ -212,7 +212,8 @@ class PrologParserFactoryImpl implements PrologParserFactory {
                      try {
                          return parseClause(parser, source);
                      } catch (ParsingException e) {
-                         throw e.toInvalidTheoryException(i);
+                         e.setClauseIndex(i);
+                         throw e;
                      }
                  });
         return StreamUtils.takeUntil(optClauses, it -> it.isOver)

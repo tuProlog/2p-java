@@ -166,7 +166,7 @@ public class Theory implements Serializable {
                     .map(PrologExpressionVisitor.asFunction())
                     .collect(Collectors.toList());
         } catch (ParsingException e) {
-            throw e.toInvalidTermException();
+            throw e.toInvalidTheoryException();
         }
     }
 
