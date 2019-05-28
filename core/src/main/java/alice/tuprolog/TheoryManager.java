@@ -218,7 +218,7 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
                     assertZ(d, dynamicTheory, libName, true);
                 }
             }
-            engine.getOperatorManager().addAll(theory.getOperatorManager());
+            engine.setOperatorManager(engine.getOperatorManager().addAll(theory.getOperatorManager()));
         } catch (InvalidTermException e) {
             throw new InvalidTheoryException(e.getMessage(), e.getCause())
                     .setClause(clause)

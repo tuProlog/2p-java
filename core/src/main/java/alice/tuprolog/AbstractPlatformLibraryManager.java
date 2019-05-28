@@ -79,7 +79,7 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
 
             String th = lib.getTheory();
             if (th != null) {
-                theoryManager.consult(Theory.parseLazilyWithOperators(lib.getTheory(), prolog.getOperatorManager().clone()), false, name);
+                theoryManager.consult(Theory.parseLazilyWithOperators(lib.getTheory(), prolog.getOperatorManager()), false, name);
                 theoryManager.solveTheoryGoal();
             }
 

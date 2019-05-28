@@ -434,7 +434,12 @@ public class Prolog implements IProlog, Serializable {
      */
 
     public OperatorManager getOperatorManager() {
-        return opManager;
+        return opManager.clone();
+    }
+
+    Prolog setOperatorManager(OperatorManager opManager) {
+        this.opManager = opManager;
+        return this;
     }
 
     /**
@@ -486,7 +491,7 @@ public class Prolog implements IProlog, Serializable {
     public void addTheory(Theory th) throws InvalidTheoryException {    //no syn
         Theory oldTh = getTheory();
         theoryManager.consult(th, true, null);
-        opManager = th.getOperatorManager();
+        setOperatorManager(getOperatorManager().addAll(th.getOperatorManager()));
         theoryManager.solveTheoryGoal();
         Theory newTh = getTheory();
         TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);
@@ -501,7 +506,7 @@ public class Prolog implements IProlog, Serializable {
 
     public Theory getTheory() {    //no syn
         try {
-            return Theory.parseLazilyWithOperators(theoryManager.getTheory(true), getOperatorManager().clone());
+            return Theory.parseLazilyWithOperators(theoryManager.getTheory(true), getOperatorManager());
         } catch (Exception ex) {
             return null;
         }
@@ -518,7 +523,6 @@ public class Prolog implements IProlog, Serializable {
     public void setTheory(Theory th) throws InvalidTheoryException {   //no syn
         theoryManager.clear();
         addTheory(th);
-        opManager = th.getOperatorManager();
     }
 
     /**

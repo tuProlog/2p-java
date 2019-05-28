@@ -8,10 +8,8 @@ import junit.framework.TestCase;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 public class JavaLibraryTestCase extends TestCase {
@@ -33,7 +31,8 @@ public class JavaLibraryTestCase extends TestCase {
     public void testAnonymousObjectRegistration() throws InvalidTheoryException, InvalidObjectIdException {
         OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
         String theory = "demo(X) :- X <- update. \n";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         TestCounter counter = new TestCounter();
         // check registering behaviour
         Struct t = lib.register(counter);
@@ -52,7 +51,8 @@ public class JavaLibraryTestCase extends TestCase {
                         "java_object('alice.tuprolog.TestCounter', [], C), \n" +
                         "C <- update, \n" +
                         "C <- update. \n";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         SolveInfo info = engine.solve("demo(Obj).");
         Struct id = (Struct) info.getVarValue("Obj");
         TestCounter counter = (TestCounter) lib.getRegisteredDynamicObject(id);
@@ -69,7 +69,8 @@ public class JavaLibraryTestCase extends TestCase {
                  "Obj <- inc, \n" +
                  "Obj <- inc, \n" +
                  "Obj <- getValue returns C.";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         alice.tuprolog.Number result2 = (alice.tuprolog.Number) info.getVarValue("Value");
@@ -79,7 +80,8 @@ public class JavaLibraryTestCase extends TestCase {
         theory = "demo_string(S) :- \n" +
                  "java_object('java.lang.String', ['MyString'], Obj_str), \n" +
                  "Obj_str <- toString returns S.";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo_string(StringValue).");
         assertEquals(true, info.isSuccess());
         result = info.getVarValue("StringValue").toString().replace("'", "");
@@ -94,7 +96,8 @@ public class JavaLibraryTestCase extends TestCase {
                  + "java_object('Bicycle', [3, 4, 5], MyBicycle), \n"
                  + "java_object('MountainBike', [5, 6, 7, 8], MyMountainBike), \n"
                  + "MyMountainBike <- getGear returns Gear.";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo_hierarchy(Res).");
         assertEquals(false, info.isHalted());
         alice.tuprolog.Number result2 = (alice.tuprolog.Number) info.getVarValue("Res");
@@ -110,7 +113,8 @@ public class JavaLibraryTestCase extends TestCase {
                  "Obj_inc <- inc, \n" +
                  "Obj_inc <- inc, \n" +
                  "Obj_inc <- getValue returns Res.";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isHalted());
     }
@@ -120,7 +124,8 @@ public class JavaLibraryTestCase extends TestCase {
         setPath(true);
         theory = "demo(Value) :- set_classpath([" + paths +
                  "]), class('TestStaticClass') <- echo('Message') returns Value.";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(StringValue).");
         assertEquals(true, info.isSuccess());
         result = info.getVarValue("StringValue").toString().replace("'", "");
@@ -129,7 +134,8 @@ public class JavaLibraryTestCase extends TestCase {
         //Testing get/set static Field
         setPath(true);
         theory = "demo_2(Value) :- set_classpath([" + paths + "]), class('TestStaticClass').'id' <- get(Value).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo_2(Res).");
         assertEquals(true, info.isSuccess());
         assertEquals(0, Integer.parseInt(info.getVarValue("Res").toString()));
@@ -137,7 +143,8 @@ public class JavaLibraryTestCase extends TestCase {
         theory = "demo_2(Value, NewValue) :- set_classpath([" + paths +
                  "]), class('TestStaticClass').'id' <- set(Value), \n" +
                  "class('TestStaticClass').'id' <- get(NewValue).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo_2(5, Val).");
         assertEquals(true, info.isSuccess());
         assertEquals(5, Integer.parseInt(info.getVarValue("Val").toString()));
@@ -149,7 +156,8 @@ public class JavaLibraryTestCase extends TestCase {
         setPath(false);
         theory = "demo(Value) :- set_classpath([" + paths +
                  "]), class('TestStaticClass') <- echo('Message') returns Value.";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(StringValue).");
         assertEquals(true, info.isHalted());
     }
@@ -161,7 +169,8 @@ public class JavaLibraryTestCase extends TestCase {
                  + "java_object('Counter[]', [10], ArrayCounters), \n"
                  + "java_array_length(ArrayCounters, Size).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         alice.tuprolog.Number resultInt = (alice.tuprolog.Number) info.getVarValue("Value");
@@ -176,7 +185,7 @@ public class JavaLibraryTestCase extends TestCase {
                  + "java_array_get(ArrayCounters, 0, C), \n"
                  + "C <- getValue returns Res.";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         alice.tuprolog.Number resultInt2 = (alice.tuprolog.Number) info.getVarValue("Value");
@@ -192,7 +201,8 @@ public class JavaLibraryTestCase extends TestCase {
                  + "java_object('Counter[]', [10], ArrayCounters), \n"
                  + "java_array_length(ArrayCounters, Size).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         alice.tuprolog.Number resultInt = (alice.tuprolog.Number) info.getVarValue("Value");
@@ -202,7 +212,8 @@ public class JavaLibraryTestCase extends TestCase {
     public void test_get_classpath() throws PrologException, IOException {
         //Testing get_classpath using DynamicURLClassLoader with not URLs added
         theory = "demo(P) :- get_classpath(P).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         assertEquals(true, info.getTerm("Value").isList());
@@ -213,7 +224,8 @@ public class JavaLibraryTestCase extends TestCase {
 
         theory = "demo(P) :- set_classpath([" + paths + "]), get_classpath(P).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Value).");
         assertEquals(true, info.isSuccess());
         assertEquals(true, info.getTerm("Value").isList());
@@ -225,16 +237,18 @@ public class JavaLibraryTestCase extends TestCase {
         assertEquals(pathArray.length, valueStruct.listSize());
         int j = 0;
         for (Iterator<? extends Term> i = valueStruct.listIterator(); i.hasNext(); j++) {
+            final Term t = i.next();
             assertEquals(
-                    new File(pathArray[j].replace("'", "")),
-                    new File(i.next().toString().replace("'", ""))
+                    new File(pathArray[j].replace("'", "").replace("\\\\", "\\")),
+                    new File(t.toString().replace("'", ""))
             );
         }
 
 //		// Test if get_classpath(PathList) unifies with the DynamicURLClassLoader urls
 //		theory =  "demo(P) :- set_classpath([" + paths + "]), get_classpath([" + paths + "]).";
 //		
-//		engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+//		engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
 //		info = engine.solve("demo(S).");
 //		assertEquals(true, info.isSuccess());
     }
@@ -247,14 +261,15 @@ public class JavaLibraryTestCase extends TestCase {
                  "Obj <- inc, \n" +
                  "Obj <- inc, \n" +
                  "register(Obj).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(R).");
         assertEquals(true, info.isSuccess());
 
         theory = "demo2(Obj, Val) :- \n"
                  + "Obj <- inc, \n"
                  + "Obj <- getValue returns Val.";
-        engine.addTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.addTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
         String obj = info.getTerm("R").toString();
         SolveInfo info2 = engine.solve("demo2(" + obj + ", V).");
         assertEquals(true, info2.isSuccess());
@@ -262,7 +277,8 @@ public class JavaLibraryTestCase extends TestCase {
 
         // Test invalid object_id registration
         theory = "demo(Obj1) :- register(Obj1).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Res).");
         assertEquals(true, info.isHalted());
     }
@@ -271,7 +287,8 @@ public class JavaLibraryTestCase extends TestCase {
     public void test_unregister_1() throws PrologException, IOException {
         // Test invalid object_id unregistration
         theory = "demo(Obj1) :- unregister(Obj1).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Res).");
         assertEquals(true, info.isHalted());
 
@@ -282,7 +299,8 @@ public class JavaLibraryTestCase extends TestCase {
                  "Obj <- inc, \n" +
                  "Obj <- inc, \n" +
                  "register(Obj), unregister(Obj).";
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(Res).");
         assertEquals(true, info.isSuccess());
         OOLibrary lib = (OOLibrary) engine.getLibrary("alice.tuprolog.lib.OOLibrary");
@@ -299,7 +317,8 @@ public class JavaLibraryTestCase extends TestCase {
                  + "Cause, Msg, StackTrace),write(Msg))], \n"
                  + "true).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("demo(S).");
         assertEquals(true, info.isSuccess());
     }
@@ -309,21 +328,24 @@ public class JavaLibraryTestCase extends TestCase {
         theory = "goal1 :- set_classpath([" + paths + "])," +
                  "java_object('Pippo', [], Obj), class('Pluto') <- method(Obj).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("goal1.");
         assertEquals(true, info.isSuccess());
 
         theory = "goal2 :- set_classpath([" + paths + "])," +
                  "java_object('Pippo', [], Obj), class('Pluto') <- method2(Obj).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("goal2.");
         assertEquals(true, info.isSuccess());
 
         theory = "goal3 :- java_object('Pippo', [], Obj), set_classpath([" + paths +
                  "]), class('Pluto') <- method(Obj).";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("goal3.");
         assertEquals(true, info.isSuccess());
 
@@ -334,7 +356,8 @@ public class JavaLibraryTestCase extends TestCase {
                  "java_array_get(Array, 0, Obj2)," +
                  "Obj2 <- met.";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("goal4.");
         assertEquals(true, info.isSuccess());
 
@@ -342,7 +365,8 @@ public class JavaLibraryTestCase extends TestCase {
                  "java_object('Pippo', [], Obj)," +
                  "class('Pluto') <- method(Obj as 'IPippo').";
 
-        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
+        engine.setTheory(Theory.parseLazilyWithOperators(theory, engine.getOperatorManager()));
+
         info = engine.solve("goal5.");
         assertEquals(true, info.isSuccess());
 
@@ -364,5 +388,7 @@ public class JavaLibraryTestCase extends TestCase {
         else {
             paths = "'" + file.getCanonicalPath() + "'";
         }
+
+        paths = paths.replace("\\", "\\\\");
     }
 }

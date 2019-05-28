@@ -3,7 +3,6 @@ package alice.tuprolog.parser.dynamic;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
@@ -110,9 +109,13 @@ public abstract class DynamicLexer extends org.antlr.v4.runtime.Lexer {
                     final int nextSlashPos = string.indexOf('\\', i + 2);
                     if (nextSlashPos > i && nextSlashPos <= last) {
                         final String hexStr = string.substring(i + 2, nextSlashPos);
-                        final int hex = Integer.parseInt(hexStr, 16);
-                        sb.append((char) hex);
-                        i += hexStr.length() + 2;
+                        try {
+                            final int hex = Integer.parseInt(hexStr, 16);
+                            sb.append((char) hex);
+                            i += hexStr.length() + 2;
+                        } catch (NumberFormatException e) {
+                            sb.append((char) currentChar);
+                        }
                     } else {
                         sb.append((char) currentChar);
                     }
@@ -120,9 +123,13 @@ public abstract class DynamicLexer extends org.antlr.v4.runtime.Lexer {
                     final int nextSlashPos = string.indexOf('\\', i + 1);
                     if (nextSlashPos > i && nextSlashPos <= last) {
                         final String octStr = string.substring(i + 1, nextSlashPos);
-                        final int oct = Integer.parseInt(octStr, 8);
-                        sb.append((char) oct);
-                        i += octStr.length() + 1;
+                        try {
+                            final int oct = Integer.parseInt(octStr, 8);
+                            sb.append((char) oct);
+                            i += octStr.length() + 1;
+                        } catch (NumberFormatException e) {
+                            sb.append((char) currentChar);
+                        }
                     } else {
                         sb.append((char) currentChar);
                     }
@@ -131,7 +138,7 @@ public abstract class DynamicLexer extends org.antlr.v4.runtime.Lexer {
                 } else {
                     final String escaped = escapeChar(lookahead);
                     sb.append(escaped);
-                    i += escaped.length();
+                    i += 1;
                 }
             } else if ((stringType == StringType.DOUBLE_QUOTED && currentChar == '"' && lookahead == '"')
                         || (stringType == StringType.SINGLE_QUOTED && currentChar == '\'' && lookahead == '\'')) {
