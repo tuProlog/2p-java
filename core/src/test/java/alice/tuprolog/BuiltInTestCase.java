@@ -35,10 +35,10 @@ public class BuiltInTestCase extends TestCase {
     //Based on the bug #59 Grouping conjunctions in () changes result on sourceforge
     public void testGroupingConjunctions() throws InvalidTheoryException, MalformedGoalException {
         Prolog engine = new Prolog();
-        engine.setTheory(new Theory("g1. g2."));
+        engine.setTheory(new Theory("g1. \n g2."));
         SolveInfo info = engine.solve("(g1, g2), (g3, g4).");
         assertFalse(info.isSuccess());
-        engine.setTheory(new Theory("g1. g2. g3. g4."));
+        engine.setTheory(new Theory("g1. \n g2. \n g3. \n g4."));
         info = engine.solve("(g1, g2), (g3, g4).");
         assertTrue(info.isSuccess());
     }
