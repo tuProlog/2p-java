@@ -146,7 +146,7 @@ public class JavaInputField
      * Solve the goal currently displayed in the input field.
      */
     public void solve() {
-        if (getGoal().length() > 0)//if the goal isn't empty
+        if (getGoal().length() > 0)//if the goal isn't emptyWithStandardOperators
         {
             addGoalToHistory();
             console.setSolveType(0);
@@ -157,7 +157,7 @@ public class JavaInputField
     }
 
     public void solveAll() {
-        if (getGoal().length() > 0)//if the goal isn't empty
+        if (getGoal().length() > 0)//if the goal isn't emptyWithStandardOperators
         {
             addGoalToHistory();
             console.setSolveType(1);

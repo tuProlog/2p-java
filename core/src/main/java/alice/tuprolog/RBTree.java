@@ -167,7 +167,7 @@ public class RBTree<K extends Comparable<? super K>, V> {
 
     private static void printHelper(Node<?, ?> n, int indent) {
         if (n == null) {
-            System.out.print("<empty tree>");
+            System.out.print("<emptyWithStandardOperators tree>");
             return;
         }
         if (n.right != null) {

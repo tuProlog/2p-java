@@ -135,7 +135,7 @@ public class Struct extends Term {
 
 
     /**
-     * Builds a structure representing an empty list
+     * Builds a structure representing an emptyWithStandardOperators list
      */
     public Struct() {
         this("[]", 0);
@@ -170,7 +170,7 @@ public class Struct extends Term {
             arg[0] = Objects.requireNonNull(i.next());
             arg[1] = new Struct(i);
         } else {
-            // build an empty list
+            // build an emptyWithStandardOperators list
             name = "[]";
             arity = 0;
             arg = null;
@@ -183,7 +183,7 @@ public class Struct extends Term {
             arg[0] = Objects.requireNonNull(argList[index]);
             arg[1] = new Struct(argList, index + 1);
         } else {
-            // build an empty list
+            // build an emptyWithStandardOperators list
             name = "[]";
             arity = 0;
             arg = null;
@@ -510,7 +510,7 @@ public class Struct extends Term {
     // services for list structures
 
     /**
-     * Is this structure an empty list?
+     * Is this structure an emptyWithStandardOperators list?
      */
     public boolean isEmptyList() {
         return name.equals("[]") && arity == 0;
@@ -719,7 +719,7 @@ public class Struct extends Term {
             throw new InvalidTermException("The functor of a Struct cannot be null");
         }
         if (name.length() == 0 && arity > 0) {
-            throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string");
+            throw new InvalidTermException("The functor of a non-atom Struct cannot be an emptyWithStandardOperators string");
         }
         this.name = name;
         this.arity = arity;
@@ -742,7 +742,7 @@ public class Struct extends Term {
      * Names starting with upper case letter are enclosed in apices.
      */
     public String toString() {
-        // empty list case
+        // emptyWithStandardOperators list case
         if (isEmptyList()) {
             return "[]";
         } else if (isEmptySet()) {

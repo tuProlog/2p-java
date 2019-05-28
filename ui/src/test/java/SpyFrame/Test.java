@@ -16,7 +16,7 @@ import java.util.Scanner;
 public class Test {
     public static void main(String[] args) throws Exception {
         Scanner tast = new Scanner(System.in);
-        Theory theo = new Theory(
+        Theory theo = Theory.parseLazilyWithStandardOperators(
                 "mutter(anne,alice).\n"
                         + "mutter(anne,louise).\n"
                         + "mutter(coco,anne).\n"

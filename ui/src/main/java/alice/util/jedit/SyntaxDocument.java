@@ -63,8 +63,8 @@ public class SyntaxDocument extends PlainDocument {
      * token marker. This should be called after a large quantity of
      * text is first inserted.
      *
-     * @param start The first line to parse
-     * @param len   The number of lines, after the first one to parse
+     * @param start The first line to parseWithStandardOperators
+     * @param len   The number of lines, after the first one to parseWithStandardOperators
      */
     public void tokenizeLines(int start, int len) {
         if (tokenMarker == null || !tokenMarker.supportsMultilineTokens()) {
@@ -93,7 +93,7 @@ public class SyntaxDocument extends PlainDocument {
      * Starts a compound edit that can be undone in one operation.
      * Subclasses that implement undo should override this method;
      * this class has no undo functionality so this method is
-     * empty.
+     * emptyWithStandardOperators.
      */
     public void beginStructEdit() {
     }
@@ -102,7 +102,7 @@ public class SyntaxDocument extends PlainDocument {
      * Ends a compound edit that can be undone in one operation.
      * Subclasses that implement undo should override this method;
      * this class has no undo functionality so this method is
-     * empty.
+     * emptyWithStandardOperators.
      */
     public void endStructEdit() {
     }

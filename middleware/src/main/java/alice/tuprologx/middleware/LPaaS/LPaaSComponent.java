@@ -292,7 +292,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	@Override
 	public synchronized final String addTheory(String theory){
 		try {
-			getProlog().addTheory(new Theory(alice.util.Tools.removeApices(theory)));
+			getProlog().addTheory(Theory.parseLazilyWithStandardOperators(alice.util.Tools.removeApices(theory)));
 		} catch (InvalidTheoryException e) {
 			e.printStackTrace();
 			return "no.";

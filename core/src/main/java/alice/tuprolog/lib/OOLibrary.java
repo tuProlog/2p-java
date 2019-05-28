@@ -632,7 +632,7 @@ public class OOLibrary extends Library {
      *
      * @param clSource: is a string representing the text source of the new Java class
      * @param clName:   full class name
-     * @param clPathes: is a (possibly empty) Prolog list of class paths that may be required for a successful dynamic compilation of this class
+     * @param clPathes: is a (possibly emptyWithStandardOperators) Prolog list of class paths that may be required for a successful dynamic compilation of this class
      * @param id:       reference to an instance of the meta-class java.lang.Class rep- resenting the newly-created class
      * @return boolean: true if created false otherwise
      * @throws JavaException

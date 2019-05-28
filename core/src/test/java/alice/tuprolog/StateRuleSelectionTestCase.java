@@ -21,7 +21,7 @@ public class StateRuleSelectionTestCase extends TestCase {
         TestWarningListener warningListener = new TestWarningListener();
         engine.addWarningListener(warningListener);
         String theory = "p(X) :- a, b. \nb.";
-        engine.setTheory(new Theory(theory));
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String query = "p(X).";
         engine.solve(query);
         assertTrue(warningListener.warning.indexOf("a/0") > 0);

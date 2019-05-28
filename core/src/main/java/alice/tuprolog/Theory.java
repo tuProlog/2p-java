@@ -44,48 +44,72 @@ import java.util.stream.Stream;
 public class Theory implements Serializable {
 
     public static Theory empty() {
-        return new Theory();
+        return new Theory().setOperatorManager(OperatorManager.empty());
     }
 
-    public static Theory lazy(String source) {
-        return new Theory(source);
+    public static Theory parseLazily(String source) {
+        return new Theory(source).setOperatorManager(OperatorManager.empty());
     }
 
     public static Theory parse(String source) {
-        Theory t = new Theory(source);
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.empty());
         t.getClauses();
         return t;
     }
 
-    public static Theory lazy(InputStream source) throws IOException {
-        return new Theory(source);
+    public static Theory parseLazily(InputStream source) throws IOException {
+        return new Theory(source).setOperatorManager(OperatorManager.empty());
     }
 
     public static Theory parse(InputStream source) throws IOException {
-        Theory t = new Theory(source);
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.empty());
         t.getClauses();
         return t;
     }
 
-    public static Theory empty(OperatorManager operatorManager) {
+    public static Theory emptyWithStandardOperators() {
+        return new Theory().setOperatorManager(OperatorManager.standardOperators());
+    }
+
+    public static Theory parseLazilyWithStandardOperators(String source) {
+        return new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+    }
+
+    public static Theory parseWithStandardOperators(String source) {
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory parseLazilyWithStandardOperators(InputStream source) throws IOException {
+        return new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+    }
+
+    public static Theory parseWithStandardOperators(InputStream source) throws IOException {
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory emptyWithOperators(OperatorManager operatorManager) {
         return new Theory().setOperatorManager(operatorManager);
     }
 
-    public static Theory lazy(String source, OperatorManager operatorManager) {
+    public static Theory parseLazilyWithOperators(String source, OperatorManager operatorManager) {
         return new Theory(source).setOperatorManager(operatorManager);
     }
 
-    public static Theory parse(String source, OperatorManager operatorManager) {
+    public static Theory parseWithOperators(String source, OperatorManager operatorManager) {
         Theory t = new Theory(source).setOperatorManager(operatorManager);
         t.getClauses();
         return t;
     }
 
-    public static Theory lazy(InputStream source, OperatorManager operatorManager) throws IOException {
+    public static Theory parseLazilyWithOperators(InputStream source, OperatorManager operatorManager) throws IOException {
         return new Theory(source).setOperatorManager(operatorManager);
     }
 
-    public static Theory parse(InputStream source, OperatorManager operatorManager) throws IOException {
+    public static Theory parseWithOperators(InputStream source, OperatorManager operatorManager) throws IOException {
         Theory t = new Theory(source).setOperatorManager(operatorManager);
         t.getClauses();
         return t;

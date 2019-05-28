@@ -237,7 +237,7 @@ public class ParserTestCase extends TestCase {
                         "t2" + "\n" +
                         "*/" + "\n" +
                         "t3." + "\n";
-        Theory theory = Theory.parse(text);
+        Theory theory = Theory.parseWithStandardOperators(text);
         Theory expected = Theory.of(new Struct("t1"), new Struct("t3"));
         assertEquals(expected, theory);
     }

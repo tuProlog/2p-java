@@ -64,7 +64,7 @@ public class ConsoleManager
         if (!getGoal().equals("")) {
             if (!ide.isFeededTheory()) {
                 try {
-                    engine.setTheory(new Theory(ide.getEditorContent()));
+                    engine.setTheory(Theory.parseLazilyWithStandardOperators(ide.getEditorContent()));
                     ide.setFeededTheory(true);
                 } catch (InvalidTheoryException e) {
                     dialog.setStatusMessage("Error setting theory: Syntax Error at/before line " + e.line);

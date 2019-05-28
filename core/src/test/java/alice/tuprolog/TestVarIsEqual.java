@@ -93,7 +93,7 @@ public class TestVarIsEqual extends TestCase {
                         + "\n" + "list_append([],L,L).                                             "
                         + "\n" + "                                                                 ";
 
-        core.setTheory(new Theory(theory));
+        core.setTheory(Theory.parseLazilyWithStandardOperators(theory));
 
         SolveInfo info = core.solve("test. ");
         assertTrue("Test should complete normally", info.isSuccess());

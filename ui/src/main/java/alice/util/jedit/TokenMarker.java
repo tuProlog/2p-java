@@ -141,7 +141,7 @@ public abstract class TokenMarker {
 
     /**
      * An abstract method that splits a line up into tokens. It
-     * should parse the line, and call <code>addToken()</code> to
+     * should parseWithStandardOperators the line, and call <code>addToken()</code> to
      * add syntax tokens to the token list. Then, it should return
      * the initial token type for the next line.<p>
      * <p>

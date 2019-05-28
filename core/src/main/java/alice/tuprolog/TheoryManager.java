@@ -67,7 +67,7 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         staticDBase = new ClauseDatabase();
         retractDBase = new ClauseDatabase();
         engine = vm;
-        lastConsultedTheory = Theory.empty(engine.getOperatorManager());
+        lastConsultedTheory = Theory.emptyWithStandardOperators();
         primitiveManager = engine.getPrimitiveManager();
     }
 
@@ -218,6 +218,7 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
                     assertZ(d, dynamicTheory, libName, true);
                 }
             }
+            engine.getOperatorManager().addAll(theory.getOperatorManager());
         } catch (InvalidTermException e) {
             throw new InvalidTheoryException(e.getMessage(), e.getCause())
                     .setClause(clause)
@@ -403,7 +404,7 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         dynamicDBase = new ClauseDatabase();
         staticDBase = new ClauseDatabase();
         retractDBase = new ClauseDatabase();
-        lastConsultedTheory = Theory.empty(engine.getOperatorManager());
+        lastConsultedTheory = Theory.emptyWithStandardOperators();
     }
 
     //Alberto
@@ -416,7 +417,7 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
     //Alberto
     @Override
     public synchronized void consultTheory(String theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
-        Theory th = Theory.lazy(theory, engine.getOperatorManager());
+        Theory th = Theory.parseLazilyWithStandardOperators(theory);
         consult(th, dynamicTheory, libName);
     }
 

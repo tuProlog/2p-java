@@ -277,7 +277,7 @@ public abstract class Term implements Serializable {
      * gets a copy (with renamed variables) of the term.
      * <p>
      * The list argument passed contains the list of variables to be renamed
-     * (if empty list then no renaming)
+     * (if emptyWithStandardOperators list then no renaming)
      *
      * @param idExecCtx Execution Context identifier
      */

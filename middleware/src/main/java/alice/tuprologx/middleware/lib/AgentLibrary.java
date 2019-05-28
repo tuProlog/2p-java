@@ -143,7 +143,7 @@ public class AgentLibrary extends Library {
 
 	private boolean assertAgentId(String agentId) {
 		try {
-			engine.addTheory(new Theory("agentId("+agentId+")."));
+			engine.addTheory(Theory.parseLazilyWithStandardOperators("agentId("+agentId+")."));
 		} catch (InvalidTheoryException e) {
 			e.printStackTrace();
 			return false;

@@ -43,7 +43,7 @@ public class ChoicePointStore {
 
     /**
      * Check if a choice point exists in the store.
-     * As a side effect, removes choice points which have been already used and are now empty.
+     * As a side effect, removes choice points which have been already used and are now emptyWithStandardOperators.
      *
      * @return
      */
@@ -63,7 +63,7 @@ public class ChoicePointStore {
     }
 
     /**
-     * Removes choice points which have been already used and are now empty.
+     * Removes choice points which have been already used and are now emptyWithStandardOperators.
      */
     protected void removeUnusedChoicePoints() {
         // Note: it uses the side effect of this.existChoicePoint()!

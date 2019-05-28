@@ -13,8 +13,8 @@ public class ThrowCatchTestCase extends TestCase {
     // nell'unificazione
     public void test_catch_3_1() throws Exception {
         Prolog engine = new Prolog();
-        String theory = "p(0) :- p(1). p(1) :- throw(error).";
-        engine.setTheory(new Theory(theory));
+        String theory = "p(0) :- p(1). \n p(1) :- throw(error).";
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String goal = "atom_length(err, 3), catch(p(0), E, (atom_length(E, Length), X is 2+3)), Y is X+5.";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
@@ -32,8 +32,8 @@ public class ThrowCatchTestCase extends TestCase {
     // risoluzione il cui secondo argomento unifica con l'argomento di throw/1
     public void test_catch_3_2() throws Exception {
         Prolog engine = new Prolog();
-        String theory = "p(0) :- throw(error). p(1).";
-        engine.setTheory(new Theory(theory));
+        String theory = "p(0) :- throw(error). \n p(1).";
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String goal = "catch(p(1), E, fail), catch(p(0), E, atom_length(E, Length)).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
@@ -49,7 +49,7 @@ public class ThrowCatchTestCase extends TestCase {
     public void test_catch_3_3() throws Exception {
         Prolog engine = new Prolog();
         String theory = "p(0) :- throw(error).";
-        engine.setTheory(new Theory(theory));
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String goal = "catch(p(0), error(X), true).";
         SolveInfo info = engine.solve(goal);
         assertFalse(info.isSuccess());
@@ -60,7 +60,7 @@ public class ThrowCatchTestCase extends TestCase {
     public void test_catch_3_4() throws Exception {
         Prolog engine = new Prolog();
         String theory = "p(0) :- throw(error).";
-        engine.setTheory(new Theory(theory));
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String goal = "catch(p(0), E, E == err).";
         SolveInfo info = engine.solve(goal);
         assertFalse(info.isSuccess());
@@ -72,8 +72,8 @@ public class ThrowCatchTestCase extends TestCase {
     // sola volta
     public void test_catch_3_5() throws Exception {
         Prolog engine = new Prolog();
-        String theory = "p(0). p(1) :- throw(error). p(2).";
-        engine.setTheory(new Theory(theory));
+        String theory = "p(0). \n p(1) :- throw(error). \n p(2).";
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String goal = "catch(p(X), E, E == error).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
@@ -87,7 +87,7 @@ public class ThrowCatchTestCase extends TestCase {
     public void test_catch_3_6() throws Exception {
         Prolog engine = new Prolog();
         String theory = "p(0) :- throw(error).";
-        engine.setTheory(new Theory(theory));
+        engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         String goal = "catch(p(0), E, throw(err)).";
         SolveInfo info = engine.solve(goal);
         assertFalse(info.isSuccess());
