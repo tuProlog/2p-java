@@ -162,11 +162,7 @@ public final class Operator implements Serializable, Comparable<Operator> {
 
     @Override
     public String toString() {
-        return "Operator{" +
-               "name='" + name + '\'' +
-               ", type=" + type +
-               ", priority=" + prio +
-               '}';
+        return String.format("op(%d, %s, %s)", getPriority(), getAssociativity().toString().toLowerCase(), getName());
     }
 
     @Override

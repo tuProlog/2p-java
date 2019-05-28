@@ -172,7 +172,7 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
             }
 
             if (theory != null) {
-                prolog.setTheory(new Theory(theory));
+                prolog.setTheory(Theory.lazy(theory));
             }
 
             if (useSolveNext) {

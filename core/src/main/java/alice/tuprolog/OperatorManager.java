@@ -23,6 +23,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -60,6 +61,7 @@ public class OperatorManager implements Serializable {
     private final Map<Pair<String, Associativity>, Operator> index;
 //    private final SortedSet<Operator> operators;
 
+
     @Deprecated
     public OperatorManager() {
         this(Collections.emptyList());
@@ -68,6 +70,7 @@ public class OperatorManager implements Serializable {
     private OperatorManager(Collection<Operator> operators) {
 //        this.operators = new TreeSet<>();
         this.index = new HashMap<>();
+        addAll(Operator.xfx(":-", 1200), Operator.fx(":-", 1200));
         addAll(operators);
     }
 
@@ -188,4 +191,29 @@ public class OperatorManager implements Serializable {
         return this;
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final OperatorManager that = (OperatorManager) o;
+        return index.equals(that.index);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(index);
+    }
+
+    @Override
+    public String toString() {
+        return index.values()
+                    .stream()
+                    .sorted()
+                    .map(Operator::toString)
+                    .collect(Collectors.joining(", ", "{", "}"));
+    }
 }

@@ -1,6 +1,7 @@
 package alice.tuprolog.parser.dynamic;
 
 import java.util.EnumSet;
+import java.util.stream.Stream;
 
 public enum Associativity {
     XF, YF, XFX, XFY, YFX, FX, FY;
@@ -17,6 +18,10 @@ public enum Associativity {
     public static EnumSet<Associativity> POSTFIX = EnumSet.of(YF, XF);
 
     public static EnumSet<Associativity> NON_PREFIX = EnumSet.complementOf(PREFIX);
+
+    public static boolean isAssociativity(String value) {
+        return Stream.of(values()).anyMatch(it -> it.toString().equalsIgnoreCase(value));
+    }
 
     static {
         if (!NON_PREFIX.equals(EnumSet.of(XFX, YFX, XFY, YF, XF))) {

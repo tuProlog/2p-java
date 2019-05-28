@@ -23,12 +23,14 @@ import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.parser.ParsingException;
 import alice.tuprolog.parser.PrologExpressionVisitor;
 import alice.tuprolog.parser.PrologParserFactory;
+import alice.tuprolog.parser.dynamic.Associativity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class represents prolog theory which can be provided
@@ -65,6 +67,30 @@ public class Theory implements Serializable {
         return t;
     }
 
+    public static Theory empty(OperatorManager operatorManager) {
+        return new Theory().setOperatorManager(operatorManager);
+    }
+
+    public static Theory lazy(String source, OperatorManager operatorManager) {
+        return new Theory(source).setOperatorManager(operatorManager);
+    }
+
+    public static Theory parse(String source, OperatorManager operatorManager) {
+        Theory t = new Theory(source).setOperatorManager(operatorManager);
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory lazy(InputStream source, OperatorManager operatorManager) throws IOException {
+        return new Theory(source).setOperatorManager(operatorManager);
+    }
+
+    public static Theory parse(InputStream source, OperatorManager operatorManager) throws IOException {
+        Theory t = new Theory(source).setOperatorManager(operatorManager);
+        t.getClauses();
+        return t;
+    }
+
     public static Theory fromPrologList(Struct clauses) {
         return new Theory(clauses);
     }
@@ -80,6 +106,7 @@ public class Theory implements Serializable {
     private String theory;
     private Struct clauseList;
     private List<Term> clauses;
+    private OperatorManager operatorManager = OperatorManager.standardOperators();
 
     /**
      * Creates a theory getting its source text from an input stream
@@ -124,6 +151,8 @@ public class Theory implements Serializable {
             throw new InvalidTheoryException();
         }
         this.clauseList = clauseList;
+        getClauses();
+        synchroniseOperators();
     }
 
     private Theory(Collection<? extends Term> clauses) {
@@ -135,6 +164,8 @@ public class Theory implements Serializable {
                 throw new InvalidTheoryException();
             }
         }).collect(Collectors.toList());
+
+        synchroniseOperators();
     }
 
     private Theory(String text, Collection<? extends Term> clauses) {
@@ -162,7 +193,7 @@ public class Theory implements Serializable {
     private List<Term> parseText() {
         try {
             return PrologParserFactory.getInstance()
-                    .parseClausesWithStandardOperators(theory)
+                    .parseClauses(theory, operatorManager)
                     .map(PrologExpressionVisitor.asFunction())
                     .collect(Collectors.toList());
         } catch (ParsingException e) {
@@ -184,9 +215,27 @@ public class Theory implements Serializable {
         return clauses;
     }
 
-    private void setClauses(List<Term> terms) {
-        this.clauses = terms;
-        this.clauseList = new Struct(clauses);
+    private void synchroniseOperators() {
+        getClauses().stream()
+                    .filter(Struct.class::isInstance)
+                    .map(Struct.class::cast)
+                    .filter(it -> it.getArity() == 1 && ":-".equals(it.getName()))
+                    .map(it -> it.getArg(0))
+                    .filter(Struct.class::isInstance)
+                    .map(Struct.class::cast)
+                    .filter(it -> it.getArity() == 3 && "op".equals(it.getName())
+                                  && it.getArg(0) instanceof Number
+                                  && it.getArg(1).getTerm() instanceof Struct
+                                  && it.getArg(2).getTerm() instanceof Struct)
+                    .forEach(op -> {
+                        final int priority = ((Number)op.getArg(0)).intValue();
+                        final Struct type = (Struct) op.getArg(1).getTerm();
+                        final Struct name = (Struct) op.getArg(2).getTerm();
+
+                        if (type.getArity() == 0 && name.getArity() == 0 && Associativity.isAssociativity(type.getName())) {
+                            operatorManager.add(name.getName(), type.getName(), priority);
+                        }
+                    });
     }
 
     public String getText() {
@@ -215,6 +264,7 @@ public class Theory implements Serializable {
     public void append(Theory other) {
         setText(getText() + other.getText());
         getClauses().addAll(other.getClauses());
+        synchroniseOperators();
     }
 
     /**
@@ -229,6 +279,14 @@ public class Theory implements Serializable {
         return clauses != null;
     }
 
+    public OperatorManager getOperatorManager() {
+        return operatorManager;
+    }
+
+    private Theory setOperatorManager(final OperatorManager operatorManager) {
+        this.operatorManager = Objects.requireNonNull(operatorManager);
+        return this;
+    }
 
     Struct getClauseListRepresentation() {
         if (clauseList == null) {

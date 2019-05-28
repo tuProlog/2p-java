@@ -235,11 +235,11 @@ public class Prolog implements IProlog, Serializable {
         }
         try {
             p = new Prolog(((FullEngineState) brain).getLibraries());
-            p.setTheory(new Theory(((FullEngineState) brain).getDynTheory()));
-            p.opManager = new OperatorManager();
+            p.opManager = OperatorManager.standardOperators();
+            p.setTheory(Theory.lazy(((FullEngineState) brain).getDynTheory(), p.getOperatorManager()));
             LinkedList<Operator> l = ((FullEngineState) brain).getOp();
             for (Operator o : l) {
-                p.opManager.opNew(o.name, o.type, o.prio);
+                p.opManager.add(o);
             }
         } catch (InvalidLibraryException e) {
             e.printStackTrace();
@@ -365,7 +365,7 @@ public class Prolog implements IProlog, Serializable {
     private void initializeManagers() {
         flagManager = new FlagManager();
         libraryManager = LibraryManagerFactory.getLibraryManagerForCurrentPlatform();
-        opManager = new OperatorManager();
+        opManager = OperatorManager.standardOperators();
         theoryManager = new TheoryManager();
         primitiveManager = new PrimitiveManager();
         engineManager = new EngineManager();
@@ -500,7 +500,7 @@ public class Prolog implements IProlog, Serializable {
 
     public Theory getTheory() {    //no syn
         try {
-            return new Theory(theoryManager.getTheory(true));
+            return Theory.lazy(theoryManager.getTheory(true), getOperatorManager().clone());
         } catch (Exception ex) {
             return null;
         }
@@ -1354,9 +1354,9 @@ public class Prolog implements IProlog, Serializable {
     private void body() {
         try {
             if (theoryText == null) {
-                this.setTheory(new Theory(theoryInputStream));
+                this.setTheory(Theory.lazy(theoryInputStream, getOperatorManager()));
             } else {
-                this.setTheory(new Theory(theoryText));
+                this.setTheory(Theory.lazy(theoryText, getOperatorManager()));
             }
             if (goalText != null) {
                 this.solve(goalText);

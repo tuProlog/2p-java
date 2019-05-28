@@ -308,8 +308,8 @@ public class Struct extends Term {
     }
 
     public boolean isList() {
-        return name.equals(".") && arity == 2 || isEmptyList();
-//        return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
+//        return name.equals(".") && arity == 2 || isEmptyList();
+        return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
     }
 
     public boolean isGround() {
