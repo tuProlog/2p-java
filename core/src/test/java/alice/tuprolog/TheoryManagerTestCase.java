@@ -88,7 +88,7 @@ public class TheoryManagerTestCase extends TestCase {
         Prolog engine = new Prolog();
         TestOutputListener listener = new TestOutputListener();
         engine.addOutputListener(listener);
-        engine.setTheory(Theory.parseLazilyWithStandardOperators("insect(ant). insect(bee)."));
+        engine.setTheory(Theory.parseLazilyWithStandardOperators("insect(ant). \n insect(bee)."));
         SolveInfo info = engine.solve("retract(insect(I)), write(I), retract(insect(bee)), fail.");
         assertFalse(info.isSuccess());
         assertEquals("antbee", listener.output);

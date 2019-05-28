@@ -38,7 +38,7 @@ public class TermIteratorTestCase extends TestCase {
     }
 
     public void testMultipleHasNext() {
-        String theory = "p. q. r.";
+        String theory = "p. \n q. \n r.";
         Iterator<Term> i = Term.getIterator(theory);
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
@@ -73,7 +73,8 @@ public class TermIteratorTestCase extends TestCase {
     public void testIteratorOnInvalidTerm() {
         String t = "q(1)"; // missing the End-Of-Clause!
         try {
-            Term.getIterator(t);
+            Iterator<? extends Term> i = Term.getIterator(t);
+            i.hasNext();
             fail();
         } catch (InvalidTermException expected) {
         }

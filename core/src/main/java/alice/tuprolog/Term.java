@@ -21,14 +21,13 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.parser.ParsingException;
+import alice.tuprolog.parser.ParseException;
 import alice.tuprolog.parser.PrologExpressionVisitor;
 import alice.tuprolog.parser.PrologParserFactory;
 import alice.util.OneWayList;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.Stream;
 
 //import java.util.ArrayList;
 
@@ -62,7 +61,7 @@ public abstract class Term implements Serializable {
             return PrologParserFactory.getInstance()
                     .parseExpressionWithStandardOperators(st)
                     .accept(PrologExpressionVisitor.get());
-        } catch (ParsingException e) {
+        } catch (ParseException e) {
             throw e.toInvalidTermException();
         }
     }
@@ -89,7 +88,7 @@ public abstract class Term implements Serializable {
             return PrologParserFactory.getInstance()
                     .parseExpression(st, op)
                     .accept(PrologExpressionVisitor.get());
-        } catch (ParsingException e) {
+        } catch (ParseException e) {
             throw e.toInvalidTermException();
         }
     }
@@ -107,17 +106,31 @@ public abstract class Term implements Serializable {
      * a term stream from a source text
      */
     public static Iterator<Term> getIterator(String text) {
-        return createTerms(text).iterator();
-    }
+        return new Iterator<Term>() {
 
-    public static Stream<Term> createTerms(String text) {
-        try {
-            return PrologParserFactory.getInstance()
-                                      .parseClausesWithStandardOperators(text)
-                                      .map(PrologExpressionVisitor.asFunction());
-        } catch (ParsingException e) {
-            throw e.toInvalidTermException();
-        }
+            private final Iterator<Term> i = PrologParserFactory.getInstance()
+                    .parseClausesWithStandardOperators(text)
+                    .map(PrologExpressionVisitor.asFunction())
+                    .iterator();
+
+            @Override
+            public boolean hasNext() {
+                try {
+                    return i.hasNext();
+                } catch (ParseException e) {
+                    throw e.toInvalidTermException();
+                }
+            }
+
+            @Override
+            public Term next() {
+                try {
+                    return i.next();
+                } catch (ParseException e) {
+                    throw e.toInvalidTermException();
+                }
+            }
+        };
     }
 
     //Alberto

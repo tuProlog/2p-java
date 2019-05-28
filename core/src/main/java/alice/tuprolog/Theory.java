@@ -20,7 +20,7 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.parser.ParsingException;
+import alice.tuprolog.parser.ParseException;
 import alice.tuprolog.parser.PrologExpressionVisitor;
 import alice.tuprolog.parser.PrologParserFactory;
 import alice.tuprolog.parser.dynamic.Associativity;
@@ -30,7 +30,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * This class represents prolog theory which can be provided
@@ -220,7 +219,7 @@ public class Theory implements Serializable {
                     .parseClauses(theory, operatorManager)
                     .map(PrologExpressionVisitor.asFunction())
                     .collect(Collectors.toList());
-        } catch (ParsingException e) {
+        } catch (ParseException e) {
             throw e.toInvalidTheoryException();
         }
     }

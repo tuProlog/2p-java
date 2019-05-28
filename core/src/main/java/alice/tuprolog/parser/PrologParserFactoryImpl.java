@@ -28,7 +28,7 @@ class PrologParserFactoryImpl implements PrologParserFactory {
         return new BaseErrorListener() {
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
-                throw new ParsingException(
+                throw new ParseException(
                         whileParsing,
                         offendingSymbol instanceof Token
                             ? PrologLexer.VOCABULARY.getSymbolicName(((Token) offendingSymbol).getType())
@@ -211,7 +211,7 @@ class PrologParserFactoryImpl implements PrologParserFactory {
                  .mapToObj(i -> {
                      try {
                          return parseClause(parser, source);
-                     } catch (ParsingException e) {
+                     } catch (ParseException e) {
                          e.setClauseIndex(i);
                          throw e;
                      }

@@ -292,7 +292,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
             try {
                 return Long.parseLong(clean, base);
             } catch (NumberFormatException notEvenLong) {
-                throw new ParsingException(ctx.value, notEvenLong);
+                throw new ParseException(ctx.value, notEvenLong);
             }
         }
     }
@@ -317,7 +317,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
         try {
             return new alice.tuprolog.Double(Double.parseDouble(raw));
         } catch (NumberFormatException notAFloating) {
-            throw new ParsingException(ctx.value, notAFloating);
+            throw new ParseException(ctx.value, notAFloating);
         }
     }
 
