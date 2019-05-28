@@ -19,6 +19,7 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
+import com.codepoetics.protonpack.StreamUtils;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -584,18 +585,15 @@ public class Struct extends Term {
      * </p>
      */
     public Iterator<? extends Term> listIterator() {
-//        if (!isList()) {
-//            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
-//        }
-        return listStream().iterator();
-//        return new StructIterator(this);
-    }
-
-    public Stream<? extends Term> listStream() {
         if (!isList()) {
             throw new UnsupportedOperationException("The structure " + this + " is not a list.");
         }
-        return Stream.of(this).flatMap(it -> it.isList() ? listStream() : Stream.of(it.arg));
+//        return listStream().iterator();
+        return new StructIterator(this);
+    }
+
+    public Stream<? extends Term> listStream() {
+        return StreamUtils.ofNullable(this::listIterator);
     }
 
     // hidden services
