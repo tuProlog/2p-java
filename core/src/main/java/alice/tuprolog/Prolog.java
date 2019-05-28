@@ -491,7 +491,7 @@ public class Prolog implements IProlog, Serializable {
     public void addTheory(Theory th) throws InvalidTheoryException {    //no syn
         Theory oldTh = getTheory();
         theoryManager.consult(th, true, null);
-        setOperatorManager(getOperatorManager().addAll(th.getOperatorManager()));
+//        setOperatorManager(getOperatorManager().addAll(th.getOperatorManager()));
         theoryManager.solveTheoryGoal();
         Theory newTh = getTheory();
         TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);

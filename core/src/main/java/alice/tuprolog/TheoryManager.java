@@ -17,6 +17,7 @@
  */
 package alice.tuprolog;
 
+import alice.tuprolog.exceptions.InvalidPrologException;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.AbstractEngineState;
@@ -211,14 +212,15 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         startGoalStack = new Stack<Term>();
         int clause = 1;
         try {
-            for (Iterator<? extends Term> it = theory.iterator(engine); it.hasNext(); ) {
+            final Iterator<? extends Term> it = theory.iterator(engine);
+            engine.setOperatorManager(engine.getOperatorManager().addAll(theory.getOperatorManager()));
+            while (it.hasNext()) {
                 clause++;
                 Struct d = (Struct) it.next();
                 if (!runDirective(d)) {
                     assertZ(d, dynamicTheory, libName, true);
                 }
             }
-            engine.setOperatorManager(engine.getOperatorManager().addAll(theory.getOperatorManager()));
         } catch (InvalidTermException e) {
             throw new InvalidTheoryException(e.getMessage(), e.getCause())
                     .setClause(clause)
@@ -293,12 +295,18 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
      */
     private Struct toClause(Struct t) {        //PRIMITIVE
         // TODO bad, slow way of cloning. requires approx twice the time necessary
-        t = (Struct) Term.createTerm(t.toString(), this.engine.getOperatorManager());
-        if (!t.isClause()) {
-            t = new Struct(":-", t, new Struct("true"));
+        String source = t.toString();
+        try {
+            t = (Struct) Term.createTerm(source, this.engine.getOperatorManager());
+            if (!t.isClause()) {
+                t = new Struct(":-", t, new Struct("true"));
+            }
+            primitiveManager.identifyPredicate(t);
+            return t;
+        } catch (InvalidPrologException e) {
+            e.setOffendingSymbol(source);
+            throw e;
         }
-        primitiveManager.identifyPredicate(t);
-        return t;
     }
 
     public synchronized void solveTheoryGoal() {

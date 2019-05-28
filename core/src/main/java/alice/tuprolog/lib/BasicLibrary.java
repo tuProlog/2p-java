@@ -50,12 +50,11 @@ public class BasicLibrary extends Library {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!th.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
-                                         th);
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", th);
         }
         try {
             Struct theory = (Struct) th;
-            getEngine().setTheory(Theory.parseLazilyWithStandardOperators(theory.getName()));
+            getEngine().setTheory(Theory.parseLazilyWithOperators(theory.getName(), getEngine().getOperatorManager()));
             return true;
         } catch (InvalidTheoryException ex) {
             throw PrologError.syntax_error(engine.getEngineManager(), ex.clause, ex.line, ex.pos, new Struct(ex.getMessage()));

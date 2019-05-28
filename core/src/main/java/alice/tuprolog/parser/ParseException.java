@@ -86,7 +86,7 @@ public class ParseException extends RuntimeException {
     }
 
     public InvalidTermException toInvalidTermException() {
-        return new InvalidTermException(getMessage(), this.getCause())
+        return new InvalidTermException(getMessage(), this)
                 .setOffendingSymbol(getOffendingSymbol())
                 .setInput(getInput() != null ? getInput().toString() : null)
                 .setLine(getLine())
@@ -98,7 +98,7 @@ public class ParseException extends RuntimeException {
     }
 
     public InvalidTheoryException toInvalidTheoryException(int clause) {
-        return new InvalidTheoryException(getMessage(), this.getCause())
+        return new InvalidTheoryException(getMessage(), this)
                 .setOffendingSymbol(getOffendingSymbol())
                 .setInput(getInput().toString())
                 .setLine(getLine())
