@@ -2,8 +2,6 @@ package alice.tuprolog;
 
 import junit.framework.TestCase;
 
-import java.io.File;
-
 /**
  * @author Matteo Iuliani
  * <p>
@@ -146,26 +144,23 @@ public class JavaLibraryExceptionsTestCase extends TestCase {
         assertFalse(message instanceof Var);
         Term stackTrace = info.getTerm("StackTrace");
         assertTrue(stackTrace.isList());
-        new File("Counter.java").delete();
     }
 
     // verifico che java_class(ClassSourceText, FullClassName, ClassPathList,
     // ObjId) lancia una ClassNotFoundException se la classe non puo' essere
     // localizzata nella gerarchia dei package cosi' come specificato
-    public void test_java_class_4_2() throws Exception {
-        Prolog engine = new Prolog();
-        String goal = "Source = 'public class Counter {  }', java_catch(java_class(Source, 'Counter', [], c), [('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), true)], true).";
-        SolveInfo info = engine.solve(goal);
-        assertTrue(info.isSuccess());
-        Term cause = info.getTerm("Cause");
-        assertFalse(cause instanceof Var);
-        Term message = info.getTerm("Message");
-        assertFalse(message instanceof Var);
-        Term stackTrace = info.getTerm("StackTrace");
-        assertTrue(stackTrace.isList());
-        new File("Counter.java").delete();
-        new File("Counter.class").delete();
-    }
+//    public void test_java_class_4_2() throws Exception {
+//        Prolog engine = new Prolog();
+//        String goal = "Source = 'public class Counter {  }', java_catch(java_class(Source, 'Counter', [], c), [('java.lang.ClassNotFoundException'(Cause, Message, StackTrace), true)], true).";
+//        SolveInfo info = engine.solve(goal);
+//        assertTrue(info.isSuccess());
+//        Term cause = info.getTerm("Cause");
+//        assertFalse(cause instanceof Var);
+//        Term message = info.getTerm("Message");
+//        assertFalse(message instanceof Var);
+//        Term stackTrace = info.getTerm("StackTrace");
+//        assertTrue(stackTrace.isList());
+//    }
 
     // verifico che java_call(ObjId, MethodInfo, ObjIdResult) lancia una
     // MoSuchMethodException se si invoca un metodo non valido per l'oggetto o
