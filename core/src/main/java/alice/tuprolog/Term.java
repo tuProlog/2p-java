@@ -294,15 +294,15 @@ public abstract class Term implements Serializable {
      *
      * @param idExecCtx Execution Context identifier
      */
-    abstract Term copy(AbstractMap<Var, Var> vMap, int idExecCtx);
+    abstract Term copy(Map<Var, Var> vMap, int idExecCtx);
 
     //Alberto
-    public abstract Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx);
+    public abstract Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx);
 
     /**
      * gets a copy for result.
      */
-    abstract Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap);
+    abstract Term copy(Map<Var, Var> vMap, AbstractMap<Term, Var> substMap);
 
     /**
      * Try to unify two terms

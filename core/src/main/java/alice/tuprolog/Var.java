@@ -22,6 +22,7 @@ import alice.tuprolog.interfaces.TermVisitor;
 
 import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents a variable term.
@@ -156,7 +157,7 @@ public class Var extends Term {
      * then the variable in the list is returned.
      */
     @Override
-    Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    Term copy(Map<Var, Var> vMap, int idExecCtx) {
         Term tt = getTerm();
         if (tt == this) {
             Var v = vMap.get(this);
@@ -172,7 +173,7 @@ public class Var extends Term {
     }
 
     @Override //Alberto
-    public Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    public Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx) {
         Term tt = getTerm();
         if (tt == this) {
             Var v = vMap.get(this);
@@ -191,7 +192,7 @@ public class Var extends Term {
      * Gets a copy of this variable.
      */
     @Override
-    Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    Term copy(Map<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
         Var v;
         Object temp = vMap.get(this);
         if (temp == null) {
