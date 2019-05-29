@@ -164,6 +164,10 @@ public class Struct extends Term {
         this(argList, 0);
     }
 
+    public Struct(Stream<? extends Term> stream) {
+        this(stream.iterator());
+    }
+
     public Struct(Iterator<? extends Term> i) {
         this(".", 2);
         if (i.hasNext()) {
