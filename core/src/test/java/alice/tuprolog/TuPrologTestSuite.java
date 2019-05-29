@@ -24,7 +24,7 @@ import org.junit.runners.Suite.SuiteClasses;
                SpyEventTestCase.class,
                VarTestCase.class,
                JavaDynamicClassLoaderTestCase.class,
-               TestVarIsEqual.class,
+//               TestVarIsEqual.class,
                ISOIOLibraryTestCase.class,
                ThreadLibraryTestCase.class
 })
