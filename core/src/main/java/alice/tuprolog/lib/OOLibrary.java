@@ -34,7 +34,10 @@ import java.io.Serializable;
 import java.lang.reflect.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class represents a tuProlog library enabling the interaction with the
@@ -623,8 +626,21 @@ public class OOLibrary extends Library {
         return new File(System.getProperty("java.home"));
     }
 
+    private File getJavaBinPath() {
+        return new File(getJavaHomePath(), "bin");
+    }
+
+    private boolean isWindows() {
+        final String osName = System.getProperty("os.name");
+        return osName.contains("Windows") || osName.contains("windows");
+    }
+
     private File getJavaCPath() {
-        return new File(System.getProperty("java.home"), "bin" + File.separator + "javac");
+        return new File(getJavaBinPath(), "javac" + (isWindows() ? ".exe" : ""));
+    }
+
+    private File getTempFile(String file) {
+        return new File(System.getProperty("java.io.tmpdir"), file);
     }
 
     /**
@@ -646,22 +662,18 @@ public class OOLibrary extends Library {
             String fullClassName = alice.util.Tools.removeApices(className.toString());
 
             String fullClassPath = fullClassName.replace('.', '/');
-            Iterator<? extends Term> it = classPathes.listIterator();
-            String cp = "";
-            while (it.hasNext()) {
-                if (cp.length() > 0) {
-                    cp += ";";
-                }
-                cp += alice.util.Tools.removeApices(it.next()
-                                                      .toString());
-            }
-            if (cp.length() > 0) {
-                cp = " -classpath " + cp;
-            }
+            final String cp = classPathes.listStream()
+                    .map(Struct.class::cast)
+                    .map(Struct::getName)
+                    .map(File::new)
+                    .map(File::getAbsolutePath)
+                    .collect(Collectors.joining(File.separator, "-cp \"", "\""));
 
             String text = alice.util.Tools.removeApices(classSource.toString());
+            final File sourcePath = getTempFile(fullClassPath + ".java");
+
             try {
-                FileWriter file = new FileWriter(fullClassPath + ".java");
+                FileWriter file = new FileWriter(sourcePath);
                 file.write(text);
                 file.close();
             } catch (IOException ex) {
@@ -681,7 +693,7 @@ public class OOLibrary extends Library {
                     throw new IOException(message);
                 }
                 final String javacPath = javac.getAbsolutePath();
-                Process jc = Runtime.getRuntime().exec(javacPath + " " + fullClassPath + ".java");
+                Process jc = Runtime.getRuntime().exec(javacPath + " " + cp + " " + sourcePath.getAbsolutePath());
                 int res = jc.waitFor();
                 if (res != 0) {
                     getEngine().warn("Compilation of java sources failed");
@@ -705,7 +717,7 @@ public class OOLibrary extends Library {
                 if (System.getProperty("java.vm.name").equals("Dalvik")) {
                     the_class = Class.forName(fullClassName, true, dynamicLoader);
                 } else {
-                    the_class = Class.forName(fullClassName, true, new ClassLoader());
+                    the_class = Class.forName(fullClassName, true, new ClassLoader(getTempFile("")));
                 }
 
                 if (bindDynamicObject(id, the_class)) {
@@ -892,22 +904,25 @@ public class OOLibrary extends Library {
                 throw new IllegalArgumentException();
             }
             URL[] urls = dynamicLoader.getURLs();
-            String stringURLs = null;
-            Term pathTerm = null;
-            if (urls.length > 0) {
-                stringURLs = "[";
-
-                for (URL url : urls) {
-                    File file = new File(java.net.URLDecoder.decode(url.getFile(), "UTF-8"));
-                    stringURLs = stringURLs + "'" + file.getPath() + "',";
-                }
-
-                stringURLs = stringURLs.substring(0, stringURLs.length() - 1);
-                stringURLs = stringURLs + "]";
-            } else {
-                stringURLs = "[]";
-            }
-            pathTerm = Term.createTerm(stringURLs);
+//            String stringURLs = null;
+//            Term pathTerm = null;
+//            if (urls.length > 0) {
+//                stringURLs = "[";
+//
+//                for (URL url : urls) {
+//                    File file = new File(URLDecoder.decode(url.getFile(), "UTF-8"));
+//                    stringURLs = stringURLs + "'" + file.getPath() + "',";
+//                }
+//
+//                stringURLs = stringURLs.substring(0, stringURLs.length() - 1);
+//                stringURLs = stringURLs + "]";
+//            } else {
+//                stringURLs = "[]";
+//            }
+//            pathTerm = Term.createTerm(stringURLs);
+            final Struct pathTerm = new Struct(
+                    Stream.of(urls).map(URL::getPath).map(File::new).map(File::getAbsolutePath).map(Struct::new)
+            );
             return unify(paths, pathTerm);
         } catch (IllegalArgumentException e) {
             getEngine().warn("Illegal list of paths " + paths);
@@ -1976,7 +1991,19 @@ class Signature implements Serializable {
 /**
  * used to load new classes without touching system class loader
  */
-class ClassLoader extends java.lang.ClassLoader {
+class ClassLoader extends URLClassLoader {
+
+    ClassLoader(File path) {
+        super(new URL[]{toUrl(path)});
+    }
+
+    private static URL toUrl(File path) {
+        try {
+            return path.toURI().toURL();
+        } catch (MalformedURLException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 }
 
 /**
