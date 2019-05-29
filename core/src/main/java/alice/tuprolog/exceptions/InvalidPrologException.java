@@ -52,11 +52,11 @@ public class InvalidPrologException extends PrologRuntimeException {
     }
 
     public String getInput() {
-        return null;
+        return input;
     }
 
     public String getOffendingSymbol() {
-        return null;
+        return offendingSymbol;
     }
 
     public int getLine() {

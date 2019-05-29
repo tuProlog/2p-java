@@ -22,10 +22,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
     @Override
     protected OperatorManager getOperatorManager() {
         OperatorManager om = OperatorManager.standardOperators();
-        om.opNew("++", "yf", 100);
-        om.opNew("--", "yf", 100);
-        om.opNew("fails", "xf", 50);
-        om.opNew("succeeds", "xf", 50);
+        om.add("++", "yf", 100);
+        om.add("--", "yf", 100);
+        om.add("fails", "xf", 50);
+        om.add("succeeds", "xf", 50);
         return om;
     }
 
@@ -522,8 +522,12 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
     @Parameters(method = "getExpressionsAreParsedCorrectlyThrough99Problems")
     public void testExpressionsAreParsedCorrectlyThrough99Problems(String toBeParsed, Term expected) {
         System.out.printf("Parsing\n\t\t%s\n\tequals\n\t\t%s\n\t?", toBeParsed, expected);
-        Assert.assertEquals(expected, parseTerm(toBeParsed));
+        assertEquals(expected, parseTerm(toBeParsed));
         System.out.println(" yes.");
+    }
+
+    protected void assertEquals(Term t1, Term t2) {
+        Assert.assertTrue(t1 + " is not matching " + t2, t1.match(t2));
     }
 
     public Object[][] getExpressionsAreParsedCorrectlyThrough99Problems() {
@@ -561,8 +565,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Var("X"),
                                               new Struct(".",
                                                          new Var(),
-                                                         new Var("Y"),
-                                                         new Var("Ys"))),
+                                                      new Struct(".",
+                                                              new Var("Y"),
+                                                              new Var("Ys")))),
                                    new Struct("last_but_one",
                                               new Var("X"),
                                               new Struct(".",
@@ -700,7 +705,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "compress([X,Y|Ys],[X|Zs]) :- X \\= Y, compress([Y|Ys],Zs)",
                         new Struct(":-",
                                    new Struct("compress",
-                                              new Struct(".", new Var("X"), new Var("Y"), new Var("Ys")),
+                                           new Struct(".", new Var("X"), new Struct(".", new Var("Y"), new Var("Ys"))),
                                               new Struct(".", new Var("X"), new Var("Zs"))),
                                    new Struct(",",
                                               new Struct("\\=",
@@ -718,7 +723,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct(),
                                               new Struct(),
                                               new Var("N"),
-                                              new Struct(new Var("N"), new Var("X"))),
+                                           new Struct(new Var[]{new Var("N"), new Var("X")})),
                                    new Struct(">",
                                               new Var("N"),
                                               new Int(1)))
@@ -744,7 +749,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct(".", new Var("Y"), new Var("Ys")),
                                               new Struct(".", new Var("Y"), new Var("Ys")),
                                               new Var("N"),
-                                              new Struct(new Var("N"), new Var("X"))),
+                                           new Struct(new Var[]{new Var("N"), new Var("X")})),
                                    new Struct(",",
                                               new Struct(">",
                                                          new Var("N"),
