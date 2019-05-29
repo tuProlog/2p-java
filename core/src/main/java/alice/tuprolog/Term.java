@@ -296,13 +296,17 @@ public abstract class Term implements Serializable {
      */
     abstract Term copy(Map<Var, Var> vMap, int idExecCtx);
 
+    public Term copy() {
+        return copy(new HashMap<>(), Var.ORIGINAL);
+    }
+
     //Alberto
     public abstract Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx);
 
     /**
      * gets a copy for result.
      */
-    abstract Term copy(Map<Var, Var> vMap, AbstractMap<Term, Var> substMap);
+    abstract Term copy(Map<Var, Var> vMap, Map<Term, Var> substMap);
 
     /**
      * Try to unify two terms

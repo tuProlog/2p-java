@@ -178,6 +178,10 @@ public class Float extends Number {
         }
     }
 
+    public Float copy() {
+        return this;
+    }
+
     public String toString() {
         return java.lang.Float.toString(value);
     }

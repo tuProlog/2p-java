@@ -17,7 +17,6 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.exceptions.InvalidPrologException;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.AbstractEngineState;
@@ -295,16 +294,15 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
      */
     private Struct toClause(Struct t) {        //PRIMITIVE
         // TODO bad, slow way of cloning. requires approx twice the time necessary
-        String source = t.toString();
+//        String source = t.toString();
         try {
-            t = (Struct) Term.createTerm(source, this.engine.getOperatorManager());
+            t = t.copy();
             if (!t.isClause()) {
                 t = new Struct(":-", t, new Struct("true"));
             }
             primitiveManager.identifyPredicate(t);
             return t;
-        } catch (InvalidPrologException e) {
-            e.setOffendingSymbol(source);
+        } catch (Exception e) {
             throw e;
         }
     }

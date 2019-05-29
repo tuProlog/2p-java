@@ -20,7 +20,7 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 
-import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +40,7 @@ public class Var extends Term {
     private static final long serialVersionUID = 1L;
     private static long fingerprint = 0; //Alberto //static version as global counter
     @SuppressWarnings("unused")
-    private String type = "Var";
+//    private String type = "Var";
     // the name identifying the var
     private String name;
     private StringBuilder completeName;    /* Reviewed by Paolo Contessi */
@@ -192,7 +192,7 @@ public class Var extends Term {
      * Gets a copy of this variable.
      */
     @Override
-    Term copy(Map<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    Term copy(Map<Var, Var> vMap, Map<Term, Var> substMap) {
         Var v;
         Object temp = vMap.get(this);
         if (temp == null) {
@@ -222,6 +222,10 @@ public class Var extends Term {
             v.link = t;
         }
         return v;
+    }
+
+    public Var copy() {
+        return (Var) copy(new HashMap<>(), 0);
     }
 
     /**

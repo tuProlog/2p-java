@@ -21,7 +21,6 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 
-import java.util.AbstractMap;
 import java.util.Map;
 
 /**
@@ -228,7 +227,12 @@ public abstract class Number extends Term implements Comparable<Number> {
     /**
      * gets a copy of the term.
      */
-    Term copy(Map<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    Term copy(Map<Var, Var> vMap, Map<Term, Var> substMap) {
+        return this;
+    }
+
+    @Override
+    public Number copy() {
         return this;
     }
 

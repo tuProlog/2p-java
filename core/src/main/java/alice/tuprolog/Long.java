@@ -179,6 +179,10 @@ public class Long extends Number {
         }
     }
 
+    public Long copy() {
+        return this;
+    }
+
     public String toString() {
         return java.lang.Long.toString(value);
     }

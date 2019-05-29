@@ -21,6 +21,7 @@ package alice.tuprolog;
 import java.util.AbstractMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * This class mantains information about a clause creation
@@ -227,7 +228,7 @@ public class ClauseInfo {
         bodyCopy(body, bodyCopy, v, idExecCtx);
     }
 
-    private void bodyCopy(SubGoalTree source, SubGoalTree destination, AbstractMap<Var, Var> map, int id) {
+    private void bodyCopy(SubGoalTree source, SubGoalTree destination, Map<Var, Var> map, int id) {
         for (AbstractSubGoalTree s : source) {
             if (s.isLeaf()) {
                 SubGoalElement l = (SubGoalElement) s;
