@@ -181,9 +181,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
         final java.util.List<String> fxOps = Arrays.asList(":-", "?-", "\\");
         final java.util.List<String> arguments = getATermsSequence();
 
-        return fxOps.stream().flatMap(op ->
-                                              arguments.stream().map(arg -> new Object[]{op, arg})
-        ).toArray(Object[][]::new);
+        return fxOps.stream()
+                    .flatMap(op -> arguments.stream().map(arg -> new Object[]{op, arg}))
+                    .toArray(Object[][]::new);
     }
 
     @Test
@@ -275,14 +275,14 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
 
     private java.util.List<java.util.List<String>> getTermsSequences() {
         return Arrays.asList(
-                Arrays.asList("1", "2"),
-                Arrays.asList("1.9", "2.8"),
+                Arrays.asList("(1)", "(2)"),
+                Arrays.asList("(1.9)", "(2.8)"),
                 Arrays.asList("a", "b"),
                 Arrays.asList("A", "B"),
                 Arrays.asList("f(x)", "g(y)"),
                 Arrays.asList("(1, 2)", "(3, 4)"),
-                Arrays.asList("1", "2", "3"),
-                Arrays.asList("1.9", "2.8", "3.7"),
+                Arrays.asList("(1)", "(2)", "(3)"),
+                Arrays.asList("(1.9)", "(2.8)", "(3.7)"),
                 Arrays.asList("a", "b", "c"),
                 Arrays.asList("A", "B", "C"),
                 Arrays.asList("f(x)", "g(y)", "h(z)"),
@@ -294,9 +294,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
         final java.util.List<String> xfyOps = Arrays.asList(";", "->", ",", "^");
         final java.util.List<java.util.List<String>> arguments = getTermsSequences();
 
-        return xfyOps.stream().flatMap(op ->
-                                               arguments.stream().map(args -> new Object[]{op, args})
-        ).toArray(Object[][]::new);
+        return xfyOps.stream()
+                     .flatMap(op -> arguments.stream().map(args -> new Object[]{op, args}))
+                     .toArray(Object[][]::new);
     }
 
     @Test
