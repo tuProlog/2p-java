@@ -322,7 +322,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
     public Term visitReal(PrologParser.RealContext ctx) {
         String raw = ctx.value.getText();
         if (ctx.sign != null) {
-            raw = raw + ctx.sign.getText();
+            raw = ctx.sign.getText() + raw;
         }
         try {
             return new alice.tuprolog.Double(Double.parseDouble(raw));
