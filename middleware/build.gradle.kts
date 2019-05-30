@@ -19,30 +19,3 @@ dependencies {
 configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
-
-task<JavaExec>("ide") {
-    group = "run"
-    dependsOn("classes")
-
-    main = "alice.tuprologx.ide.GUILauncher"
-    sourceSets {
-        main {
-            classpath = runtimeClasspath
-        }
-    }
-}
-
-task<JavaExec>("repl") {
-    group = "run"
-    dependsOn("classes")
-
-    main = "alice.tuprologx.ide.CUIConsole"
-    sourceSets {
-        main {
-            classpath = runtimeClasspath
-        }
-    }
-
-    standardInput = System.`in`
-    standardOutput = System.out
-}
