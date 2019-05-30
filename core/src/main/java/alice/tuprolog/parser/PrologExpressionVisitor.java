@@ -276,6 +276,16 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
             clean = str.substring(2);
         } else if (ctx.isChar) {
             clean = str.substring(2);
+            if (clean.length() != 1) {
+                throw new ParseException(
+                        null,
+                        ctx.getText(),
+                        ctx.value.getLine(),
+                        ctx.value.getCharPositionInLine(),
+                        "Invalid character literal: " + ctx.getText(),
+                        null
+                );
+            }
             return (int) clean.charAt(0);
         } else {
             base = 10;

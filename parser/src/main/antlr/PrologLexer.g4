@@ -39,7 +39,7 @@ FLOAT
     ;
 
 CHAR
-    : Zero '\'' .
+    : Zero '\'' ((~[\n\t\r\f]) | Escapable | DoubleDQ | DoubleSQ) { setText(escape(getText(), SINGLE_QUOTED)); }
     ;
 
 BOOL
