@@ -235,11 +235,11 @@ public class Prolog implements IProlog, Serializable {
         }
         try {
             p = new Prolog(((FullEngineState) brain).getLibraries());
-            p.setTheory(new Theory(((FullEngineState) brain).getDynTheory()));
-            p.opManager = new OperatorManager();
+            p.opManager = OperatorManager.standardOperators();
+            p.setTheory(Theory.parseLazilyWithStandardOperators(((FullEngineState) brain).getDynTheory()));
             LinkedList<Operator> l = ((FullEngineState) brain).getOp();
             for (Operator o : l) {
-                p.opManager.opNew(o.name, o.type, o.prio);
+                p.opManager.add(o);
             }
         } catch (InvalidLibraryException e) {
             e.printStackTrace();
@@ -365,7 +365,7 @@ public class Prolog implements IProlog, Serializable {
     private void initializeManagers() {
         flagManager = new FlagManager();
         libraryManager = LibraryManagerFactory.getLibraryManagerForCurrentPlatform();
-        opManager = new OperatorManager();
+        opManager = OperatorManager.standardOperators();
         theoryManager = new TheoryManager();
         primitiveManager = new PrimitiveManager();
         engineManager = new EngineManager();
@@ -434,7 +434,12 @@ public class Prolog implements IProlog, Serializable {
      */
 
     public OperatorManager getOperatorManager() {
-        return opManager;
+        return opManager.clone();
+    }
+
+    Prolog setOperatorManager(OperatorManager opManager) {
+        this.opManager = opManager;
+        return this;
     }
 
     /**
@@ -486,6 +491,7 @@ public class Prolog implements IProlog, Serializable {
     public void addTheory(Theory th) throws InvalidTheoryException {    //no syn
         Theory oldTh = getTheory();
         theoryManager.consult(th, true, null);
+//        setOperatorManager(getOperatorManager().addAll(th.getOperatorManager()));
         theoryManager.solveTheoryGoal();
         Theory newTh = getTheory();
         TheoryEvent ev = new TheoryEvent(this, oldTh, newTh);
@@ -500,7 +506,7 @@ public class Prolog implements IProlog, Serializable {
 
     public Theory getTheory() {    //no syn
         try {
-            return new Theory(theoryManager.getTheory(true));
+            return Theory.parseLazilyWithOperators(theoryManager.getTheory(true), getOperatorManager());
         } catch (Exception ex) {
             return null;
         }
@@ -687,8 +693,7 @@ public class Prolog implements IProlog, Serializable {
 
     public SolveInfo solve(String st) throws MalformedGoalException {
         try {
-            Parser p = new Parser(opManager, st);
-            Term t = p.nextTerm(true);
+            Term t = Term.createTerm(st, opManager);
             return solve(t);
         } catch (InvalidTermException ex) {
             System.out.println(ex.toString());
@@ -699,8 +704,7 @@ public class Prolog implements IProlog, Serializable {
     //Alberto
     public SolveInfo solve(String st, long maxTime) throws MalformedGoalException {
         try {
-            Parser p = new Parser(opManager, st);
-            Term t = p.nextTerm(true);
+            Term t = Term.createTerm(st, opManager);
             return solve(t, maxTime);
         } catch (InvalidTermException ex) {
             System.out.println(ex.toString());
@@ -820,7 +824,7 @@ public class Prolog implements IProlog, Serializable {
      */
 
     public Term toTerm(String st) throws InvalidTermException {    //no syn
-        return Parser.parseSingleTerm(st, opManager);
+        return Term.createTerm(st, opManager);
     }
 
     /**
@@ -1338,8 +1342,7 @@ public class Prolog implements IProlog, Serializable {
 
     public Term termSolve(String st) {
         try {
-            Parser p = new Parser(opManager, st);
-            Term t = p.nextTerm(true);
+            Term t = Term.createTerm(st, opManager);
             return t;
         } catch (InvalidTermException e) {
             String s = "null";
@@ -1357,9 +1360,9 @@ public class Prolog implements IProlog, Serializable {
     private void body() {
         try {
             if (theoryText == null) {
-                this.setTheory(new Theory(theoryInputStream));
+                this.setTheory(Theory.parseLazilyWithStandardOperators(theoryInputStream));
             } else {
-                this.setTheory(new Theory(theoryText));
+                this.setTheory(Theory.parseLazilyWithStandardOperators(theoryText));
             }
             if (goalText != null) {
                 this.solve(goalText);

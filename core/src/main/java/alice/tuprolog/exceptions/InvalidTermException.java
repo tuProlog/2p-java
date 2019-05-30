@@ -21,37 +21,43 @@ package alice.tuprolog.exceptions;
  * This exception means that a method has been passed an argument
  * containing an invalid Prolog term.
  */
-public class InvalidTermException extends PrologRuntimeException {
-
-    @Deprecated
-    public final int line;
-
-    @Deprecated
-    public final int pos;
+public class InvalidTermException extends InvalidPrologException {
+    public InvalidTermException() {
+    }
 
     public InvalidTermException(String message) {
-        this(message, -1, -1);
-    }
-
-    public InvalidTermException(String message, int line, int pos) {
         super(message);
-        this.line = line;
-        this.pos = pos;
     }
 
-    public String getInput() {
-        return null;
+    public InvalidTermException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public String getOffendingSymbol() {
-        return null;
+    public InvalidTermException(Throwable cause) {
+        super(cause);
     }
 
-    public int getLine() {
-        return line;
+    public InvalidTermException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
-    public int getPositionInLine() {
-        return pos;
+    @Override
+    public InvalidTermException setLine(int line) {
+        return (InvalidTermException) super.setLine(line);
+    }
+
+    @Override
+    public InvalidTermException setPositionInLine(int pos) {
+        return (InvalidTermException) super.setPositionInLine(pos);
+    }
+
+    @Override
+    public InvalidTermException setOffendingSymbol(String offendingSymbol) {
+        return (InvalidTermException) super.setOffendingSymbol(offendingSymbol);
+    }
+
+    @Override
+    public InvalidTermException setInput(String input) {
+        return (InvalidTermException) super.setInput(input);
     }
 }

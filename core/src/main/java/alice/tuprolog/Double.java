@@ -187,6 +187,10 @@ public class Double extends Number {
         return count;
     }
 
+    public Double copy() {
+        return this;
+    }
+
     /**
      * @author Paolo Contessi
      */

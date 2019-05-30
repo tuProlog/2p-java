@@ -462,8 +462,7 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
     @Override
     public synchronized String solve_untimed(String goal) {
         try {
-            Parser parser = new Parser(vm.getOperatorManager(), goal);
-            Term t = parser.nextTerm(true);
+            Term t = Term.createTerm(goal, vm.getOperatorManager());
             return this.solve(t).toJSON();
         } catch (Exception e) {
             return "Error in solving: " + goal;
@@ -482,8 +481,7 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
     @Override
     public synchronized String solve_timed(String goal, long maxTime) {
         try {
-            Parser parser = new Parser(vm.getOperatorManager(), goal);
-            Term t = parser.nextTerm(true);
+            Term t = Term.createTerm(goal, vm.getOperatorManager());
             return this.solve(t).toJSON();
         } catch (Exception e) {
             return "Error in solving: " + goal;

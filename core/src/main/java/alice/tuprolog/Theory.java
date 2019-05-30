@@ -20,11 +20,16 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.JSONSerializerManager;
+import alice.tuprolog.parser.ParseException;
+import alice.tuprolog.parser.PrologExpressionVisitor;
+import alice.tuprolog.parser.PrologParserFactory;
+import alice.tuprolog.parser.dynamic.Associativity;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Iterator;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents prolog theory which can be provided
@@ -37,16 +42,101 @@ import java.util.Iterator;
  */
 public class Theory implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static Theory empty() {
+        return new Theory().setOperatorManager(OperatorManager.empty());
+    }
+
+    public static Theory parseLazily(String source) {
+        return new Theory(source).setOperatorManager(OperatorManager.empty());
+    }
+
+    public static Theory parse(String source) {
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.empty());
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory parseLazily(InputStream source) throws IOException {
+        return new Theory(source).setOperatorManager(OperatorManager.empty());
+    }
+
+    public static Theory parse(InputStream source) throws IOException {
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.empty());
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory emptyWithStandardOperators() {
+        return new Theory().setOperatorManager(OperatorManager.standardOperators());
+    }
+
+    public static Theory parseLazilyWithStandardOperators(String source) {
+        return new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+    }
+
+    public static Theory parseWithStandardOperators(String source) {
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory parseLazilyWithStandardOperators(InputStream source) throws IOException {
+        return new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+    }
+
+    public static Theory parseWithStandardOperators(InputStream source) throws IOException {
+        Theory t = new Theory(source).setOperatorManager(OperatorManager.standardOperators());
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory emptyWithOperators(OperatorManager operatorManager) {
+        return new Theory().setOperatorManager(operatorManager);
+    }
+
+    public static Theory parseLazilyWithOperators(String source, OperatorManager operatorManager) {
+        return new Theory(source).setOperatorManager(operatorManager);
+    }
+
+    public static Theory parseWithOperators(String source, OperatorManager operatorManager) {
+        Theory t = new Theory(source).setOperatorManager(operatorManager);
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory parseLazilyWithOperators(InputStream source, OperatorManager operatorManager) throws IOException {
+        return new Theory(source).setOperatorManager(operatorManager);
+    }
+
+    public static Theory parseWithOperators(InputStream source, OperatorManager operatorManager) throws IOException {
+        Theory t = new Theory(source).setOperatorManager(operatorManager);
+        t.getClauses();
+        return t;
+    }
+
+    public static Theory fromPrologList(Struct clauses) {
+        return new Theory(clauses);
+    }
+
+    public static Theory of(Term... terms) {
+        return new Theory(Arrays.asList(terms));
+    }
+
+    public static Theory of(Collection<? extends Term> terms) {
+        return new Theory(terms);
+    }
 
     private String theory;
     private Struct clauseList;
+    private List<Term> clauses;
+    private OperatorManager operatorManager = OperatorManager.standardOperators();
 
     /**
      * Creates a theory getting its source text from an input stream
      *
      * @param is the input stream acting as source
      */
+    @Deprecated
     public Theory(InputStream is) throws IOException {
         byte[] info = new byte[is.available()];
         is.read(info);
@@ -57,30 +147,53 @@ public class Theory implements Serializable {
      * Creates a theory from its source text
      *
      * @param theory the source text
-     * @throws s InvalidTheoryException if theory is null
+     * @throws InvalidTheoryException if theory is null
      */
-    public Theory(String theory) throws InvalidTheoryException {
+    @Deprecated
+    public Theory(String theory) {
         if (theory == null) {
             throw new InvalidTheoryException();
         }
         this.theory = theory;
     }
 
+    @Deprecated
     Theory() {
-        this.theory = "";
+        this("", Collections.emptyList());
     }
 
     /**
      * Creates a theory from a clause list
      *
      * @param clauseList the source text
-     * @throws s InvalidTheoryException if clauseList is null or is not a prolog list
+     * @throws InvalidTheoryException if clauseList is null or is not a prolog list
      */
-    public Theory(Struct clauseList) throws InvalidTheoryException {
+    @Deprecated
+    public Theory(Struct clauseList) {
         if (clauseList == null || !clauseList.isList()) {
             throw new InvalidTheoryException();
         }
         this.clauseList = clauseList;
+        getClauses();
+        synchroniseOperators();
+    }
+
+    private Theory(Collection<? extends Term> clauses) {
+        if (clauses == null) {
+            throw new InvalidTheoryException();
+        }
+        this.clauses = clauses.stream().peek(it -> {
+            if (!(it instanceof Struct)) {
+                throw new InvalidTheoryException();
+            }
+        }).collect(Collectors.toList());
+
+        synchroniseOperators();
+    }
+
+    private Theory(String text, Collection<? extends Term> clauses) {
+        this(Objects.requireNonNull(clauses));
+        this.theory = Objects.requireNonNull(text);
     }
 
     //Alberto
@@ -88,43 +201,93 @@ public class Theory implements Serializable {
         return JSONSerializerManager.fromJSON(jsonString, Theory.class);
     }
 
-    public Iterator<? extends Term> iterator(Prolog engine) {
-        if (isTextual()) {
-            return new Parser(engine.getOperatorManager(), theory).iterator();
-        } else {
-            return clauseList.listIterator();
+    private List<Term> slitPrologList() {
+        final List<Term> clauses = new LinkedList<>();
+        for (Iterator<? extends Term> i = clauseList.listIterator(); i.hasNext();) {
+            final Term it = i.next();
+            if (!(it instanceof Struct)) {
+                throw new InvalidTheoryException();
+            }
+            clauses.add(it);
         }
+        return clauses;
+    }
+
+    private List<Term> parseText() {
+        try {
+            return PrologParserFactory.getInstance()
+                    .parseClauses(theory, operatorManager)
+                    .map(PrologExpressionVisitor.asFunction())
+                    .collect(Collectors.toList());
+        } catch (ParseException e) {
+            throw e.toInvalidTheoryException();
+        }
+    }
+
+    public List<Term> getClauses() {
+        if (clauses == null) {
+            if (clauseList != null) {
+                clauses = slitPrologList();
+            } else if (theory != null) {
+                clauses = parseText();
+            } else {
+                throw new IllegalStateException();
+            }
+        }
+
+        return clauses;
+    }
+
+    private void synchroniseOperators() {
+        getClauses().stream()
+                    .filter(Struct.class::isInstance)
+                    .map(Struct.class::cast)
+                    .filter(it -> it.getArity() == 1 && ":-".equals(it.getName()))
+                    .map(it -> it.getArg(0))
+                    .filter(Struct.class::isInstance)
+                    .map(Struct.class::cast)
+                    .filter(it -> it.getArity() == 3 && "op".equals(it.getName())
+                                  && it.getArg(0) instanceof Number
+                                  && it.getArg(1).getTerm() instanceof Struct
+                                  && it.getArg(2).getTerm() instanceof Struct)
+                    .forEach(op -> {
+                        final int priority = ((Number)op.getArg(0)).intValue();
+                        final Struct type = (Struct) op.getArg(1).getTerm();
+                        final Struct name = (Struct) op.getArg(2).getTerm();
+
+                        if (type.getArity() == 0 && name.getArity() == 0 && Associativity.isAssociativity(type.getName())) {
+                            operatorManager.add(name.getName(), type.getName(), priority);
+                        }
+                    });
+    }
+
+    public String getText() {
+        if (theory == null) {
+            theory = clauses.stream().map(Term::toString).collect(Collectors.joining(".\n", "", ".\n"));
+        }
+
+        return theory;
+    }
+
+    private void setText(String text) {
+        this.theory = text;
+    }
+
+    public Iterator<? extends Term> iterator(Prolog engine) {
+        return getClauses().iterator();
     }
 
     /**
      * Adds (appends) a theory to this.
      *
-     * @param th is the theory to be appended
-     * @throws s InvalidTheoryException if the theory object are not compatibles (they are
+     * @param other is the theory to be appended
+     * @throws InvalidTheoryException if the theory object are not compatibles (they are
      *           compatibles when both have been built from texts or both from clause lists)
      */
-    public void append(Theory th) throws InvalidTheoryException {
-        if (th.isTextual() && isTextual()) {
-            theory += th.theory;
-        } else if (!th.isTextual() && !isTextual()) {
-            Struct otherClauseList = th.getClauseListRepresentation();
-            if (clauseList.isEmptyList()) {
-                clauseList = otherClauseList;
-            } else {
-                Struct p = clauseList, q;
-                while (!(q = (Struct) p.getArg(1)).isEmptyList()) {
-                    p = q;
-                }
-                p.setArg(1, otherClauseList);
-            }
-        } else if (!isTextual() && th.isTextual()) {
-            theory = theory + "\n" + th;
-            clauseList = null;
-        } else if (isTextual() && !th.isTextual()) {
-            theory += th.toString();
-        } else {
-            throw new InvalidTheoryException();
-        }
+    public void append(Theory other) {
+        setText(getText() + other.getText());
+        getClauses().addAll(other.getClauses());
+        synchroniseOperators();
     }
 
     /**
@@ -135,16 +298,49 @@ public class Theory implements Serializable {
         return theory != null;
     }
 
+    boolean isParsed() {
+        return clauses != null;
+    }
+
+    public OperatorManager getOperatorManager() {
+        return operatorManager;
+    }
+
+    private Theory setOperatorManager(final OperatorManager operatorManager) {
+        this.operatorManager = Objects.requireNonNull(operatorManager);
+        return this;
+    }
+
     Struct getClauseListRepresentation() {
+        if (clauseList == null) {
+            clauseList = new Struct(getClauses());
+        }
         return clauseList;
     }
 
     public String toString() {
-        return theory != null ? theory : clauseList.toString();
+        return getText();
     }
 
     //Alberto
     public String toJSON() {
         return JSONSerializerManager.toJSON(this);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final Theory theory = (Theory) o;
+        return Objects.equals(getClauses(), theory.getClauses());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getClauses());
     }
 }

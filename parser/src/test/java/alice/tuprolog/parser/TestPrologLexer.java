@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-
 public class TestPrologLexer {
 
     private static PrologLexer lexerForString(String input) {
@@ -25,7 +24,11 @@ public class TestPrologLexer {
         final LinkedList<Token> result = new LinkedList<>();
 
         int i = 0;
-        stream.consume();
+        try {
+            stream.consume();
+        } catch (IllegalStateException e) {
+            return result;
+        }
         do {
             result.add(stream.get(i++));
             stream.consume();
@@ -41,6 +44,15 @@ public class TestPrologLexer {
     }
 
     @Test
+    public void testPrologLexerDoesNotAcceptEmptyStrings() {
+        final PrologLexer lexer = lexerForString("");
+        final TokenStream tokenStream = tokenStreamFromLexer(lexer);
+        final List<Token> tokens = tokenStreamToList(tokenStream);
+
+        Assert.assertEquals(tokens.size(), 0);
+    }
+
+    @Test
     public void testPrologLexerRecognisesAtoms() {
         final PrologLexer lexer = lexerForString("1 + a + \"b\" + 'c'");
         final TokenStream tokenStream = tokenStreamFromLexer(lexer);
@@ -52,9 +64,9 @@ public class TestPrologLexer {
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "a");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "+");
-        assertTokenIs(tokens.get(i++), PrologLexer.STRING, "b");
+        assertTokenIs(tokens.get(i++), PrologLexer.DQ_STRING, "b");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "+");
-        assertTokenIs(tokens.get(i++), PrologLexer.STRING, "c");
+        assertTokenIs(tokens.get(i++), PrologLexer.SQ_STRING, "c");
         Assert.assertEquals(tokens.size(), i);
     }
 
@@ -71,9 +83,9 @@ public class TestPrologLexer {
         assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "a");
         assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
-        assertTokenIs(tokens.get(i++), PrologLexer.STRING, "b");
+        assertTokenIs(tokens.get(i++), PrologLexer.DQ_STRING, "b");
         assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "-");
-        assertTokenIs(tokens.get(i++), PrologLexer.STRING, "c");
+        assertTokenIs(tokens.get(i++), PrologLexer.SQ_STRING, "c");
         assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "dada");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "a");
         Assert.assertEquals(tokens.size(), i);

@@ -41,7 +41,7 @@ public class PrologTestCase extends TestCase {
     public void testUnloadLibraryAfterLoadingTheory() throws Exception {
         Prolog engine = new Prolog();
         assertNotNull(engine.getLibrary("alice.tuprolog.lib.IOLibrary"));
-        Theory t = new Theory("a(1).\na(2).\n");
+        Theory t = Theory.parseLazilyWithStandardOperators("a(1).\na(2).\n");
         engine.setTheory(t);
         engine.unloadLibrary("alice.tuprolog.lib.IOLibrary");
         assertNull(engine.getLibrary("alice.tuprolog.lib.IOLibrary"));
@@ -49,7 +49,7 @@ public class PrologTestCase extends TestCase {
 
     public void testAddTheory() throws InvalidTheoryException {
         Prolog engine = new Prolog();
-        Theory t = new Theory("test :- notx existing(s).");
+        Theory t = Theory.parseLazilyWithStandardOperators("test :- notx existing(s).");
         try {
             engine.addTheory(t);
             fail();
@@ -89,11 +89,11 @@ public class PrologTestCase extends TestCase {
         Prolog engine = new Prolog();
         TestPrologEventAdapter a = new TestPrologEventAdapter();
         engine.addTheoryListener(a);
-        Theory t = new Theory("a(1).\na(2).\n");
+        Theory t = Theory.parseLazilyWithStandardOperators("a(1).\na(2).\n");
         engine.setTheory(t);
         assertEquals("", a.firstMessage);
         assertEquals("a(1).\n\na(2).\n\n", a.secondMessage);
-        t = new Theory("a(3).\na(4).\n");
+        t = Theory.parseLazilyWithStandardOperators("a(3).\na(4).\n");
         engine.addTheory(t);
         assertEquals("a(1).\n\na(2).\n\n", a.firstMessage);
         assertEquals("a(1).\n\na(2).\n\na(3).\n\na(4).\n\n", a.secondMessage);
@@ -103,7 +103,7 @@ public class PrologTestCase extends TestCase {
         Prolog engine = new Prolog();
         TestPrologEventAdapter a = new TestPrologEventAdapter();
         engine.addQueryListener(a);
-        engine.setTheory(new Theory("a(1).\na(2).\n"));
+        engine.setTheory(Theory.parseLazilyWithStandardOperators("a(1).\na(2).\n"));
         engine.solve("a(X).");
         assertEquals("a(X)", a.firstMessage);
         assertEquals("yes.\nX / 1", a.secondMessage);

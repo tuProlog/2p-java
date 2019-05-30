@@ -258,7 +258,7 @@ public final class MethodFinder {
      * @return an array of Class objects representing the classes or primitives
      *         named by the FQNs in the given String array. If the String array
      *         is null, a zero-length Class array is returned. If an element in
-     *         classNames is null, the empty string, "void", or "null", then
+     *         classNames is null, the emptyWithStandardOperators string, "void", or "null", then
      *         Void.TYPE is the corresponding Class in the return array. If any
      *         classes require loading because of this operation, the loading is
      *         done by the ClassLoader that loaded this class. Such classes are
@@ -280,7 +280,7 @@ public final class MethodFinder {
      * @return an array of Class objects representing the classes or primitives
      *         named by the FQNs in the given String array. If the String array
      *         is null, a zero-length Class array is returned. If an element in
-     *         classNames is null, the empty string, "void", or "null", then
+     *         classNames is null, the emptyWithStandardOperators string, "void", or "null", then
      *         Void.TYPE is the corresponding Class in the return array. If any
      *         classes require loading because of this operation, the loading is
      *         done by the given ClassLoader. Such classes are not initialized,

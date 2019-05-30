@@ -53,7 +53,7 @@ public class ConcordionSingleton {
         Prolog engine = new Prolog();
         loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
-            engine.setTheory(new Theory(theory));
+            engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         }
         SolveInfo info = engine.solve(goal);
         return info.isSuccess();
@@ -69,7 +69,7 @@ public class ConcordionSingleton {
         engine = new Prolog();
         loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
-            engine.setTheory(new Theory(theory));
+            engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         }
         engine.addExceptionListener(ex);
         info = engine.solve(goal);
@@ -88,7 +88,7 @@ public class ConcordionSingleton {
         engine = new Prolog();
         loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
-            engine.setTheory(new Theory(theory));
+            engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         }
         engine.addExceptionListener(ex);
         info = engine.solve(goal);
@@ -143,7 +143,7 @@ public class ConcordionSingleton {
 
 
         if (!theory.equalsIgnoreCase("null")) {
-            engine.setTheory(new Theory(theory));
+            engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         }
         info = engine.solve(goal);
         while (info.isSuccess() && maxSolutions != 0) {
@@ -192,7 +192,7 @@ public class ConcordionSingleton {
         List<String> results = new ArrayList<String>();
 
         if (!theory.equalsIgnoreCase("null")) {
-            engine.setTheory(new Theory(theory));
+            engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         }
         info = engine.solve(goal);
         while (info.isSuccess()) {
@@ -247,7 +247,7 @@ public class ConcordionSingleton {
         Prolog engine = new Prolog();
         loadAllLibraries(engine, libraryNames);
         if (!theory.equalsIgnoreCase("null")) {
-            engine.setTheory(new Theory(theory));
+            engine.setTheory(Theory.parseLazilyWithStandardOperators(theory));
         }
         SolveInfo info = engine.solve(goal);
         for (Var var : info.getBindingVars()) {

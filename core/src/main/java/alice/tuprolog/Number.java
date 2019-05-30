@@ -21,7 +21,7 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 
-import java.util.AbstractMap;
+import java.util.Map;
 
 /**
  * Number abstract class represents numbers prolog data type
@@ -206,7 +206,7 @@ public abstract class Number extends Term implements Comparable<Number> {
     }
 
     @Override //Alberto
-    public Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    public Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx) {
         return this;
     }
 
@@ -214,20 +214,25 @@ public abstract class Number extends Term implements Comparable<Number> {
      * gets a copy (with renamed variables) of the term.
      * <p>
      * the list argument passed contains the list of variables to be renamed
-     * (if empty list then no renaming)
+     * (if emptyWithStandardOperators list then no renaming)
      */
-    Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    Term copy(Map<Var, Var> vMap, int idExecCtx) {
         return this;
     }
 
-    Term copyClone(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    Term copyClone(Map<Var, Var> vMap, int idExecCtx) {
         return this;
     }
 
     /**
      * gets a copy of the term.
      */
-    Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    Term copy(Map<Var, Var> vMap, Map<Term, Var> substMap) {
+        return this;
+    }
+
+    @Override
+    public Number copy() {
         return this;
     }
 

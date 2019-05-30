@@ -42,17 +42,17 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che set_theory(a) lancia un errore di sintassi
     public void test_set_theory_1_3() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch(set_theory(a), error(syntax_error(Message), syntax_error(Goal, Line, Position, Message)), true).";
+        String goal = "catch(set_theory(\"a :-\"), error(syntax_error(Message), syntax_error(Goal, Line, Position, Message)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("set_theory", new Struct("a"))));
+        assertTrue(g.isEqual(new Struct("set_theory", new Struct("a :-"))));
         Int line = (Int) info.getTerm("Line");
         assertTrue(line.intValue() == 1);
         Int position = (Int) info.getTerm("Line");
         assertTrue(position.intValue() == 1);
         Struct message = (Struct) info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("The term 'a' is not ended with a period.")));
+        assertTrue(message.isEqual(new Struct("no viable alternative at input ':-'")));
     }
 
     // verifico che add_theory(X) lancia un errore di instanziazione
@@ -86,17 +86,17 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che add_theory(a) lancia un errore di sintassi
     public void test_add_theory_1_3() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch(add_theory(a), error(syntax_error(Message), syntax_error(Goal, Line, Position, Message)), true).";
+        String goal = "catch(add_theory('a :-'), error(syntax_error(Message), syntax_error(Goal, Line, Position, Message)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("add_theory", new Struct("a"))));
+        assertTrue(g.isEqual(new Struct("add_theory", new Struct("a :-"))));
         Int line = (Int) info.getTerm("Line");
-        assertTrue(line.intValue() == 1);
+        assertEquals(1, line.intValue());
         Int position = (Int) info.getTerm("Line");
-        assertTrue(position.intValue() == 1);
+        assertEquals(1, position.intValue());
         Struct message = (Struct) info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("The term 'a' is not ended with a period.")));
+        assertEquals(new Struct("no viable alternative at input ':-'"), message);
     }
 
     // verifico che agent(X) lancia un errore di instanziazione

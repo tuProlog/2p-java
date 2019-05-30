@@ -24,11 +24,9 @@ import alice.tuprolog.Library;
  *
  * @see Library
  */
-public class InvalidLibraryException extends PrologException {
+public class InvalidLibraryException extends InvalidPrologException {
 
     private final String libraryName;
-    private final int line;
-    private final int pos;
 
     public InvalidLibraryException() {
         this(null, 0, 0);
@@ -36,24 +34,51 @@ public class InvalidLibraryException extends PrologException {
 
     public InvalidLibraryException(String libName, int line, int pos) {
         libraryName = libName;
-        this.pos = pos;
-        this.line = line;
+        setLine(line);
+        setPositionInLine(pos);
+    }
+
+    public InvalidLibraryException(final String message, final String libraryName, final int line, final int pos) {
+        super(message);
+        this.libraryName = libraryName;
+        setLine(line);
+        setPositionInLine(pos);
+    }
+
+    public InvalidLibraryException(final String message, final Throwable cause, final String libraryName, final int line, final int pos) {
+        super(message, cause);
+        this.libraryName = libraryName;
+        setLine(line);
+        setPositionInLine(pos);
+    }
+
+    public InvalidLibraryException(final Throwable cause, final String libraryName, final int line, final int pos) {
+        super(cause);
+        this.libraryName = libraryName;
+        setLine(line);
+        setPositionInLine(pos);
+    }
+
+    public InvalidLibraryException(final String message, final Throwable cause, final boolean enableSuppression, final boolean writableStackTrace, final String libraryName, final int line, final int pos) {
+        super(message, cause, enableSuppression, writableStackTrace);
+        this.libraryName = libraryName;
+        setLine(line);
+        setPositionInLine(pos);
+    }
+
+    public InvalidLibraryException(String libName, int line, int pos, Throwable cause) {
+        super(cause);
+        libraryName = libName;
+        setLine(line);
+        setPositionInLine(pos);
     }
 
     public String getLibraryName() {
         return libraryName;
     }
 
-    public int getLine() {
-        return line;
-    }
-
     @Deprecated
     public int getPos() {
-        return pos;
-    }
-
-    public int getPositionInLine() {
         return pos;
     }
 

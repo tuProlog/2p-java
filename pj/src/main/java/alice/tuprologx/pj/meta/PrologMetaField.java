@@ -69,7 +69,7 @@ public class PrologMetaField {
         String init = _annotation.init();
         if (init != "") {
             try {
-                Term<?> t = Term.unmarshal(alice.tuprolog.Parser.parseSingleTerm(init));
+                Term<?> t = Term.unmarshal(alice.tuprolog.Term.createTerm(init));
                 System.out.println("init field = "+t);
                 setValue(o, t);
             }

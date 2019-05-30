@@ -58,7 +58,7 @@ public class StructTestCase extends TestCase {
     }
 
     /**
-     * Structs with an empty name can only be atoms.
+     * Structs with an emptyWithStandardOperators name can only be atoms.
      */
     public void testStructWithEmptyName() {
         try {
@@ -79,7 +79,7 @@ public class StructTestCase extends TestCase {
     }
 
     /**
-     * Another correct method of building an empty list
+     * Another correct method of building an emptyWithStandardOperators list
      */
     public void testEmptyListAsSquaredStruct() {
         Struct emptyList = new Struct("[]");
@@ -91,7 +91,7 @@ public class StructTestCase extends TestCase {
     }
 
     /**
-     * A wrong method of building an empty list
+     * A wrong method of building an emptyWithStandardOperators list
      */
     public void testEmptyListAsDottedStruct() {
         Struct notAnEmptyList = new Struct(".");

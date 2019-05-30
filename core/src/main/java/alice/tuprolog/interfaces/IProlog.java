@@ -1,9 +1,7 @@
 package alice.tuprolog.interfaces;
 
-import alice.tuprolog.Library;
-import alice.tuprolog.SolveInfo;
-import alice.tuprolog.Term;
-import alice.tuprolog.Theory;
+import alice.tuprolog.*;
+import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.interfaces.event.ExceptionListener;
 import alice.tuprolog.interfaces.event.OutputListener;
 import alice.tuprolog.interfaces.event.SpyListener;
@@ -16,7 +14,7 @@ public interface IProlog {
     /**
      * Gets the component managing operators
      */
-    IOperatorManager getOperatorManager();
+    OperatorManager getOperatorManager();
 
     /**
      * Gets the component managing primitives

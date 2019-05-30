@@ -184,6 +184,10 @@ public class Int extends Number {
         return Integer.toString(value);
     }
 
+    public Int copy() {
+        return this;
+    }
+
     /**
      * @author Paolo Contessi
      */

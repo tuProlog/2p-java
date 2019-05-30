@@ -62,9 +62,9 @@ class History {
 
     /**
      * Get the next element in history. If the upper bound of
-     * the history is crossed, an empty element is returned.
+     * the history is crossed, an emptyWithStandardOperators element is returned.
      *
-     * @return The next element in history, or an empty element
+     * @return The next element in history, or an emptyWithStandardOperators element
      * if history's upper bound is crossed.
      */
     public String next() {

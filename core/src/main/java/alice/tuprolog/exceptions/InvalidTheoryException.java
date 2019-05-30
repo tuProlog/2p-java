@@ -24,45 +24,63 @@ import alice.tuprolog.Theory;
  *
  * @see Theory
  */
-public class InvalidTheoryException extends PrologException {
+public class InvalidTheoryException extends InvalidPrologException {
 
     @Deprecated
-    public final int line;
-
-    @Deprecated
-    public final int pos;
-
-    @Deprecated
-    public final int clause;
+    public int clause = -1;
 
     public InvalidTheoryException() {
-        this(null, -1, -1, -1);
-    }
-
-    public InvalidTheoryException(int line, int pos) {
-        this(null, -1, line, pos);
     }
 
     public InvalidTheoryException(String message) {
-        this(message, -1, -1, -1);
-    }
-
-    public InvalidTheoryException(String message, int clause, int line, int pos) {
         super(message);
-        this.clause = clause;
-        this.line = line;
-        this.pos = pos;
     }
 
-    public int getLine() {
-        return line;
+    public InvalidTheoryException(String message, int clause, int line, int positionInLine) {
+        super(message);
+        setClause(clause);
+        setLine(line);
+        setPositionInLine(positionInLine);
     }
 
-    public int getPositionInLine() {
-        return pos;
+    public InvalidTheoryException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvalidTheoryException(Throwable cause) {
+        super(cause);
+    }
+
+    public InvalidTheoryException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 
     public int getClause() {
         return clause;
+    }
+
+    public InvalidTheoryException setClause(int clause) {
+        this.clause = clause;
+        return this;
+    }
+
+    @Override
+    public InvalidTheoryException setLine(int line) {
+        return (InvalidTheoryException) super.setLine(line);
+    }
+
+    @Override
+    public InvalidTheoryException setPositionInLine(int pos) {
+        return (InvalidTheoryException) super.setPositionInLine(pos);
+    }
+
+    @Override
+    public InvalidTheoryException setOffendingSymbol(String offendingSymbol) {
+        return (InvalidTheoryException) super.setOffendingSymbol(offendingSymbol);
+    }
+
+    @Override
+    public InvalidTheoryException setInput(String input) {
+        return (InvalidTheoryException) super.setInput(input);
     }
 }

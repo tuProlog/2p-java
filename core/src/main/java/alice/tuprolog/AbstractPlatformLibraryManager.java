@@ -79,17 +79,19 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
 
             String th = lib.getTheory();
             if (th != null) {
-                theoryManager.consult(new Theory(th), false, name);
+                theoryManager.consult(Theory.parseLazilyWithOperators(lib.getTheory(), prolog.getOperatorManager()), false, name);
                 theoryManager.solveTheoryGoal();
             }
 
             theoryManager.rebindPrimitives();
 
             return lib;
-        } catch (InvalidTheoryException ex) {
-            throw new InvalidLibraryException(lib.getName(), ex.line, ex.pos);
+        } catch (InvalidTheoryException e) {
+            throw new InvalidLibraryException(e.getMessage(), e.getCause(), lib.getName(), e.getLine(), e.getPositionInLine())
+                    .setOffendingSymbol(e.getOffendingSymbol())
+                    .setInput(e.getInput());
         } catch (Exception ex) {
-            throw new InvalidLibraryException(lib.getName(), -1, -1);
+            throw new InvalidLibraryException(lib.getName(), -1, -1, ex);
         }
     }
 

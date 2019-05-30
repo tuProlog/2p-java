@@ -21,6 +21,9 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
+import alice.tuprolog.parser.ParseException;
+import alice.tuprolog.parser.PrologExpressionVisitor;
+import alice.tuprolog.parser.PrologParserFactory;
 import alice.util.OneWayList;
 
 import java.io.Serializable;
@@ -54,12 +57,19 @@ public abstract class Term implements Serializable {
      * @throws InvalidTermException if the string does not represent a valid term
      */
     public static Term createTerm(String st) {
-        return Parser.parseSingleTerm(st);
+        try {
+            return PrologParserFactory.getInstance()
+                    .parseExpressionWithStandardOperators(st)
+                    .accept(PrologExpressionVisitor.get());
+        } catch (ParseException e) {
+            throw e.toInvalidTermException();
+        }
     }
 
     /**
      * @deprecated Use {@link Term#createTerm(String)} instead.
      */
+    @Deprecated
     public static Term parse(String st) {
         return Term.createTerm(st);
     }
@@ -74,12 +84,19 @@ public abstract class Term implements Serializable {
      * @throws InvalidTermException if the string does not represent a valid term
      */
     public static Term createTerm(String st, OperatorManager op) {
-        return Parser.parseSingleTerm(st, op);
+        try {
+            return PrologParserFactory.getInstance()
+                    .parseExpression(st, op)
+                    .accept(PrologExpressionVisitor.get());
+        } catch (ParseException e) {
+            throw e.toInvalidTermException();
+        }
     }
 
     /**
      * @deprecated Use {@link Term#createTerm(String, OperatorManager)} instead.
      */
+    @Deprecated
     public static Term parse(String st, OperatorManager op) {
         return Term.createTerm(st, op);
     }
@@ -88,8 +105,32 @@ public abstract class Term implements Serializable {
      * Gets an iterator providing
      * a term stream from a source text
      */
-    public static java.util.Iterator<Term> getIterator(String text) {
-        return new Parser(text).iterator();
+    public static Iterator<Term> getIterator(String text) {
+        return new Iterator<Term>() {
+
+            private final Iterator<Term> i = PrologParserFactory.getInstance()
+                    .parseClausesWithStandardOperators(text)
+                    .map(PrologExpressionVisitor.asFunction())
+                    .iterator();
+
+            @Override
+            public boolean hasNext() {
+                try {
+                    return i.hasNext();
+                } catch (ParseException e) {
+                    throw e.toInvalidTermException();
+                }
+            }
+
+            @Override
+            public Term next() {
+                try {
+                    return i.next();
+                } catch (ParseException e) {
+                    throw e.toInvalidTermException();
+                }
+            }
+        };
     }
 
     //Alberto
@@ -188,17 +229,6 @@ public abstract class Term implements Serializable {
     }
 
     /**
-     * Tests if this term (as java object) is equal to another
-     */
-    public boolean isEqualObject(Term t) { //Alberto
-        if (!(t instanceof Term)) {
-            return false;
-        } else {
-            return this == t;
-        }
-    }
-
-    /**
      * Gets the actual term referred by this Term. if the Term is a bound variable, the method gets the Term linked to the variable
      */
     public abstract Term getTerm();
@@ -260,19 +290,23 @@ public abstract class Term implements Serializable {
      * gets a copy (with renamed variables) of the term.
      * <p>
      * The list argument passed contains the list of variables to be renamed
-     * (if empty list then no renaming)
+     * (if emptyWithStandardOperators list then no renaming)
      *
      * @param idExecCtx Execution Context identifier
      */
-    abstract Term copy(AbstractMap<Var, Var> vMap, int idExecCtx);
+    abstract Term copy(Map<Var, Var> vMap, int idExecCtx);
+
+    public Term copy() {
+        return copy(new HashMap<>(), Var.ORIGINAL);
+    }
 
     //Alberto
-    public abstract Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx);
+    public abstract Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx);
 
     /**
      * gets a copy for result.
      */
-    abstract Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap);
+    abstract Term copy(Map<Var, Var> vMap, Map<Term, Var> substMap);
 
     /**
      * Try to unify two terms
@@ -431,5 +465,9 @@ public abstract class Term implements Serializable {
     //Alberto
     public String toJSON() {
         return JSONSerializerManager.toJSON(this);
+    }
+
+    public <T extends Term> T castTo(Class<T> klass) {
+        return klass.cast(this);
     }
 }

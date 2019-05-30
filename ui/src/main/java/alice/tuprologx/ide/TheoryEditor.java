@@ -150,7 +150,7 @@ public class TheoryEditor
         // insert a check on feededTheory? -> if true does not feed anything.
         String theory = editArea.getTheory();
         try {
-            getEngine().setTheory(new Theory(theory));
+            getEngine().setTheory(Theory.parseLazilyWithStandardOperators(theory));
             editArea.setDirty(false);
             setStatusMessage("New theory accepted.");
         } catch (InvalidTheoryException ite) {

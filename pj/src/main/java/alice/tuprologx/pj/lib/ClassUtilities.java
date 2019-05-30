@@ -109,7 +109,7 @@ final class ClassUtilities {
      * @param name FQN of a class, or the name of a primitive type
      * @param loader a ClassLoader
      * @return the Class for the name given. Primitive types are converted to
-     *         their particular Class object. null, the empty string, "null",
+     *         their particular Class object. null, the emptyWithStandardOperators string, "null",
      *         and "void" yield Void.TYPE. If any classes require loading
      *         because of this operation, the loading is done by the given class
      *         loader. Such classes are not initialized, however.

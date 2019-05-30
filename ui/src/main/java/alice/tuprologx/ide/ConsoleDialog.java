@@ -779,7 +779,7 @@ public class ConsoleDialog
     //ChangeListener interface methods
 
     /**
-     * this method enable bExport JButton if the user sees a not empty table
+     * this method enable bExport JButton if the user sees a not emptyWithStandardOperators table
      * else disable it
      */
     public void stateChanged(ChangeEvent arg0) {

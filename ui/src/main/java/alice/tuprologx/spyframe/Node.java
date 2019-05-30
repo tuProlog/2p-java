@@ -9,11 +9,11 @@ import java.awt.*;
  */
 public class Node {
     /**
-     * An always empty array. Needed for convenience and speed.
+     * An always emptyWithStandardOperators array. Needed for convenience and speed.
      */
     public static final Node[] empty = new Node[0];
     /**
-     * The children of this node. No children may be an empty array or <code>null</code>.
+     * The children of this node. No children may be an emptyWithStandardOperators array or <code>null</code>.
      */
     public Node[] kids;
     /**
@@ -50,7 +50,7 @@ public class Node {
     }
 
     /**
-     * Creates a node with empty text.
+     * Creates a node with emptyWithStandardOperators text.
      */
     public Node() {
         this(null);

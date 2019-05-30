@@ -50,7 +50,7 @@ public class TestEvent {
         engine.loadLibrary("alice.tuprolog.lib.OOLibrary");
         engine.loadLibrary("alice.tuprolog.lib.IOLibrary");
 
-        Theory th = new Theory(
+        Theory th = Theory.parseLazilyWithStandardOperators(
                 "a(1).\n" +
                 "a(2).\n");
 
@@ -64,7 +64,7 @@ public class TestEvent {
 
         engine.unloadLibrary("alice.tuprolog.lib.IOLibrary");
 
-        th = new Theory(
+        th = Theory.parseLazilyWithStandardOperators(
                 "a(3).\n" +
                 "a(4).\n");
 

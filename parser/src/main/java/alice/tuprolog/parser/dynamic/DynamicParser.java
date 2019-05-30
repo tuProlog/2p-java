@@ -6,9 +6,12 @@ import org.antlr.v4.runtime.TokenStream;
 
 import java.util.*;
 import java.util.function.IntBinaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public abstract class DynamicParser extends Parser {
+
+    private static final boolean DEBUG = false;
 
     private final Map<String, Map<Associativity, Integer>> operators = new HashMap<>();
     private DynamicLexer lexer;
@@ -27,20 +30,16 @@ public abstract class DynamicParser extends Parser {
         this.lexer = lexer;
     }
 
-    protected static String[] except(String... strings) {
-        return strings;
+    public void setLexer(DynamicLexer lexer) {
+        this.lexer = lexer;
     }
 
     public DynamicLexer getLexer() {
         return lexer;
     }
 
-    public void setLexer(DynamicLexer lexer) {
-        this.lexer = lexer;
-    }
-
     public int getOperatorPriority(String operator, Associativity associativity) {
-        return Optional.of(operators.get(operator))
+        return Optional.ofNullable(operators.get(operator))
                        .map(m -> m.get(associativity))
                        .orElse(Integer.MAX_VALUE);
     }
@@ -82,8 +81,25 @@ public abstract class DynamicParser extends Parser {
                && operators.get(functor).containsKey(a);
     }
 
+    protected static final void log(String format, Object... args) {
+        if (DEBUG) {
+            System.err.printf(format, args);
+        }
+    }
+
     protected OptionalInt lookahead(IntBinaryOperator f, Associativity associativity, int priority, String... except) {
         final Token lookahead = getTokenStream().LT(1);
+
+        log("r=%d, c=%d, l='%s' a=%s e=[%s] p(%s)=%d",
+            lookahead.getLine(),
+            lookahead.getCharPositionInLine(),
+            lookahead.getText(),
+            associativity,
+            except.length > 0 ? "'" + String.join("','", except) + "'" : "",
+            lookahead.getText(),
+            getOperatorPriority(lookahead, associativity)
+        );
+
         if (Stream.of(except).filter(this::isOperator).anyMatch(o -> lookahead.getText().equals(o))) {
             return OptionalInt.empty();
         }
@@ -97,28 +113,60 @@ public abstract class DynamicParser extends Parser {
         return OptionalInt.of(f.applyAsInt(getOperatorPriority(lookahead, associativity), priority));
     }
 
+    protected boolean lookaheadIs(EnumSet<Associativity> associativities, String... except) {
+        final Token lookahead = getTokenStream().LT(1);
+
+        log("r=%d, c=%d, l='%s' e=[%s]",
+            lookahead.getLine(),
+            lookahead.getCharPositionInLine(),
+            lookahead.getText(),
+            except.length > 0 ? "'" + String.join("','", except) + "'" : ""
+        );
+
+        boolean result = Stream.of(except).filter(this::isOperator).noneMatch(o -> lookahead.getText().equals(o))
+                         && associativities.stream().anyMatch(a -> isOperatorAssociativity(lookahead, a));
+
+        log(" %s %s\n", result ? "is" : "is not", associativities.size() == 1
+                                                  ? associativities.iterator().next()
+                                                  : associativities.stream().map(Objects::toString).collect(Collectors.joining(",", "oneOf(", ")")));
+
+        return result;
+    }
+
     protected boolean lookaheadGt(Associativity associativity, int priority, String... except) {
-        return lookahead(Integer::compare, associativity, priority, except).orElse(-1) > 0;
+        boolean res = lookahead(Integer::compare, associativity, priority, except).orElse(-1) > 0;
+        log(" > %d? %s\n", priority, res ? "yes" : "no");
+        return res;
     }
 
     protected boolean lookaheadEq(Associativity associativity, int priority, String... except) {
-        return lookahead(Integer::compare, associativity, priority, except).orElse(-1) == 0;
+        boolean res = lookahead(Integer::compare, associativity, priority, except).orElse(-1) == 0;
+        log(" == %d? %s\n", priority, res ? "yes" : "no");
+        return res;
     }
 
     protected boolean lookaheadNeq(Associativity associativity, int priority, String... except) {
-        return lookahead(Integer::compare, associativity, priority, except).orElse(0) != 0;
+        boolean res = lookahead(Integer::compare, associativity, priority, except).orElse(0) != 0;
+        log(" != %d? %s\n", priority, res ? "yes" : "no");
+        return res;
     }
 
     protected boolean lookaheadGeq(Associativity associativity, int priority, String... except) {
-        return lookahead(Integer::compare, associativity, priority, except).orElse(-1) >= 0;
+        boolean res = lookahead(Integer::compare, associativity, priority, except).orElse(-1) >= 0;
+        log(" >= %d? %s\n", priority, res ? "yes" : "no");
+        return res;
     }
 
     protected boolean lookaheadLeq(Associativity associativity, int priority, String... except) {
-        return lookahead(Integer::compare, associativity, priority, except).orElse(1) <= 0;
+        boolean res = lookahead(Integer::compare, associativity, priority, except).orElse(1) <= 0;
+        log(" =< %d? %s\n", priority, res ? "yes" : "no");
+        return res;
     }
 
     protected boolean lookaheadLt(Associativity associativity, int priority, String... except) {
-        return lookahead(Integer::compare, associativity, priority, except).orElse(1) < 0;
+        boolean res = lookahead(Integer::compare, associativity, priority, except).orElse(1) < 0;
+        log(" < %d? %s\n", priority, res ? "yes" : "no");
+        return res;
     }
 
     protected boolean lookahead(Associativity associativity, int top, int bottom, String... except) {
@@ -127,14 +175,24 @@ public abstract class DynamicParser extends Parser {
 
     protected boolean lookahead(EnumSet<Associativity> associativities, int top, int bottom, String... except) {
         final Token lookahead = getTokenStream().LT(1);
-        if (Stream.of(except).filter(this::isOperator).anyMatch(o -> lookahead.getText().equals(o))) {
-            return false;
-        }
-        if (!isOperator(lookahead)) {
-            return false;
-        }
 
-        return associativities.stream().anyMatch(associativity -> {
+        log("r=%d, c=%d, l='%s' a=%s e=[%s] p(%s)=%s",
+            lookahead.getLine(),
+            lookahead.getCharPositionInLine(),
+            lookahead.getText(),
+            associativities.size() == 1
+                ? associativities.iterator().next()
+                : associativities.stream().map(Objects::toString).collect(Collectors.joining(",", "oneOf(", ")")),
+            except.length > 0 ? "'" + String.join("','", except) + "'" : "",
+            lookahead.getText(),
+            associativities.size() == 1
+                ? associativities.stream().map(a -> getOperatorPriority(lookahead,a)).map(String::valueOf).findAny().get()
+                : associativities.stream().map(a -> getOperatorPriority(lookahead,a)).map(String::valueOf).collect(Collectors.joining(",", "oneOf(", ")"))
+        );
+
+
+        final boolean result = Stream.of(except).filter(this::isOperator).noneMatch(o -> lookahead.getText().equals(o))
+                               && associativities.stream().anyMatch(associativity -> {
             if (!isOperatorAssociativity(lookahead, associativity)) {
                 return false;
             }
@@ -143,5 +201,9 @@ public abstract class DynamicParser extends Parser {
 
             return priority <= top && priority >= bottom;
         });
+
+        log(" in [%d, %d]? %s\n", top, bottom, result ? "yes" : "no");
+
+        return result;
     }
 }

@@ -149,7 +149,7 @@ public class Theory extends List<Clause<?,?>> {
         Vector<Clause<?,?>> clauses = new Vector<Clause<?,?>>();
         alice.tuprolog.Theory t = null;
         try {
-            t = new alice.tuprolog.Theory(s);
+            t = alice.tuprolog.Theory.parseLazilyWithStandardOperators(s);
         }
         catch (Exception e) {
             throw new UnsupportedOperationException(e);

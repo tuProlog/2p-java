@@ -1,4 +1,4 @@
-package alice.tuprolog.parsing;
+package alice.tuprolog.parser;
 
 import alice.tuprolog.Double;
 import alice.tuprolog.*;
@@ -21,11 +21,11 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
 
     @Override
     protected OperatorManager getOperatorManager() {
-        OperatorManager om = OperatorManager.defaultOperators();
-        om.opNew("++", "yf", 100);
-        om.opNew("--", "yf", 100);
-        om.opNew("fails", "xf", 50);
-        om.opNew("succeeds", "xf", 50);
+        OperatorManager om = OperatorManager.standardOperators();
+        om.add("++", "yf", 100);
+        om.add("--", "yf", 100);
+        om.add("fails", "xf", 50);
+        om.add("succeeds", "xf", 50);
         return om;
     }
 
@@ -181,9 +181,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
         final java.util.List<String> fxOps = Arrays.asList(":-", "?-", "\\");
         final java.util.List<String> arguments = getATermsSequence();
 
-        return fxOps.stream().flatMap(op ->
-                                              arguments.stream().map(arg -> new Object[]{op, arg})
-        ).toArray(Object[][]::new);
+        return fxOps.stream()
+                    .flatMap(op -> arguments.stream().map(arg -> new Object[]{op, arg}))
+                    .toArray(Object[][]::new);
     }
 
     @Test
@@ -275,14 +275,14 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
 
     private java.util.List<java.util.List<String>> getTermsSequences() {
         return Arrays.asList(
-                Arrays.asList("1", "2"),
-                Arrays.asList("1.9", "2.8"),
+                Arrays.asList("(1)", "(2)"),
+                Arrays.asList("(1.9)", "(2.8)"),
                 Arrays.asList("a", "b"),
                 Arrays.asList("A", "B"),
                 Arrays.asList("f(x)", "g(y)"),
                 Arrays.asList("(1, 2)", "(3, 4)"),
-                Arrays.asList("1", "2", "3"),
-                Arrays.asList("1.9", "2.8", "3.7"),
+                Arrays.asList("(1)", "(2)", "(3)"),
+                Arrays.asList("(1.9)", "(2.8)", "(3.7)"),
                 Arrays.asList("a", "b", "c"),
                 Arrays.asList("A", "B", "C"),
                 Arrays.asList("f(x)", "g(y)", "h(z)"),
@@ -294,9 +294,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
         final java.util.List<String> xfyOps = Arrays.asList(";", "->", ",", "^");
         final java.util.List<java.util.List<String>> arguments = getTermsSequences();
 
-        return xfyOps.stream().flatMap(op ->
-                                               arguments.stream().map(args -> new Object[]{op, args})
-        ).toArray(Object[][]::new);
+        return xfyOps.stream()
+                     .flatMap(op -> arguments.stream().map(args -> new Object[]{op, args}))
+                     .toArray(Object[][]::new);
     }
 
     @Test
@@ -522,8 +522,12 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
     @Parameters(method = "getExpressionsAreParsedCorrectlyThrough99Problems")
     public void testExpressionsAreParsedCorrectlyThrough99Problems(String toBeParsed, Term expected) {
         System.out.printf("Parsing\n\t\t%s\n\tequals\n\t\t%s\n\t?", toBeParsed, expected);
-        Assert.assertEquals(expected, parseTerm(toBeParsed));
+        assertEquals(expected, parseTerm(toBeParsed));
         System.out.println(" yes.");
+    }
+
+    protected void assertEquals(Term t1, Term t2) {
+        Assert.assertTrue(t1 + " is not matching " + t2, t1.match(t2));
     }
 
     public Object[][] getExpressionsAreParsedCorrectlyThrough99Problems() {
@@ -561,8 +565,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Var("X"),
                                               new Struct(".",
                                                          new Var(),
-                                                         new Var("Y"),
-                                                         new Var("Ys"))),
+                                                      new Struct(".",
+                                                              new Var("Y"),
+                                                              new Var("Ys")))),
                                    new Struct("last_but_one",
                                               new Var("X"),
                                               new Struct(".",
@@ -700,7 +705,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "compress([X,Y|Ys],[X|Zs]) :- X \\= Y, compress([Y|Ys],Zs)",
                         new Struct(":-",
                                    new Struct("compress",
-                                              new Struct(".", new Var("X"), new Var("Y"), new Var("Ys")),
+                                           new Struct(".", new Var("X"), new Struct(".", new Var("Y"), new Var("Ys"))),
                                               new Struct(".", new Var("X"), new Var("Zs"))),
                                    new Struct(",",
                                               new Struct("\\=",
@@ -718,7 +723,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct(),
                                               new Struct(),
                                               new Var("N"),
-                                              new Struct(new Var("N"), new Var("X"))),
+                                           new Struct(new Var[]{new Var("N"), new Var("X")})),
                                    new Struct(">",
                                               new Var("N"),
                                               new Int(1)))
@@ -744,7 +749,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct(".", new Var("Y"), new Var("Ys")),
                                               new Struct(".", new Var("Y"), new Var("Ys")),
                                               new Var("N"),
-                                              new Struct(new Var("N"), new Var("X"))),
+                                           new Struct(new Var[]{new Var("N"), new Var("X")})),
                                    new Struct(",",
                                               new Struct(">",
                                                          new Var("N"),

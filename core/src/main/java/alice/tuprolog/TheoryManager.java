@@ -66,8 +66,8 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         dynamicDBase = new ClauseDatabase();
         staticDBase = new ClauseDatabase();
         retractDBase = new ClauseDatabase();
-        lastConsultedTheory = new Theory();
         engine = vm;
+        lastConsultedTheory = Theory.emptyWithStandardOperators();
         primitiveManager = engine.getPrimitiveManager();
     }
 
@@ -211,7 +211,9 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         startGoalStack = new Stack<Term>();
         int clause = 1;
         try {
-            for (Iterator<? extends Term> it = theory.iterator(engine); it.hasNext(); ) {
+            final Iterator<? extends Term> it = theory.iterator(engine);
+            engine.setOperatorManager(engine.getOperatorManager().addAll(theory.getOperatorManager()));
+            while (it.hasNext()) {
                 clause++;
                 Struct d = (Struct) it.next();
                 if (!runDirective(d)) {
@@ -219,7 +221,12 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
                 }
             }
         } catch (InvalidTermException e) {
-            throw new InvalidTheoryException(e.getMessage(), clause, e.line, e.pos);
+            throw new InvalidTheoryException(e.getMessage(), e.getCause())
+                    .setClause(clause)
+                    .setLine(e.getLine())
+                    .setPositionInLine(e.getPositionInLine())
+                    .setOffendingSymbol(e.getOffendingSymbol())
+                    .setInput(e.getInput());
         }
 
         if (libName == null) {
@@ -287,12 +294,17 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
      */
     private Struct toClause(Struct t) {        //PRIMITIVE
         // TODO bad, slow way of cloning. requires approx twice the time necessary
-        t = (Struct) Term.createTerm(t.toString(), this.engine.getOperatorManager());
-        if (!t.isClause()) {
-            t = new Struct(":-", t, new Struct("true"));
+//        String source = t.toString();
+        try {
+            t = t.copy();
+            if (!t.isClause()) {
+                t = new Struct(":-", t, new Struct("true"));
+            }
+            primitiveManager.identifyPredicate(t);
+            return t;
+        } catch (Exception e) {
+            throw e;
         }
-        primitiveManager.identifyPredicate(t);
-        return t;
     }
 
     public synchronized void solveTheoryGoal() {
@@ -398,7 +410,7 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         dynamicDBase = new ClauseDatabase();
         staticDBase = new ClauseDatabase();
         retractDBase = new ClauseDatabase();
-        lastConsultedTheory = new Theory();
+        lastConsultedTheory = Theory.emptyWithStandardOperators();
     }
 
     //Alberto
@@ -411,31 +423,25 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
     //Alberto
     @Override
     public synchronized void consultTheory(String theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
-        Theory th = new Theory(theory);
+        Theory th = Theory.parseLazilyWithStandardOperators(theory);
         consult(th, dynamicTheory, libName);
     }
 
-    //Alberto
     @Override
     public synchronized void assertA(String clause, boolean dyn, String libName, boolean backtrackable) {
-        Parser parser = new Parser(engine.getOperatorManager(), clause);
-        Struct s = (Struct) parser.nextTerm(true);
+        Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         assertA(s, dyn, libName, backtrackable);
     }
 
-    //Alberto
     @Override
     public synchronized void assertZ(String clause, boolean dyn, String libName, boolean backtrackable) {
-        Parser parser = new Parser(engine.getOperatorManager(), clause);
-        Struct s = (Struct) parser.nextTerm(true);
+        Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         assertZ(s, dyn, libName, backtrackable);
     }
 
-    //Alberto
     @Override
     public synchronized void retract(String clause) {
-        Parser parser = new Parser(engine.getOperatorManager(), clause);
-        Struct s = (Struct) parser.nextTerm(true);
+        Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         retract(s);
     }
 

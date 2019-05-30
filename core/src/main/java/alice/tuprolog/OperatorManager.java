@@ -18,30 +18,35 @@
 
 package alice.tuprolog;
 
-import alice.tuprolog.interfaces.IOperatorManager;
-import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.management.interfaces.OperatorManagerMXBean;
+import alice.tuprolog.parser.dynamic.Associativity;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * This class manages Prolog operators.
  *
  * @see Operator
  */
-public class OperatorManager implements IOperatorManager, Serializable, OperatorManagerMXBean {
-
-    @Deprecated
-    public OperatorManager() {
-    }
+public class OperatorManager implements Serializable {
 
     public static OperatorManager empty() {
         return new OperatorManager();
     }
 
-    public static OperatorManager defaultOperators() {
+    public static OperatorManager standardOperators() {
         return new DefaultOperatorManager();
+    }
+
+    public static OperatorManager with(Operator op, Operator ops) {
+        return new OperatorManager().add(op).addAll(ops);
+    }
+
+    public static OperatorManager standardOperatorsPlus(Operator op, Operator... ops) {
+        return standardOperators().add(op).addAll(ops);
     }
 
     /**
@@ -53,120 +58,162 @@ public class OperatorManager implements IOperatorManager, Serializable, Operator
      */
     public static final int OP_HIGH = 1200;
 
+    private final Map<Pair<String, Associativity>, Operator> index;
+//    private final SortedSet<Operator> operators;
+
+
+    @Deprecated
+    public OperatorManager() {
+        this(Collections.emptyList());
+    }
+
+    private OperatorManager(Collection<Operator> operators) {
+//        this.operators = new TreeSet<>();
+        this.index = new HashMap<>();
+        addAll(Operator.xfx(":-", 1200), Operator.fx(":-", 1200));
+        addAll(operators);
+    }
+
+    private OperatorManager(Map<Pair<String, Associativity>, Operator> operators) {
+//        this.operators = new TreeSet<>();
+        this.index = operators;
+    }
+
     /**
-     * current known operators
+     * Creates a new operator. If the operator is already provided,
+     * it replaces it with the new one
+     *
+     * @see #add(Operator)
      */
-    private OperatorRegister operatorList = new OperatorRegister();
+    @Deprecated
+    public void opNew(String name, String type, int prio) {
+        add(name, type, prio);
+    }
+
+    public OperatorManager add(String name, Associativity type, int prio) {
+        return add(Operator.of(name, type, prio));
+    }
+
+    public OperatorManager add(String name, String type, int prio) {
+        return add(Operator.of(name, type, prio));
+    }
+
+    public OperatorManager addAll(Operator... operators) {
+        return addAll(Stream.of(operators));
+    }
+
+    public OperatorManager addAll(Collection<Operator> operators) {
+        return addAll(operators.stream());
+    }
+
+    public OperatorManager addAll(Stream<Operator> operators) {
+        operators.forEach(this::add);
+        return this;
+    }
+
+    public OperatorManager addAll(OperatorManager other) {
+        return addAll(Objects.requireNonNull(other).getOperators());
+    }
 
     /**
      * Creates a new operator. If the operator is already provided,
      * it replaces it with the new one
      */
-    //Usato anche nel management JMX
-    public synchronized void opNew(String name, String type, int prio) {
-        final Operator op = new Operator(name, type, prio);
-        if (prio >= OP_LOW && prio <= OP_HIGH) {
-            operatorList.addOperator(op);
+    public OperatorManager add(Operator operator) {
+        Objects.requireNonNull(operator);
+
+        if (operator.getPriority() >= OP_LOW && operator.getPriority() <= OP_HIGH) {
+//            operators.add(operator);
+            index.put(Pair.of(operator.getName(), operator.getAssociativity()), operator);
+        } else {
+            throw new IllegalArgumentException(
+                    "Illegal priority for " + operator + " it must be in the range " + OP_LOW + ".." + OP_HIGH);
         }
+
+        return this;
     }
 
     /**
      * Returns the priority of an operator (0 if the operator is not defined).
      */
-    //Usato anche nel management JMX
-    public synchronized int opPrio(String name, String type) {
-        Operator o = operatorList.getOperator(name, type);
-        return (o == null) ? 0 : o.prio;
+    @Deprecated
+    public int opPrio(String name, String type) {
+        return getOperatorPriority(name, type);
+    }
+
+    public int getOperatorPriority(String name, Associativity type) {
+        Objects.requireNonNull(name);
+        Operator op = index.get(Pair.of(name, type));
+        return op == null ? 0 : op.getPriority();
+    }
+
+    public int getOperatorPriority(String name, String type) {
+        return getOperatorPriority(name, Associativity.valueOf(type.toUpperCase()));
     }
 
     /**
      * Returns the priority nearest (lower) to the priority of a defined operator
      */
-    //Usato anche nel management JMX
-    public synchronized int opNext(int prio) {
-        int n = 0;
-        for (Operator opFromList : operatorList) {
-            if (opFromList.prio > n && opFromList.prio < prio) {
-                n = opFromList.prio;
-            }
-        }
-        return n;
-    }
+//    @Deprecated
+//    public int opNext(int prio) {
+//        return getNearestPriority(prio);
+//    }
+
+//    public int getNearestPriority(int priority) {
+//        return operators.subSet(
+//                Operator.of("", Associativity.values(0), OP_HIGH + 1),
+//                Operator.of("", Associativity.values(0), priority - 1)
+//        ).last().getPriority();
+//    }
 
     /**
      * Gets the list of the operators currently defined
      *
      * @return the list of the operators
      */
-    public synchronized List<Operator> getOperators() {
-        return new LinkedList<Operator>(operatorList);
+    public List<Operator> getOperators() {
+        return new ArrayList<>(index.values());
     }
 
-    /*Castagna 06/2011*/
-    /* Francesco Fabbri
-     * 16/05/2011
-     * Clone operation added
-     */
-    public IOperatorManager clone() {
-        OperatorManager om = new OperatorManager();
-        om.operatorList = (OperatorRegister) this.operatorList.clone();
-        return om;
+    public OperatorManager clone() {
+        return new OperatorManager(new HashMap<>(index));
     }
 
-    //Alberto
-    @Override
-    public String fetchAllOperators() {
-        List<Operator> l = getOperators();
-        return JSONSerializerManager.toJSON(l);
+    @Deprecated
+    public void reset() {
+//        operators.clear();
+        index.clear();
     }
 
-    ///Management
+
+    public OperatorManager clear() {
+        reset();
+        return this;
+    }
 
     @Override
-    public synchronized void reset() {
-        operatorList = new OperatorRegister();
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final OperatorManager that = (OperatorManager) o;
+        return index.equals(that.index);
     }
 
-    /**
-     * Register for operators
-     * Cashes operator by name+type description.
-     * Retains insertion order as LinkedHashSet.
-     * <p/>
-     * todo Not 100% sure if 'insertion-order-priority' should be completely replaced
-     * by the explicit priority given to operators.
-     *
-     * @author ivar.orstavik@hist.no
-     */
-    private static class OperatorRegister extends LinkedHashSet<Operator> /*Castagna 06/2011*/ implements Cloneable/**/ {
-        //map of operators by name and type
-        //key is the nameType of an operator (for example ":-xfx") - value is an Operator
-        private HashMap<String, Operator> nameTypeToKey = new HashMap<String, Operator>();
+    @Override
+    public int hashCode() {
+        return Objects.hash(index);
+    }
 
-        public boolean addOperator(Operator op) {
-            final String nameTypeKey = op.name + op.type;
-            Operator matchingOp = nameTypeToKey.get(nameTypeKey);
-            if (matchingOp != null) {
-                super.remove(matchingOp);       //removes found match from the main list
-            }
-            nameTypeToKey.put(nameTypeKey, op); //writes over found match in nameTypeToKey map
-            return super.add(op);               //adds new operator to the main list
-        }
-
-        public Operator getOperator(String name, String type) {
-            return nameTypeToKey.get(name + type);
-        }
-
-        /*Castagna 06/2011*/
-        @Override
-        public Object clone() {
-            OperatorRegister or = (OperatorRegister) super.clone();
-            Iterator<Operator> ior = or.iterator();
-            or.nameTypeToKey = new HashMap<String, Operator>();
-            while (ior.hasNext()) {
-                Operator o = ior.next();
-                or.nameTypeToKey.put(o.name + o.type, o);
-            }
-            return or;
-        }
+    @Override
+    public String toString() {
+        return index.values()
+                    .stream()
+                    .sorted()
+                    .map(Operator::toString)
+                    .collect(Collectors.joining(", ", "{", "}"));
     }
 }

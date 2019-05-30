@@ -27,7 +27,7 @@ public class TestStop {
 
         Prolog core = new Prolog();
 
-        Theory th = new Theory(
+        Theory th = Theory.parseLazilyWithStandardOperators(
                 "rec(X):- current_thread <- sleep(X), X1 is X + 100, rec(X1).\n"
         );
         core.setTheory(th);

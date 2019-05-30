@@ -25,8 +25,7 @@ package alice.tuprolog;
 
 class DefaultOperatorManager extends OperatorManager {
 
-    private static final long serialVersionUID = 1L;
-
+    @Deprecated
     public DefaultOperatorManager() {
         opNew(":-", "xfx", 1200);
         opNew("-->", "xfx", 1200);
@@ -43,7 +42,6 @@ class DefaultOperatorManager extends OperatorManager {
         opNew("\\==", "xfx", 700);
         opNew("=@=", "xfx", 700);
         opNew("\\=@=", "xfx", 700);
-        opNew("@>", "xfx", 700);
         opNew("@>", "xfx", 700);
         opNew("@<", "xfx", 700);
         opNew("@=<", "xfx", 700);

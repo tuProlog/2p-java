@@ -173,10 +173,10 @@ public final class ComponentConfigurator implements IComponentConfigurator {
 		Prolog prolog = new Prolog();
 		try {
 			if(!prologTheory.trim().isEmpty())
-				prolog.setTheory(new Theory(prologTheory));
+				prolog.setTheory(Theory.parseLazilyWithStandardOperators(prologTheory));
 			for(String file : fromFiles){
 				if(!file.trim().isEmpty()){
-					prolog.addTheory(new Theory(getTheoryFromFile(file.trim())));
+					prolog.addTheory(Theory.parseLazilyWithStandardOperators(getTheoryFromFile(file.trim())));
 				}
 			}
 		} catch (InvalidTheoryException e) {

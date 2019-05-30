@@ -19,11 +19,11 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.interfaces.TermVisitor;
+import com.codepoetics.protonpack.StreamUtils;
 
-import java.util.AbstractMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 //import java.util.ArrayList;
 
@@ -135,11 +135,17 @@ public class Struct extends Term {
 
 
     /**
-     * Builds a structure representing an empty list
+     * Builds a structure representing an emptyWithStandardOperators list
      */
     public Struct() {
         this("[]", 0);
         resolved = true;
+    }
+
+    private static final Pattern ATOM_REGEX = Pattern.compile("^[a-z][a-zA-Z0-9_]*$");
+
+    public Struct(Collection<? extends Term> terms) {
+        this(terms.iterator());
     }
 
     /**
@@ -147,8 +153,8 @@ public class Struct extends Term {
      */
     public Struct(Term h, Term t) {
         this(".", 2);
-        arg[0] = h;
-        arg[1] = t;
+        arg[0] = Objects.requireNonNull(h);
+        arg[1] = Objects.requireNonNull(t);
     }
 
     /**
@@ -158,13 +164,30 @@ public class Struct extends Term {
         this(argList, 0);
     }
 
+    public Struct(Stream<? extends Term> stream) {
+        this(stream.iterator());
+    }
+
+    public Struct(Iterator<? extends Term> i) {
+        this(".", 2);
+        if (i.hasNext()) {
+            arg[0] = Objects.requireNonNull(i.next());
+            arg[1] = new Struct(i);
+        } else {
+            // build an emptyWithStandardOperators list
+            name = "[]";
+            arity = 0;
+            arg = null;
+        }
+    }
+
     private Struct(Term[] argList, int index) {
         this(".", 2);
         if (index < argList.length) {
-            arg[0] = argList[index];
+            arg[0] = Objects.requireNonNull(argList[index]);
             arg[1] = new Struct(argList, index + 1);
         } else {
-            // build an empty list
+            // build an emptyWithStandardOperators list
             name = "[]";
             arity = 0;
             arg = null;
@@ -180,32 +203,16 @@ public class Struct extends Term {
         if (arity > 0) {
             arg = new Term[arity];
             for (int c = 0; c < arity; c++) {
-                arg[c] = al.removeFirst();
+                arg[c] = Objects.requireNonNull(al.removeFirst());
             }
         }
         predicateIndicator = name + "/" + arity;
         resolved = false;
     }
 
-    private Struct(int arity_) {
-        arity = arity_;
-        arg = new Term[arity];
-    }
-
-    private Struct(String name_, int arity_) {
-        if (name_ == null) {
-            throw new InvalidTermException("The functor of a Struct cannot be null");
-        }
-        if (name_.length() == 0 && arity_ > 0) {
-            throw new InvalidTermException("The functor of a non-atom Struct cannot be an empty string");
-        }
-        name = name_;
-        arity = arity_;
-        if (arity > 0) {
-            arg = new Term[arity];
-        }
-        predicateIndicator = name + "/" + arity;
-        resolved = false;
+    private Struct(int arity) {
+        this.arity = arity;
+        arg = new Term[this.arity];
     }
 
     /**
@@ -305,6 +312,7 @@ public class Struct extends Term {
     }
 
     public boolean isList() {
+//        return name.equals(".") && arity == 2 || isEmptyList();
         return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
     }
 
@@ -392,7 +400,7 @@ public class Struct extends Term {
      *
      * @param vMap is needed for register occurence of same variables
      */
-    Term copy(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    Term copy(Map<Var, Var> vMap, int idExecCtx) {
         Struct t = new Struct(arity);
         t.resolved = resolved;
         t.name = name;
@@ -408,7 +416,7 @@ public class Struct extends Term {
     }
 
     @Override //Alberto
-    public Term copyAndRetainFreeVar(AbstractMap<Var, Var> vMap, int idExecCtx) {
+    public Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx) {
         Struct t = new Struct(arity);
         t.resolved = resolved;
         t.name = name;
@@ -429,7 +437,7 @@ public class Struct extends Term {
      *
      * @param vMap is needed for register occurence of same variables
      */
-    Term copy(AbstractMap<Var, Var> vMap, AbstractMap<Term, Var> substMap) {
+    Term copy(Map<Var, Var> vMap, Map<Term, Var> substMap) {
         Struct t = new Struct(arity);
         t.resolved = false;
         t.name = name;
@@ -442,6 +450,10 @@ public class Struct extends Term {
             //	t.arg[c] = this.arg[c];
         }
         return t;
+    }
+
+    public Struct copy() {
+        return (Struct) super.copy();
     }
 
     /**
@@ -506,10 +518,18 @@ public class Struct extends Term {
     // services for list structures
 
     /**
-     * Is this structure an empty list?
+     * Is this structure an emptyWithStandardOperators list?
      */
     public boolean isEmptyList() {
         return name.equals("[]") && arity == 0;
+    }
+
+    public boolean isEmptySet() {
+        return name.equals("{}") && arity == 0;
+    }
+
+    public boolean isSet() {
+        return name.equals("{}");
     }
 
     /**
@@ -551,16 +571,17 @@ public class Struct extends Term {
      * </p>
      */
     public int listSize() {
-        if (!isList()) {
-            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
-        }
-        Struct t = this;
-        int count = 0;
-        while (!t.isEmptyList()) {
-            count++;
-            t = (Struct) t.arg[1].getTerm();
-        }
-        return count;
+//        if (!isList()) {
+//            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
+//        }
+//        Struct t = this;
+//        int count = 0;
+//        while (!t.isEmptyList()) {
+//            count++;
+//            t = (Struct) t.arg[1].getTerm();
+//        }
+//        return count;
+        return (int) listStream().count();
     }
 
     /**
@@ -575,7 +596,12 @@ public class Struct extends Term {
         if (!isList()) {
             throw new UnsupportedOperationException("The structure " + this + " is not a list.");
         }
+//        return listStream().iterator();
         return new StructIterator(this);
+    }
+
+    public Stream<? extends Term> listStream() {
+        return StreamUtils.ofNullable(this::listIterator);
     }
 
     // hidden services
@@ -696,6 +722,27 @@ public class Struct extends Term {
         primitive = b;
     }
 
+    private Struct(String name, int arity) {
+        if (name == null) {
+            throw new InvalidTermException("The functor of a Struct cannot be null");
+        }
+        if (name.length() == 0 && arity > 0) {
+            throw new InvalidTermException("The functor of a non-atom Struct cannot be an emptyWithStandardOperators string");
+        }
+        this.name = name;
+        this.arity = arity;
+        if (this.arity > 0) {
+            arg = new Term[this.arity];
+        }
+        predicateIndicator = this.name + "/" + this.arity;
+        resolved = false;
+    }
+
+    public boolean isFunctorAtomic() {
+        return ATOM_REGEX.matcher(getName()).matches();
+    }
+
+
     /**
      * Gets the string representation of this structure
      * <p>
@@ -703,17 +750,17 @@ public class Struct extends Term {
      * Names starting with upper case letter are enclosed in apices.
      */
     public String toString() {
-        // empty list case
+        // emptyWithStandardOperators list case
         if (isEmptyList()) {
             return "[]";
-        }
-        // list case
-        if (name.equals(".") && arity == 2) {
+        } else if (isEmptySet()) {
+            return "{}";
+        } else if (this.isList()) {
             return ("[" + toString0() + "]");
-        } else if (name.equals("{}")) {
+        } else if (isSet()) {
             return ("{" + toString0_bracket() + "}");
         } else {
-            String s = (Parser.isAtom(name) ? name : "'" + name + "'");
+            String s = (isFunctorAtomic() ? name : "'" + name + "'");
             if (arity > 0) {
                 s = s + "(";
                 for (int c = 1; c < arity; c++) {
@@ -736,11 +783,14 @@ public class Struct extends Term {
     private String toString0() {
         Term h = arg[0].getTerm();
         Term t = arg[1].getTerm();
-        if (t.isList()) {
-            Struct tl = (Struct) t;
-            if (tl.isEmptyList()) {
+        if (t.isEmptyList()) {
+            if (h instanceof Var) {
+                return ((Var) h).toStringFlattened();
+            } else {
                 return h.toString();
             }
+        } else if (t.isList()) {
+            Struct tl = (Struct) t;
             if (h instanceof Var) {
                 return (((Var) h).toStringFlattened() + "," + tl.toString0());
             } else {
@@ -876,7 +926,7 @@ public class Struct extends Term {
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
         }
-        v = (Parser.isAtom(name) ? name : "'" + name + "'");
+        v = (isFunctorAtomic()? name : "'" + name + "'");
         if (arity == 0) {
             return v;
         }

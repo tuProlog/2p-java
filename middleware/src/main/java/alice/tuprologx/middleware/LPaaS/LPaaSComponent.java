@@ -3,9 +3,9 @@ package alice.tuprologx.middleware.LPaaS;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import alice.util.Tools;
 import com.google.gson.Gson;
 
-import alice.tuprolog.Parser;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Term;
 import alice.tuprolog.Theory;
@@ -48,8 +48,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 		goals = toMatch.toMatch();
 		goalsToMatch =  new ArrayList<Term>();
 		for(String goal : goals){
-			Parser parser = new Parser(getProlog().getOperatorManager(), goal);
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(goal, getProlog().getOperatorManager());
 			goalsToMatch.add(term);
 		}
 			
@@ -67,8 +66,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	@Override
 	public synchronized final String solve(String toSolve){
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(toSolve));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(toSolve), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -90,8 +88,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	public synchronized final String solveN(String toSolve, int num){
 		ArrayList<String> result = new ArrayList<String>();
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(toSolve));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(toSolve), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -121,8 +118,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	public synchronized final String solveN(String toSolve, int num, long time){
 		ArrayList<String> result = new ArrayList<String>();
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(toSolve));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(toSolve), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -152,8 +148,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	public synchronized final String solveAll(String toSolve){
 		ArrayList<String> result = new ArrayList<String>();
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(toSolve));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(toSolve), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -191,8 +186,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	public synchronized final String solveAll(String toSolve, long time){
 		ArrayList<String> result = new ArrayList<String>();
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(toSolve));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(toSolve), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -221,8 +215,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	@Override
 	public synchronized final String solve(String toSolve, long time){
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(toSolve));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(toSolve), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -243,8 +236,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	@Override
 	public synchronized final String addGoal(String goal){
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(goal));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(goal), getProlog().getOperatorManager());
 			for(Term t : goalsToMatch){
 				if(t.match(term))
 					return "Goal already authorized!";
@@ -260,8 +252,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	public synchronized final String removeGoal(String goal){
 		String res = "Goal not present!";
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(goal));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(goal), getProlog().getOperatorManager());
 			Term toRemove = null;
 			for(Term t : goalsToMatch){
 				if (t.match(term)){
@@ -281,8 +272,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	@Override
 	public synchronized final String isGoal(String goal){
 		try{
-			Parser parser = new Parser(getProlog().getOperatorManager(), alice.util.Tools.removeApices(goal));
-			Term term = parser.nextTerm(true);
+			Term term = Term.createTerm(Tools.removeApices(goal), getProlog().getOperatorManager());
 			boolean allowed = false;
 			for(Term toMatch : goalsToMatch){
 				if(toMatch.match(term)){
@@ -302,7 +292,7 @@ public abstract class LPaaSComponent implements LPaaS_ClientInterface, LPaaS_Con
 	@Override
 	public synchronized final String addTheory(String theory){
 		try {
-			getProlog().addTheory(new Theory(alice.util.Tools.removeApices(theory)));
+			getProlog().addTheory(Theory.parseLazilyWithStandardOperators(alice.util.Tools.removeApices(theory)));
 		} catch (InvalidTheoryException e) {
 			e.printStackTrace();
 			return "no.";

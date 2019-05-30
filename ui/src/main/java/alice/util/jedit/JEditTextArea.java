@@ -1849,7 +1849,7 @@ public class JEditTextArea extends JComponent {
 
         private void doDoubleClick(MouseEvent evt, int line,
                                    int offset, int dot) throws BadLocationException {
-            // Ignore empty lines
+            // Ignore emptyWithStandardOperators lines
             if (getLineLength(line) == 0) {
                 return;
             }

@@ -9,34 +9,37 @@ package alice.tuprolog.parser;
 import java.util.*;
 import alice.tuprolog.parser.dynamic.*;
 import static alice.tuprolog.parser.dynamic.Associativity.*;
+import static alice.tuprolog.parser.dynamic.StringType.*;
 }
 
 tokens { VARIABLE }
 
 INTEGER
-    : '0'
-    | [1-9] (Digits? | '_' + Digits)
+    : Digit+
     ;
 
 HEX
-    : '0' [xX] [0-9a-fA-F] ([0-9a-fA-F_]* [0-9a-fA-F])?
+    : Zero [xX] HexDigit+
     ;
 
 OCT
-    : '0' '_'* [0-7] ([0-7_]* [0-7])?
+    : Zero [oO] OctDigit+
     ;
 
 BINARY
-    : '0' [bB] [01] ([01_]* [01])?
+    : Zero [bB] BinDigit+
+    ;
+
+SIGN
+    : '+' | '-'
     ;
 
 FLOAT
-    : (Digits '.' Digits? | '.' Digits) ExponentPart? [fFdD]?
-    | Digits (ExponentPart [fFdD]? | [fFdD])
+    : Digit+ '.' Digit+ ( [eE] SIGN? Digit+ )?
     ;
 
-HEX_FLOAT
-    : '0' [xX] (HexDigits '.'? | HexDigits? '.' HexDigits) [pP] [+-]? Digits [fFdD]?
+CHAR
+    : Zero '\'' ((~[\n\t\r\f]) | Escapable | DoubleDQ | DoubleSQ) { setText(escape(getText(), SINGLE_QUOTED)); }
     ;
 
 BOOL
@@ -65,7 +68,7 @@ RSQUARE
     ;
 
 EMPTY_LIST
-    : '[' Ws* ']'
+    : LSQUARE Ws* RSQUARE
     ;
 
 LBRACE
@@ -76,16 +79,20 @@ RBRACE
     : '}'
     ;
 
-//EMPTY_SET
-//    : '{' Ws* '}'
-//    ;
+EMPTY_SET
+    : LBRACE Ws* RBRACE
+    ;
 
 VARIABLE
     : [_A-Z] [_A-Za-z0-9]*
     ;
 
-STRING
-    : ('"' .*? '"' | '\'' .*? '\'') { setText(substring(getText(), 1, -1)); }
+SQ_STRING
+    : '\'' ((~[\n']) | Escapable | DoubleSQ)* '\'' { setText(escape(unquote(getText()), SINGLE_QUOTED)); }
+    ;
+
+DQ_STRING
+    : '"' ((~[\n"]) | Escapable | DoubleDQ)* '"' { setText(escape(unquote(getText()), DOUBLE_QUOTED)); }
     ;
 
 COMMA
@@ -96,16 +103,28 @@ PIPE
     : '|'
     ;
 
+CUT
+    : '!'
+    ;
+
+FULL_STOP
+    : '.' [ \t]* (COMMENT? FullStopTerminator)
+    ;
+
+fragment FullStopTerminator
+    : EOF | LINE_COMMENT | [\n\r]+
+    ;
+
 WHITE_SPACES
     : Ws+ -> skip
     ;
 
 COMMENT
-    : '/*' .*? '*/' -> channel(HIDDEN)
+    : '/*' .*? '*/' -> skip
     ;
 
 LINE_COMMENT
-    : '%' ~[\r\n]* -> channel(HIDDEN)
+    : '%' (~[\r\n])* -> skip
     ;
 
 OPERATOR
@@ -116,30 +135,66 @@ ATOM
     : (Symbols | Atom) { !isOperator(getText()) }?
     ;
 
+fragment Symbols
+    : NotReserved (Symbol* NotReserved)?
+    | '!' '!'+
+    ;
+
+fragment Escapable
+    : '\\'
+        ( [abfnrtv'`"]
+        | '\\'
+        | ('\r'? '\n')
+        | (OctDigit+ '\\')
+        | (HexDigit+ '\\')
+        )
+    ;
+
+fragment DoubleSQ
+    : '\'\''
+    ;
+
+fragment DoubleDQ
+    : '""'
+    ;
+
+fragment NotReserved
+    : [#$&*+;/\\:<=>?@^~°.] | '-'
+    ;
+
+fragment Reserved
+    : COMMA | PIPE | LPAR | RPAR | LBRACE | RBRACE | LSQUARE | RSQUARE
+    ;
+
 fragment Atom
     : [a-z][A-Za-z0-9_]*
     ;
 
-fragment Symbols
-    : '!' | [#$&*+-.;/\\:<=>?@^~°][#$&*+-.;/\\:<=>?@^~°!|]*
+fragment Symbol
+    : NotReserved
+    | Reserved
     ;
 
 fragment Ws
     : [ \t\r\n]
     ;
 
-fragment ExponentPart
-    : [eE] [+-]? Digits
+fragment OctDigit
+    : [0-7]
     ;
 
-fragment HexDigits
-    : HexDigit ((HexDigit | '_')* HexDigit)?
+fragment BinDigit
+    : [0-1]
     ;
 
 fragment HexDigit
     : [0-9a-fA-F]
     ;
 
-fragment Digits
-    : [0-9] ([0-9_]* [0-9])?
+fragment Digit
+    : [0-9]
+    ;
+
+fragment Zero
+    : '0'
     ;

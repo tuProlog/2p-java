@@ -50,12 +50,11 @@ public class BasicLibrary extends Library {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!th.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
-                                         th);
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", th);
         }
         try {
             Struct theory = (Struct) th;
-            getEngine().setTheory(new Theory(theory.getName()));
+            getEngine().setTheory(Theory.parseLazilyWithOperators(theory.getName(), getEngine().getOperatorManager()));
             return true;
         } catch (InvalidTheoryException ex) {
             throw PrologError.syntax_error(engine.getEngineManager(), ex.clause, ex.line, ex.pos, new Struct(ex.getMessage()));
@@ -78,7 +77,7 @@ public class BasicLibrary extends Library {
         }
         try {
             Struct theory = (Struct) th.getTerm();
-            getEngine().addTheory(new Theory(theory.getName()));
+            getEngine().addTheory(Theory.parseLazilyWithStandardOperators(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex) {
             throw PrologError.syntax_error(engine.getEngineManager(), ex.clause, ex.line, ex.pos, new Struct(ex.getMessage()));
@@ -115,7 +114,7 @@ public class BasicLibrary extends Library {
             if (!libN.isAtom()) {
                 return false;
             }
-            Theory t = new Theory(theory.getName());
+            Theory t = Theory.parseLazilyWithStandardOperators(theory.getName());
             TheoryLibrary thlib = new TheoryLibrary(libN.getName(), t);
             getEngine().loadLibrary(thlib);
             return true;

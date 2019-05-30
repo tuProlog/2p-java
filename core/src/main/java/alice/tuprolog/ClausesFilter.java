@@ -149,7 +149,7 @@ class ClausesFilter {
     private static boolean isAList(Term t) {
         /*
          * Checks if a Struct is also a list.
-         * A list can be an empty list, or a Struct with name equals to "."
+         * A list can be an emptyWithStandardOperators list, or a Struct with name equals to "."
          * and arity equals to 2.
          */
         if (t instanceof Struct) {

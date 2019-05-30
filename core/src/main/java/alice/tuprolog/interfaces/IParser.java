@@ -7,7 +7,7 @@ public interface IParser {
     /**
      * Parses next term from the stream built on string.
      *
-     * @param endNeeded <tt>true</tt> if it is required to parse the end token
+     * @param endNeeded <tt>true</tt> if it is required to parseWithStandardOperators the end token
      *                  (a period), <tt>false</tt> otherwise.
      * @throws InvalidTermException if a syntax error is found.
      */
