@@ -136,8 +136,9 @@ ATOM
     ;
 
 fragment Symbols
-    : NotReserved (Symbol* NotReserved)?
-    | '!' '!'+
+    : OpInitialSymbol OpSymbol* { !getText().startsWith("/*") }?
+    | '!'
+    | ';'
     ;
 
 fragment Escapable
@@ -158,21 +159,16 @@ fragment DoubleDQ
     : '""'
     ;
 
-fragment NotReserved
-    : [#$&*+;/\\:<=>?@^~°.] | '-'
+fragment OpSymbol
+    : [+*/\\^<>=~:.?@#$&_\-]
     ;
 
-fragment Reserved
-    : COMMA | PIPE | LPAR | RPAR | LBRACE | RBRACE | LSQUARE | RSQUARE
+fragment OpInitialSymbol
+    : [+*/\\^<>=~:.?@#$&\-]
     ;
 
 fragment Atom
     : [a-z][A-Za-z0-9_]*
-    ;
-
-fragment Symbol
-    : NotReserved
-    | Reserved
     ;
 
 fragment Ws
