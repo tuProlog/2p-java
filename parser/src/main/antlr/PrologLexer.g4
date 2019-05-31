@@ -108,11 +108,11 @@ CUT
     ;
 
 FULL_STOP
-    : '.' [ \t]* (COMMENT? FullStopTerminator)
+    : '.' Ws* (COMMENT? FullStopTerminator)
     ;
 
 fragment FullStopTerminator
-    : EOF | LINE_COMMENT | [\n\r]+
+    : EOF | LINE_COMMENT | Ws+
     ;
 
 WHITE_SPACES
