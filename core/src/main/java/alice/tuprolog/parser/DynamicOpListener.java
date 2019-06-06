@@ -33,6 +33,20 @@ class DynamicOpListener extends PrologParserBaseListener {
     }
 
     @Override
+    public void enterExpression(final ExpressionContext ctx) {
+        if (ctx.exception != null) {
+            throw ctx.exception;
+        }
+    }
+
+    @Override
+    public void exitOuter(final PrologParser.OuterContext ctx) {
+        if (ctx.exception != null) {
+            throw ctx.exception;
+        }
+    }
+
+    @Override
     public void exitClause(PrologParser.ClauseContext ctx) {
 
         final ExpressionContext expr = ctx.expression();
