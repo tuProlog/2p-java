@@ -22,6 +22,9 @@ import alice.tuprolog.Library;
 import alice.tuprolog.PrologError;
 import alice.tuprolog.Term;
 import alice.tuprolog.Var;
+import alice.util.Tools;
+
+import java.io.IOException;
 
 /**
  * Library for managing DCGs.
@@ -34,23 +37,19 @@ public class DCGLibrary extends Library {
     public DCGLibrary() {
     }
 
+    private static final String THEORY;
+
+    static {
+        try {
+            THEORY = Tools.loadText(DCGLibrary.class.getResourceAsStream(DCGLibrary.class.getSimpleName() + ".pl"));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
     public String getTheory() {
-        return ":- op(1200, xfx, '-->'). \n"
-               + ":- op(200, xfx, '\\'). \n"
-               + "dcg_nonterminal(X) :- list(X), !, fail. \n"
-               + "dcg_nonterminal(_). \n"
-               + "dcg_terminals(Xs) :- list(Xs). \n"
-               + "phrase(C,L) :- phrase_guard(C,L), phrase0(C,L). \n"
-               + "phrase(C,L,R) :- phrase_guard(C,L,R), phrase0(C,L,R). \n"
-               + "phrase0(Category, String, Left) :- dcg_parse(Category, String \\ Left). \n"
-               + "phrase0(Category, [H | T]) :- dcg_parse(Category, [H | T] \\ []). \n"
-               + "phrase0(Category,[]) :- dcg_parse(Category, [] \\ []). \n"
-               + "dcg_parse(A, Tokens) :- dcg_nonterminal(A), (A --> B), dcg_parse(B, Tokens). \n"
-               + "dcg_parse((A, B), Tokens \\ Xs) :- dcg_parse(A, Tokens \\ Tokens1), dcg_parse(B, Tokens1 \\ Xs). \n"
-               + "dcg_parse(A, Tokens) :- dcg_terminals(A), dcg_connect(A, Tokens). \n"
-               + "dcg_parse({A}, Xs \\ Xs) :- call(A). \n"
-               + "dcg_connect([], Xs \\ Xs). \n"
-               + "dcg_connect([W | Ws], [W | Xs] \\ Ys) :- dcg_connect(Ws, Xs \\ Ys). \n";
+        return THEORY;
     }
 
     // Java guards for Prolog predicates

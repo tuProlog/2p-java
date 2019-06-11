@@ -124,13 +124,13 @@ A ; B :-
 A ; B :- '$call'(A).
 A ; B :- '$call'(B).
 
-unify_with_occurs_check(X, Y):- !, X=Y.
+unify_with_occurs_check(X, Y):- !, X = Y.
 
 current_op(Pri, Type, Name):-get_operators_list(L), member(op(Pri, Type, Name), L).
 
 once(X) :- myonce(X).
 
-myonce(X):-X,!.
+myonce(X) :- X, !.
 
 repeat.
 
@@ -321,7 +321,7 @@ setof(Template, Goal, Instances) :-
     quicksort(List, '@<', OrderedList),
     no_duplicates(OrderedList, Instances).
 
-forall(A, B):- \+(call(A), \+ call(B)).
+forall(A, B) :- \+(call(A), \+ call(B)).
 
 assert(C) :- assertz(C).
 

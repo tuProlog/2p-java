@@ -147,7 +147,7 @@ fragment Escapable
         | '\\'
         | ('\r'? '\n')
         | (OctDigit+ '\\')
-        | (HexDigit+ '\\')
+        | ([xX] HexDigit+ '\\')
         )
     ;
 
