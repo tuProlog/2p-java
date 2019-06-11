@@ -5,3 +5,5 @@
 - Alberto Sita
 - Andrea Bucaletti
 - [Giovanni Ciatto](mailto:giovanni.ciatto@unibo.it)
+
+<!-- TODO: look for ancient contributors -->
