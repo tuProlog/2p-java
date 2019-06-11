@@ -136,7 +136,7 @@ ATOM
     ;
 
 fragment Symbols
-    : OpInitialSymbol OpSymbol* { !getText().startsWith("/*") }?
+    : OpSymbol+ { !getText().startsWith("/*") }?
     | '!'
     | ';'
     ;
@@ -160,10 +160,6 @@ fragment DoubleDQ
     ;
 
 fragment OpSymbol
-    : [+*/\\^<>=~:.?@#$&_\-]
-    ;
-
-fragment OpInitialSymbol
     : [+*/\\^<>=~:.?@#$&\-]
     ;
 
