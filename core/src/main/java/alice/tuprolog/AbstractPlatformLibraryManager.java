@@ -6,7 +6,6 @@ import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.management.interfaces.PlatformLibraryManagerMXBean;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 //Alberto
-public abstract class AbstractPlatformLibraryManager implements ILibraryManager, PlatformLibraryManagerMXBean {
+public abstract class AbstractPlatformLibraryManager implements ILibraryManager {
 
     protected transient Prolog prolog;
     protected Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
@@ -198,7 +197,6 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
 
     ///Management
 
-    @Override
     public synchronized String fetchCurrentLibraries() {
         String[] libs = new String[currentLibraries.size()];
         for (int i = 0; i < libs.length; i++) {
@@ -208,7 +206,6 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
         return JSONSerializerManager.toJSON(libs);
     }
 
-    @Override
     public synchronized String fetchCurrentExternalLibraries() {
         String[] libs = new String[externalLibraries.keySet().size()];
         Set<String> set = externalLibraries.keySet();
@@ -220,7 +217,6 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
         return JSONSerializerManager.toJSON(libs);
     }
 
-    @Override
     public synchronized boolean loadLibraryIntoEngine(String libraryClass) {
         try {
             return loadLibrary(libraryClass) != null;
@@ -230,7 +226,6 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager,
         }
     }
 
-    @Override
     public synchronized boolean unloadLibraryFromEngine(String libraryClass) {
         try {
             unloadLibrary(libraryClass);

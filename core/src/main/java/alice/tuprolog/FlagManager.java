@@ -20,7 +20,6 @@ package alice.tuprolog;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.management.interfaces.FlagManagerMXBean;
 
 import java.util.ArrayList;
 
@@ -29,7 +28,7 @@ import java.util.ArrayList;
  *
  * @author Alex Benini
  */
-class FlagManager implements FlagManagerMXBean {
+class FlagManager {
 
     /**
      * mediator owner of the manager
@@ -158,56 +157,6 @@ class FlagManager implements FlagManagerMXBean {
             f.add(fl);
         }
         flags = f;
-    }
-
-    ///Management
-
-    //Alberto
-    @Override
-    public synchronized String fetchAllPrologFlags() {
-        return getPrologFlagList().toJSON();
-    }
-
-    //Alberto
-    @Override
-    public synchronized boolean configurePrologFlag(String name, String term) {
-        Term t = Term.createTerm(term, mediator.getOperatorManager());
-        return setFlag(name, t);
-    }
-
-    //Alberto
-    @Override
-    public synchronized String fetchPrologFlag(String name) {
-        return getFlag(name).toJSON();
-    }
-
-    //Alberto
-    @Override
-    public synchronized boolean validValue(String name, String term) {
-        Term t = Term.createTerm(term, mediator.getOperatorManager());
-        return isValidValue(name, t);
-    }
-
-    //Alberto
-    @Override
-    public synchronized void reset() {
-        flags = new ArrayList<>();
-        Struct s = new Struct();
-        s.append(new Struct("on"));
-        s.append(new Struct("off"));
-        defineFlag("occursCheck", s, new Struct("on"), true, "BuiltIn");
-    }
-
-    //Alberto
-    @Override
-    public synchronized boolean occursCheckIsEnabled() {
-        return isOccursCheckEnabled();
-    }
-
-    //Alberto
-    @Override
-    public synchronized boolean modifiable(String name) {
-        return isModifiable(name);
     }
 
 }

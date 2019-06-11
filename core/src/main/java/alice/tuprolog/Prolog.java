@@ -29,7 +29,6 @@ import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.json.ReducedEngineState;
-import alice.tuprolog.management.PrologMXBeanServer;
 import alice.util.Tools;
 
 import javax.management.MBeanServerFactory;
@@ -47,15 +46,6 @@ public class Prolog implements IProlog, Serializable {
     public static final boolean INCLUDE_KB_IN_SERIALIZATION = true;
     public static final boolean EXCLUDE_KB_IN_SERIALIZATION = false;
     private static final long serialVersionUID = 1L;
-    //Alberto
-    private PrologMXBeanServer mxBeanServer;
-
-    //Alberto MXBeanServer
-    private String host;
-    private int port;
-    private String adaptor;
-    private String credentialFile;
-    private String SSLconfigFile;
 
     /*  manager of current theory */
     private TheoryManager theoryManager;
@@ -301,65 +291,6 @@ public class Prolog implements IProlog, Serializable {
                 ex.printStackTrace();
             }
         }
-    }
-
-    //Alberto
-    public PrologMXBeanServer getMXBeanServer() {
-        return mxBeanServer;
-    }
-
-    //Alberto
-    public void startMXBeanServer() {
-        mxBeanServer = new PrologMXBeanServer();
-        mxBeanServer.startMXBeanServer(this, host, port, adaptor, credentialFile, SSLconfigFile);
-    }
-
-    //Alberto
-    public void stopMXBeanServer() {
-        if (mxBeanServer != null) {
-            mxBeanServer.stopAdaptor(adaptor);
-            MBeanServerFactory.releaseMBeanServer(mxBeanServer.getMBeanServer());
-        }
-    }
-
-    //Alberto
-    public String getHost() {
-        return host;
-    }
-
-    //Alberto
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    //Alberto
-    public int getPort() {
-        return port;
-    }
-
-    //Alberto
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    //Alberto
-    public String getAdaptor() {
-        return this.adaptor;
-    }
-
-    //Alberto
-    public void setAdaptor(String adaptor) {
-        this.adaptor = adaptor;
-    }
-
-    //Alberto
-    public void setCredentialFile(String credentialFile) {
-        this.credentialFile = credentialFile;
-    }
-
-    //Alberto
-    public void setSSLconfigFile(String SSLconfigFile) {
-        this.SSLconfigFile = SSLconfigFile;
     }
 
     private void initializeManagers() {

@@ -22,7 +22,6 @@ import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.management.interfaces.TheoryManagerMXBean;
 import alice.util.Tools;
 
 import java.io.DataOutputStream;
@@ -51,7 +50,7 @@ import java.util.Stack;
  * @author ivar.orstavik@hist.no
  * @see Theory
  */
-public class TheoryManager implements Serializable, TheoryManagerMXBean {
+public class TheoryManager implements Serializable {
 
     private static final long serialVersionUID = 1L;
     Theory lastConsultedTheory;
@@ -395,17 +394,11 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         brain.setDynTheory(getTheory(true));
     }
 
-    ///Management
-
-    //Alberto
-    @Override
     public synchronized String fetchKnowledgeBase(boolean all) {
         String res = getTheory(all);
         return JSONSerializerManager.toJSON(res);
     }
 
-    //Alberto
-    @Override
     public synchronized void clearKnowledgeBase() {
         dynamicDBase = new ClauseDatabase();
         staticDBase = new ClauseDatabase();
@@ -413,33 +406,26 @@ public class TheoryManager implements Serializable, TheoryManagerMXBean {
         lastConsultedTheory = Theory.emptyWithStandardOperators();
     }
 
-    //Alberto
-    @Override
     public synchronized String fetchMostRecentConsultedTheory() {
         String res = this.lastConsultedTheory.toString();
         return JSONSerializerManager.toJSON(res);
     }
 
-    //Alberto
-    @Override
     public synchronized void consultTheory(String theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
         Theory th = Theory.parseLazilyWithStandardOperators(theory);
         consult(th, dynamicTheory, libName);
     }
 
-    @Override
     public synchronized void assertA(String clause, boolean dyn, String libName, boolean backtrackable) {
         Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         assertA(s, dyn, libName, backtrackable);
     }
 
-    @Override
     public synchronized void assertZ(String clause, boolean dyn, String libName, boolean backtrackable) {
         Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         assertZ(s, dyn, libName, backtrackable);
     }
 
-    @Override
     public synchronized void retract(String clause) {
         Struct s = (Struct) Term.createTerm(clause, engine.getOperatorManager());
         retract(s);

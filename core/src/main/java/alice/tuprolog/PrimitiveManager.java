@@ -21,7 +21,6 @@ package alice.tuprolog;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.IPrimitives;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.management.interfaces.PrimitiveManagerMXBean;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -32,7 +31,7 @@ import java.util.*;
  *
  * @author Alex Benini
  */
-public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBean {
+public class PrimitiveManager implements IPrimitiveManager {
 
     private Map<IPrimitives, List<PrimitiveInfo>> libHashMap;
     private Map<String, PrimitiveInfo> directiveHashMap;
@@ -189,23 +188,4 @@ public class PrimitiveManager implements IPrimitiveManager, PrimitiveManagerMXBe
         return (functorHashMap.containsKey(name + "/" + nArgs) || predicateHashMap.containsKey(name + "/" + nArgs));
     }
 
-    /// Management
-
-    @Override
-    public synchronized String fetchDirectiveInfo(String directive) {
-        String info = directiveHashMap.get(directive).toStringFlat();
-        return JSONSerializerManager.toJSON(info);
-    }
-
-    @Override
-    public synchronized String fetchFunctorInfo(String functor) {
-        String info = functorHashMap.get(functor).toStringFlat();
-        return JSONSerializerManager.toJSON(info);
-    }
-
-    @Override
-    public synchronized String fetchPredicateInfo(String predicate) {
-        String info = predicateHashMap.get(predicate).toStringFlat();
-        return JSONSerializerManager.toJSON(info);
-    }
 }
