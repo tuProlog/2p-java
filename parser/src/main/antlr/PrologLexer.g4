@@ -88,11 +88,11 @@ VARIABLE
     ;
 
 SQ_STRING
-    : '\'' ((~[\n']) | Escapable | DoubleSQ)* '\'' { setText(escape(unquote(getText()), SINGLE_QUOTED)); }
+    : '\'' ((~[\\\n']) | Escapable | DoubleSQ)* '\'' { setText(escape(unquote(getText()), SINGLE_QUOTED)); }
     ;
 
 DQ_STRING
-    : '"' ((~[\n"]) | Escapable | DoubleDQ)* '"' { setText(escape(unquote(getText()), DOUBLE_QUOTED)); }
+    : '"' ((~[\\\n"]) | Escapable | DoubleDQ)* '"' { setText(escape(unquote(getText()), DOUBLE_QUOTED)); }
     ;
 
 COMMA
@@ -147,7 +147,7 @@ fragment Escapable
         | '\\'
         | ('\r'? '\n')
         | (OctDigit+ '\\')
-        | (HexDigit+ '\\')
+        | ([xX] HexDigit+ '\\')
         )
     ;
 

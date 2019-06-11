@@ -248,7 +248,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che '=\='(X, 1) lancia un errore di instanziazione
     public void test_expression_comparison_2_5() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
+        String goal = "catch('=\\\\='(X, 1), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
@@ -261,7 +261,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che '=\='(1, X) lancia un errore di instanziazione
     public void test_expression_comparison_2_6() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
+        String goal = "catch('=\\\\='(1, X), error(instantiation_error, instantiation_error(Goal, ArgNo)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
@@ -274,7 +274,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che '=\='(a, 1) lancia un errore di tipo
     public void test_expression_comparison_2_7() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
+        String goal = "catch('=\\\\='(a, 1), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
@@ -291,7 +291,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che '=\='(1, a) lancia un errore di tipo
     public void test_expression_comparison_2_8() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
+        String goal = "catch('=\\\\='(1, a), error(type_error(ValidType, Culprit), type_error(Goal, ArgNo, ValidType, Culprit)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
@@ -563,7 +563,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che '=\='(1, 1/0) lancia l'errore di valutazione "zero_divisor"
     public void test_expression_comparison_2_26() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true).";
+        String goal = "catch('=\\\\='(1, 1/0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
@@ -653,7 +653,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // verifico che '=\='(1, 1//0) lancia l'errore di valutazione "zero_divisor"
     public void test_expression_comparison_2_32() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true).";
+        String goal = "catch('=\\\\='(1, 1//0), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
@@ -745,7 +745,7 @@ public class BasicLibraryExceptionsTestCase extends TestCase {
     // "zero_divisor"
     public void test_expression_comparison_2_38() throws Exception {
         Prolog engine = new Prolog();
-        String goal = "catch('=\\='(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true).";
+        String goal = "catch('=\\\\='(1 div 0, 1), error(evaluation_error(Error), evaluation_error(Goal, ArgNo, Error)), true).";
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");

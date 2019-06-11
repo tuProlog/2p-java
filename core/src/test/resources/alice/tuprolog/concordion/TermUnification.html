@@ -1,5 +1,5 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion"
-	xmlns:ext="urn:concordion-extensions:2010">
+>
 <link href="../../concordion.css" rel="stylesheet" type="text/css" />
 
 <head>
@@ -385,7 +385,7 @@ unify_with_occurs_check(?term, ?term)
 	</p>
 	<p>Templates and modes for the predicate are as follows:</p>
 	<pre>
-'\='(@term, @term)
+'\\='(@term, @term)
 </pre>
 
 	<p>
@@ -408,52 +408,52 @@ unify_with_occurs_check(?term, ?term)
 				theory)</th>
 		</tr>
 		<tr>
-			<td>'\='(1, 2).</td>
+			<td>'\\='(1, 2).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(1, 1.0).</td>
+			<td>'\\='(1, 1.0).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(g(X), f(f(X))).</td>
+			<td>'\\='(g(X), f(f(X))).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(f(X, 1), f(a(X))).</td>
+			<td>'\\='(f(X, 1), f(a(X))).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(f(X, Y, X), f(a(X), a(Y), Y, 2)).</td>
+			<td>'\\='(f(X, Y, X), f(a(X), a(Y), Y, 2)).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(X, a(X)).</td>
+			<td>'\\='(X, a(X)).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(f(X, 1), f(a(X), 2)).</td>
+			<td>'\\='(f(X, 1), f(a(X), 2)).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(f(1, X, 1), f(2, a(X), 2)).</td>
+			<td>'\\='(f(1, X, 1), f(2, a(X), 2)).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(f(1, X), f(2, a(X))).</td>
+			<td>'\\='(f(1, X), f(2, a(X))).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>'\='(f(X, Y, X, 1), f(a(X), a(Y), Y, 2)).</td>
+			<td>'\\='(f(X, Y, X, 1), f(a(X), a(Y), Y, 2)).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
@@ -471,27 +471,27 @@ unify_with_occurs_check(?term, ?term)
 				theory)</th>
 		</tr>
 		<tr>
-			<td>'\='(1, 1).</td>
+			<td>'\\='(1, 1).</td>
 			<td>null</td>
 			<td>false</td>
 		</tr>
 		<tr>
-			<td>'\='(X, 1).</td>
+			<td>'\\='(X, 1).</td>
 			<td>null</td>
 			<td>false</td>
 		</tr>
 		<tr>
-			<td>'\='(X, Y).</td>
+			<td>'\\='(X, Y).</td>
 			<td>null</td>
 			<td>false</td>
 		</tr>
 		<tr>
-			<td>'\='(_, _).</td>
+			<td>'\\='(_, _).</td>
 			<td>null</td>
 			<td>false</td>
 		</tr>
 		<tr>
-			<td>'\='(f(X, def), f(def, Y)).</td>
+			<td>'\\='(f(X, def), f(def, Y)).</td>
 			<td>null</td>
 			<td>false</td>
 		</tr>

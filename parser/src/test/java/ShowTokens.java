@@ -16,16 +16,10 @@ public class ShowTokens {
     private static BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException {
-        Stream<Token> tokens;
-
         while (true) {
 
-            if (args.length > 0) {
-                tokens = tokenStream(new StringReader(String.join(" ", args)));
-            } else {
-                System.out.print("> ");
-                tokens = tokenStream(stdin.readLine());
-            }
+            System.out.print("> ");
+            final Stream<Token> tokens = tokenStream(stdin.readLine(), args);
 
             tokens.forEach(it -> {
                 System.out.printf("%s: «%s» %d:%d\n",
@@ -35,26 +29,32 @@ public class ShowTokens {
                                   it.getCharPositionInLine()
                 );
             });
+
+            System.out.println();
         }
     }
 
-    private static Stream<Token> tokenStream(String reader) throws IOException {
-        return tokenStream(new StringReader(reader));
+    private static Stream<Token> tokenStream(String reader, String... ops) throws IOException {
+        return tokenStream(new StringReader(reader), ops);
     }
 
-    private static Stream<Token> tokenStream(Reader reader) throws IOException {
+    private static Stream<Token> tokenStream(Reader reader, String... ops) throws IOException {
         return StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(
-                        tokenIterator(reader),
+                        tokenIterator(reader, ops),
                         Spliterator.ORDERED
                 ),
             false
         );
     }
 
-    private static Iterator<Token> tokenIterator(Reader reader) throws IOException {
+    private static Iterator<Token> tokenIterator(Reader reader, String... ops) throws IOException {
         PrologLexer lexer = new PrologLexer(CharStreams.fromReader(reader));
         TokenStream stream = new BufferedTokenStream(lexer);
+
+        for (String op : ops) {
+            lexer.addOperators(op);
+        }
 
         return new Iterator<Token>() {
             private int i = 0;

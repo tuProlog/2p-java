@@ -27,10 +27,9 @@ class PrologParserFactoryImpl implements PrologParserFactory {
     private static ANTLRErrorListener newErrorListener(Object whileParsing) {
         return new BaseErrorListener() {
 
-            String symbolToString(Object obj) {
+            private String symbolToString(Object obj) {
                 if (obj instanceof Token) {
                     final Token token = (Token) obj;
-//                    return String.format("%s '%s'", PrologLexer.VOCABULARY.getSymbolicName(token.getType()), token.getText());
                     return token.getText();
                 } else {
                     return obj.toString();
@@ -39,6 +38,10 @@ class PrologParserFactoryImpl implements PrologParserFactory {
 
             @Override
             public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol, int line, int charPositionInLine, String msg, RecognitionException e) {
+                if (recognizer instanceof PrologParser) {
+                    PrologParser p = (PrologParser) recognizer;
+                    p.removeParseListeners();
+                }
                 throw new ParseException(
                         whileParsing,
                         symbolToString(offendingSymbol),
