@@ -456,7 +456,7 @@ public class EngineManager implements java.io.Serializable {
         return s;
     }
 
-    public synchronized String solve_untimed(String goal) {
+    public synchronized String solveUntimed(String goal) {
         try {
             Term t = Term.createTerm(goal, vm.getOperatorManager());
             return this.solve(t).toJSON();
@@ -465,7 +465,7 @@ public class EngineManager implements java.io.Serializable {
         }
     }
 
-    public synchronized String solveNext_untimed() {
+    public synchronized String solveNextUntimed() {
         try {
             return this.solveNext().toJSON();
         } catch (NoMoreSolutionException e) {
@@ -473,7 +473,7 @@ public class EngineManager implements java.io.Serializable {
         }
     }
 
-    public synchronized String solve_timed(String goal, long maxTime) {
+    public synchronized String solveTimed(String goal, long maxTime) {
         try {
             Term t = Term.createTerm(goal, vm.getOperatorManager());
             return this.solve(t).toJSON();
@@ -482,7 +482,7 @@ public class EngineManager implements java.io.Serializable {
         }
     }
 
-    public synchronized String solveNext_timed(long maxTime) {
+    public synchronized String solveNextTimed(long maxTime) {
         try {
             return this.solveNext(maxTime).toJSON();
         } catch (NoMoreSolutionException e) {
@@ -490,15 +490,15 @@ public class EngineManager implements java.io.Serializable {
         }
     }
 
-    public synchronized String solveN_untimed(String goal, int numberSol) {
+    public synchronized String solveNUntimed(String goal, int numberSol) {
         ArrayList<String> res = new ArrayList<String>();
-        String s = this.solve_untimed(goal);
+        String s = this.solveUntimed(goal);
         res.add(s);
         if (s.contains("Error")) {
             return JSONSerializerManager.toJSON(res);
         } else {
             for (int i = 1; i < numberSol; i++) {
-                s = this.solveNext_untimed();
+                s = this.solveNextUntimed();
                 if (s.equals("No more solutions!")) {
                     break;
                 } else {
@@ -509,15 +509,15 @@ public class EngineManager implements java.io.Serializable {
         return JSONSerializerManager.toJSON(res);
     }
 
-    public synchronized String solveN_timed(String goal, int numberSol, long maxTime) {
+    public synchronized String solveNTimed(String goal, int numberSol, long maxTime) {
         ArrayList<String> res = new ArrayList<String>();
-        String s = this.solve_timed(goal, maxTime);
+        String s = this.solveTimed(goal, maxTime);
         res.add(s);
         if (s.contains("Error")) {
             return JSONSerializerManager.toJSON(res);
         } else {
             for (int i = 1; i < numberSol; i++) {
-                s = this.solveNext_timed(maxTime);
+                s = this.solveNextTimed(maxTime);
                 if (s.equals("No more solutions!")) {
                     break;
                 } else {
@@ -528,15 +528,15 @@ public class EngineManager implements java.io.Serializable {
         return JSONSerializerManager.toJSON(res);
     }
 
-    public synchronized String solveAll_untimed(String goal) {
+    public synchronized String solveAllUntimed(String goal) {
         ArrayList<String> res = new ArrayList<String>();
-        String s = this.solve_untimed(goal);
+        String s = this.solveUntimed(goal);
         res.add(s);
         if (s.contains("Error")) {
             return JSONSerializerManager.toJSON(res);
         } else {
             for (; ; ) {
-                s = this.solveNext_untimed();
+                s = this.solveNextUntimed();
                 if (s.equals("No more solutions!")) {
                     break;
                 } else {
@@ -547,15 +547,15 @@ public class EngineManager implements java.io.Serializable {
         return JSONSerializerManager.toJSON(res);
     }
 
-    public synchronized String solveAll_timed(String goal, long maxTime) {
+    public synchronized String solveAllTimed(String goal, long maxTime) {
         ArrayList<String> res = new ArrayList<String>();
-        String s = this.solve_timed(goal, maxTime);
+        String s = this.solveTimed(goal, maxTime);
         res.add(s);
         if (s.contains("Error")) {
             return JSONSerializerManager.toJSON(res);
         } else {
             for (; ; ) {
-                s = this.solveNext_timed(maxTime);
+                s = this.solveNextTimed(maxTime);
                 if (s.equals("No more solutions!")) {
                     break;
                 } else {
