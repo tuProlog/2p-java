@@ -1,5 +1,5 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion"
-	xmlns:ext="urn:concordion-extensions:2010">
+>
 <link href="../../concordion.css" rel="stylesheet" type="text/css" />
 <head>
 <title>Bitwise functors</title>
@@ -176,7 +176,7 @@
 	</h2>
 
 	<p>
-		<code>'/\'(B1, B2)</code>
+        <code>'/\\'(B1, B2)</code>
 		evaluates the expressions
 		<var>B1</var>
 		and
@@ -203,7 +203,7 @@
 
 	<p>Templates and modes for the predicate are as follows:</p>
 	<pre>
-'/\'(int-exp, int-exp) = integer
+'/\\'(int-exp, int-exp) = integer
 </pre>
 
 	<p>
@@ -222,20 +222,20 @@
 			<th concordion:assertEquals="#result">value(String evaluable)</th>
 		</tr>
 		<tr>
-			<td>'/\'(10, 12).</td>
+            <td>'/\\'(10, 12).</td>
 			<td>8</td>
 		</tr>
 		<tr>
-			<td>'/\'(10, 12).</td>
+            <td>'/\\'(10, 12).</td>
 			<td>8</td>
 		</tr>
 		<tr>
-			<td>'/\'(17 * 256 + 125, 255).</td>
+            <td>'/\\'(17 * 256 + 125, 255).</td>
 			<td>125</td>
 		</tr>
 
 		<tr>
-			<td>'/\'(-10, 12).</td>
+            <td>'/\\'(-10, 12).</td>
 			<td>4</td>
 		</tr>
 
@@ -245,12 +245,12 @@
 
 	<h2>
 		4.
-		<code>(\/)/2</code>
+        <code>(\\/)/2</code>
 		(bitwise or)
 	</h2>
 
 	<p>
-		<code>'\/'(B1, B2)</code>
+        <code>'\\/'(B1, B2)</code>
 		evaluates the expressions
 		<var>B1</var>
 		and
@@ -277,7 +277,7 @@
 
 	<p>Templates and modes for the predicate are as follows:</p>
 	<pre>
-'\/'(int-exp, int-exp) = integer
+'\\/'(int-exp, int-exp) = integer
 </pre>
 
 	<p>
@@ -296,20 +296,20 @@
 			<th concordion:assertEquals="#result">value(String evaluable)</th>
 		</tr>
 		<tr>
-			<td>'\/'(10, 12).</td>
+            <td>'\\/'(10, 12).</td>
 			<td>14</td>
 		</tr>
 		<tr>
-			<td>'\/'(10, 12).</td>
+            <td>'\\/'(10, 12).</td>
 			<td>14</td>
 		</tr>
 		<tr>
-			<td>'\/'(125, 255).</td>
+            <td>'\\/'(125, 255).</td>
 			<td>255</td>
 		</tr>
 
 		<tr>
-			<td>'\/'(-10, 12).</td>
+            <td>'\\/'(-10, 12).</td>
 			<td>-2</td>
 		</tr>
 
@@ -324,7 +324,7 @@
 	</h2>
 
 	<p>
-		<code>'\'(B1)</code>
+        <code>'\\'(B1)</code>
 		evaluates the expression
 		<var>B1</var>
 		with value
@@ -339,7 +339,7 @@
 
 	<p>Templates and modes for the predicate are as follows:</p>
 	<pre>
-'\'(int-exp, int-exp) = integer
+'\\'(int-exp) = integer
 </pre>
 
 	<p>
@@ -358,7 +358,7 @@
 			<th concordion:assertEquals="#result">value(String evaluable)</th>
 		</tr>
 		<tr>
-			<td>'\'('\'(10)).</td>
+            <td>'\\'('\\'(10)).</td>
 			<td>10</td>
 		</tr>
 		<tr>
