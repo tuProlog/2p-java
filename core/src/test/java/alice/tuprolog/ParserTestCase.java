@@ -326,7 +326,7 @@ public class ParserTestCase extends TestCase {
     }
 
     public void testStringEscaping() throws InvalidTermException {
-        String input = "'\\a\\b\\f\\n\\r\\t\\v\\\\'\\\"\\`'";
+        String input = "'\\a\\b\\f\\n\\r\\t\\v\\\\\\'\\\"\\`'";
         Struct result = new Struct("\u0007\b\f\n\r\t\u000b\\'\"`");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
