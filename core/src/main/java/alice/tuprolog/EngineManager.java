@@ -3,12 +3,11 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.NoMoreSolutionException;
 import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.management.interfaces.EngineManagerMXBean;
 
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class EngineManager implements java.io.Serializable, EngineManagerMXBean {
+public class EngineManager implements java.io.Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -457,9 +456,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         return s;
     }
 
-    /// Management
-
-    @Override
     public synchronized String solve_untimed(String goal) {
         try {
             Term t = Term.createTerm(goal, vm.getOperatorManager());
@@ -469,7 +465,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         }
     }
 
-    @Override
     public synchronized String solveNext_untimed() {
         try {
             return this.solveNext().toJSON();
@@ -478,7 +473,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         }
     }
 
-    @Override
     public synchronized String solve_timed(String goal, long maxTime) {
         try {
             Term t = Term.createTerm(goal, vm.getOperatorManager());
@@ -488,7 +482,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         }
     }
 
-    @Override
     public synchronized String solveNext_timed(long maxTime) {
         try {
             return this.solveNext(maxTime).toJSON();
@@ -497,7 +490,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         }
     }
 
-    @Override
     public synchronized String solveN_untimed(String goal, int numberSol) {
         ArrayList<String> res = new ArrayList<String>();
         String s = this.solve_untimed(goal);
@@ -517,7 +509,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         return JSONSerializerManager.toJSON(res);
     }
 
-    @Override
     public synchronized String solveN_timed(String goal, int numberSol, long maxTime) {
         ArrayList<String> res = new ArrayList<String>();
         String s = this.solve_timed(goal, maxTime);
@@ -537,7 +528,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         return JSONSerializerManager.toJSON(res);
     }
 
-    @Override
     public synchronized String solveAll_untimed(String goal) {
         ArrayList<String> res = new ArrayList<String>();
         String s = this.solve_untimed(goal);
@@ -557,7 +547,6 @@ public class EngineManager implements java.io.Serializable, EngineManagerMXBean 
         return JSONSerializerManager.toJSON(res);
     }
 
-    @Override
     public synchronized String solveAll_timed(String goal, long maxTime) {
         ArrayList<String> res = new ArrayList<String>();
         String s = this.solve_timed(goal, maxTime);

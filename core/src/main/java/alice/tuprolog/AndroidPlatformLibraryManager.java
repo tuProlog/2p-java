@@ -68,10 +68,6 @@ public class AndroidPlatformLibraryManager extends AbstractPlatformLibraryManage
         this.optimizedDirectory = optimizedDirectory;
     }
 
-    ///Management
-
-    //Alberto
-    @Override
     public String fetchCurrentPlatform() {
         return "Android-Platform";
     }

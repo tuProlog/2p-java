@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import alice.tuprolog.management.PrologMXBeanServer;
-
 //Alberto
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -20,7 +18,7 @@ public @interface PrologManagement {
 	String host() default "localhost";
 	int port() default 45000;
 	boolean lazyBoot() default true; //ignored if @AsPrototype is used
-	String adaptor() default PrologMXBeanServer.HTTP_ADAPTOR;
+//	String adaptor() default PrologMXBeanServer.HTTP_ADAPTOR;
 	String credentialFile() default "";
 	String SSLconfigFile() default "";
 	

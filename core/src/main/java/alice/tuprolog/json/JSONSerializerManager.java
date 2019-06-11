@@ -1,12 +1,11 @@
 package alice.tuprolog.json;
 
 import alice.tuprolog.Term;
-import alice.tuprolog.management.interfaces.JSONSerializerManagerMXBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 //Alberto
-public class JSONSerializerManager implements JSONSerializerManagerMXBean {
+public class JSONSerializerManager {
 
     static Gson gson = new GsonBuilder() //Mandatory for serializing query obj!
                                          .registerTypeAdapter(Term.class, new JSONMarshaller())
@@ -27,12 +26,10 @@ public class JSONSerializerManager implements JSONSerializerManagerMXBean {
 
     ///Management
 
-    @Override
     public String fetchCurrentAdapters() {
         return currentAdapters;
     }
 
-    @Override
     public synchronized boolean addAdapter(String className) {
         try {
             gson = new GsonBuilder()
@@ -47,7 +44,6 @@ public class JSONSerializerManager implements JSONSerializerManagerMXBean {
         return true;
     }
 
-    @Override
     public synchronized void reset() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(Term.class, new JSONMarshaller())

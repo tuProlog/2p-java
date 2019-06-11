@@ -60,10 +60,6 @@ public class JavaPlatformLibraryManager extends AbstractPlatformLibraryManager i
         return lib;
     }
 
-    ///Management
-
-    //Alberto
-    @Override
     public String fetchCurrentPlatform() {
         return "Java-Platform";
     }
