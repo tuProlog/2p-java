@@ -20,9 +20,7 @@ package alice.tuprolog.lib;
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
 import alice.util.Tools;
-import sun.rmi.runtime.Log;
 
-import javax.tools.Tool;
 import java.io.IOException;
 import java.lang.Double;
 import java.lang.Long;
