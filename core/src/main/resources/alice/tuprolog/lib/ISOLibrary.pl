@@ -22,22 +22,17 @@ bound(X) :- ground(X).
 
 unbound(X) :- not(ground(X)).
 
-atom_concat(F, S, R) :-
-    catch(atom_concat0(F, S, R), Error, false).
+atom_concat(F, S, R) :- var(R), !,
+    atom_chars(F, FL),
+    atom_chars(S, SL),
+    append(FL, SL, RS),
+    atom_chars(R, RS).
 
-atom_concat0(F, S, R) :-
-    var(R), !, (
-        atom_chars(S, SL),
-        append(FL, SL, RS),
-        atom_chars(F, FL),
-        atom_chars(R, RS)
-    ).
-atom_concat0(F, S, R) :- (
-        atom_chars(R, RS),
-        append(FL, SL, RS),
-        atom_chars(F, FL),
-        atom_chars(S, SL)
-    ).
+atom_concat(F, S, R) :-
+    atom_chars(R, RS),
+    append(FL, SL, RS),
+    atom_chars(F, FL),
+    atom_chars(S, SL).
 
 chars_codes([], []).
 chars_codes([X | L1], [Y | L2]) :-
