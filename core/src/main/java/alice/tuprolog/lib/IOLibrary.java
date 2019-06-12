@@ -20,6 +20,7 @@ package alice.tuprolog.lib;
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidTermException;
+import alice.util.Tools;
 
 import java.io.*;
 import java.util.Random;
@@ -486,15 +487,20 @@ public class IOLibrary extends Library {
         return unify(num, new Int(gen.nextInt(arg.intValue())));
     }
 
-    public String getTheory() {
-        return "consult(File) :- text_from_file(File,Text), add_theory(Text).\n"
-               + "reconsult(File) :- text_from_file(File,Text), set_theory(Text).\n"
-               +
-               "solve_file(File,Goal) :- solve_file_goal_guard(File,Goal),text_from_file(File,Text),text_term(Text,Goal),call(Goal).\n"
-               + "agent_file(X)  :- text_from_file(X,Y),agent(Y).\n";
+    private static final String THEORY;
+
+    static {
+        try {
+            THEORY = Tools.loadText(IOLibrary.class.getResourceAsStream(IOLibrary.class.getSimpleName() + ".pl"));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    // Java guards for Prolog predicates
+    @Override
+    public String getTheory() {
+        return THEORY;
+    }
 
     public boolean solve_file_goal_guard_2(Term arg0, Term arg1)
             throws PrologError {
