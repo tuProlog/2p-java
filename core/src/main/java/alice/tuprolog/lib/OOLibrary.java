@@ -22,10 +22,7 @@ import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidObjectIdException;
 import alice.tuprolog.exceptions.JavaException;
 import alice.tuprolog.lib.annotations.OOLibraryEnableLambdas;
-import alice.util.AbstractDynamicClassLoader;
-import alice.util.AndroidDynamicClassLoader;
-import alice.util.InspectionUtils;
-import alice.util.JavaDynamicClassLoader;
+import alice.util.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -363,51 +360,19 @@ public class OOLibrary extends Library {
         }
     }
 
+    private static final String THEORY;
+
+    static {
+        try {
+            THEORY = Tools.loadText(OOLibrary.class.getResourceAsStream(OOLibrary.class.getSimpleName() + ".pl"));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
     public String getTheory() {
-        return
-                //
-                // operators defined by the JavaLibrary theory
-                //
-                ":- op(800,xfx,'<-').\n"
-                + ":- op(850,xfx,'returns').\n"
-                + ":- op(200,xfx,'as').\n"
-                + ":- op(600,xfx,'.'). \n"
-                +
-                "new_object_bt(ClassName,Args,Id):- new_object(ClassName,Args,Id).\n"
-                + "new_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
-
-                + "Obj <- What :- java_call(Obj,What,Res), Res \\== false.\n"
-                + "Obj <- What returns Res :- java_call(Obj,What,Res).\n"
-
-                +
-                "array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
-                + "array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
-                +
-                "array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
-                + "array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
-
-                +
-                "array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
-
-
-                + //**** following section deprecated from tuProlog 3.0  ***//
-                "java_object_bt(ClassName,Args,Id):- java_object(ClassName,Args,Id).\n"
-                + "java_object_bt(ClassName,Args,Id):- destroy_object(Id).\n"
-
-                +
-                "java_array_set(Array,Index,Object):- class('java.lang.reflect.Array') <- set(Array as 'java.lang.Object',Index,Object as 'java.lang.Object'), !.\n"
-                + "java_array_set(Array,Index,Object):- java_array_set_primitive(Array,Index,Object).\n"
-                +
-                "java_array_get(Array,Index,Object):- class('java.lang.reflect.Array') <- get(Array as 'java.lang.Object',Index) returns Object,!.\n"
-                + "java_array_get(Array,Index,Object):- java_array_get_primitive(Array,Index,Object).\n"
-
-                +
-                "java_array_length(Array,Length):- class('java.lang.reflect.Array') <- getLength(Array as 'java.lang.Object') returns Length.\n"
-                + "java_object_string(Object,String):- Object <- toString returns String.    \n"
-                +//**** end section deprecated from tuProlog 3.0  ***//
-                "java_catch(JavaGoal, List, Finally) :- call(JavaGoal), call(Finally).\n";
-
-
+        return THEORY;
     }
 
     public void dismiss() {
