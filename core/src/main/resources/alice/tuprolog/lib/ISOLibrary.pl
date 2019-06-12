@@ -64,7 +64,7 @@ sub_list(L1, [_ | L2], N) :-
     N is M + 1.
 
 sub_list_seq([], L).
-sub_list_seq([X |L 1], [X | L2]) :-
+sub_list_seq([X | L1], [X | L2]) :-
     sub_list_seq(L1, L2).
 
 number_codes(Number, List) :-
