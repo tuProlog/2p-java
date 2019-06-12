@@ -20,8 +20,10 @@ package alice.tuprolog.lib;
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
 import alice.util.Tools;
+import sun.rmi.runtime.Log;
 
 import javax.tools.Tool;
+import java.io.IOException;
 import java.lang.Double;
 import java.lang.Long;
 import java.util.Iterator;
@@ -528,89 +530,24 @@ public class ISOLibrary extends Library {
         return null;
     }
 
-    /**
-     * library theory
-     */
-    public String getTheory() {
-        return
-                //
-                // operators defined by the ISOLibrary theory
-                //
-                ":- op(  300, yfx,  'div'). \n"
-                        + ":- op(  400, yfx,  'mod'). \n"
-                        + ":- op(  400, yfx,  'rem'). \n"
-                        + ":- op(  200, fx,   'sin'). \n"
-                        + ":- op(  200, fx,   'cos'). \n"
-                        + ":- op(  200, fx,   'sqrt'). \n"
-                        + ":- op(  200, fx,   'atan'). \n"
-                        + ":- op(  200, fx,   'exp'). \n"
-                        + ":- op(  200, fx,   'log'). \n"
-                        +
-                        //
-                        // flags defined by the ISOLibrary theory
-                        //
-                        ":- flag(bounded, [true,false], true, false).\n"
-                        + ":- flag(max_integer, ["
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + "], "
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + ",false).\n"
-                        + ":- flag(min_integer, ["
-                        + new Integer(Integer.MIN_VALUE).toString()
-                        + "], "
-                        + new Integer(Integer.MIN_VALUE).toString()
-                        + ",false).\n"
-                        + ":- flag(integer_rounding_function, [up,down], down, false).\n"
-                        + ":- flag(char_conversion,[on,off],off,false).\n"
-                        + ":- flag(debug,[on,off],off,false).\n"
-                        + ":- flag(max_arity, ["
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + "], "
-                        + new Integer(Integer.MAX_VALUE).toString()
-                        + ",false).\n"
-                        + ":- flag(undefined_predicate, [error,fail,warning], fail, false).\n"
-                        + ":- flag(double_quotes, [atom,chars,codes], atom, false).\n"
-                        //
-                        //
-                        +
-                        "bound(X):-ground(X).\n                                                                                  "
-                        +
-                        "unbound(X):-not(ground(X)).\n                                                                          "
+    private static final String THEORY;
 
-                        //
-                        + "atom_concat(F,S,R) :- catch(atom_concat0(F,S,R), Error, false).\n"
-                        + "atom_concat0(F,S,R) :- var(R), !,(atom_chars(S,SL),append(FL,SL,RS),atom_chars(F,FL),atom_chars(R,RS)).  \n"
-                        + "atom_concat0(F,S,R) :-(atom_chars(R,RS), append(FL,SL,RS),atom_chars(F,FL),atom_chars(S,SL)).\n"
-
-//                + "atom_codes(A,L):- catch(atom_codes0(A,L), Error, false).\n"
-//                + "atom_codes0(A,L):-nonvar(A),atom_chars(A,L1),!,chars_codes(L1,L).\n"
-//                + "atom_codes0(A,L):-nonvar(L), list(L), !,chars_codes(L1,L),atom_chars(A,L1).\n"
-                        + "chars_codes([],[]).\n"
-                        + "chars_codes([X|L1],[Y|L2]):-char_code(X,Y),chars_codes(L1,L2).\n"
-
-                        + "sub_atom(Atom,B,L,A,Sub):- sub_atom_guard(Atom,B,L,A,Sub), sub_atom0(Atom,B,L,A,Sub).\n"
-                        +
-                        "sub_atom0(Atom,B,L,A,Sub):-atom_chars(Atom,L1),sub_list(L2,L1,B),atom_chars(Sub,L2),length(L2,L), length(L1,Len), A is Len-(B+L).\n"
-                        + "sub_list([],_,0).\n"
-                        + "sub_list([X|L1],[X|L2],0):- sub_list_seq(L1,L2).\n"
-                        + "sub_list(L1,[_|L2],N):- sub_list(L1,L2,M), N is M + 1.\n"
-                        + "sub_list_seq([],L).\n"
-                        + "sub_list_seq([X|L1],[X|L2]):-sub_list_seq(L1,L2).\n"
-
-//                        + "number_chars(Number,List):-catch(number_chars0(Number,List), Error, false).\n"
-//                        + "number_chars0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_chars(Struct,List).\n"
-//                        + "number_chars0(Number,List):-atom_chars(Struct,List),num_atom(Number,Struct).\n"
-
-                        + "number_codes(Number,List):-catch(number_codes0(Number,List), Error, false).\n"
-                        + "number_codes0(Number,List):-nonvar(Number),!,num_atom(Number,Struct),atom_codes(Struct,List).\n"
-                        + "number_codes0(Number,List):-atom_codes(Struct,List),num_atom(Number,Struct).\n";
-
+    static {
+        try {
+            THEORY = Tools.loadText(ISOLibrary.class.getResourceAsStream(ISOLibrary.class.getSimpleName() + ".pl"))
+                          .replace("%%MAX_INT%%", Long.toString(Long.MAX_VALUE))
+                          .replace("%%MIN_INT%%", Long.toString(Long.MIN_VALUE));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    // Java guards for Prolog predicates
+    @Override
+    public String getTheory() {
+        return THEORY;
+    }
 
-    public boolean sub_atom_guard_5(Term arg0, Term arg1, Term arg2, Term arg3, Term arg4)
-            throws PrologError {
+    public boolean sub_atom_guard_5(Term arg0, Term arg1, Term arg2, Term arg3, Term arg4) throws PrologError {
         arg0 = arg0.getTerm();
         if (!arg0.isAtom()) {
             throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
