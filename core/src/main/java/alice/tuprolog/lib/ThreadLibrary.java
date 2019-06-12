@@ -7,10 +7,13 @@ package alice.tuprolog.lib;
 import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.exceptions.NoSolutionException;
+import alice.util.Tools;
+
+import java.io.IOException;
 
 
 public class ThreadLibrary extends Library {
-    private static final long serialVersionUID = 1L;
+
     protected EngineManager engineManager;
 
     public void setEngine(Prolog en) {
@@ -60,8 +63,7 @@ public class ThreadLibrary extends Library {
     public boolean thread_read_2(Term id, Term result) throws PrologError {
         id = id.getTerm();
         if (!(id instanceof Int)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
-                                         "integer", id);
+            throw PrologError.type_error(engine.getEngineManager(), 1, "integer", id);
         }
         SolveInfo res = engineManager.read(((Int) id).intValue());
         if (res == null) {
@@ -284,18 +286,18 @@ public class ThreadLibrary extends Library {
         return true;
     }
 
+    private static final String THEORY;
+
+    static {
+        try {
+            THEORY = Tools.loadText(ThreadLibrary.class.getResourceAsStream(ThreadLibrary.class.getSimpleName() + ".pl"));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
     public String getTheory() {
-        return
-                "thread_execute(ID, GOAL):- thread_create(ID, GOAL), '$next'(ID). \n" +
-                "'$next'(ID). \n" +
-                "'$next'(ID) :- '$thread_execute2'(ID). \n" +
-                "'$thread_execute2'(ID) :- not thread_has_next(ID),!,false. \n" +
-                "'$thread_execute2'(ID) :- thread_next_sol(ID). \n" +
-                "'$thread_execute2'(ID) :- '$thread_execute2'(ID). \n" +
-
-                "with_mutex(MUTEX,GOAL):-mutex_lock(MUTEX), call(GOAL), !, mutex_unlock(MUTEX).\n" +
-                "with_mutex(MUTEX,GOAL):-mutex_unlock(MUTEX), fail."
-                ;
-
+        return THEORY;
     }
 }
