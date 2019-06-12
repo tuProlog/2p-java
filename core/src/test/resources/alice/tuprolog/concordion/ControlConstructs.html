@@ -41,8 +41,8 @@ call(+callable_term)
 <br />
  <table concordion:execute="#result = success(#goal,#theory)">
         <tr><th concordion:set="#goal">Goal</th><th concordion:set="#theory">Theory</th><th concordion:assertFalse="#result">success(String goal,String theory)</th></tr>
-        <tr><td>call(fail).	false</td><td>null</td><td>false</td></tr>
-        <tr><td>call((fail, X)).	false</td><td>null</td><td>false</td></tr>
+        <tr><td>call(fail).</td><td>null</td><td>false</td></tr>
+        <tr><td>call((fail, X)).</td><td>null</td><td>false</td></tr>
         <tr><td>call((fail, call(1))).</td><td>null</td><td>false</td></tr>
         
         
