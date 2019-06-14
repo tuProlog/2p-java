@@ -20,6 +20,7 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.interfaces.ILibraryManager;
+import alice.tuprolog.parser.dynamic.StringType;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -132,11 +133,30 @@ public class BuiltIn extends Library {
         return true;
     }
 
-    public boolean asserta_1(Term arg0) throws PrologError {
+    private Struct ensureNonStatic(Struct struct, String operation, String objectType) throws PrologError {
+        if (primitiveManager.isPredicate(struct) || theoryManager.isStatic(struct)) {
+            final Struct indicator = new Struct("/", new Struct(struct.getName()), new Int(struct.getArity()));
+            throw PrologError.permission_error(
+                    engineManager,
+                    operation,
+                    objectType,
+                    indicator,
+                    new Struct(String.format("No permission to %s %s`%s`",
+                                             operation,
+                                             objectType.replace("_", " "),
+                                             indicator))
+            );
+        }
+        return struct;
+    }
+
+    private boolean assertImpl(Term arg0, boolean before) throws PrologError {
         arg0 = arg0.getTerm();
+        final Struct struct0;
+
         if (arg0 instanceof Struct) {
-            Struct struct0 = (Struct) arg0;
-            if (struct0.getName().equals(":-")) {
+            struct0 = (Struct) arg0;
+            if (struct0.getName().equals(":-") && struct0.getArity() == 2) {
                 for (int i = 0; i < (struct0.toList().listSize()) - 1; i++) {
                     Term argi = struct0.getArg(i);
                     if (!(argi instanceof Struct)) {
@@ -147,8 +167,15 @@ public class BuiltIn extends Library {
                         }
                     }
                 }
+                ensureNonStatic((Struct) struct0.getArg(0), "modify", "static_clause");
+            } else {
+                ensureNonStatic(struct0, "modify", "static_clause");
             }
-            theoryManager.assertA((Struct) arg0, true, null, false);
+            if (before) {
+                theoryManager.assertA(struct0, true, null, false);
+            } else {
+                theoryManager.assertZ(struct0, true, null, false);
+            }
             return true;
         }
         if (arg0 instanceof Var) {
@@ -158,29 +185,12 @@ public class BuiltIn extends Library {
         }
     }
 
+    public boolean asserta_1(Term arg0) throws PrologError {
+        return assertImpl(arg0, true);
+    }
+
     public boolean assertz_1(Term arg0) throws PrologError {
-        arg0 = arg0.getTerm();
-        if (arg0 instanceof Struct) {
-            if (((Struct) arg0).getName().equals(":-")) {
-                for (int i = 0; i < (((Struct) arg0).toList().listSize()) - 1; i++) {
-                    Term argi = ((Struct) arg0).getArg(i);
-                    if (!(argi instanceof Struct)) {
-                        if (argi instanceof Var) {
-                            throw PrologError.instantiation_error(engineManager, 1);
-                        } else {
-                            throw PrologError.type_error(engineManager, 1, "clause", arg0);
-                        }
-                    }
-                }
-            }
-            theoryManager.assertZ((Struct) arg0, true, null, false);
-            return true;
-        }
-        if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engineManager, 1);
-        } else {
-            throw PrologError.type_error(engineManager, 1, "clause", arg0);
-        }
+        return assertImpl(arg0, false);
     }
 
     public boolean $retract_1(Term arg0) throws PrologError {

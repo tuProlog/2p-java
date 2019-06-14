@@ -21,6 +21,7 @@ package alice.tuprolog;
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.IPrimitives;
 import alice.tuprolog.json.JSONSerializerManager;
+import alice.tuprolog.parser.dynamic.StringType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -115,6 +116,17 @@ public class PrimitiveManager implements IPrimitiveManager {
 
     public void identifyPredicate(Term term) {
         identify(term, PrimitiveInfo.PREDICATE);
+    }
+
+    public boolean isPredicate(Term term) {
+        if (term instanceof Struct) {
+            identifyPredicate(term);
+            return Optional.ofNullable(((Struct) term).getPrimitive())
+                           .map(PrimitiveInfo::isPredicate)
+                           .orElse(Boolean.FALSE);
+        }
+
+        return false;
     }
 
     public void identifyFunctor(Term term) {

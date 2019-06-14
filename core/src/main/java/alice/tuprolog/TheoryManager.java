@@ -199,6 +199,15 @@ public class TheoryManager implements Serializable {
         return new LinkedList<ClauseInfo>();
     }
 
+    public synchronized boolean isStatic(Term headt) {
+        if (headt instanceof Struct) {
+            if (!staticDBase.getPredicates(((Struct) headt).getPredicateIndicator()).isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Consults a theory.
      *
