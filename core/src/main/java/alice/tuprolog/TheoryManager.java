@@ -208,6 +208,10 @@ public class TheoryManager implements Serializable {
         return false;
     }
 
+    public synchronized boolean isStatic(String indicator) {
+        return !staticDBase.getPredicates(indicator).isEmpty();
+    }
+
     /**
      * Consults a theory.
      *

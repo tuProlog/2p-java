@@ -129,6 +129,10 @@ public class PrimitiveManager implements IPrimitiveManager {
         return false;
     }
 
+    public boolean isPredicate(String indicator) {
+        return predicateHashMap.containsKey(indicator);
+    }
+
     public void identifyFunctor(Term term) {
         identify(term, PrimitiveInfo.FUNCTOR);
     }

@@ -325,6 +325,7 @@ forall(A, B) :- \+(call(A), \+ call(B)).
 
 assert(C) :- assertz(C).
 
+/*
 retract(Rule) :-
     retract_guard(Rule),
     Rule = ':-'(Head, Body), !,
@@ -334,6 +335,10 @@ retract(Fact) :-
     retract_guard(Fact),
     clause(Fact, true),
     '$retract'(Fact).
+*/
+
+retract(Clause) :- '$retract'(Clause).
+
 
 retractall(Head) :-
     retract_guard(Head),
