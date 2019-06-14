@@ -18,6 +18,8 @@
 
 package alice.tuprolog;
 
+import alice.tuprolog.parser.dynamic.Associativity;
+
 import java.util.AbstractMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
@@ -101,7 +103,7 @@ public class ClauseInfo {
         if (t instanceof Struct) {
             Struct co = (Struct) t;
             if (co.getName().equals(",")) {
-                int prio = op.opPrio(",", "xfy");
+                int prio = op.getOperatorPriority(",", Associativity.XFY);
                 StringBuilder sb = new StringBuilder(prio >= p ? "(" : "");
                 sb.append(co.getArg(0).toStringAsArgX(op, prio));
                 sb.append(",\n\t");
@@ -124,7 +126,7 @@ public class ClauseInfo {
         if (t instanceof Struct) {
             Struct co = (Struct) t;
             if (co.getName().equals(",")) {
-                int prio = op.opPrio(",", "xfy");
+                int prio = op.getOperatorPriority(",", Associativity.XFY);
                 StringBuilder sb = new StringBuilder(prio > p ? "(" : "");
                 sb.append(co.getArg(0).toStringAsArgX(op, prio));
                 sb.append(",\n\t");
@@ -156,7 +158,7 @@ public class ClauseInfo {
      */
     public String toString(OperatorManager op) {
         int p;
-        if ((p = op.opPrio(":-", "xfx")) >= OperatorManager.OP_LOW) {
+        if ((p = op.getOperatorPriority(":-", "xfx")) >= OperatorManager.OP_LOW) {
             String st = indentPredicatesAsArgX(clause.getArg(1), op, p);
             String head = clause.getArg(0).toStringAsArgX(op, p);
             if (st.equals("true")) {
@@ -166,7 +168,7 @@ public class ClauseInfo {
             }
         }
 
-        if ((p = op.opPrio(":-", "yfx")) >= OperatorManager.OP_LOW) {
+        if ((p = op.getOperatorPriority(":-", "yfx")) >= OperatorManager.OP_LOW) {
             String st = indentPredicatesAsArgX(clause.getArg(1), op, p);
             String head = clause.getArg(0).toStringAsArgY(op, p);
             if (st.equals("true")) {
@@ -176,7 +178,7 @@ public class ClauseInfo {
             }
         }
 
-        if ((p = op.opPrio(":-", "xfy")) >= OperatorManager.OP_LOW) {
+        if ((p = op.getOperatorPriority(":-", "xfy")) >= OperatorManager.OP_LOW) {
             String st = indentPredicatesAsArgY(clause.getArg(1), op, p);
             String head = clause.getArg(0).toStringAsArgX(op, p);
             if (st.equals("true")) {

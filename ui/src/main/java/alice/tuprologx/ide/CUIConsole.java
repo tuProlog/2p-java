@@ -54,9 +54,9 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
         /**/
         if (args.length > 0) {
             try {
-                engine.setTheory(new Theory(new FileInputStream(args[0])));
+                engine.setTheory(Theory.parseLazilyWithOperators(new FileInputStream(args[0]), engine.getOperatorManager()));
             } catch (InvalidTheoryException ex) {
-                System.err.println("invalid theory - line: " + ex.line);
+                System.err.println("invalid theory - line: " + ex.getLine());
                 System.exit(-1);
             } catch (Exception ex) {
                 System.err.println("invalid theory.");

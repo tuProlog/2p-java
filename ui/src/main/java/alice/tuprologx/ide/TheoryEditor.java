@@ -150,11 +150,11 @@ public class TheoryEditor
         // insert a check on feededTheory? -> if true does not feed anything.
         String theory = editArea.getTheory();
         try {
-            getEngine().setTheory(Theory.parseLazilyWithStandardOperators(theory));
+            getEngine().setTheory(Theory.parseWithOperators(theory, getEngine().getOperatorManager()));
             editArea.setDirty(false);
             setStatusMessage("New theory accepted.");
         } catch (InvalidTheoryException ite) {
-            setStatusMessage("Error setting theory: Syntax Error at/before line " + ite.line);
+            setStatusMessage("Error setting theory: Syntax Error at/before line " + ite.getLine());
         }
     }
 

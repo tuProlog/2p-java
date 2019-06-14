@@ -135,10 +135,10 @@ public class BuiltIn extends Library {
     public boolean asserta_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Struct) {
-
-            if (((Struct) arg0).getName().equals(":-")) {
-                for (int i = 0; i < (((Struct) arg0).toList().listSize()) - 1; i++) {
-                    Term argi = ((Struct) arg0).getArg(i);
+            Struct struct0 = (Struct) arg0;
+            if (struct0.getName().equals(":-")) {
+                for (int i = 0; i < (struct0.toList().listSize()) - 1; i++) {
+                    Term argi = struct0.getArg(i);
                     if (!(argi instanceof Struct)) {
                         if (argi instanceof Var) {
                             throw PrologError.instantiation_error(engineManager, 1);
@@ -574,10 +574,10 @@ public class BuiltIn extends Library {
             for (Iterator<? extends Term> operators = ((Struct) arg2).listIterator(); operators
                     .hasNext(); ) {
                 Struct operator = (Struct) operators.next();
-                operatorManager.opNew(operator.getName(), specifier, priority);
+                operatorManager.add(operator.getName(), specifier, priority);
             }
         } else {
-            operatorManager.opNew(((Struct) arg2).getName(), specifier, priority);
+            operatorManager.add(((Struct) arg2).getName(), specifier, priority);
         }
         return true;
     }
@@ -630,7 +630,7 @@ public class BuiltIn extends Library {
             path = engine.getCurrentDirectory() + File.separator + path;
         }
         engine.pushDirectoryToList(new File(path).getParent());
-        engine.addTheory(new Theory(new FileInputStream(path)));
+        engine.addTheory(Theory.parseLazilyWithOperators(new FileInputStream(path), operatorManager));
         engine.popDirectoryFromList();
     }
 }
