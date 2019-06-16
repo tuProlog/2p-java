@@ -178,6 +178,7 @@ public class JEditTextArea extends JComponent {
      * Returns if this component can be traversed by pressing
      * the Tab key. This returns false.
      */
+    @Deprecated
     public final boolean isManagingFocus() {
         return true;
     }
@@ -1359,7 +1360,7 @@ public class JEditTextArea extends JComponent {
     /**
      * Sets if the selection should be rectangular.
      *
-     * @param overwrite True if the selection should be rectangular,
+     * @param rectSelect True if the selection should be rectangular,
      *                  false otherwise.
      */
     public final void setSelectionRectangular(boolean rectSelect) {

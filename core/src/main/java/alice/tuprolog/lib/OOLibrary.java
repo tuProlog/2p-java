@@ -23,6 +23,7 @@ import alice.tuprolog.exceptions.InvalidObjectIdException;
 import alice.tuprolog.exceptions.JavaException;
 import alice.tuprolog.lib.annotations.OOLibraryEnableLambdas;
 import alice.util.*;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -522,8 +523,8 @@ public class OOLibrary extends Library {
                                                                                interfaceName.toString().length() - 1);
                     String lambda_expression = (implementation.toString()).substring(1, implementation.toString()
                                                                                                       .length() - 1);
-                    target_class = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(target_class);
-                    lambda_expression = org.apache.commons.lang3.StringEscapeUtils.unescapeJava(lambda_expression);
+                    target_class = StringEscapeUtils.unescapeJava(target_class);
+                    lambda_expression = StringEscapeUtils.unescapeJava(lambda_expression);
 
                     Class<?> lambdaMetaFactory = alice.util.proxyGenerator.Generator.make(
                             ClassLoader.getSystemClassLoader(),

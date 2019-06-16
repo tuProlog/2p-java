@@ -362,7 +362,7 @@ public class IOLibrary extends Library {
         try {
             unify(arg0, getEngine().toTerm(st));
         } catch (InvalidTermException e) {
-            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.line, e.pos, new Struct(st));
+            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.getLine(), e.getPositionInLine(), new Struct(st));
         }
         return true;
     }
