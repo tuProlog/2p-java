@@ -111,6 +111,9 @@ public class TheoryManager implements Serializable {
         Struct clause = toClause(cl);
         Struct struct = ((Struct) clause.getArg(0));
         FamilyClausesList family = dynamicDBase.get(struct.getPredicateIndicator());
+
+        if (family == null) return null;
+
         ExecutionContext ctx = engine.getEngineManager().getCurrentContext();
 
         /*creo un nuovo clause database x memorizzare la teoria all'atto della retract
@@ -133,13 +136,11 @@ public class TheoryManager implements Serializable {
             return null;
         }
         //fa la retract dalla teoria base
-        if (family != null) {
-            for (Iterator<ClauseInfo> it = family.iterator(); it.hasNext(); ) {
-                ClauseInfo d = it.next();
-                if (clause.match(d.getClause())) {
-                    it.remove();
-                    break;
-                }
+        for (Iterator<ClauseInfo> it = family.iterator(); it.hasNext(); ) {
+            ClauseInfo d = it.next();
+            if (clause.match(d.getClause())) {
+                it.remove();
+                break;
             }
         }
         //fa la retract dal retract db

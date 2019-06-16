@@ -20,11 +20,9 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.interfaces.ILibraryManager;
-import alice.tuprolog.parser.dynamic.StringType;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -109,7 +107,8 @@ public class BuiltIn extends Library {
         return new String[][]{{"!", "cut", "predicate"},
                               {"=", "unify", "predicate"},
                               {"\\=", "deunify", "predicate"},
-                              {",", "comma", "predicate"}, {"op", "$op", "predicate"},
+                {",", "comma", "predicate"},
+                {"op", "$op", "predicate"},
                               {"solve", "initialization", "directive"},
                               {"consult", "include", "directive"},
                               {"load_library", "$load_library", "directive"}};
@@ -157,16 +156,6 @@ public class BuiltIn extends Library {
         if (arg0 instanceof Struct) {
             struct0 = (Struct) arg0;
             if (struct0.getName().equals(":-") && struct0.getArity() == 2) {
-//                for (int i = 0; i < (struct0.toList().listSize()) - 1; i++) {
-//                    Term argi = struct0.getArg(i);
-//                    if (!(argi instanceof Struct)) {
-//                        if (argi instanceof Var) {
-//                            throw PrologError.instantiation_error(engineManager, 1);
-//                        } else {
-//                            throw PrologError.type_error(engineManager, 1, "clause", arg0);
-//                        }
-//                    }
-//                }
                 ensureValidHead(struct0.getArg(0));
                 ensureValidBody(struct0.getArg(1));
                 ensureNonStatic((Struct) struct0.getArg(0), "modify", "static_clause");
@@ -233,23 +222,26 @@ public class BuiltIn extends Library {
             } else {
                 ensureNonStatic(struct0, "modify", "static_clause");
             }
-        } else {
-            ensureValidHead(arg0);
-        }
-        Struct sarg0 = (Struct) arg0;
-        ClauseInfo c = theoryManager.retract(sarg0);
-        // if clause to retract found -> retract + true
-        if (c != null) {
-            Struct clause = null;
-            if (!sarg0.isClause()) {
-                clause = new Struct(":-", arg0, new Struct("true"));
-            } else {
-                clause = sarg0;
+            Struct sarg0 = (Struct) arg0;
+            ClauseInfo c = theoryManager.retract(sarg0);
+            // if clause to retract found -> retract + true
+            if (c != null) {
+                Struct clause = null;
+                if (!sarg0.isClause()) {
+                    clause = new Struct(":-", arg0, new Struct("true"));
+                } else {
+                    clause = sarg0;
+                }
+                unify(clause, c.getClause());
+                return true;
             }
-            unify(clause, c.getClause());
-            return true;
+            return false;
         }
-        return false;
+        if (arg0 instanceof Var) {
+            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+        } else {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "clause", arg0);
+        }
     }
 
     public boolean abolish_1(Term arg0) throws PrologError {
