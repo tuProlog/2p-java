@@ -151,4 +151,6 @@ public class PrologError extends Throwable {
     public Term getError() {
         return error;
     }
+
+
 }

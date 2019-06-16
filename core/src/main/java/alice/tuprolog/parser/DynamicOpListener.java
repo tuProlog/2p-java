@@ -44,11 +44,11 @@ class DynamicOpListener extends PrologParserBaseListener {
         if (expr.op != null && ":-".equals(expr.op.symbol.getText()) && Associativity.PREFIX.contains(expr.associativity)) {
             final Struct directive = ctx.accept(PrologExpressionVisitor.get()).castTo(Struct.class);
 
-            if (directive.getArity() == 1 && directive.getArg(0).isStruct()) {
+            if (directive.getArity() == 1 && directive.getArg(0) instanceof Struct) {
                 final Struct op = directive.getArg(0).castTo(Struct.class);
 
                 if ("op".equals(op.getName()) && op.getArity() == 3
-                    && op.getArg(0).isNumber() && op.getArg(1).isAtom() && op.getArg(2).isAtom()) {
+                        && op.getArg(0) instanceof Number && op.getArg(1).isAtom() && op.getArg(2).isAtom()) {
 
                     final int priority = min(
                             PrologParser.TOP,

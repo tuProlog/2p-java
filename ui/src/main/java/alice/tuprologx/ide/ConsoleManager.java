@@ -67,7 +67,7 @@ public class ConsoleManager
                     engine.setTheory(Theory.parseLazilyWithStandardOperators(ide.getEditorContent()));
                     ide.setFeededTheory(true);
                 } catch (InvalidTheoryException e) {
-                    dialog.setStatusMessage("Error setting theory: Syntax Error at/before line " + e.line);
+                    dialog.setStatusMessage("Error setting theory: Syntax Error at/before line " + e.getLine());
                     return;
                 }
             }

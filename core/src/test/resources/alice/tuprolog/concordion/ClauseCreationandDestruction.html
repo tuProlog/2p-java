@@ -243,8 +243,9 @@ foo(X) :- call(X) -> call(X).</td><td>true</td></tr>
  <table concordion:execute="#result = success(#goal,#theory)">
         <tr><th concordion:set="#goal">Goal</th><th concordion:set="#theory">Theory</th><th concordion:assertFalse="#result">success(String goal,String theory)</th></tr>
         <tr><td>retract(legs(spider, 6)).</td><td>null</td><td>false</td></tr>
-        <tr><td>        retract(insect(I)), write(I), retract(insect(bee)), fail.
-        </td><td>:- dynamic(legs/2).
+     <tr>
+         <td>retract(insect(I)), write(I), retract(insect(bee)), fail.</td>
+         <td>:- dynamic(legs/2).
 legs(A, 4) :- animal(A).
 legs(octopus, 8).
 legs(A, 6) :- insect(A).
@@ -258,7 +259,9 @@ insect(bee).
 :- dynamic(foo/1).
 foo(X) :- call(X), call(X).
 foo(X) :- call(X) -> call(X).</td><td>false</td></tr>
-                <tr><td>retract((foo(A) :- A, call(A))).</td><td>:- dynamic(legs/2).
+     <tr>
+         <td>retract((foo(A) :- A, call(A))).</td>
+         <td>:- dynamic(legs/2).
 legs(A, 4) :- animal(A).
 legs(octopus, 8).
 legs(A, 6) :- insect(A).
@@ -272,20 +275,27 @@ insect(bee).
 :- dynamic(foo/1).
 foo(X) :- call(X), call(X).
 foo(X) :- call(X) -> call(X).</td><td>false</td></tr>
-             
-        
-        
-</table>
+     <tr>
+         <td>retract(insect(I)), write(I), retract(insect(bee)), fail.</td>
+         <td>null</td>
+         <td>false</td>
+     </tr>
+
+ </table>
 
 <p>Tests With Exception</p>
 
 <table concordion:execute="#result = successWithException(#goal,#theory)">
         <tr><th concordion:set="#goal">Goal</th><th concordion:set="#theory">Theory</th><th concordion:assertTrue="#result">success(String goal)</th><th ext:embed="successWithExceptionAndText(#goal,#theory)">Type Of Error</th></tr>
-        <tr><td>retract(insect(I)), write(I), retract(insect(bee)), fail.
-        </td><td>null</td><td>true</td><td></td></tr>
-        <tr><td>        retract((X :- in_eec(Y))).
-        </td><td>null</td><td>true</td><td></td></tr>
-                <tr><td>retract((4 :- X)).</td><td>:- dynamic(legs/2).
+    <tr>
+        <td>retract((X :- in_eec(Y))).</td>
+        <td>null</td>
+        <td>true</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>retract((4 :- X)).</td>
+        <td>:- dynamic(legs/2).
 legs(A, 4) :- animal(A).
 legs(octopus, 8).
 legs(A, 6) :- insect(A).
@@ -299,7 +309,9 @@ insect(bee).
 :- dynamic(foo/1).
 foo(X) :- call(X), call(X).
 foo(X) :- call(X) -> call(X).</td><td>true</td><td></td></tr>
-                <tr><td>retract((atom(X) :- X == '[]')).</td><td>:- dynamic(legs/2).
+    <tr>
+        <td>retract((atom(X) :- X == '[]')).</td>
+        <td>:- dynamic(legs/2).
 legs(A, 4) :- animal(A).
 legs(octopus, 8).
 legs(A, 6) :- insect(A).
@@ -326,68 +338,99 @@ foo(X) :- call(X) -> call(X).</td><td>true</td><td></td></tr>
 			<th concordion:assertEquals="#result">success(String goal,String
 				theory,String variable,Strng solution)</th>
 		</tr>
-		 <tr><td>retract((legs(X, 2) :- T)).</td><td>:- dynamic(legs/2).
-legs(A, 4) :- animal(A).
-legs(octopus, 8).
+
+    <tr>
+        <td>retract((legs(X, 2) :- T)).</td>
+        <td>:- dynamic(legs/2).
+            legs(A, 4) :- animal(A).
+            legs(octopus, 8).
+            legs(A, 6) :- insect(A).
+            legs(spider, 8).
+            legs(B, 2) :- bird(B).
+
+            :- dynamic(insect/1).
+            insect(ant).
+            insect(bee).
+
+            :- dynamic(foo/1).
+            foo(X) :- call(X), call(X).
+            foo(X) :- call(X) -> call(X).
+        </td>
+        <td>T</td>
+        <td>bird(X)</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>retract((legs(X, Y) :- bird(_))).</td>
+        <td>:- dynamic(legs/2).
+            legs(A, 4) :- animal(A).
+            legs(octopus, 8).
+            legs(A, 6) :- insect(A).
+            legs(spider, 8).
+            legs(B, 2) :- bird(B).
+
+            :- dynamic(insect/1).
+            insect(ant).
+            insect(bee).
+
+            :- dynamic(foo/1).
+            foo(X) :- call(X), call(X).
+            foo(X) :- call(X) -> call(X).
+        </td>
+        <td>Y</td>
+        <td>2</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>retract((legs(X, Y) :- Z)).</td>
+        <td>:- dynamic(legs/2).
+            legs(A, 4) :- animal(A).
+            legs(octopus, 8).
+            legs(A, 6) :- insect(A).
+            legs(spider, 8).
+            legs(B, 2) :- bird(B).
+
+            :- dynamic(insect/1).
+            insect(ant).
+            insect(bee).
+
+            :- dynamic(foo/1).
+            foo(X) :- call(X), call(X).
+            foo(X) :- call(X) -> call(X).
+        </td>
+        <td>Z</td>
+        <td>animal(X)</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>retract((legs(X, Y) :- insect(_))).</td>
+        <td>:- dynamic(legs/2).
+            legs(A, 4) :- animal(A).
+            legs(octopus, 8).
+            legs(A, 6) :- insect(A).
+            legs(spider, 8).
+            legs(B, 2) :- bird(B).
+
+            :- dynamic(insect/1).
+            insect(ant).
+            insect(bee).
+
+            :- dynamic(foo/1).
+            foo(X) :- call(X), call(X).
+            foo(X) :- call(X) -> call(X).
+        </td>
+        <td>Y</td>
+        <td>6</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>retract((legs(X, Y) :- Z)).</td>
+        <td>:- dynamic(legs/2).
 legs(A, 6) :- insect(A).
+            legs(octopus, 8).
 legs(spider, 8).
 legs(B, 2) :- bird(B).
-
-:- dynamic(insect/1).
-insect(ant).
-insect(bee).
-
-:- dynamic(foo/1).
-foo(X) :- call(X), call(X).
-foo(X) :- call(X) -> call(X).</td><td>T</td><td>bird(X)</td><td>true</td></tr>
-        <tr><td>retract((legs(X, Y) :- Z)).</td><td>:- dynamic(legs/2).
-legs(A, 4) :- animal(A).
-legs(octopus, 8).
-legs(A, 6) :- insect(A).
-legs(spider, 8).
-legs(B, 2) :- bird(B).
-
-:- dynamic(insect/1).
-insect(ant).
-insect(bee).
-
-:- dynamic(foo/1).
-foo(X) :- call(X), call(X).
-foo(X) :- call(X) -> call(X).</td><td>Y</td><td>2</td><td>true</td></tr>
-                <tr><td>retract((legs(X, Y) :- Z)).</td><td>:- dynamic(legs/2).
-legs(A, 4) :- animal(A).
-legs(octopus, 8).
-legs(A, 6) :- insect(A).
-legs(spider, 8).
-legs(B, 2) :- bird(B).
-
-:- dynamic(insect/1).
-insect(ant).
-insect(bee).
-
-:- dynamic(foo/1).
-foo(X) :- call(X), call(X).
-foo(X) :- call(X) -> call(X).</td><td>Z</td><td>animal(X)</td><td>true</td></tr>
-                                <tr><td>retract((legs(X, Y) :- Z)).</td><td>:- dynamic(legs/2).
-legs(A, 4) :- animal(A).
-legs(octopus, 8).
-legs(A, 6) :- insect(A).
-legs(spider, 8).
-legs(B, 2) :- bird(B).
-
-:- dynamic(insect/1).
-insect(ant).
-insect(bee).
-
-:- dynamic(foo/1).
-foo(X) :- call(X), call(X).
-foo(X) :- call(X) -> call(X).</td><td>Y</td><td>6</td><td>true</td></tr>
-          <tr><td>retract((legs(X, Y) :- Z)).</td><td>:- dynamic(legs/2).
-legs(A, 4) :- animal(A).
-legs(octopus, 8).
-legs(A, 6) :- insect(A).
-legs(spider, 8).
-legs(B, 2) :- bird(B).
+            legs(A, 4) :- animal(A).
 
 :- dynamic(insect/1).
 insect(ant).

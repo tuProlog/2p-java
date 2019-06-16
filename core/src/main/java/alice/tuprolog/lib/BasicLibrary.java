@@ -59,7 +59,7 @@ public class BasicLibrary extends Library {
             getEngine().setTheory(Theory.parseLazilyWithOperators(theory.getName(), getEngine().getOperatorManager()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(engine.getEngineManager(), ex.clause, ex.line, ex.pos, new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(engine.getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
         }
     }
 
@@ -82,7 +82,7 @@ public class BasicLibrary extends Library {
             getEngine().addTheory(Theory.parseLazilyWithStandardOperators(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(engine.getEngineManager(), ex.clause, ex.line, ex.pos, new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(engine.getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
         }
     }
 
@@ -131,8 +131,8 @@ public class BasicLibrary extends Library {
         java.util.Iterator<Operator> it = getEngine().getCurrentOperatorList().iterator();
         while (it.hasNext()) {
             Operator o = it.next();
-            list = new Struct(new Struct("op", new alice.tuprolog.Int(o.prio),
-                                         new Struct(o.type), new Struct(o.name)), list);
+            list = new Struct(new Struct("op", new Int(o.getPriority()),
+                    new Struct(o.getAssociativity().name().toLowerCase()), new Struct(o.getName())), list);
         }
         return unify(arg, list);
     }
@@ -947,7 +947,7 @@ public class BasicLibrary extends Library {
             }
             Term term = null;
             try {
-                term = new alice.tuprolog.Int(java.lang.Integer.parseInt(st2));
+                term = new Int(java.lang.Integer.parseInt(st2));
             } catch (Exception ex) {
             }
             if (term == null) {

@@ -55,7 +55,7 @@ public class ThreadLibrary extends Library {
         try {
             unify(result, status);
         } catch (InvalidTermException e) {
-            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.line, e.pos, result);
+            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.getLine(), e.getPositionInLine(), result);
         }
         return true;
     }
@@ -79,7 +79,7 @@ public class ThreadLibrary extends Library {
         try {
             unify(result, status);
         } catch (InvalidTermException e) {
-            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.line, e.pos, result);
+            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.getLine(), e.getPositionInLine(), result);
         }
         return true;
     }

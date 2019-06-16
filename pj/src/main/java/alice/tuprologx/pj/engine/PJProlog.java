@@ -62,11 +62,11 @@ public class PJProlog /*extends alice.tuprolog.Prolog*/ {
     }
 
     public void setTheory(Theory theory) throws alice.tuprolog.exceptions.InvalidTheoryException {
-        engine.setTheory(new alice.tuprolog.Theory(theory.marshal()));
+        engine.setTheory(alice.tuprolog.Theory.fromPrologList(theory.marshal()));
     }
 
     public void addTheory(Theory theory) throws alice.tuprolog.exceptions.InvalidTheoryException {
-        engine.addTheory(new alice.tuprolog.Theory(theory.marshal()));
+        engine.addTheory(alice.tuprolog.Theory.fromPrologList(theory.marshal()));
     }
     
     public Theory getTheory() throws alice.tuprolog.exceptions.InvalidTheoryException {

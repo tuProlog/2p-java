@@ -23,7 +23,6 @@ import alice.tuprolog.interfaces.ILibraryManager;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
@@ -108,7 +107,8 @@ public class BuiltIn extends Library {
         return new String[][]{{"!", "cut", "predicate"},
                               {"=", "unify", "predicate"},
                               {"\\=", "deunify", "predicate"},
-                              {",", "comma", "predicate"}, {"op", "$op", "predicate"},
+                {",", "comma", "predicate"},
+                {"op", "$op", "predicate"},
                               {"solve", "initialization", "directive"},
                               {"consult", "include", "directive"},
                               {"load_library", "$load_library", "directive"}};
@@ -132,23 +132,41 @@ public class BuiltIn extends Library {
         return true;
     }
 
-    public boolean asserta_1(Term arg0) throws PrologError {
-        arg0 = arg0.getTerm();
-        if (arg0 instanceof Struct) {
+    private Struct ensureNonStatic(Struct struct, String operation, String objectType) throws PrologError {
+        if (primitiveManager.isPredicate(struct) || theoryManager.isStatic(struct)) {
+            final Struct indicator = new Struct("/", new Struct(struct.getName()), new Int(struct.getArity()));
+            throw PrologError.permission_error(
+                    engineManager,
+                    operation,
+                    objectType,
+                    indicator,
+                    new Struct(String.format("No permission to %s %s`%s`",
+                                             operation,
+                                             objectType.replace("_", " "),
+                                             indicator))
+            );
+        }
+        return struct;
+    }
 
-            if (((Struct) arg0).getName().equals(":-")) {
-                for (int i = 0; i < (((Struct) arg0).toList().listSize()) - 1; i++) {
-                    Term argi = ((Struct) arg0).getArg(i);
-                    if (!(argi instanceof Struct)) {
-                        if (argi instanceof Var) {
-                            throw PrologError.instantiation_error(engineManager, 1);
-                        } else {
-                            throw PrologError.type_error(engineManager, 1, "clause", arg0);
-                        }
-                    }
-                }
+    private boolean assertImpl(Term arg0, boolean before) throws PrologError {
+        arg0 = arg0.getTerm();
+        final Struct struct0;
+
+        if (arg0 instanceof Struct) {
+            struct0 = (Struct) arg0;
+            if (struct0.getName().equals(":-") && struct0.getArity() == 2) {
+                ensureValidHead(struct0.getArg(0));
+                ensureValidBody(struct0.getArg(1));
+                ensureNonStatic((Struct) struct0.getArg(0), "modify", "static_clause");
+            } else {
+                ensureNonStatic(struct0, "modify", "static_clause");
             }
-            theoryManager.assertA((Struct) arg0, true, null, false);
+            if (before) {
+                theoryManager.assertA(struct0, true, null, false);
+            } else {
+                theoryManager.assertZ(struct0, true, null, false);
+            }
             return true;
         }
         if (arg0 instanceof Var) {
@@ -158,68 +176,103 @@ public class BuiltIn extends Library {
         }
     }
 
+    public boolean asserta_1(Term arg0) throws PrologError {
+        return assertImpl(arg0, true);
+    }
+
     public boolean assertz_1(Term arg0) throws PrologError {
-        arg0 = arg0.getTerm();
-        if (arg0 instanceof Struct) {
-            if (((Struct) arg0).getName().equals(":-")) {
-                for (int i = 0; i < (((Struct) arg0).toList().listSize()) - 1; i++) {
-                    Term argi = ((Struct) arg0).getArg(i);
-                    if (!(argi instanceof Struct)) {
-                        if (argi instanceof Var) {
-                            throw PrologError.instantiation_error(engineManager, 1);
-                        } else {
-                            throw PrologError.type_error(engineManager, 1, "clause", arg0);
-                        }
-                    }
-                }
-            }
-            theoryManager.assertZ((Struct) arg0, true, null, false);
-            return true;
-        }
-        if (arg0 instanceof Var) {
+        return assertImpl(arg0, false);
+    }
+
+    private Struct ensureValidHead(Term head) throws PrologError {
+        if (head instanceof Struct) {
+            return (Struct) head;
+        } else if (head instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
         } else {
-            throw PrologError.type_error(engineManager, 1, "clause", arg0);
+            throw PrologError.type_error(engineManager, 1, "clause", head);
+        }
+    }
+
+    private Term ensureValidBody(Term body) throws PrologError {
+        if (body instanceof Struct) {
+            Struct bodyStruct = (Struct) body;
+            if (bodyStruct.getArity() == 2 && ",".equals(bodyStruct.getName())) {
+                ensureValidBody(bodyStruct.getArg(0));
+                ensureValidBody(bodyStruct.getArg(1));
+            }
+            return body;
+        } else if (body instanceof Var) {
+            return body;
+        } else {
+            throw PrologError.type_error(engineManager, 1, "clause", body);
         }
     }
 
     public boolean $retract_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
-        if (!(arg0 instanceof Struct)) {
-            if (arg0 instanceof Var) {
-                throw PrologError.instantiation_error(engineManager, 1);
+        final Struct struct0;
+
+        if (arg0 instanceof Struct) {
+            struct0 = (Struct) arg0;
+            if (struct0.getName().equals(":-") && struct0.getArity() == 2) {
+                ensureValidHead(struct0.getArg(0));
+                ensureValidBody(struct0.getArg(1));
+                ensureNonStatic((Struct) struct0.getArg(0), "modify", "static_clause");
             } else {
-                throw PrologError.type_error(engineManager, 1, "clause", arg0);
+                ensureNonStatic(struct0, "modify", "static_clause");
             }
-        }
-        Struct sarg0 = (Struct) arg0;
-        ClauseInfo c = theoryManager.retract(sarg0);
-        // if clause to retract found -> retract + true
-        if (c != null) {
-            Struct clause = null;
-            if (!sarg0.isClause()) {
-                clause = new Struct(":-", arg0, new Struct("true"));
-            } else {
-                clause = sarg0;
+            Struct sarg0 = (Struct) arg0;
+            ClauseInfo c = theoryManager.retract(sarg0);
+            // if clause to retract found -> retract + true
+            if (c != null) {
+                Struct clause = null;
+                if (!sarg0.isClause()) {
+                    clause = new Struct(":-", arg0, new Struct("true"));
+                } else {
+                    clause = sarg0;
+                }
+                unify(clause, c.getClause());
+                return true;
             }
-            unify(clause, c.getClause());
-            return true;
+            return false;
         }
-        return false;
+        if (arg0 instanceof Var) {
+            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+        } else {
+            throw PrologError.type_error(engine.getEngineManager(), 1, "clause", arg0);
+        }
     }
 
     public boolean abolish_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
+        final Struct struct0;
         if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engineManager, 1);
         }
-        if (!(arg0 instanceof Struct) || !arg0.isGround()) {
+        if (arg0 instanceof Struct
+            && "/".equals((struct0 = (Struct) arg0).getName())
+            && struct0.getArity() == 2
+            && struct0.getArg(0) instanceof Struct
+            && struct0.getArg(1) instanceof Number) {
+
+            final String functor = ((Struct) struct0.getArg(0)).getName();
+            final int arity = ((Number) struct0.getArg(1)).intValue();
+            final String indicator = functor + "/" + arity;
+
+            if (primitiveManager.isPredicate(indicator) || theoryManager.isStatic(indicator)) {
+                throw PrologError.permission_error(
+                        engineManager,
+                        "modify",
+                        "static_procedure",
+                        new Struct("/", new Struct(functor), new Int(arity)),
+                        new Struct(String.format("No permission to modify static procedure `%s`", indicator))
+                );
+            }
+        } else {
             throw PrologError.type_error(engineManager, 1, "predicate_indicator", arg0);
         }
 
-        if (((Struct) arg0).getArg(0).toString().equals("abolish")) {
-            throw PrologError.permission_error(engineManager, "modify", "static_procedure", arg0, new Struct(""));
-        }
 
         return theoryManager.abolish((Struct) arg0);
     }
@@ -574,10 +627,10 @@ public class BuiltIn extends Library {
             for (Iterator<? extends Term> operators = ((Struct) arg2).listIterator(); operators
                     .hasNext(); ) {
                 Struct operator = (Struct) operators.next();
-                operatorManager.opNew(operator.getName(), specifier, priority);
+                operatorManager.add(operator.getName(), specifier, priority);
             }
         } else {
-            operatorManager.opNew(((Struct) arg2).getName(), specifier, priority);
+            operatorManager.add(((Struct) arg2).getName(), specifier, priority);
         }
         return true;
     }
@@ -630,7 +683,7 @@ public class BuiltIn extends Library {
             path = engine.getCurrentDirectory() + File.separator + path;
         }
         engine.pushDirectoryToList(new File(path).getParent());
-        engine.addTheory(new Theory(new FileInputStream(path)));
+        engine.addTheory(Theory.parseLazilyWithOperators(new FileInputStream(path), operatorManager));
         engine.popDirectoryFromList();
     }
 }
