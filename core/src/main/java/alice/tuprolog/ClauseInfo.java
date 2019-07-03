@@ -194,7 +194,7 @@ public class ClauseInfo {
         return clause;
     }
 
-    Struct getHead() {
+    public Struct getHead() {
         return head;
     }
 
