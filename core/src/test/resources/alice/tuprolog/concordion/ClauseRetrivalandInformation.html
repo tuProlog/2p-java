@@ -318,7 +318,14 @@ current_predicate(?predicate_indicator)
 
 <table concordion:execute="#result = success(#goal,#theory)">
         <tr><th concordion:set="#goal">Goal</th><th concordion:set="#theory">Theory</th><th concordion:assertTrue="#result">success(String goal,String theory)</th></tr>
-        <tr><td>current_predicate(dog/0).</td><td>:- dynamic(cat/0).
+    <tr>
+        <td>current_predicate(current_predicate/1).</td>
+        <td>null</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>current_predicate(dog/0).</td>
+        <td>:- dynamic(cat/0).
 cat.
 
 :- dynamic(dog/0).
@@ -341,7 +348,6 @@ insect(bee).</td><td>true</td></tr>
 
  <table concordion:execute="#result = success(#goal,#theory)">
         <tr><th concordion:set="#goal">Goal</th><th concordion:set="#theory">Theory</th><th concordion:assertFalse="#result">success(String goal,String theory)</th></tr>
-        <tr><td>current_predicate(current_predicate/1).</td><td>null</td><td>false</td></tr>
         <tr><td>current_predicate(foo/A).</td><td>:- dynamic(cat/0).
 cat.
 
