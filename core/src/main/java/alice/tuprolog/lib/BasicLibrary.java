@@ -49,17 +49,17 @@ public class BasicLibrary extends Library {
     public boolean set_theory_1(Term th) throws PrologError {
         th = th.getTerm();
         if (th instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!th.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", th);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", th);
         }
         try {
             Struct theory = (Struct) th;
             getEngine().setTheory(Theory.parseLazilyWithOperators(theory.getName(), getEngine().getOperatorManager()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(engine.getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
         }
     }
 
@@ -71,10 +71,10 @@ public class BasicLibrary extends Library {
     public boolean add_theory_1(Term th) throws PrologError {
         th = th.getTerm();
         if (th instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!th.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
                                          th);
         }
         try {
@@ -82,7 +82,7 @@ public class BasicLibrary extends Library {
             getEngine().addTheory(Theory.parseLazilyWithStandardOperators(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(engine.getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
         }
     }
 
@@ -102,7 +102,7 @@ public class BasicLibrary extends Library {
     /**
      * Loads a library constructed from a theory.
      *
-     * @param theory  theory text
+     * @param th  theory text
      * @param libName name of the library
      * @return true if the library has been succesfully loaded.
      */
@@ -145,10 +145,10 @@ public class BasicLibrary extends Library {
     public boolean prologEngine_1(Term th) throws PrologError {
         th = th.getTerm();
         if (th instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!(th.isAtom())) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
                                          th);
         }
         Struct theory = (Struct) th;
@@ -170,17 +170,17 @@ public class BasicLibrary extends Library {
         th = th.getTerm();
         g = g.getTerm();
         if (th instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (g instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         if (!(th.isAtom())) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
                                          th);
         }
         if (!(g instanceof Struct)) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "struct", g);
         }
         Struct theory = (Struct) th;
@@ -298,7 +298,7 @@ public class BasicLibrary extends Library {
         if (t instanceof ArithmeticException) {
             ArithmeticException cause = (ArithmeticException) t;
             if (cause.getMessage().equals("/ by zero")) {
-                throw PrologError.evaluation_error(engine.getEngineManager(),
+                throw PrologError.evaluation_error(getEngine().getEngineManager(),
                                                    arg, "zero_divisor");
             }
         }
@@ -307,10 +307,10 @@ public class BasicLibrary extends Library {
     public boolean expression_equality_2(Term arg0, Term arg1)
             throws PrologError {
         if (arg0.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (arg1.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         Term val0 = null;
         Term val1 = null;
@@ -325,11 +325,11 @@ public class BasicLibrary extends Library {
             handleError(e, 2);
         }
         if (val0 == null || !(val0 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "evaluable", arg0.getTerm());
         }
         if (val1 == null || !(val1 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "evaluable", arg1.getTerm());
         }
         alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
@@ -347,10 +347,10 @@ public class BasicLibrary extends Library {
     public boolean expression_greater_than_2(Term arg0, Term arg1)
             throws PrologError {
         if (arg0.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (arg1.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         Term val0 = null;
         Term val1 = null;
@@ -365,11 +365,11 @@ public class BasicLibrary extends Library {
             handleError(e, 2);
         }
         if (val0 == null || !(val0 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "evaluable", arg0.getTerm());
         }
         if (val1 == null || !(val1 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "evaluable", arg1.getTerm());
         }
         return expression_greater_than((alice.tuprolog.Number) val0,
@@ -379,10 +379,10 @@ public class BasicLibrary extends Library {
     public boolean expression_less_or_equal_than_2(Term arg0, Term arg1)
             throws PrologError {
         if (arg0.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (arg1.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         Term val0 = null;
         Term val1 = null;
@@ -397,11 +397,11 @@ public class BasicLibrary extends Library {
             handleError(e, 2);
         }
         if (val0 == null || !(val0 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "evaluable", arg0.getTerm());
         }
         if (val1 == null || !(val1 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "evaluable", arg1.getTerm());
         }
         return !expression_greater_than((alice.tuprolog.Number) val0,
@@ -420,10 +420,10 @@ public class BasicLibrary extends Library {
     public boolean expression_less_than_2(Term arg0, Term arg1)
             throws PrologError {
         if (arg0.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (arg1.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         Term val0 = null;
         Term val1 = null;
@@ -438,11 +438,11 @@ public class BasicLibrary extends Library {
             handleError(e, 2);
         }
         if (val0 == null || !(val0 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "evaluable", arg0.getTerm());
         }
         if (val1 == null || !(val1 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "evaluable", arg1.getTerm());
         }
         return expression_less_than((alice.tuprolog.Number) val0,
@@ -452,10 +452,10 @@ public class BasicLibrary extends Library {
     public boolean expression_greater_or_equal_than_2(Term arg0, Term arg1)
             throws PrologError {
         if (arg0.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (arg1.getTerm() instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         Term val0 = null;
         Term val1 = null;
@@ -470,11 +470,11 @@ public class BasicLibrary extends Library {
             handleError(e, 2);
         }
         if (val0 == null || !(val0 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "evaluable", arg0.getTerm());
         }
         if (val1 == null || !(val1 instanceof Number)) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "evaluable", arg1.getTerm());
         }
         return !expression_less_than((alice.tuprolog.Number) val0,
@@ -810,17 +810,17 @@ public class BasicLibrary extends Library {
         source2 = source2.getTerm();
         dest = dest.getTerm();
         if (source1 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (source2 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         if (!source1.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom",
                                          source1);
         }
         if (!source2.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 2, "atom",
+            throw PrologError.type_error(getEngine().getEngineManager(), 2, "atom",
                                          source2);
         }
         return unify(dest, new Struct(((Struct) source1).getName()
@@ -832,7 +832,7 @@ public class BasicLibrary extends Library {
         arg1 = arg1.getTerm();
         if (arg1 instanceof Var) {
             if (!(arg0 instanceof Number)) {
-                throw PrologError.type_error(engine.getEngineManager(), 1,
+                throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                              "number", arg0);
             }
             alice.tuprolog.Number n0 = (alice.tuprolog.Number) arg0;
@@ -845,7 +845,7 @@ public class BasicLibrary extends Library {
             return (unify(arg1, new Struct(st)));
         } else {
             if (!arg1.isAtom()) {
-                throw PrologError.type_error(engine.getEngineManager(), 2,
+                throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                              "atom", arg1);
             }
             String st = ((Struct) arg1).getName();
@@ -958,7 +958,7 @@ public class BasicLibrary extends Library {
                 }
             }
             if (term == null) {
-                throw PrologError.domain_error(engine.getEngineManager(), 2,
+                throw PrologError.domain_error(getEngine().getEngineManager(), 2,
                                                "num_atom", arg1);
             }
             return (unify(arg0, term));
@@ -992,22 +992,22 @@ public class BasicLibrary extends Library {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (arg1 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         if (!(arg0 instanceof Int)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "integer", arg0);
         }
         if (!arg1.isCompound()) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "compound", arg1);
         }
         Int arg0int = (Int) arg0;
         if (arg0int.intValue() < 1) {
-            throw PrologError.domain_error(engine.getEngineManager(), 1,
+            throw PrologError.domain_error(getEngine().getEngineManager(), 1,
                                            "greater_than_zero", arg0);
         }
         return true;
@@ -1016,7 +1016,7 @@ public class BasicLibrary extends Library {
     public boolean clause_guard_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!(arg0 instanceof Struct)) {
             throw PrologError.type_error(getEngine().getEngineManager(), 1, "callable", arg0);
@@ -1028,10 +1028,10 @@ public class BasicLibrary extends Library {
     public boolean call_guard_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!arg0.isAtom() && !arg0.isCompound()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "callable", arg0);
         }
         return true;
@@ -1042,10 +1042,10 @@ public class BasicLibrary extends Library {
         arg1 = arg1.getTerm();
 
         if (arg1 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 2);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         if (!arg1.isAtom() && !arg1.isCompound()) {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                                          "callable", arg1);
         }
         return true;
@@ -1054,10 +1054,10 @@ public class BasicLibrary extends Library {
     public boolean retract_guard_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!(arg0 instanceof Struct)) {
-            throw PrologError.type_error(engine.getEngineManager(), 1,
+            throw PrologError.type_error(getEngine().getEngineManager(), 1,
                                          "clause", arg0);
         }
         return true;
@@ -1066,7 +1066,7 @@ public class BasicLibrary extends Library {
     public boolean member_guard_2(Term arg0, Term arg1) throws PrologError {
         arg1 = arg1.getTerm();
         if (!(arg1 instanceof Var) && !(arg1.isList())) {
-            throw PrologError.type_error(engine.getEngineManager(), 2, "list",
+            throw PrologError.type_error(getEngine().getEngineManager(), 2, "list",
                                          arg1);
         }
         return true;
@@ -1075,7 +1075,7 @@ public class BasicLibrary extends Library {
     public boolean reverse_guard_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         if (!(arg0 instanceof Var) && !(arg0.isList())) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "list",
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "list",
                                          arg0);
         }
         return true;
@@ -1085,7 +1085,7 @@ public class BasicLibrary extends Library {
             throws PrologError {
         arg1 = arg1.getTerm();
         if (!(arg1 instanceof Var) && !(arg1.isList())) {
-            throw PrologError.type_error(engine.getEngineManager(), 2, "list",
+            throw PrologError.type_error(getEngine().getEngineManager(), 2, "list",
                                          arg1);
         }
         return true;
@@ -1095,7 +1095,7 @@ public class BasicLibrary extends Library {
             throws PrologError {
         arg1 = arg1.getTerm();
         if (!(arg1 instanceof Var) && !(arg1.isList())) {
-            throw PrologError.type_error(engine.getEngineManager(), 2, "list",
+            throw PrologError.type_error(getEngine().getEngineManager(), 2, "list",
                                          arg1);
         }
         return true;
@@ -1108,7 +1108,7 @@ public class BasicLibrary extends Library {
     public boolean $wt_copyAndRetainFreeVar_2(Term arg0, Term arg1) {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        int id = engine.getEngineManager().getEnv().getNDemoSteps();
+        int id = getEngine().getEngineManager().getEnv().getNDemoSteps();
         return unify(arg1, arg0.copyAndRetainFreeVar(new IdentityHashMap<Var, Var>(), id));
     }
 
