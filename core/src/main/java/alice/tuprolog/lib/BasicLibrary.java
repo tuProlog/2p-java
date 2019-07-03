@@ -998,19 +998,49 @@ public class BasicLibrary extends Library {
             throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
         if (!(arg0 instanceof Int)) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 1,
-                                         "integer", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "integer", arg0);
         }
         if (!arg1.isCompound()) {
-            throw PrologError.type_error(getEngine().getEngineManager(), 2,
-                                         "compound", arg1);
+            throw PrologError.type_error(getEngine().getEngineManager(), 2, "compound", arg1);
         }
         Int arg0int = (Int) arg0;
         if (arg0int.intValue() < 1) {
-            throw PrologError.domain_error(getEngine().getEngineManager(), 1,
-                                           "greater_than_zero", arg0);
+            throw PrologError.domain_error(getEngine().getEngineManager(), 1, "greater_than_zero", arg0);
         }
         return true;
+    }
+
+    public boolean $dynamic_predicates_1(Term arg0) {
+        Struct clauses = new Struct(
+                getEngine().getTheoryManager()
+                        .dynamicClausesStream()
+                        .map(ClauseInfo::getHead)
+                        .map(Term::copy)
+        );
+
+        return unify(arg0, clauses);
+    }
+
+    public boolean $static_predicates_1(Term arg0) {
+        Struct clauses = new Struct(
+                getEngine().getTheoryManager()
+                        .staticClausesStream()
+                        .map(ClauseInfo::getHead)
+                        .map(Term::copy)
+        );
+
+        return unify(arg0, clauses);
+    }
+
+    public boolean $predicates_1(Term arg0) {
+        Struct clauses = new Struct(
+                getEngine().getTheoryManager()
+                        .clausesStream()
+                        .map(ClauseInfo::getHead)
+                        .map(Term::copy)
+        );
+
+        return unify(arg0, clauses);
     }
 
     public boolean clause_guard_2(Term arg0, Term arg1) throws PrologError {
