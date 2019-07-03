@@ -407,15 +407,21 @@ element0(N,[_ | L], E):-
 
 quicksort([], Pred,[]).
 quicksort([X | Tail], Pred, Sorted) :-
-   split(X, Tail, Pred, Small, Big),                   
-   quicksort(Small, Pred, SortedSmall),              
-   quicksort(Big, Pred, SortedBig),                  
-   append(SortedSmall, [X | SortedBig], Sorted).
+    split(X, Tail, Pred, Small, Big),
+    quicksort(Small, Pred, SortedSmall),
+    quicksort(Big, Pred, SortedBig),
+    append(SortedSmall, [X | SortedBig], Sorted).
 
 split(_, [], _, [], []).
 split(X, [Y | Tail], Pred, Small, [Y | Big]) :-
-   Predicate =.. [Pred, X, Y],
-   call(Predicate), !,
-   split(X, Tail, Pred, Small, Big).                   
+    Predicate =.. [Pred, X, Y],
+    call(Predicate), !,
+    split(X, Tail, Pred, Small, Big).
 split(X,[Y | Tail], Pred,[Y | Small], Big):-             
-   split(X, Tail, Pred, Small, Big).                   
+    split(X, Tail, Pred, Small, Big).
+
+current_predicate(Functor / Arity) :-
+    '$predicates'(Predicates),
+    member(P, Predicates),
+    P =.. [Functor | Args],
+    length(Args, Arity).
