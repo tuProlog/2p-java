@@ -1018,6 +1018,10 @@ public class BasicLibrary extends Library {
         if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
+        if (!(arg0 instanceof Struct)) {
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "callable", arg0);
+        }
+        ensureNonStatic((Struct) arg0, "access", "private_procedure");
         return true;
     }
 
