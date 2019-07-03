@@ -49,6 +49,7 @@ public abstract class Library implements Serializable, IPrimitives {
     /**
      * prolog core which loaded the library
      */
+    @Deprecated
     protected Prolog engine;
 
     /**
@@ -58,6 +59,11 @@ public abstract class Library implements Serializable, IPrimitives {
 
     public Library() {
         opMappingCached = getSynonymMap();
+    }
+
+    public Library(Prolog engine) {
+        opMappingCached = getSynonymMap();
+        this.engine = engine;
     }
 
     /**
@@ -259,5 +265,24 @@ public abstract class Library implements Serializable, IPrimitives {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    protected Struct ensureNonStatic(Struct struct, String operation, String objectType) throws PrologError {
+        if (getEngine() == null) return struct;
+
+        if (getEngine().getPrimitiveManager().isPredicate(struct) || getEngine().getTheoryManager().isStatic(struct)) {
+            final Struct indicator = new Struct("/", new Struct(struct.getName()), new Int(struct.getArity()));
+            throw PrologError.permission_error(
+                    getEngine().getEngineManager(),
+                    operation,
+                    objectType,
+                    indicator,
+                    new Struct(String.format("No permission to %s %s`%s`",
+                                             operation,
+                                             objectType.replace("_", " "),
+                                             indicator))
+            );
+        }
+        return struct;
     }
 }
