@@ -264,7 +264,9 @@ legs(A, 7) :- A, call(A).
 :- dynamic(insect/1).
 insect(ant).
 insect(bee).</td><td>true</td><td></td></tr>
-                <tr><td>clause(elk(N), Body).</td><td>:- dynamic(cat/0).
+    <tr>
+        <td>clause(clause(_, _), Body).</td>
+        <td>:- dynamic(cat/0).
 cat.
 
 :- dynamic(dog/0).
