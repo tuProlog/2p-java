@@ -23,6 +23,7 @@ import alice.tuprolog.json.AbstractEngineState;
 import alice.tuprolog.json.FullEngineState;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.Tools;
+import com.codepoetics.protonpack.StreamUtils;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -32,6 +33,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
 /**
  * This class defines the Theory Manager who manages the clauses/theory often referred to as the Prolog database.
@@ -68,6 +70,18 @@ public class TheoryManager implements Serializable {
         engine = vm;
         lastConsultedTheory = Theory.emptyWithStandardOperators();
         primitiveManager = engine.getPrimitiveManager();
+    }
+
+    public Stream<ClauseInfo> dynamicClausesStream() {
+        return StreamUtils.stream(dynamicDBase);
+    }
+
+    public Stream<ClauseInfo> staticClausesStream() {
+        return StreamUtils.stream(staticDBase);
+    }
+
+    public Stream<ClauseInfo> clausesStream() {
+        return Stream.concat(staticClausesStream(), dynamicClausesStream());
     }
 
     /**
