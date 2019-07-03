@@ -100,7 +100,12 @@ functor(Term, Functor, Arity) :- false.
 
 arg(N, C, T):- arg_guard(N, C, T), C =.. [_ | Args], element(N, Args, T).
 
-clause(H, B) :- clause_guard(H, B), L = [], '$find'(H, L), copy_term(L, LC), member((':-'(H, B)), LC).
+clause(H, B) :-
+    clause_guard(H, B),
+    L = [],
+    '$find'(H, L),
+    copy_term(L, LC),
+    member((':-'(H, B)), LC).
 
 call(G) :- call_guard(G), '$call'(G).
 
