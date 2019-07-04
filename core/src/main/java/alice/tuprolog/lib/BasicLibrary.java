@@ -939,6 +939,31 @@ public class BasicLibrary extends Library {
         throw new PrologError(error);
     }
 
+    public boolean throw_2(Term error, Term description) throws PrologError {
+        error = error.getTerm();
+        description = description.getTerm();
+        if (!(description instanceof Struct)) {
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
+        }
+        throw new PrologError(error, ((Struct) description).getName());
+    }
+
+    public boolean throw_error_3(Term error, Term term, Term description) throws PrologError {
+        error = error.getTerm();
+        term = term.getTerm();
+        description = description.getTerm();
+        if (!(description instanceof Struct)) {
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
+        }
+        throw new PrologError(new Struct("error", error, term), ((Struct) description).getName());
+    }
+
+    public boolean throw_error_2(Term error, Term term) throws PrologError {
+        error = error.getTerm();
+        term = term.getTerm();
+        throw new PrologError(new Struct("error", error, term));
+    }
+
     private static final String THEORY;
 
     static {
