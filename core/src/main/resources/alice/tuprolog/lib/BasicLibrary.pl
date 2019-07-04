@@ -75,20 +75,21 @@ current_prolog_flag(Name, Value) :-
 
 '=..'(T, L) :- nonvar(L), catch('$fromlist'(T, L), Error, false).
 
+functor(Term, Functor, _) :-
+    var(Term),
+    var(Functor), !,
+    fail.
 functor(Term, Functor, Arity) :-
-    \+ var(Term), !,
+    nonvar(Term), !,
     Term =.. [Functor | ArgList],
     length(ArgList, Arity).
-functor(Term, Functor, Arity) :-
-    var(Term),
-    atomic(Functor),
-    Arity == 0, !,
-    Term = Functor.
+functor(Functor, Functor, 0) :-
+    atomic(Functor), !.
 functor(Term, Functor, Arity) :-
     var(Term),
     current_prolog_flag(max_arity, Max),
     Arity > Max, !,
-    false.
+    fail.
 functor(Term, Functor, Arity) :-
     var(Term),
     atom(Functor),
