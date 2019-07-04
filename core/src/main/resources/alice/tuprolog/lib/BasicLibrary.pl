@@ -109,7 +109,7 @@ clause(H, B) :-
 
 call(G) :- call_guard(G), '$call'(G).
 
-'\\+'(P):- P,!, fail.
+'\\+'(P):- call(P),!, fail.
 
 '\\+'(_).
 
@@ -141,7 +141,7 @@ repeat.
 
 repeat :- repeat.
 
-not(G) :- G, !, fail.
+not(G) :- call(G), !, fail.
 not(_). 
 
 catch(Goal, Catcher, Handler) :- call(Goal).
