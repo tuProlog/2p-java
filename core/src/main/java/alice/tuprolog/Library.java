@@ -267,6 +267,14 @@ public abstract class Library implements Serializable, IPrimitives {
         }
     }
 
+    protected alice.tuprolog.Number getIntegerNumber(long num) {
+        if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) {
+            return new Int((int) num);
+        } else {
+            return new alice.tuprolog.Long(num);
+        }
+    }
+
     protected Struct ensureNonStatic(Struct struct, String operation, String objectType) throws PrologError {
         if (getEngine() == null) return struct;
 

@@ -392,8 +392,10 @@ public class BuiltIn extends Library {
         // errore durante la valutazione
         if (t instanceof ArithmeticException) {
             ArithmeticException cause = (ArithmeticException) t;
-            if (cause.getMessage().equals("/ by zero")) {
+            if (cause.getMessage().contains("by zero")) {
                 throw PrologError.evaluation_error(getEngine().getEngineManager(), 2, "zero_divisor");
+            } else {
+                throw PrologError.evaluation_error(getEngine().getEngineManager(), 2, "overflow");
             }
         }
     }

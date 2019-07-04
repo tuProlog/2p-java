@@ -505,16 +505,12 @@ public class BasicLibrary extends Library {
         }
         if (val0 != null && val0 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
-            if (val0n instanceof Int) {
-                return new Int(val0n.intValue() * -1);
+            if (val0n.isInteger()) {
+                return getIntegerNumber(Math.negateExact(val0n.longValue()));
             } else if (val0n instanceof alice.tuprolog.Double) {
-                return new alice.tuprolog.Double(val0n.doubleValue() * -1);
-            } else if (val0n instanceof alice.tuprolog.Long) {
-                return new alice.tuprolog.Long(val0n.longValue() * -1);
-            } else if (val0n instanceof alice.tuprolog.Float) {
-                return new alice.tuprolog.Float(val0n.floatValue() * -1);
+                return new alice.tuprolog.Double(-val0n.doubleValue());
             } else {
-                return null;
+                return new alice.tuprolog.Float(-val0n.floatValue());
             }
         } else {
             return null;
@@ -535,14 +531,6 @@ public class BasicLibrary extends Library {
         }
     }
 
-    alice.tuprolog.Number getIntegerNumber(long num) {
-        if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) {
-            return new Int((int) num);
-        } else {
-            return new alice.tuprolog.Long(num);
-        }
-    }
-
     public Term expression_plus_2(Term arg0, Term arg1) {
         Term val0 = null;
         Term val1 = null;
@@ -557,7 +545,7 @@ public class BasicLibrary extends Library {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
             if (val0n.isInteger() && (val1n.isInteger())) {
-                return getIntegerNumber(val0n.longValue() + val1n.longValue());
+                return getIntegerNumber(Math.addExact(val0n.longValue(), val1n.longValue()));
             } else {
                 return new alice.tuprolog.Double(val0n.doubleValue() + val1n.doubleValue());
             }
@@ -572,15 +560,17 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && (val1 instanceof Number)) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
             if (val0n.isInteger() && (val1n.isInteger())) {
-                return getIntegerNumber(val0n.longValue() - val1n.longValue());
+                return getIntegerNumber(Math.subtractExact(val0n.longValue(), val1n.longValue()));
             } else {
                 return new alice.tuprolog.Double(val0n.doubleValue() - val1n.doubleValue());
             }
@@ -595,15 +585,17 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && (val1 instanceof Number)) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
             if (val0n.isInteger() && (val1n.isInteger())) {
-                return getIntegerNumber(val0n.longValue() * val1n.longValue());
+                return getIntegerNumber(Math.multiplyExact(val0n.longValue(), val1n.longValue()));
             } else {
                 return new alice.tuprolog.Double(val0n.doubleValue() * val1n.doubleValue());
             }
@@ -618,14 +610,16 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && val1 instanceof Number) {
             Number val0n = (Number) val0;
             Number val1n = (Number) val1;
-            if (val0n.isInteger() && val1n.isInteger()) {
+            if (val0n.isInteger() && val1n.isInteger() && val0n.longValue() % val1n.longValue() == 0) {
                 return getIntegerNumber(val0n.longValue() / val1n.longValue());
             } else {
                 return new alice.tuprolog.Double(val0n.doubleValue() / val1n.doubleValue());
@@ -641,8 +635,10 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && (val1 instanceof Number)) {
@@ -660,8 +656,10 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && (val1 instanceof Number)) {
@@ -679,8 +677,10 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && val1 instanceof Number) {
@@ -698,8 +698,10 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && val1 instanceof Number) {
@@ -717,8 +719,10 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && val1 instanceof Number) {
@@ -736,8 +740,10 @@ public class BasicLibrary extends Library {
         try {
             val0 = evalExpression(arg0);
             val1 = evalExpression(arg1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 != null && val1 != null && val0 instanceof Number
             && val1 instanceof Number) {

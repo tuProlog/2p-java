@@ -266,8 +266,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.sin(((Number) val0)
@@ -280,8 +282,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.cos(((Number) val0)
@@ -294,12 +298,13 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.exp(((Number) val0)
-                    .doubleValue()));
+            return new alice.tuprolog.Double(Math.exp(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -308,8 +313,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.atan(((Number) val0)
@@ -322,8 +329,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.log(((Number) val0)
@@ -336,8 +345,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double(Math.sqrt(((Number) val0)
@@ -350,8 +361,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long) {
             return new alice.tuprolog.Int(Math.abs(((Number) val0).intValue()));
@@ -368,8 +381,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long) {
             return new alice.tuprolog.Double(
@@ -387,8 +402,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double((long) Math.rint(((Number) val0)
@@ -401,8 +418,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             double fl = ((Number) val0).doubleValue();
@@ -415,8 +434,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Double(((Number) val0).doubleValue());
@@ -428,8 +449,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new Int((int) Math.floor(((Number) val0).doubleValue()));
@@ -441,8 +464,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new alice.tuprolog.Long(Math.round(((Number) val0)
@@ -455,8 +480,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        }  catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new Int((int) Math.rint(((Number) val0).doubleValue()));
@@ -468,8 +495,10 @@ public class ISOLibrary extends Library {
         Term val0 = null;
         try {
             val0 = evalExpression(val);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
             return new Int((int) Math.ceil(((Number) val0).doubleValue()));
@@ -483,12 +512,13 @@ public class ISOLibrary extends Library {
         try {
             val0 = evalExpression(v0);
             val1 = evalExpression(v1);
-        } catch (Throwable e) {
-
+        }  catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number && val1 instanceof Number) {
-            return new alice.tuprolog.Int(((Number) val0).intValue()
-                    / ((Number) val1).intValue());
+            return getIntegerNumber(((Number) val0).intValue() / ((Number) val1).intValue());
         }
         return null;
     }
@@ -499,14 +529,15 @@ public class ISOLibrary extends Library {
         try {
             val0 = evalExpression(v0);
             val1 = evalExpression(v1);
-        } catch (Throwable e) {
-
+        }  catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number && val1 instanceof Number) {
             int x = ((Number) val0).intValue();
             int y = ((Number) val1).intValue();
-            int f = new java.lang.Double(Math.floor((double) x / (double) y))
-                    .intValue();
+            int f = java.lang.Double.valueOf(Math.floor((double) x / (double) y)).intValue();
             return new Int(x - (f * y));
         }
         return null;
@@ -518,8 +549,10 @@ public class ISOLibrary extends Library {
         try {
             val0 = evalExpression(v0);
             val1 = evalExpression(v1);
-        } catch (Throwable e) {
-
+        } catch (ArithmeticException ex) {
+            throw ex;
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number && val1 instanceof Number) {
             return new alice.tuprolog.Double(Math.IEEEremainder(((Number) val0)
