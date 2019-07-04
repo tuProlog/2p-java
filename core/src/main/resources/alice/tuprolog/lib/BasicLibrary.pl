@@ -114,17 +114,15 @@ functor(_Term, _Functor, Arity) :-
     current_prolog_flag(max_arity, Max),
     Arity > Max, !,
     throw_error(domain_error(signed_32bits_number, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be an integer lower than the max_arity flag").
-functor(Functor, Functor, 0) :-
-    atomic(Functor), !.
+functor(Atom, Functor, N) :-
+    atomic(Atom), atomic(Functor), integer(N), !,
+    Atom = Functor,
+    N = 0.
 functor(Term, Functor, Arity) :-
     nonvar(Term), !,
     Term =.. [Functor | ArgList],
     length(ArgList, Arity).
 functor(Term, Functor, Arity) :-
-    var(Term),
-    atom(Functor),
-    number(Arity),
-    Arity > 0, !,
     length(ArgList, Arity),
     Term =.. [Functor | ArgList].
 
@@ -459,5 +457,4 @@ split(X,[Y | Tail], Pred,[Y | Small], Big):-
 current_predicate(Functor / Arity) :-
     '$predicates'(Predicates),
     member(P, Predicates),
-    functor(P, Functor, Arity),
-    length(Args, Arity).
+    functor(P, Functor, Arity).
