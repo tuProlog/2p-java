@@ -132,11 +132,23 @@
 			<td>21.299999999999997</td>
 		</tr>
 		<tr>
-			<td>'/'(7, 35).</td>
+			<td>div(7, 35).</td>
 			<td>0</td>
 		</tr>
 		<tr>
-			<td>'/'(7.0, 35).</td>
+			<td>'//'(7, 35).</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>div(7.0, 35).</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>'//'(7, 35.0).</td>
+			<td>0</td>
+		</tr>
+		<tr>
+			<td>'/'(7, 35).</td>
 			<td>0.2</td>
 		</tr>
 		<tr>
@@ -197,8 +209,12 @@
 			<td>7.3</td>
 		</tr>
 		<tr>
-			<td>float(5 / 3).</td>
+			<td>float(5 // 3).</td>
 			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>float(5 / 3).</td>
+			<td>1.6666666666666667</td>
 		</tr>
 		<tr>
 			<td>abs(7).</td>
@@ -225,6 +241,23 @@
 		engine.</p>
 
 	<table
+			concordion:execute="#result = success(#goal,#theory)">
+		<tr>
+			<th concordion:set="#goal">Goal</th>
+			<th concordion:set="#theory">Theory</th>
+			<th concordion:assertTrue="#result">success(String goal)</th>
+		</tr>
+		<tr>
+			<td>current_prolog_flag(max_integer, MI), R is float(MI) * 2, X
+				is floor(R).</td>
+			<td>null</td>
+			<td>true</td>
+		</tr>
+
+
+	</table>
+
+	<table
 		concordion:execute="#result = successWithException(#goal,#theory)">
 		<tr>
 			<th concordion:set="#goal">Goal</th>
@@ -248,13 +281,6 @@
 		</tr>
 		<tr>
 			<td>current_prolog_flag(max_integer, MI), X is '*'(MI, 2).</td>
-			<td>null</td>
-			<td>true</td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>current_prolog_flag(max_integer, MI), R is float(MI) * 2, X
-				is floor(R).</td>
 			<td>null</td>
 			<td>true</td>
 			<td></td>
