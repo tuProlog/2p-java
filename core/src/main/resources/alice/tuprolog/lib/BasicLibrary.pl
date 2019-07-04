@@ -37,6 +37,15 @@
 :- op(200, xfy, '^'). 
 :- op(200, fy, '\\').
 :- op(200, fy, '-').
+
+number_atom(Number, Atom) :-
+    nonvar(Number), !,
+    number_chars(Number, Chars),
+    atom_chars(Atom, Chars), !.
+number_atom(Number, Atom) :-
+    nonvar(Atom), !,
+    atom_chars(Atom, Chars),
+    number_chars(Number, Chars), !.
  
 current_prolog_flag(Name, Value) :- 
     catch(get_prolog_flag(Name, Value), Error, false),
@@ -75,21 +84,42 @@ current_prolog_flag(Name, Value) :-
 
 '=..'(T, L) :- nonvar(L), catch('$fromlist'(T, L), Error, false).
 
-functor(Term, Functor, _) :-
+functor(Term, Functor, _Arity) :-
     var(Term),
     var(Functor), !,
-    fail.
+    throw_error(instantiation_error, @(functor(Term, Functor, _Arity), (1, 2)), "Arguments 1 and 2 of functor/3 are not sufficiently instantiated").
+functor(Term, _Functor, Arity) :-
+    var(Term),
+    var(Arity), !,
+    throw_error(instantiation_error, @(functor(Term, _Functor, Arity), (1, 3)), "Arguments 1 and 3 of functor/3 are not sufficiently instantiated").
+functor(_Term, Functor, _Arity) :-
+    nonvar(Functor),
+    not(atomic(Functor)), !,
+    throw_error(type_error(atom, Functor), @(functor(_Term, Functor, _Arity), 2), "Argument 2 of functor/3 must be an atom").
+functor(_Term, _Functor, Arity) :-
+    nonvar(Arity),
+    (not(integer(Arity))), !,
+    throw_error(type_error(integer, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be an integer").
+functor(_Term, _Functor, Arity) :-
+    integer(Arity),
+    Arity < 0, !,
+    throw_error(domain_error(non_negative_integer, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be a non-negative integer").
+functor(_Term, Functor, Arity) :-
+    integer(Arity),
+    number(Functor),
+    Arity > 0, !,
+    throw_error(type_error(number, Functor), @(functor(_Term, Functor, Arity), 2), "Argument 2 of functor/3 must be an atom if argument 3 is non-zero").
+functor(_Term, _Functor, Arity) :-
+    integer(Arity),
+    current_prolog_flag(max_arity, Max),
+    Arity > Max, !,
+    throw_error(domain_error(signed_32bits_number, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be an integer lower than the max_arity flag").
+functor(Functor, Functor, 0) :-
+    atomic(Functor), !.
 functor(Term, Functor, Arity) :-
     nonvar(Term), !,
     Term =.. [Functor | ArgList],
     length(ArgList, Arity).
-functor(Functor, Functor, 0) :-
-    atomic(Functor), !.
-functor(Term, Functor, Arity) :-
-    var(Term),
-    current_prolog_flag(max_arity, Max),
-    Arity > Max, !,
-    fail.
 functor(Term, Functor, Arity) :-
     var(Term),
     atom(Functor),
@@ -97,7 +127,6 @@ functor(Term, Functor, Arity) :-
     Arity > 0, !,
     length(ArgList, Arity),
     Term =.. [Functor | ArgList].
-functor(Term, Functor, Arity) :- false.
 
 arg(N, C, T):- arg_guard(N, C, T), C =.. [_ | Args], element(N, Args, T).
 
@@ -430,5 +459,5 @@ split(X,[Y | Tail], Pred,[Y | Small], Big):-
 current_predicate(Functor / Arity) :-
     '$predicates'(Predicates),
     member(P, Predicates),
-    P =.. [Functor | Args],
+    functor(P, Functor, Arity),
     length(Args, Arity).
