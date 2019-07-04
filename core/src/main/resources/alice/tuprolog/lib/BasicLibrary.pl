@@ -107,6 +107,12 @@ clause(H, B) :-
     copy_term(L, LC),
     member((':-'(H, B)), LC).
 
+call_guard(G) :- var(G), !, '$call_guard'(G).
+call_guard(','(G1, G2)) :- !, call_guard(G1), call_guard(G2).
+call_guard(';'(G1, G2)) :- !, call_guard(G1), call_guard(G2).
+call_guard('->'(G1, G2)) :- !, call_guard(G1), call_guard(G2).
+call_guard(G) :- '$call_guard'(G).
+
 call(G) :- call_guard(G), '$call'(G).
 
 '\\+'(P):- call(P),!, fail.
