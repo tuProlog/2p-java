@@ -1024,7 +1024,7 @@ public class BasicLibrary extends Library {
         return true;
     }
 
-    public boolean call_guard_1(Term arg0) throws PrologError {
+    public boolean $call_guard_1(Term arg0) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
             throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
