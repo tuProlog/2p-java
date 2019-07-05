@@ -77,16 +77,19 @@ current_prolog_flag(Name, Value) :-
 
 '@=<'(X, Y) :- not term_greater_than(X, Y).
 
-list_pipe(X, X) :- (var(X); X \= .(_, _)), !.
-list_pipe([], []).
-list_pipe(.(_, T), P) :- list_pipe(T, P).
+head([X | _]) :- X.
+tail([_ | X]) :- X.
+
+tail_star(X, X) :- (var(X); X \= .(_, _)), !.
+tail_star([], []).
+tail_star(.(_, T), P) :- tail_star(T, P).
 
 '=..'(X, Y) :-
     var(X),
     var(Y), !,
     throw_error(instantiation_error, @('=..'(X, Y), (1, 2)), "Arguments 1 and 2 of '=..'/2 are not sufficiently instantiated").
 '=..'(X, Y) :-
-    var(X), list_pipe(Y, E), E \= [], !,
+    var(X), tail_star(Y, E), E \= [], !,
     throw_error(domain_error(non_piped_list, Y), @('=..'(X, Y), 2), "Argument 2 of '=..'/2 cannot be a piped list").
 '=..'(X, [F | Args]) :-
     var(X), var(F), !,

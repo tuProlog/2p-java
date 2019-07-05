@@ -617,8 +617,7 @@ public class BuiltIn extends Library {
                                            "operator_specifier", arg1);
         }
         if (arg2.isList()) {
-            for (Iterator<? extends Term> operators = ((Struct) arg2).listIterator(); operators
-                    .hasNext(); ) {
+            for (Iterator<? extends Term> operators = ((Struct) arg2).listIterator(); operators.hasNext(); ) {
                 Struct operator = (Struct) operators.next();
                 getEngine().getOperatorManager().add(operator.getName(), specifier, priority);
             }
