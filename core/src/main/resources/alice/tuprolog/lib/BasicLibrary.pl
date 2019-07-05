@@ -48,8 +48,7 @@ number_atom(Number, Atom) :-
     number_chars(Number, Chars), !.
  
 current_prolog_flag(Name, Value) :- 
-    catch(get_prolog_flag(Name, Value), Error, false),
-    !.
+    catch(get_prolog_flag(Name, Value), Error, false), !.
 current_prolog_flag(Name, Value) :- 
     flag_list(L),
     member(flag(Name, Value), L).
@@ -80,7 +79,7 @@ current_prolog_flag(Name, Value) :-
 
 '=..'(T, [T]) :- atomic(T), !.
 
-'=..'(T, L) :- compound(T),!, '$tolist'(T, L).
+'=..'(T, L) :- compound(T), !, '$tolist'(T, L).
 
 '=..'(T, L) :- nonvar(L), catch('$fromlist'(T, L), Error, false).
 
@@ -115,14 +114,22 @@ functor(_Term, _Functor, Arity) :-
     Arity > Max, !,
     throw_error(domain_error(signed_32bits_number, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be an integer lower than the max_arity flag").
 functor(Atom, Functor, N) :-
-    atomic(Atom), atomic(Functor), integer(N), !,
+    (atomic(Atom), atomic(Functor); atomic(Functor), integer(N), N = 0), !,
     Atom = Functor,
     N = 0.
 functor(Term, Functor, Arity) :-
     nonvar(Term), !,
-    Term =.. [Functor | ArgList],
-    length(ArgList, Arity).
+%    '$log'("Call for functor(Term = %s, Functor = %s, Arity = %s)", [Term, Functor, Arity]),
+    copy_term(Term, Term1),
+%    '$log'("\tTerm1 = %s", [Term1]),
+    Term1 =.. [Functor | ArgList],
+%    '$log'("\tFunctor = %s", [Functor]),
+%    '$log'("\tArgList = %s", [ArgList]),
+    length(ArgList, Arity). %,
+%    '$log'("\tArity = %s", [Arity]).
 functor(Term, Functor, Arity) :-
+    atom(Functor),
+    integer(Arity),
     length(ArgList, Arity),
     Term =.. [Functor | ArgList].
 
@@ -458,3 +465,12 @@ current_predicate(Functor / Arity) :-
     '$predicates'(Predicates),
     member(P, Predicates),
     functor(P, Functor, Arity).
+
+/*
+'$predicate'(P) :-
+    '$predicates'(Predicates),
+    member(P, Predicates).
+
+
+?- '$predicate'(P), functor(P, Functor, Arity).
+*/

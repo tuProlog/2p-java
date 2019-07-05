@@ -20,6 +20,8 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.interfaces.ILibraryManager;
+import alice.tuprolog.parser.dynamic.StringType;
+import alice.util.Tools;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Library of built-in predicates
@@ -176,6 +179,25 @@ public class BuiltIn extends Library {
         } else {
             throw PrologError.type_error(getEngine().getEngineManager(), 1, "clause", body);
         }
+    }
+
+    public boolean $log_2(Term format, Term args) {
+        String f = Tools.removeApices(format.getTerm().toString());
+        Object[] a;
+
+        if (args.getTerm().isList()) {
+            a = args.getTerm().castTo(Struct.class).listStream().map(Term::toString).toArray();
+        } else {
+            a = new Object[0];
+        }
+
+        System.out.printf(f, a);
+        System.out.println();
+        return true;
+    }
+
+    public boolean $log_1(Term format) {
+        return $log_2(format, new Struct());
     }
 
     public boolean $retract_1(Term arg0) throws PrologError {
