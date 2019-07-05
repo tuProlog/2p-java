@@ -619,10 +619,10 @@ public class BuiltIn extends Library {
         if (arg2.isList()) {
             for (Iterator<? extends Term> operators = ((Struct) arg2).listIterator(); operators.hasNext(); ) {
                 Struct operator = (Struct) operators.next();
-                getEngine().getOperatorManager().add(operator.getName(), specifier, priority);
+                getEngine().setOperatorManager(getEngine().getOperatorManager().add(operator.getName(), specifier, priority));
             }
         } else {
-            getEngine().getOperatorManager().add(((Struct) arg2).getName(), specifier, priority);
+            getEngine().setOperatorManager(getEngine().getOperatorManager().add(((Struct) arg2).getName(), specifier, priority));
         }
         return true;
     }
