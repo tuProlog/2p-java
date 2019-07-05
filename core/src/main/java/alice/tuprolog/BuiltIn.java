@@ -229,9 +229,9 @@ public class BuiltIn extends Library {
             return false;
         }
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         } else {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "clause", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "clause", arg0);
         }
     }
 
@@ -672,10 +672,10 @@ public class BuiltIn extends Library {
         theory = theory.getTerm();
         String path = alice.util.Tools.removeApices(theory.toString());
         if (!new File(path).isAbsolute()) {
-            path = engine.getCurrentDirectory() + File.separator + path;
+            path = getEngine().getCurrentDirectory() + File.separator + path;
         }
-        engine.pushDirectoryToList(new File(path).getParent());
-        engine.addTheory(Theory.parseLazilyWithOperators(new FileInputStream(path), getEngine().getOperatorManager()));
-        engine.popDirectoryFromList();
+        getEngine().pushDirectoryToList(new File(path).getParent());
+        getEngine().addTheory(Theory.parseLazilyWithOperators(new FileInputStream(path), getEngine().getOperatorManager()));
+        getEngine().popDirectoryFromList();
     }
 }
