@@ -14,7 +14,7 @@
 :- flag(integer_rounding_function, [up, down], down, false).
 :- flag(char_conversion, [on, off], off, false).
 :- flag(debug, [on, off], off, false).
-:- flag(max_arity, [%%MAX_INT%%], %%MAX_INT%%, false).
+:- flag(max_arity, [%%MAX_ARITY%%], %%MAX_ARITY%%, false).
 :- flag(undefined_predicate, [error, fail, warning], fail, false).
 :- flag(double_quotes, [atom,chars,codes], atom, false).
 

@@ -37,10 +37,18 @@
 :- op(200, xfy, '^'). 
 :- op(200, fy, '\\').
 :- op(200, fy, '-').
+
+number_atom(Number, Atom) :-
+    nonvar(Number), !,
+    number_chars(Number, Chars),
+    atom_chars(Atom, Chars), !.
+number_atom(Number, Atom) :-
+    nonvar(Atom), !,
+    atom_chars(Atom, Chars),
+    number_chars(Number, Chars), !.
  
 current_prolog_flag(Name, Value) :- 
-    catch(get_prolog_flag(Name, Value), Error, false),
-    !.
+    catch(get_prolog_flag(Name, Value), Error, false), !.
 current_prolog_flag(Name, Value) :- 
     flag_list(L),
     member(flag(Name, Value), L).
@@ -69,34 +77,79 @@ current_prolog_flag(Name, Value) :-
 
 '@=<'(X, Y) :- not term_greater_than(X, Y).
 
+list_pipe(X, X) :- (var(X); X \= .(_, _)), !.
+list_pipe([], []).
+list_pipe(.(_, T), P) :- list_pipe(T, P).
+
+'=..'(X, Y) :-
+    var(X),
+    var(Y), !,
+    throw_error(instantiation_error, @('=..'(X, Y), (1, 2)), "Arguments 1 and 2 of '=..'/2 are not sufficiently instantiated").
+'=..'(X, Y) :-
+    var(X), list_pipe(Y, E), E \= [], !,
+    throw_error(domain_error(non_piped_list, Y), @('=..'(X, Y), 2), "Argument 2 of '=..'/2 cannot be a piped list").
+'=..'(X, [F | Args]) :-
+    var(X), var(F), !,
+    throw_error(instantiation_error, @('=..'(X, [F | Args]), 2), "The head of the 2nd argument of '=..'/2 is not sufficiently instantiated").
+'=..'(X, [F | Args]) :-
+    var(X), not(atomic(F)), !,
+    throw_error(type_error(constant, F), @('=..'(X, [F | Args]), 2), "The head of the 2nd argument of '=..'/2 must be a constant").
+'=..'(X, [F | Args]) :-
+    var(X), not(atom(F)), Args \= [], !,
+    throw_error(domain_error(non_piped_list, Y), @('=..'(X, [F | Args]), 2), "If the head of the 2nd argument of '=..'/2 is not an atom, then he 2nd argument of '=..'/2 must be a singleton list").
 '=..'(T, [T]) :- atomic(T), !.
-
-'=..'(T, L) :- compound(T),!, '$tolist'(T, L).
-
+'=..'(T, L) :- compound(T), !, '$tolist'(T, L).
 '=..'(T, L) :- nonvar(L), catch('$fromlist'(T, L), Error, false).
 
-functor(Term, Functor, Arity) :-
-    \+ var(Term), !,
-    Term =.. [Functor | ArgList],
-    length(ArgList, Arity).
-functor(Term, Functor, Arity) :-
+functor(Term, Functor, _Arity) :-
     var(Term),
-    atomic(Functor),
-    Arity == 0, !,
-    Term = Functor.
-functor(Term, Functor, Arity) :-
+    var(Functor), !,
+    throw_error(instantiation_error, @(functor(Term, Functor, _Arity), (1, 2)), "Arguments 1 and 2 of functor/3 are not sufficiently instantiated").
+functor(Term, _Functor, Arity) :-
     var(Term),
+    var(Arity), !,
+    throw_error(instantiation_error, @(functor(Term, _Functor, Arity), (1, 3)), "Arguments 1 and 3 of functor/3 are not sufficiently instantiated").
+functor(_Term, Functor, _Arity) :-
+    nonvar(Functor),
+    not(atomic(Functor)), !,
+    throw_error(type_error(atom, Functor), @(functor(_Term, Functor, _Arity), 2), "Argument 2 of functor/3 must be an atom").
+functor(_Term, _Functor, Arity) :-
+    nonvar(Arity),
+    (not(integer(Arity))), !,
+    throw_error(type_error(integer, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be an integer").
+functor(_Term, _Functor, Arity) :-
+    integer(Arity),
+    Arity < 0, !,
+    throw_error(domain_error(non_negative_integer, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be a non-negative integer").
+functor(_Term, Functor, Arity) :-
+    integer(Arity),
+    number(Functor),
+    Arity > 0, !,
+    throw_error(type_error(number, Functor), @(functor(_Term, Functor, Arity), 2), "Argument 2 of functor/3 must be an atom if argument 3 is non-zero").
+functor(_Term, _Functor, Arity) :-
+    integer(Arity),
     current_prolog_flag(max_arity, Max),
     Arity > Max, !,
-    false.
+    throw_error(domain_error(signed_32bits_number, Arity), @(functor(_Term, _Functor, Arity), 3), "Argument 3 of functor/3 must be an integer lower than the max_arity flag").
+functor(Atom, Functor, N) :-
+    (atomic(Atom), atomic(Functor); atomic(Functor), integer(N), N = 0), !,
+    Atom = Functor,
+    N = 0.
 functor(Term, Functor, Arity) :-
-    var(Term),
+    nonvar(Term), !,
+%    '$log'("Call for functor(Term = %s, Functor = %s, Arity = %s)", [Term, Functor, Arity]),
+    copy_term(Term, Term1),
+%    '$log'("\tTerm1 = %s", [Term1]),
+    Term1 =.. [Functor | ArgList],
+%    '$log'("\tFunctor = %s", [Functor]),
+%    '$log'("\tArgList = %s", [ArgList]),
+    length(ArgList, Arity). %,
+%    '$log'("\tArity = %s", [Arity]).
+functor(Term, Functor, Arity) :-
     atom(Functor),
-    number(Arity),
-    Arity > 0, !,
+    integer(Arity),
     length(ArgList, Arity),
     Term =.. [Functor | ArgList].
-functor(Term, Functor, Arity) :- false.
 
 arg(N, C, T):- arg_guard(N, C, T), C =.. [_ | Args], element(N, Args, T).
 
@@ -429,5 +482,13 @@ split(X,[Y | Tail], Pred,[Y | Small], Big):-
 current_predicate(Functor / Arity) :-
     '$predicates'(Predicates),
     member(P, Predicates),
-    P =.. [Functor | Args],
-    length(Args, Arity).
+    functor(P, Functor, Arity).
+
+/*
+'$predicate'(P) :-
+    '$predicates'(Predicates),
+    member(P, Predicates).
+
+
+?- '$predicate'(P), functor(P, Functor, Arity).
+*/

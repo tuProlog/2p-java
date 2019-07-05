@@ -29,21 +29,21 @@ public class PrologError extends Throwable {
         this.descriptionError = descriptionError;
     }
 
-    public static PrologError instantiation_error(EngineManager engineManager, int argNo) {
-        Term errorTerm = new Struct("instantiation_error");
-        Term tuPrologTerm = new Struct("instantiation_error", engineManager.getEnv().currentContext.currentGoal, new Int(argNo));
-        String descriptionError = "Instantiation error" +
-                                  " in argument " + argNo +
-                                  " of " + engineManager.getEnv().currentContext.currentGoal.toString();
-        return new PrologError(new Struct("error", errorTerm, tuPrologTerm), descriptionError);
-    }
-
     public static PrologError type_error(EngineManager e, int argNo, String validType, Term culprit) {
         Term errorTerm = new Struct("type_error", new Struct(validType), culprit);
         Term tuPrologTerm = new Struct("type_error", e.getEnv().currentContext.currentGoal, new Int(argNo), new Struct(validType), culprit);
         String descriptionError = "Type error" +
                                   " in argument " + argNo +
                                   " of " + e.getEnv().currentContext.currentGoal.toString();
+        return new PrologError(new Struct("error", errorTerm, tuPrologTerm), descriptionError);
+    }
+
+    public static PrologError instantiation_error(EngineManager engineManager, int argNo) {
+        Term errorTerm = new Struct("instantiation_error");
+        Term tuPrologTerm = new Struct("instantiation_error", engineManager.getEnv().currentContext.currentGoal, new Int(argNo));
+        String descriptionError = "Instantiation error" +
+                " in argument " + argNo +
+                " of " + engineManager.getEnv().currentContext.currentGoal.toString();
         return new PrologError(new Struct("error", errorTerm, tuPrologTerm), descriptionError);
     }
 
@@ -145,7 +145,7 @@ public class PrologError extends Throwable {
     }
 
     public String toString() {
-        return descriptionError;
+        return descriptionError != null ? descriptionError : error.toString();
     }
 
     public Term getError() {

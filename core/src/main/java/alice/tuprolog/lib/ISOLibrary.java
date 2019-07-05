@@ -567,6 +567,7 @@ public class ISOLibrary extends Library {
         try {
             THEORY = Tools.loadText(ISOLibrary.class.getResourceAsStream(ISOLibrary.class.getSimpleName() + ".pl"))
                           .replace("%%MAX_INT%%", Long.toString(Long.MAX_VALUE))
+                    .replace("%%MAX_ARITY%%", Long.toString(Integer.MAX_VALUE))
                           .replace("%%MIN_INT%%", Long.toString(Long.MIN_VALUE));
         } catch (IOException e) {
             throw new IllegalStateException(e);
