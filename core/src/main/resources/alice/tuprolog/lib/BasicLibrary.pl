@@ -77,10 +77,28 @@ current_prolog_flag(Name, Value) :-
 
 '@=<'(X, Y) :- not term_greater_than(X, Y).
 
+list_pipe(X, X) :- (var(X); X \= .(_, _)), !.
+list_pipe([], []).
+list_pipe(.(_, T), P) :- list_pipe(T, P).
+
+'=..'(X, Y) :-
+    var(X),
+    var(Y), !,
+    throw_error(instantiation_error, @('=..'(X, Y), (1, 2)), "Arguments 1 and 2 of '=..'/2 are not sufficiently instantiated").
+'=..'(X, Y) :-
+    var(X), list_pipe(Y, E), E \= [], !,
+    throw_error(domain_error(non_piped_list, Y), @('=..'(X, Y), 2), "Argument 2 of '=..'/2 cannot be a piped list").
+'=..'(X, [F | Args]) :-
+    var(X), var(F), !,
+    throw_error(instantiation_error, @('=..'(X, [F | Args]), 2), "The head of the 2nd argument of '=..'/2 is not sufficiently instantiated").
+'=..'(X, [F | Args]) :-
+    var(X), not(atomic(F)), !,
+    throw_error(type_error(constant, F), @('=..'(X, [F | Args]), 2), "The head of the 2nd argument of '=..'/2 must be a constant").
+'=..'(X, [F | Args]) :-
+    var(X), not(atom(F)), Args \= [], !,
+    throw_error(domain_error(non_piped_list, Y), @('=..'(X, [F | Args]), 2), "If the head of the 2nd argument of '=..'/2 is not an atom, then he 2nd argument of '=..'/2 must be a singleton list").
 '=..'(T, [T]) :- atomic(T), !.
-
 '=..'(T, L) :- compound(T), !, '$tolist'(T, L).
-
 '=..'(T, L) :- nonvar(L), catch('$fromlist'(T, L), Error, false).
 
 functor(Term, Functor, _Arity) :-
