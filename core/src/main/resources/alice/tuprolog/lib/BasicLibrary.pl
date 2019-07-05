@@ -224,7 +224,8 @@ findall(Template, Goal, Instances) :-
 variable_set(T, []) :- atomic(T), !. 
 variable_set(T, [T]) :- var(T), !. 
 variable_set([H | T], [SH | ST]) :- 
-variable_set(H, SH), variable_set(T, ST). 
+    variable_set(H, SH),
+    variable_set(T, ST).
 variable_set(T, S) :- 
     T =.. [_ | Args],
     variable_set(Args, L),
@@ -286,13 +287,20 @@ is_member(E, [_ | T]) :- is_member(E, T).
     copy_term(Witness, W2),
     '$s_next0'(W2, WT_List, S_Next), !.
 
-bagof(Template, Goal, Instances) :- 
+bagof(Template, Goal, Instances) :-
+    '$log'("Calling %s", [bagof(Template, Goal, Instances)]),
     all_solutions_predicates_guard(Template, Goal, Instances),
+    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
     free_variables_set(Goal, Template, Set),
+    '$log'("\t%s", [free_variables_set(Goal, Template, Set)]),
     Witness =.. [witness | Set],
+    '$log'("\tWitness = %s", [Witness]),
     iterated_goal_term(Goal, G),
+    '$log'("\t%s", [iterated_goal_term(Goal, G)]),
     all_solutions_predicates_guard(Template, G, Instances),
-    'splitAndSolve'(Witness, Instances, Template, G, Goal).
+    '$log'("\t%s", [all_solutions_predicates_guard(Template, G, Instances)]),
+    'splitAndSolve'(Witness, Instances, Template, G, Goal),
+    '$log'("\t%s", ['splitAndSolve'(Witness, Instances, Template, G, Goal)]).
 
 count([], 0). 
 count([T1 | Ts], N) :- count(Ts, N1), N is (N1 + 1).
@@ -382,11 +390,16 @@ occurs_member_list_of_term(Template, [H | T]) :-
     '$s_next'(Witness, WT_List, S_Next),
     'bag0'(Witness, S_Next, Instances).
 
-setof(Template, Goal, Instances) :- 
+setof(Template, Goal, Instances) :-
+    '$log'("Calling %s", [setof(Template, Goal, Instances)]),
     all_solutions_predicates_guard(Template, Goal, Instances),
+    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
     bagof(Template, Goal, List),
+    '$log'("\t%s", [bagof(Template, Goal, List)]),
     quicksort(List, '@<', OrderedList),
-    no_duplicates(OrderedList, Instances).
+    '$log'("\t%s", [bagof(Template, Goal, List)]),
+    no_duplicates(OrderedList, Instances),
+    '$log'("\t%s", [no_duplicates(OrderedList, Instances)]).
 
 forall(A, B) :- \+(call(A), \+ call(B)).
 
