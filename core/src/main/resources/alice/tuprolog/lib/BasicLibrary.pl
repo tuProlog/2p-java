@@ -288,19 +288,19 @@ is_member(E, [_ | T]) :- is_member(E, T).
     '$s_next0'(W2, WT_List, S_Next), !.
 
 bagof(Template, Goal, Instances) :-
-    '$log'("Calling %s", [bagof(Template, Goal, Instances)]),
+%    '$log'("Calling %s", [bagof(Template, Goal, Instances)]),
     all_solutions_predicates_guard(Template, Goal, Instances),
-    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
+%    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
     free_variables_set(Goal, Template, Set),
-    '$log'("\t%s", [free_variables_set(Goal, Template, Set)]),
+%    '$log'("\t%s", [free_variables_set(Goal, Template, Set)]),
     Witness =.. [witness | Set],
-    '$log'("\tWitness = %s", [Witness]),
+%    '$log'("\tWitness = %s", [Witness]),
     iterated_goal_term(Goal, G),
-    '$log'("\t%s", [iterated_goal_term(Goal, G)]),
+%    '$log'("\t%s", [iterated_goal_term(Goal, G)]),
     all_solutions_predicates_guard(Template, G, Instances),
-    '$log'("\t%s", [all_solutions_predicates_guard(Template, G, Instances)]),
-    'splitAndSolve'(Witness, Instances, Template, G, Goal), !,
-    '$log'("\t%s", ['splitAndSolve'(Witness, Instances, Template, G, Goal)]).
+%    '$log'("\t%s", [all_solutions_predicates_guard(Template, G, Instances)]),
+    'splitAndSolve'(Witness, Instances, Template, G, Goal), !. %,
+%    '$log'("\t%s", ['splitAndSolve'(Witness, Instances, Template, G, Goal)]).
 
 count([], 0). 
 count([T1 | Ts], N) :- count(Ts, N1), N is (N1 + 1).
@@ -391,13 +391,13 @@ occurs_member_list_of_term(Template, [H | T]) :-
     'bag0'(Witness, S_Next, Instances).
 
 setof(Template, Goal, Instances) :-
-    '$log'("Calling %s", [setof(Template, Goal, Instances)]),
+%    '$log'("Calling %s", [setof(Template, Goal, Instances)]),
     all_solutions_predicates_guard(Template, Goal, Instances),
-    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
+%    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
     bagof(Template, Goal, List),
-    '$log'("\t%s", [bagof(Template, Goal, List)]),
-    '$remove_duplicates'(List, Instances),
-    '$log'("\t%s", ['$remove_duplicates'(List, Instances)]).
+%    '$log'("\t%s", [bagof(Template, Goal, List)]),
+    '$remove_duplicates'(List, Instances). %,
+%    '$log'("\t%s", ['$remove_duplicates'(List, Instances)]).
 
 /*
 setof(Template, Goal, Instances) :-
