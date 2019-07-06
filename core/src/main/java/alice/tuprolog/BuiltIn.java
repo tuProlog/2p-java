@@ -19,8 +19,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
-import alice.tuprolog.interfaces.ILibraryManager;
-import alice.tuprolog.parser.dynamic.StringType;
 import alice.util.Tools;
 
 import java.io.File;
@@ -29,7 +27,6 @@ import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Library of built-in predicates
@@ -441,6 +438,10 @@ public class BuiltIn extends Library {
 
     public boolean unify_2(Term arg0, Term arg1) {
         return unify(arg0, arg1);
+    }
+
+    public boolean $match_2(Term arg0, Term arg1) {
+        return arg0.match(arg1);
     }
 
     public boolean deunify_2(Term arg0, Term arg1) {
