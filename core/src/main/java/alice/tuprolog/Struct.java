@@ -336,7 +336,10 @@ public class Struct extends Term {
 
         return getName().equals(other.getName())
                 && getArity() == other.getArity()
-                && Arrays.equals(arg, other.arg);
+                && Arrays.equals(
+                Optional.ofNullable(arg).orElseGet(() -> new Term[0]),
+                Optional.ofNullable(other.arg).orElseGet(() -> new Term[0])
+        );
     }
 
     @Override
@@ -344,7 +347,7 @@ public class Struct extends Term {
         return Objects.hash(
                 getName(),
                 getArity(),
-                Arrays.hashCode(arg)
+                Arrays.hashCode(Optional.ofNullable(arg).orElseGet(() -> new Term[0]))
         );
     }
 

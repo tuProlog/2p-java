@@ -255,9 +255,11 @@ public abstract class Number extends Term implements Comparable<Number> {
 
         if (isInteger() && other.isInteger()) {
             return longValue() == other.longValue();
-        } else {
+        } else if (isReal() && other.isReal()) {
             return java.lang.Double.compare(doubleValue(), other.doubleValue()) == 0;
         }
+
+        return false;
     }
 
     @Override
