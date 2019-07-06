@@ -218,8 +218,9 @@ public abstract class Term implements Serializable {
     /**
      * Tests if this term is (logically) equal to another
      */
-    public boolean isEqual(Term t) { //Alberto
-        return this.toString().equals(t.toString());
+    public boolean isEqual(Term t) {
+        return equals(t);
+//        return this.toString().equals(t.toString());
     }
 
     /**
