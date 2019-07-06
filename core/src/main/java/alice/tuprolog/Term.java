@@ -205,15 +205,9 @@ public abstract class Term implements Serializable {
 
     /**
      * Tests for the equality of two object terms
-     * <p>
-     * The comparison follows the same semantic of
-     * the isEqual method.
      */
     public boolean equals(Object t) {
-        if (!(t instanceof Term)) {
-            return false;
-        }
-        return isEqual((Term) t);
+        return this == t;
     }
 
     /**

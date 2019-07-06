@@ -246,6 +246,25 @@ public abstract class Number extends Term implements Comparable<Number> {
     void restoreVariables() {
     }
 
+    @Override
+    public boolean equals(Object t) {
+        if (super.equals(t)) return true;
+        if (!(t instanceof Term) || !(((Term) t).getTerm() instanceof Number)) return false;
+
+        final Number other = (Number) ((Term) t).getTerm();
+
+        if (isInteger() && other.isInteger()) {
+            return longValue() == other.longValue();
+        } else {
+            return java.lang.Double.compare(doubleValue(), other.doubleValue()) == 0;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return isInteger() ? java.lang.Long.hashCode(longValue()) : java.lang.Double.hashCode(doubleValue());
+    }
+
     /*Castagna 06/2011*/
     @Override
     public void accept(TermVisitor tv) {
