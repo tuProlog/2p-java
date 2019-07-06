@@ -299,7 +299,7 @@ bagof(Template, Goal, Instances) :-
     '$log'("\t%s", [iterated_goal_term(Goal, G)]),
     all_solutions_predicates_guard(Template, G, Instances),
     '$log'("\t%s", [all_solutions_predicates_guard(Template, G, Instances)]),
-    'splitAndSolve'(Witness, Instances, Template, G, Goal),
+    'splitAndSolve'(Witness, Instances, Template, G, Goal), !,
     '$log'("\t%s", ['splitAndSolve'(Witness, Instances, Template, G, Goal)]).
 
 count([], 0). 
@@ -396,10 +396,21 @@ setof(Template, Goal, Instances) :-
     '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
     bagof(Template, Goal, List),
     '$log'("\t%s", [bagof(Template, Goal, List)]),
-    quicksort(List, '@<', OrderedList),
+    '$remove_duplicates'(List, Instances),
+    '$log'("\t%s", ['$remove_duplicates'(List, Instances)]).
+
+/*
+setof(Template, Goal, Instances) :-
+    '$log'("Calling %s", [setof(Template, Goal, Instances)]),
+    all_solutions_predicates_guard(Template, Goal, Instances),
+    '$log'("\t%s", [all_solutions_predicates_guard(Template, Goal, Instances)]),
+    bagof(Template, Goal, List),
     '$log'("\t%s", [bagof(Template, Goal, List)]),
+    quicksort(List, '@<', OrderedList),
+    '$log'("\t%s", [quicksort(List, '@<', OrderedList)]),
     no_duplicates(OrderedList, Instances),
     '$log'("\t%s", [no_duplicates(OrderedList, Instances)]).
+*/
 
 forall(A, B) :- \+(call(A), \+ call(B)).
 
