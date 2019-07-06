@@ -205,15 +205,9 @@ public abstract class Term implements Serializable {
 
     /**
      * Tests for the equality of two object terms
-     * <p>
-     * The comparison follows the same semantic of
-     * the isEqual method.
      */
     public boolean equals(Object t) {
-        if (!(t instanceof Term)) {
-            return false;
-        }
-        return isEqual((Term) t);
+        return this == t;
     }
 
     /**
@@ -224,8 +218,9 @@ public abstract class Term implements Serializable {
     /**
      * Tests if this term is (logically) equal to another
      */
-    public boolean isEqual(Term t) { //Alberto
-        return this.toString().equals(t.toString());
+    public boolean isEqual(Term t) {
+        return equals(t);
+//        return this.toString().equals(t.toString());
     }
 
     /**
@@ -469,5 +464,20 @@ public abstract class Term implements Serializable {
 
     public <T extends Term> T castTo(Class<T> klass) {
         return klass.cast(this);
+    }
+
+    public static Comparator<Term> lexicographicComparator() {
+        return (t1, t2) -> {
+            if (t1.getTerm() instanceof Var) {
+                if (!(t2.getTerm() instanceof Var)) {
+                    return -1;
+                }
+            } else {
+                if (t2.getTerm() instanceof Var) {
+                    return 1;
+                }
+            }
+            return t1.toString().compareTo(t2.toString());
+        };
     }
 }

@@ -25,6 +25,7 @@ import alice.util.Tools;
 import java.io.IOException;
 import java.lang.Double;
 import java.util.IdentityHashMap;
+import java.util.stream.Stream;
 
 /**
  * This class defines a set of basic built-in predicates for the tuProlog engine
@@ -1013,6 +1014,40 @@ public class BasicLibrary extends Library {
         );
 
         return unify(arg0, clauses);
+    }
+
+    private Stream<Term> removeDuplicates(Stream<Term> termStream) {
+        return termStream.distinct();
+    }
+
+    private Stream<Term> sortLexicographically(Stream<Term> termStream) {
+        return termStream.sorted(Term.lexicographicComparator());
+    }
+
+    public boolean $sort_lexicographically_2(Term arg0, Term arg1) throws PrologError {
+        arg0 = arg0.getTerm();
+        if (arg0 instanceof Var) {
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+        }
+        if (!arg0.isAtom() && !arg0.isCompound()) {
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "callable", arg0);
+        }
+        Stream<? extends Term> terms = arg0.castTo(Struct.class).listStream();
+        terms = sortLexicographically(terms.map(Term.class::cast));
+        return unify(arg1, new Struct(terms));
+    }
+
+    public boolean $remove_duplicates_2(Term arg0, Term arg1) throws PrologError {
+        arg0 = arg0.getTerm();
+        if (arg0 instanceof Var) {
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
+        }
+        if (!arg0.isAtom() && !arg0.isCompound()) {
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "callable", arg0);
+        }
+        Stream<? extends Term> terms = arg0.castTo(Struct.class).listStream();
+        terms = removeDuplicates(sortLexicographically(terms.map(Term.class::cast)));
+        return unify(arg1, new Struct(terms));
     }
 
     public boolean $static_predicates_1(Term arg0) {

@@ -325,6 +325,32 @@ public class Struct extends Term {
         return true;
     }
 
+    @Override
+    public boolean equals(Object t) {
+        if (super.equals(t)) return true;
+        if (!(t instanceof Term)) return false;
+
+        if (!(((Term) t).getTerm() instanceof Struct)) return false;
+
+        Struct other = (Struct) ((Term) t).getTerm();
+
+        return getName().equals(other.getName())
+                && getArity() == other.getArity()
+                && Arrays.equals(
+                Optional.ofNullable(arg).orElseGet(() -> new Term[0]),
+                Optional.ofNullable(other.arg).orElseGet(() -> new Term[0])
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(
+                getName(),
+                getArity(),
+                Arrays.hashCode(Optional.ofNullable(arg).orElseGet(() -> new Term[0]))
+        );
+    }
+
     /**
      * Check is this struct is clause or directive
      */

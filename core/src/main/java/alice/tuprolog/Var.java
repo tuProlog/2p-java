@@ -97,7 +97,7 @@ public class Var extends Term {
      * @param n     is the name
      * @param id    is the id of ExecCtx
      * @param alias code to discriminate external vars
-     * @param time  is timestamp
+     * @param count  is timestamp
      */
     private Var(String n, int id, int alias, long count/*, boolean isCyclic*/) {
         name = n;
@@ -145,6 +145,38 @@ public class Var extends Term {
             completeName = completeName
                     .delete(0, completeName.length())
                     .append("_").append(count);
+        }
+    }
+
+    @Override
+    public boolean equals(Object t) {
+        if (super.equals(t)) return true;
+        if (!(t instanceof Term)) return false;
+
+        Term thiz = getTerm();
+        Term other = ((Term) t).getTerm();
+
+        if (thiz instanceof Var) {
+            if (other instanceof Var) {
+                return thiz.toString().equals(other.toString());
+            }
+        } else {
+            if (!(other instanceof Var)) {
+                return thiz.equals(other);
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        final Term thiz = getTerm();
+
+        if (thiz instanceof Var) {
+            return thiz.toString().hashCode();
+        } else {
+            return thiz.hashCode();
         }
     }
 
@@ -387,7 +419,7 @@ public class Var extends Term {
      * (era una findIn)
      *
      * @param vl     TODO
-     * @param choice
+     * @param t
      */
     private boolean occurCheck(List<Var> vl, Struct t) {
         int arity = t.getArity();

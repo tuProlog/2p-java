@@ -19,8 +19,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
-import alice.tuprolog.interfaces.ILibraryManager;
-import alice.tuprolog.parser.dynamic.StringType;
 import alice.util.Tools;
 
 import java.io.File;
@@ -29,7 +27,6 @@ import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Library of built-in predicates
@@ -229,9 +226,9 @@ public class BuiltIn extends Library {
             return false;
         }
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         } else {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "clause", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "clause", arg0);
         }
     }
 
@@ -441,6 +438,10 @@ public class BuiltIn extends Library {
 
     public boolean unify_2(Term arg0, Term arg1) {
         return unify(arg0, arg1);
+    }
+
+    public boolean $match_2(Term arg0, Term arg1) {
+        return arg0.match(arg1);
     }
 
     public boolean deunify_2(Term arg0, Term arg1) {
@@ -672,10 +673,10 @@ public class BuiltIn extends Library {
         theory = theory.getTerm();
         String path = alice.util.Tools.removeApices(theory.toString());
         if (!new File(path).isAbsolute()) {
-            path = engine.getCurrentDirectory() + File.separator + path;
+            path = getEngine().getCurrentDirectory() + File.separator + path;
         }
-        engine.pushDirectoryToList(new File(path).getParent());
-        engine.addTheory(Theory.parseLazilyWithOperators(new FileInputStream(path), getEngine().getOperatorManager()));
-        engine.popDirectoryFromList();
+        getEngine().pushDirectoryToList(new File(path).getParent());
+        getEngine().addTheory(Theory.parseLazilyWithOperators(new FileInputStream(path), getEngine().getOperatorManager()));
+        getEngine().popDirectoryFromList();
     }
 }
