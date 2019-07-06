@@ -465,4 +465,19 @@ public abstract class Term implements Serializable {
     public <T extends Term> T castTo(Class<T> klass) {
         return klass.cast(this);
     }
+
+    public static Comparator<Term> lexicographicComparator() {
+        return (t1, t2) -> {
+            if (t1.getTerm() instanceof Var) {
+                if (!(t2.getTerm() instanceof Var)) {
+                    return -1;
+                }
+            } else {
+                if (t2.getTerm() instanceof Var) {
+                    return 1;
+                }
+            }
+            return t1.toString().compareTo(t2.toString());
+        };
+    }
 }

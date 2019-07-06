@@ -24,7 +24,6 @@ import alice.util.Tools;
 
 import java.io.IOException;
 import java.lang.Double;
-import java.util.Comparator;
 import java.util.IdentityHashMap;
 import java.util.stream.Stream;
 
@@ -1022,7 +1021,7 @@ public class BasicLibrary extends Library {
     }
 
     private Stream<Term> sortLexicographically(Stream<Term> termStream) {
-        return termStream.sorted(Comparator.comparing(Object::toString));
+        return termStream.sorted(Term.lexicographicComparator());
     }
 
     public boolean $sort_lexicographically_2(Term arg0, Term arg1) throws PrologError {
