@@ -60,11 +60,11 @@ phrase(+term, ?list)
 	<p>First of all, let's start an appropriate fixture containing an
 		engine.</p>
 
-	<table concordion:execute="#result = success(#goal,#theory)">
+	<table concordion:execute="#result = successWithDCGLib(#goal,#theory)">
 		<tr>
 			<th concordion:set="#goal">Goal</th>
 			<th concordion:set="#theory">Theory</th>
-			<th concordion:assertTrue="#result">success(String goal,String
+			<th concordion:assertTrue="#result">successWithDCGLib(String goal,String
 				theory)</th>
 		</tr>
 		<tr>
