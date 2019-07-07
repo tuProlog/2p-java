@@ -9,14 +9,58 @@ import org.concordion.ext.EmbedExtension;
 import org.concordion.integration.junit4.ConcordionRunner;
 import org.junit.runner.RunWith;
 
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 /* Run this class as a JUnit test. */
 
 @RunWith(ConcordionRunner.class)
 public class StreamSelectionandControl {
 
+    private static final Path BASE_DIR;
+
+    static {
+        try {
+            BASE_DIR = Paths.get(StreamSelectionandControl.class.getResource("/binFile.bin").toURI()).getParent();
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
     private static final String[] ISO_IO_LIB = new String[] {
             ISOIOLibrary.class.getName()
     };
+
+    private String ensureWithin(String input, String prefix, String suffix) {
+        return ensureStartsWith(ensureEndsWith(input, suffix), prefix);
+    }
+
+    private String ensureStartsWith(String input, String prefix) {
+        if (!input.startsWith(prefix)) {
+            return prefix + input;
+        } else {
+            return input;
+        }
+    }
+
+    private String ensureEndsWith(String input, String suffix) {
+        if (!input.endsWith(suffix)) {
+            return input + suffix;
+        } else {
+            return input;
+        }
+    }
+
+    private String fixSlashes(String raw) {
+        return raw.replaceAll("\\\\", "/");
+    }
+
+    private String updatePaths(String raw) {
+        return raw
+                .replaceAll("'\\./", ensureWithin(fixSlashes(BASE_DIR.toString()), "'", "/"))
+                .replaceAll("'/temp/", ensureWithin(fixSlashes(System.getProperty("java.io.tmpdir")), "'", "/"));
+    }
 
     @Extension
     public ConcordionExtension extension = new EmbedExtension().withNamespace(
@@ -24,7 +68,7 @@ public class StreamSelectionandControl {
 
     public boolean success(String goal, String theory) throws Exception {
 
-        return ConcordionSingleton.getInstance().success(goal, theory, ISO_IO_LIB);
+        return ConcordionSingleton.getInstance().success(updatePaths(goal), theory, ISO_IO_LIB);
 
     }
 
