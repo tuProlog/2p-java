@@ -202,17 +202,13 @@ public class ConcordionSingleton {
 
                     variable = replaceForVariable(var.toString(), ' ');
                     Term t = info.getVarValue(variable);
-                    results.add(replace == true ? replaceUnderscore(t
-                                                                            .toString()) : t.toString());
-
-
+                    results.add(replace ? replaceUnderscore(t.toString()) : t.toString());
                 }
 
             }
             variable = replaceForVariable(variable, '_');
             Term t = info.getVarValue(variable);
-            results.add(replace == true ? replaceUnderscore(t.toString()) : t
-                    .toString());
+            results.add(replace ? replaceUnderscore(t.toString()) : t.toString());
 
             if (engine.hasOpenAlternatives()) {
                 info = engine.solveNext();
