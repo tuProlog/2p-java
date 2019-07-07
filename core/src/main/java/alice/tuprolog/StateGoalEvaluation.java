@@ -63,9 +63,9 @@ public class StateGoalEvaluation extends State {
 
                     // sostituisco il gol in cui si ? verificato l'errore con il
                     // subgoal java_throw/1
-                    e.currentContext.currentGoal = new Struct("java_throw", exception.getException());
+                    e.currentContext.currentGoal = new Struct("java_throw", exception.toStruct());
                     /*Castagna 06/2011*/
-                    e.manager.exception(exception.getException().toString());
+                    e.manager.exception(exception.toStruct().toString());
                     /**/
                 }
 
