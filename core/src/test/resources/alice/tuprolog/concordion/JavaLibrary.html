@@ -219,38 +219,28 @@ return('&lt;-'(@obj_id, @method_signature), ?obj_id)
 	</table>
 
 <p>Tests With Results</p>
-	<table
-		concordion:execute="#result = successAndResultsWithLimit(#goal,#theory,#variable,#solution,#limit)">
-		<tr>
-			<th concordion:set="#goal">Goal</th>
-			<th concordion:set="#theory">Theory</th>
-			<th concordion:set="#variable">Variable</th>
-			<th concordion:set="#solution">Solution</th>
-			<th concordion:set="#limit">Limit</th>
-			<th concordion:assertEquals="#result">success(String goal,String
-				theory,String variable,Strng solution)</th>
-		</tr>
-		<tr>
-			<td>java_object('java.lang.Integer', [5], N), N &lt;- intValue returns V.</td>
-			<td>null</td>
-			<td>V</td>
-			<td>5</td>
-			<td>10</td>
-			<td>True</td>
-		</tr>
-		<tr>
-			<td>java_object('java.util.ArrayList', [], X), X &lt;- toArray returns A, atom_chars(A, L).</td>
-			<td>null</td>
-			<td>L</td>
-			<td>['$', 'o', 'b', 'j', '_', '2']</td>
-			<td>10</td>
-			<td>True</td>
-		</tr>
-		
-		
-		
-	</table>
 
+<table concordion:execute="#result = success(#goal,#theory)">
+    <tr>
+        <th concordion:set="#goal">Goal</th>
+        <th concordion:set="#theory">Theory</th>
+        <th concordion:assertTrue="#result">success(String goal,String
+            theory)
+        </th>
+    </tr>
+    <tr>
+        <td>java_object('java.lang.Integer', [5], N), N &lt;- intValue returns V, V = 5.</td>
+        <td>null</td>
+        <td>true</td>
+    </tr>
+    <tr>
+        <td>java_object('java.util.ArrayList', [], X), X &lt;- toArray returns A, atom_chars(A, ['$', 'o', 'b', 'j', '_'
+            | Digits]), number_chars(N, Digits), N &gt;= 0.
+        </td>
+        <td>null</td>
+        <td>true</td>
+    </tr>
+</table>
 
 <h2>3. <code>as</code> and <code>'.'</code></h2>
 
