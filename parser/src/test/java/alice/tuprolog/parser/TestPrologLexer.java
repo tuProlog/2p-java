@@ -1,10 +1,7 @@
 package alice.tuprolog.parser;
 
 import alice.tuprolog.parser.dynamic.DynamicLexer;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -13,7 +10,7 @@ import java.util.List;
 public class TestPrologLexer {
 
     private static PrologLexer lexerForString(String input) {
-        return new PrologLexer(new ANTLRInputStream(input));
+        return new PrologLexer(CharStreams.fromString(input));
     }
 
     private static TokenStream tokenStreamFromLexer(DynamicLexer lexer) {
@@ -61,11 +58,11 @@ public class TestPrologLexer {
         int i = 0;
 
         assertTokenIs(tokens.get(i++), PrologLexer.INTEGER, "1");
-        assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "a");
-        assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.DQ_STRING, "b");
-        assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.SQ_STRING, "c");
         Assert.assertEquals(tokens.size(), i);
     }
@@ -80,11 +77,11 @@ public class TestPrologLexer {
         int i = 0;
 
         assertTokenIs(tokens.get(i++), PrologLexer.INTEGER, "1");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "a");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.DQ_STRING, "b");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "-");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "-");
         assertTokenIs(tokens.get(i++), PrologLexer.SQ_STRING, "c");
         assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "dada");
         assertTokenIs(tokens.get(i++), PrologLexer.ATOM, "a");
@@ -93,25 +90,25 @@ public class TestPrologLexer {
 
     @Test
     public void testPrologLexerRecognisesVariables() {
-        final PrologLexer lexer = lexerForString("_ + A + _B + _1 + _a + _+");
-        lexer.addOperators("+");
+        final PrologLexer lexer = lexerForString("_ + A + _B is _1 + _a + _+");
+        lexer.addOperators("+", "is");
         final TokenStream tokenStream = tokenStreamFromLexer(lexer);
         final List<Token> tokens = tokenStreamToList(tokenStream);
 
         int i = 0;
 
         assertTokenIs(tokens.get(i++), PrologLexer.VARIABLE, "_");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.VARIABLE, "A");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.VARIABLE, "_B");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "is");
         assertTokenIs(tokens.get(i++), PrologLexer.VARIABLE, "_1");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.VARIABLE, "_a");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         assertTokenIs(tokens.get(i++), PrologLexer.VARIABLE, "_");
-        assertTokenIs(tokens.get(i++), PrologLexer.OPERATOR, "+");
+        assertTokenIs(tokens.get(i++), PrologLexer.SIGN, "+");
         Assert.assertEquals(tokens.size(), i);
     }
 }
