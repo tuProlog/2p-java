@@ -141,6 +141,8 @@ public abstract class Number extends Term implements Comparable<Number> {
     /**
      * is this term a prolog numeric term?
      */
+    @Override
+    @Deprecated
     final public boolean isNumber() {
         return true;
     }
@@ -148,6 +150,8 @@ public abstract class Number extends Term implements Comparable<Number> {
     /**
      * is this term a struct
      */
+    @Override
+    @Deprecated
     final public boolean isStruct() {
         return false;
     }
@@ -155,6 +159,8 @@ public abstract class Number extends Term implements Comparable<Number> {
     /**
      * is this term a variable
      */
+    @Override
+    @Deprecated
     final public boolean isVar() {
         return false;
     }
@@ -267,9 +273,8 @@ public abstract class Number extends Term implements Comparable<Number> {
         return isInteger() ? java.lang.Long.hashCode(longValue()) : java.lang.Double.hashCode(doubleValue());
     }
 
-    /*Castagna 06/2011*/
     @Override
-    public void accept(TermVisitor tv) {
-        tv.visit(this);
+    public <T> T accept(TermVisitor<T> tv) {
+        return tv.visit(this);
     }
 }

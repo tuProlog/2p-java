@@ -455,7 +455,7 @@ public abstract class Term implements Serializable {
      *
      * @param tv - Visitor
      */
-    public abstract void accept(TermVisitor tv);
+    public abstract <T> T accept(TermVisitor<T> tv);
 
     //Alberto
     public String toJSON() {

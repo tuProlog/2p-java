@@ -279,6 +279,7 @@ public class Struct extends Term {
     /**
      * is this term a prolog numeric term?
      */
+    @Deprecated
     public boolean isNumber() {
         return false;
     }
@@ -286,6 +287,7 @@ public class Struct extends Term {
     /**
      * is this term a struct
      */
+    @Deprecated
     public boolean isStruct() {
         return true;
     }
@@ -293,11 +295,10 @@ public class Struct extends Term {
     /**
      * is this term a variable
      */
+    @Deprecated
     public boolean isVar() {
         return false;
     }
-
-    // check type services
 
     public boolean isAtomic() {
         return arity == 0;
@@ -888,7 +889,7 @@ public class Struct extends Term {
         }
 
         if (arity == 2) {
-            if ((p = op.opPrio(name, "xfx")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "xfx")) >= OperatorManager.OP_LOW) {
                 return (
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgX(op, p) +
@@ -896,7 +897,7 @@ public class Struct extends Term {
                         arg[1].toStringAsArgX(op, p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name, "yfx")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "yfx")) >= OperatorManager.OP_LOW) {
                 return (
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgY(op, p) +
@@ -904,7 +905,7 @@ public class Struct extends Term {
                         arg[1].toStringAsArgX(op, p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name, "xfy")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "xfy")) >= OperatorManager.OP_LOW) {
                 if (!name.equals(",")) {
                     return (
                             (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
@@ -923,28 +924,28 @@ public class Struct extends Term {
                 }
             }
         } else if (arity == 1) {
-            if ((p = op.opPrio(name, "fx")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "fx")) >= OperatorManager.OP_LOW) {
                 return (
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         name + " " +
                         arg[0].toStringAsArgX(op, p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name, "fy")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "fy")) >= OperatorManager.OP_LOW) {
                 return (
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         name + " " +
                         arg[0].toStringAsArgY(op, p) +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name, "xf")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "xf")) >= OperatorManager.OP_LOW) {
                 return (
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgX(op, p) +
                         " " + name + " " +
                         (((x && p >= prio) || (!x && p > prio)) ? ")" : ""));
             }
-            if ((p = op.opPrio(name, "yf")) >= OperatorManager.OP_LOW) {
+            if ((p = op.getOperatorPriority(name, "yf")) >= OperatorManager.OP_LOW) {
                 return (
                         (((x && p >= prio) || (!x && p > prio)) ? "(" : "") +
                         arg[0].toStringAsArgY(op, p) +
@@ -974,14 +975,17 @@ public class Struct extends Term {
         }
     }
 
-    /*Castagna 06/2011*/
     @Override
-    public void accept(TermVisitor tv) {
-        tv.visit(this);
+    public <T> T accept(TermVisitor<T> tv) {
+        return tv.visit(this);
     }
 
     @Override
     boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
         return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
+    }
+
+    public Term[] getArgs() {
+        return Arrays.copyOf(arg, arg.length);
     }
 }

@@ -334,14 +334,17 @@ public class Var extends Term {
         internalTimestamp = t;
     }
 
+    @Deprecated
     public boolean isNumber() {
         return false;
     }
 
+    @Deprecated
     public boolean isStruct() {
         return false;
     }
 
+    @Deprecated
     public boolean isVar() {
         return true;
     }
@@ -598,10 +601,9 @@ public class Var extends Term {
         }
     }
 
-    /*Castagna 06/2011*/
     @Override
-    public void accept(TermVisitor tv) {
-        tv.visit(this);
+    public <T> T accept(TermVisitor<T> tv) {
+        return tv.visit(this.getTerm());
     }
 
     @Override
