@@ -7,6 +7,10 @@ import java.util.stream.Stream;
 
 public class Terms {
 
+    private Terms () {
+        throw new IllegalStateException();
+    }
+
     public static Term parse(String parse) {
         return Term.createTerm(parse);
     }
@@ -91,19 +95,19 @@ public class Terms {
         return Struct.tuple(terms);
     }
 
-    public Var var(String name) {
+    public static Var var(String name) {
         return Var.of(name);
     }
 
-    public Var var() {
+    public static Var var() {
         return Var.anonymous();
     }
 
-    public Var whatever() {
+    public static Var whatever() {
         return Var.whatever();
     }
 
-    public Var any() {
+    public static Var any() {
         return Var.any();
     }
 

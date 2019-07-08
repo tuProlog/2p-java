@@ -86,8 +86,8 @@ public class Struct extends Term {
     }
 
     @SuppressWarnings({"deprecated"})
-    public static Struct of(String atom, Term first, Term... others) {
-        return new Struct(atom, Stream.concat(Stream.of(first), Stream.of(others)).toArray(Term[]::new));
+    public static Struct of(String functor, Term first, Term... others) {
+        return new Struct(functor, Stream.concat(Stream.of(first), Stream.of(others)).toArray(Term[]::new));
     }
 
     @SuppressWarnings({"deprecated"})
