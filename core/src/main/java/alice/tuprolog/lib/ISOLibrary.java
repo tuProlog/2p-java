@@ -44,10 +44,10 @@ public class ISOLibrary extends Library {
     public boolean atom_length_2(Term arg0, Term len) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         if (!arg0.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
         }
         if (len instanceof Var && ((Var) len).isBound()) {
             len = len.getTerm();
@@ -56,7 +56,7 @@ public class ISOLibrary extends Library {
             Struct atom = (Struct) arg0;
             return unify(len, new Int(atom.getName().length()));
         } else {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
         }
     }
 
@@ -65,11 +65,11 @@ public class ISOLibrary extends Library {
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
             if (!arg1.isList()) {
-                throw PrologError.type_error(engine.getEngineManager(), 2, "list", arg1);
+                throw PrologError.type_error(getEngine().getEngineManager(), 2, "list", arg1);
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
-                throw PrologError.domain_error(engine.getEngineManager(), 2, "[Char | Chars]", arg1);
+                throw PrologError.domain_error(getEngine().getEngineManager(), 2, "[Char | Chars]", arg1);
             }
             StringBuilder sb = new StringBuilder();
 
@@ -91,7 +91,7 @@ public class ISOLibrary extends Library {
                         }
                     }
                 }
-                throw PrologError.domain_error(engine.getEngineManager(), 2, "[char | Chars]", arg1);
+                throw PrologError.domain_error(getEngine().getEngineManager(), 2, "[char | Chars]", arg1);
             }
 
             String numString = sb.toString().trim();
@@ -124,12 +124,12 @@ public class ISOLibrary extends Library {
                 long val = Long.parseLong(numString, radix);
                 return unify(arg0, new alice.tuprolog.Long(val));
             } catch (NumberFormatException e) {
-                throw PrologError.domain_error(engine.getEngineManager(), 2, "[digit | Digits]", arg1);
+                throw PrologError.domain_error(getEngine().getEngineManager(), 2, "[digit | Digits]", arg1);
             }
 
         } else {
             if (!(arg0 instanceof Number)) {
-                throw PrologError.type_error(engine.getEngineManager(), 1, "number", arg0);
+                throw PrologError.type_error(getEngine().getEngineManager(), 1, "number", arg0);
             }
             String string = arg0.toString();
             Term[] numberList = new Term[string.length()];
@@ -147,7 +147,7 @@ public class ISOLibrary extends Library {
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
             if (!arg1.isList()) {
-                throw PrologError.type_error(engine.getEngineManager(), 2, "list", arg1);
+                throw PrologError.type_error(getEngine().getEngineManager(), 2, "list", arg1);
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
@@ -174,7 +174,7 @@ public class ISOLibrary extends Library {
             return unify(arg0, new Struct(st));
         } else {
             if (!arg0.isAtom()) {
-                throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+                throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
             }
             String st = ((Struct) arg0).getName();
             Term[] tlist = new Term[st.length()];
@@ -197,7 +197,7 @@ public class ISOLibrary extends Library {
         arg1 = arg1.getTerm();
         if (arg0 instanceof Var) {
             if (!arg1.isList()) {
-                throw PrologError.type_error(engine.getEngineManager(), 2, "list", arg1);
+                throw PrologError.type_error(getEngine().getEngineManager(), 2, "list", arg1);
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
@@ -220,7 +220,7 @@ public class ISOLibrary extends Library {
             return unify(arg0, new Struct(sb.toString()));
         } else {
             if (!arg0.isAtom()) {
-                throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+                throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
             }
             String st = ((Struct) arg0).getName();
             Term[] codesList = new Term[st.length()];
@@ -241,11 +241,11 @@ public class ISOLibrary extends Library {
                 if (st.length() <= 1) {
                     return unify(arg1, new Int(st.charAt(0)));
                 } else {
-                    throw PrologError.type_error(engine.getEngineManager(), 1,
+                    throw PrologError.type_error(getEngine().getEngineManager(), 1,
                             "character", arg0);
                 }
             } else {
-                throw PrologError.type_error(engine.getEngineManager(), 1,
+                throw PrologError.type_error(getEngine().getEngineManager(), 1,
                         "character", arg0);
             }
         } else if ((arg1 instanceof Int)
@@ -253,7 +253,7 @@ public class ISOLibrary extends Library {
             char c = (char) ((Number) arg1).intValue();
             return unify(arg0, new Struct("" + c));
         } else {
-            throw PrologError.type_error(engine.getEngineManager(), 2,
+            throw PrologError.type_error(getEngine().getEngineManager(), 2,
                     "integer", arg1);
         }
     }
@@ -582,7 +582,7 @@ public class ISOLibrary extends Library {
     public boolean sub_atom_guard_5(Term arg0, Term arg1, Term arg2, Term arg3, Term arg4) throws PrologError {
         arg0 = arg0.getTerm();
         if (!arg0.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg0);
+            throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
         }
         return true;
     }
