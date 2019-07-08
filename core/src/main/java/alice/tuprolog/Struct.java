@@ -23,6 +23,7 @@ import com.codepoetics.protonpack.StreamUtils;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 //import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.stream.Stream;
  */
 public class Struct extends Term {
 
-    private static final long serialVersionUID = 1L;
+    private static final Pattern ATOM_REGEX = Pattern.compile("^[a-z][a-zA-Z0-9_]*$");
 
     @SuppressWarnings("unused")
     private String type = "Struct";
@@ -63,9 +64,117 @@ public class Struct extends Term {
      */
     private boolean resolved = false;
 
+    public static Struct cut() {
+        return Struct.atom("!");
+    }
+
+    public static Struct truth(boolean value) {
+        return Struct.atom(value ? "true" : "fail");
+    }
+
+    public static Struct directive(Term body) {
+        return Struct.of(":-", body);
+    }
+
+    public static Struct rule(Term head, Term body) {
+        return Struct.of(":-", head, body);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct atom(String atom) {
+        return new Struct(atom);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct of(String atom, Term first, Term... others) {
+        return new Struct(atom, Stream.concat(Stream.of(first), Stream.of(others)).toArray(Term[]::new));
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct cons(Term head, Term tail) {
+        return new Struct(head, tail);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct emptyList() {
+        return new Struct();
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct list(Term... terms) {
+        return new Struct(terms);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct list(Stream<? extends Term> terms) {
+        return new Struct(terms);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct list(Collection<? extends Term> terms) {
+        return new Struct(terms);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct list(Iterator<? extends Term> terms) {
+        return new Struct(terms);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Struct list(Iterable<? extends Term> terms) {
+        return new Struct(terms.iterator());
+    }
+
+    public static Struct tuple(Collection<? extends Term> terms) {
+        return tuple(new ArrayList<>(terms));
+    }
+
+    public static Struct tuple(Iterable<? extends Term> terms) {
+        return tuple(StreamUtils.stream(terms));
+    }
+
+    public static Struct tuple(Iterator<? extends Term> terms) {
+        return tuple(StreamUtils.stream(() -> terms));
+    }
+
+    public static Struct tuple(Stream<? extends Term> terms) {
+        return tuple(terms.collect(Collectors.toList()));
+    }
+
+    public static Struct tuple(List<? extends Term> terms) {
+        final int size = terms.size();
+
+        if (size < 2) {
+            throw new IllegalArgumentException(String.format("Tuples can be created out of 2 or more terms, only %d have been provided", size));
+        }
+
+        Struct tuple = Struct.of(",", terms.get(size - 2), terms.get(size - 1));
+        for (int i = size - 3; i >= 0; i--) {
+            tuple = Struct.of(",", terms.get(i), tuple);
+        }
+        return tuple;
+    }
+
+    private Struct(String name, int arity) {
+        if (name == null) {
+            throw new InvalidTermException("The functor of a Struct cannot be null");
+        }
+        if (name.length() == 0 && arity > 0) {
+            throw new InvalidTermException("The functor of a non-atom Struct cannot be an emptyWithStandardOperators string");
+        }
+        this.name = name;
+        this.arity = arity;
+        if (this.arity > 0) {
+            arg = new Term[this.arity];
+        }
+        predicateIndicator = this.name + "/" + this.arity;
+        resolved = false;
+    }
+
     /**
      * Builds a Struct representing an atom
      */
+    @Deprecated
     public Struct(String f) {
         this(f, 0);
     }
@@ -73,6 +182,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with one argument
      */
+    @Deprecated
     public Struct(String f, Term at0) {
         this(f, new Term[]{at0});
     }
@@ -80,6 +190,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with two arguments
      */
+    @Deprecated
     public Struct(String f, Term at0, Term at1) {
         this(f, new Term[]{at0, at1});
     }
@@ -87,6 +198,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with three arguments
      */
+    @Deprecated
     public Struct(String f, Term at0, Term at1, Term at2) {
         this(f, new Term[]{at0, at1, at2});
     }
@@ -94,6 +206,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with four arguments
      */
+    @Deprecated
     public Struct(String f, Term at0, Term at1, Term at2, Term at3) {
         this(f, new Term[]{at0, at1, at2, at3});
     }
@@ -101,6 +214,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with five arguments
      */
+    @Deprecated
     public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4) {
         this(f, new Term[]{at0, at1, at2, at3, at4});
     }
@@ -108,6 +222,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with six arguments
      */
+    @Deprecated
     public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4, Term at5) {
         this(f, new Term[]{at0, at1, at2, at3, at4, at5});
     }
@@ -115,6 +230,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with seven arguments
      */
+    @Deprecated
     public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4, Term at5, Term at6) {
         this(f, new Term[]{at0, at1, at2, at3, at4, at5, at6});
     }
@@ -122,6 +238,7 @@ public class Struct extends Term {
     /**
      * Builds a compound, with an array of arguments
      */
+    @Deprecated
     public Struct(String f, Term[] argList) {
         this(f, argList.length);
         for (int i = 0; i < argList.length; i++) {
@@ -137,13 +254,13 @@ public class Struct extends Term {
     /**
      * Builds a structure representing an emptyWithStandardOperators list
      */
+    @Deprecated
     public Struct() {
         this("[]", 0);
         resolved = true;
     }
 
-    private static final Pattern ATOM_REGEX = Pattern.compile("^[a-z][a-zA-Z0-9_]*$");
-
+    @Deprecated
     public Struct(Collection<? extends Term> terms) {
         this(terms.iterator());
     }
@@ -151,6 +268,7 @@ public class Struct extends Term {
     /**
      * Builds a list providing head and tail
      */
+    @Deprecated
     public Struct(Term h, Term t) {
         this(".", 2);
         arg[0] = Objects.requireNonNull(h);
@@ -160,14 +278,17 @@ public class Struct extends Term {
     /**
      * Builds a list specifying the elements
      */
+    @Deprecated
     public Struct(Term... argList) {
         this(argList, 0);
     }
 
+    @Deprecated
     public Struct(Stream<? extends Term> stream) {
         this(stream.iterator());
     }
 
+    @Deprecated
     public Struct(Iterator<? extends Term> i) {
         this(".", 2);
         if (i.hasNext()) {
@@ -197,7 +318,8 @@ public class Struct extends Term {
     /**
      * Builds a compound, with a linked list of arguments
      */
-    Struct(String f, LinkedList<Term> al) {
+    @Deprecated
+    Struct(String f, Deque<Term> al) {
         name = f;
         arity = al.size();
         if (arity > 0) {
@@ -274,8 +396,6 @@ public class Struct extends Term {
         return arg[index].getTerm();
     }
 
-    // checking type and properties of the Term
-
     /**
      * is this term a prolog numeric term?
      */
@@ -313,7 +433,6 @@ public class Struct extends Term {
     }
 
     public boolean isList() {
-//        return name.equals(".") && arity == 2 || isEmptyList();
         return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
     }
 
@@ -442,7 +561,7 @@ public class Struct extends Term {
         return t;
     }
 
-    @Override //Alberto
+    @Override
     public Term copyAndRetainFreeVar(Map<Var, Var> vMap, int idExecCtx) {
         Struct t = new Struct(arity);
         t.resolved = resolved;
@@ -542,8 +661,6 @@ public class Struct extends Term {
         return newcount;
     }
 
-    // services for list structures
-
     /**
      * Is this structure an emptyWithStandardOperators list?
      */
@@ -598,16 +715,6 @@ public class Struct extends Term {
      * </p>
      */
     public int listSize() {
-//        if (!isList()) {
-//            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
-//        }
-//        Struct t = this;
-//        int count = 0;
-//        while (!t.isEmptyList()) {
-//            count++;
-//            t = (Struct) t.arg[1].getTerm();
-//        }
-//        return count;
         return (int) listStream().count();
     }
 
@@ -623,7 +730,6 @@ public class Struct extends Term {
         if (!isList()) {
             throw new UnsupportedOperationException("The structure " + this + " is not a list.");
         }
-//        return listStream().iterator();
         return new StructIterator(this);
     }
 
@@ -747,22 +853,6 @@ public class Struct extends Term {
      */
     void setPrimitive(PrimitiveInfo b) {
         primitive = b;
-    }
-
-    private Struct(String name, int arity) {
-        if (name == null) {
-            throw new InvalidTermException("The functor of a Struct cannot be null");
-        }
-        if (name.length() == 0 && arity > 0) {
-            throw new InvalidTermException("The functor of a non-atom Struct cannot be an emptyWithStandardOperators string");
-        }
-        this.name = name;
-        this.arity = arity;
-        if (this.arity > 0) {
-            arg = new Term[this.arity];
-        }
-        predicateIndicator = this.name + "/" + this.arity;
-        resolved = false;
     }
 
     public boolean isFunctorAtomic() {
