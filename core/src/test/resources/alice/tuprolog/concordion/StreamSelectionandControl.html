@@ -1,5 +1,5 @@
 <html xmlns:concordion="http://www.concordion.org/2007/concordion"
-	xmlns:ext="urn:concordion-extensions:2010">
+>
 <link href="../../concordion.css" rel="stylesheet" type="text/css" />
 
 <head>
@@ -74,17 +74,17 @@ open(@source_sink, @io_mode, -stream)
 				theory)</th>
 		</tr>
 		<tr>
-			<td>open('/user/roger/data', read, D, [type(binary)]).</td>
+			<td>open('./binFile.bin', read, D, [type(binary)]).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>open('/user/scowen', write, D, [alias(editor)]).</td>
+			<td>open('/temp/editor.bin', write, D, [alias(editor)]).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
 		<tr>
-			<td>open('/user/dave/data', read, DD, []).</td>
+			<td>open('./readFile.txt', read, DD, []).</td>
 			<td>null</td>
 			<td>true</td>
 		</tr>
