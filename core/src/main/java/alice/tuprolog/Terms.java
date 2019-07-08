@@ -99,16 +99,16 @@ public class Terms {
         return Var.of(name);
     }
 
+    public static Var anonymous() {
+        return Var.anonymous();
+    }
+
     public static Var var() {
         return Var.anonymous();
     }
 
     public static Var whatever() {
         return Var.whatever();
-    }
-
-    public static Var any() {
-        return Var.any();
     }
 
     public static Number number(java.lang.Number value) {

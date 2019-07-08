@@ -63,11 +63,6 @@ public class Var extends Term {
         return anonymous();
     }
 
-    @SuppressWarnings({"deprecated"})
-    public static Var any() {
-        return anonymous();
-    }
-
     /**
      * Creates a variable identified by a name.
      * <p>
