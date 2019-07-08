@@ -678,8 +678,8 @@ public class ISOIOLibrary extends Library {
                 }
 
                 buffer.skip(pos);
-                int new_pos = (new Long(pos)).intValue();
-                entry.put("position", new Int(new_pos));
+                int new_pos = (int) pos;
+                entry.put("position", Int.of(new_pos));
                 inputStreams.put(buffer, entry);
 
             } catch (IOException e) {
@@ -754,7 +754,7 @@ public class ISOIOLibrary extends Library {
                     return unify(arg, new Struct("-1"));
                 } else if (action.equals("reset")) {
                     element.put("end_of_stream", new Struct("not"));
-                    element.put("position", new Int(0));
+                    element.put("position", Int.of(0));
                     stream.reset();
                 }
             }
@@ -772,7 +772,7 @@ public class ISOIOLibrary extends Library {
             Int i = (Int) position;
             int i2 = i.intValue();
             i2++;
-            element.put("position", new Int(i2));
+            element.put("position", Int.of(i2));
 
             if (value != -1) {
                 //vado a controllare il prossimo carattere
@@ -835,9 +835,9 @@ public class ISOIOLibrary extends Library {
             }
 
             if (value == -1) {
-                return unify(char_code, new Int(-1));
+                return unify(char_code, Int.of(-1));
             } else {
-                return unify(char_code, new Int(value));
+                return unify(char_code, Int.of(value));
             }
         }
 
@@ -855,7 +855,7 @@ public class ISOIOLibrary extends Library {
                         return unify(char_code, new Struct("-1"));
                     case "reset":
                         element.put("end_of_stream", new Struct("not"));
-                        element.put("position", new Int(0));
+                        element.put("position", Int.of(0));
                         stream.reset();
                         break;
                 }
@@ -873,7 +873,7 @@ public class ISOIOLibrary extends Library {
             Int i = (Int) position;
             int i2 = i.intValue();
             i2++;
-            element.put("position", new Int(i2));
+            element.put("position", Int.of(i2));
 
             if (value != -1) {
                 Var nextChar = new Var();
@@ -886,7 +886,7 @@ public class ISOIOLibrary extends Library {
             }
 
             inputStreams.put(stream, element);
-            return unify(char_code, new Int(value));
+            return unify(char_code, Int.of(value));
         } catch (IOException ioe) {
             ioe.printStackTrace();
             throw PrologError.system_error(new Struct("An I/O error has occurred."));
@@ -951,7 +951,7 @@ public class ISOIOLibrary extends Library {
                         return unify(in_char, new Struct("-1"));
                     case "reset":
                         element.put("end_of_stream", new Struct("not"));
-                        element.put("position", new Int(0));
+                        element.put("position", Int.of(0));
                         stream.reset();
                         break;
                 }
@@ -1036,7 +1036,7 @@ public class ISOIOLibrary extends Library {
                         return unify(char_code, new Struct("-1"));
                     case "reset":
                         element.put("end_of_stream", new Struct("not"));
-                        element.put("position", new Int(0));
+                        element.put("position", Int.of(0));
                         stream.reset();
                         break;
                 }
@@ -1053,7 +1053,7 @@ public class ISOIOLibrary extends Library {
                 throw PrologError.representation_error(getEngine().getEngineManager(), 2, "character");
             }
             inputStreams.put(stream, element);
-            return unify(char_code, new Int(value));
+            return unify(char_code, Int.of(value));
         } catch (IOException ioe) {
             ioe.printStackTrace();
             throw PrologError.system_error(new Struct("An I/O error has occurred."));
@@ -1198,7 +1198,7 @@ public class ISOIOLibrary extends Library {
                         return unify(in_byte, new Struct("-1"));
                     case "reset":
                         element.put("end_of_stream", new Struct("not"));
-                        element.put("position", new Int(0));
+                        element.put("position", Int.of(0));
                         reader.reset();
                         break;
                 }
@@ -1208,7 +1208,7 @@ public class ISOIOLibrary extends Library {
             b = reader.readByte();
 
             i2++; //incremento la posizione dello stream
-            element.put("position", new Int(i2));
+            element.put("position", Int.of(i2));
 
             //if(b != -1){
             Var nextByte = new Var();
@@ -1265,7 +1265,7 @@ public class ISOIOLibrary extends Library {
                         return unify(in_byte, new Struct("-1"));
                     case "reset":
                         element.put("end_of_stream", new Struct("not"));
-                        element.put("position", new Int(0));
+                        element.put("position", Int.of(0));
                         reader.reset();
                         break;
                 }
@@ -1318,7 +1318,7 @@ public class ISOIOLibrary extends Library {
                 writer.writeByte(b.intValue());
 
                 i2++;
-                element.put("position", new Int(i2));
+                element.put("position", Int.of(i2));
                 outputStreams.put(stream, element);
             } catch (IOException e) {
                 throw PrologError.permission_error(getEngine().getEngineManager(), "output", "stream", new Struct(outputStreamName), new Struct(e.getMessage()));
@@ -1430,7 +1430,7 @@ public class ISOIOLibrary extends Library {
             if (ch == -1) {
                 st = new StringBuilder("-1");
                 element.put("end_of_stream", new Struct("past"));
-                element.put("position", new Int(p2));
+                element.put("position", Int.of(p2));
                 inputStreams.put(stream, element);
                 return unify(in_term, Term.createTerm(st.toString()));
             }
@@ -1521,7 +1521,7 @@ public class ISOIOLibrary extends Library {
             }
 
             //vado a modificare la posizione di lettura
-            element.put("position", new Int(p2));
+            element.put("position", Int.of(p2));
             inputStreams.put(stream, element);
             return unify(in_term, getEngine().toTerm(string_term));
         } catch (Exception ex) {
@@ -1930,7 +1930,7 @@ public class ISOIOLibrary extends Library {
         map.put("input", new Struct("false"));
         map.put("output", new Struct("false"));
         map.put("alias", new Struct());
-        map.put("position", new Int(0));
+        map.put("position", Int.of(0));
         map.put("end_of_stream", new Struct("not"));
         map.put("eof_action", new Struct("error"));
         map.put("reposition", new Struct("false"));

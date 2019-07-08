@@ -29,26 +29,26 @@ public class TestTermParsing extends BaseTestPrologParsing {
     public List<List<Object>> getSpaceInvariantTerms() {
         return asList(
                 asList("a", new Struct("a")),
-                asList("a(1)", new Struct("a", new Int(1))),
-                asList("a(1, b(2), c(d(3), e))", new Struct("a", new Int(1), new Struct("b", new Int(2)), new Struct("c", new Struct("d", new Int(3)), new Struct("e")))),
+                asList("a(1)", new Struct("a", Int.of(1))),
+                asList("a(1, b(2), c(d(3), e))", new Struct("a", Int.of(1), new Struct("b", Int.of(2)), new Struct("c", new Struct("d", Int.of(3)), new Struct("e")))),
                 asList("X", new Var("X")),
                 asList("_", new Var()),
                 asList("[]", new Struct()),
-                asList("[1]", new Struct(new Int(1), new Struct())),
-                asList("[2]", new Struct(new Int(2))),
-                asList("[3]", new Struct(new Int(3))),
-                asList("[4]", new Struct(new Int(4), new Struct())),
-                asList("[1, a, 2, b]", new Struct(new Int(1), new Struct("a"), new Int(2), new Struct("b"))),
+                asList("[1]", new Struct(Int.of(1), new Struct())),
+                asList("[2]", new Struct(Int.of(2))),
+                asList("[3]", new Struct(Int.of(3))),
+                asList("[4]", new Struct(Int.of(4), new Struct())),
+                asList("[1, a, 2, b]", new Struct(Int.of(1), new Struct("a"), Int.of(2), new Struct("b"))),
                 asList("[H | T]", new Struct(new Var("H"), new Var("T"))),
                 asList("[H | T]", new Struct(new Var("H"), new Var("T"))),
-                asList("1", new Int(1))
+                asList("1", Int.of(1))
         );
     }
 
     public List<List<Object>> getSpaceSensibleTerms() {
         return asList(
-                asList(java.lang.Long.valueOf(java.lang.Long.MAX_VALUE).toString(), new Long(java.lang.Long.MAX_VALUE)),
-                asList("1.1", new Double(1.1)),
+                asList(java.lang.Long.valueOf(java.lang.Long.MAX_VALUE).toString(), Long.of(java.lang.Long.MAX_VALUE)),
+                asList("1.1", Double.of(1.1)),
                 asList("true", new Struct("true")),
                 asList("fail", new Struct("fail"))
         );

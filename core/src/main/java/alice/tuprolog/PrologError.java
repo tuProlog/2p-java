@@ -31,7 +31,7 @@ public class PrologError extends Throwable {
 
     public static PrologError type_error(EngineManager e, int argNo, String validType, Term culprit) {
         Term errorTerm = new Struct("type_error", new Struct(validType), culprit);
-        Term tuPrologTerm = new Struct("type_error", e.getEnv().currentContext.currentGoal, new Int(argNo), new Struct(validType), culprit);
+        Term tuPrologTerm = new Struct("type_error", e.getEnv().currentContext.currentGoal, Int.of(argNo), new Struct(validType), culprit);
         String descriptionError = "Type error" +
                                   " in argument " + argNo +
                                   " of " + e.getEnv().currentContext.currentGoal.toString();
@@ -40,7 +40,7 @@ public class PrologError extends Throwable {
 
     public static PrologError instantiation_error(EngineManager engineManager, int argNo) {
         Term errorTerm = new Struct("instantiation_error");
-        Term tuPrologTerm = new Struct("instantiation_error", engineManager.getEnv().currentContext.currentGoal, new Int(argNo));
+        Term tuPrologTerm = new Struct("instantiation_error", engineManager.getEnv().currentContext.currentGoal, Int.of(argNo));
         String descriptionError = "Instantiation error" +
                 " in argument " + argNo +
                 " of " + engineManager.getEnv().currentContext.currentGoal.toString();
@@ -49,7 +49,7 @@ public class PrologError extends Throwable {
 
     public static PrologError domain_error(EngineManager e, int argNo, String validDomain, Term culprit) {
         Term errorTerm = new Struct("domain_error", new Struct(validDomain), culprit);
-        Term tuPrologTerm = new Struct("domain_error", e.getEnv().currentContext.currentGoal, new Int(argNo), new Struct(validDomain), culprit);
+        Term tuPrologTerm = new Struct("domain_error", e.getEnv().currentContext.currentGoal, Int.of(argNo), new Struct(validDomain), culprit);
         String descriptionError = "Domain error" +
                                   " in argument " + argNo +
                                   " of " + e.getEnv().currentContext.currentGoal.toString();
@@ -58,7 +58,7 @@ public class PrologError extends Throwable {
 
     public static PrologError existence_error(EngineManager e, int argNo, String objectType, Term culprit, Term message) {
         Term errorTerm = new Struct("existence_error", new Struct(objectType), culprit);
-        Term tuPrologTerm = new Struct("existence_error", e.getEnv().currentContext.currentGoal, new Int(argNo), new Struct(objectType), culprit, message);
+        Term tuPrologTerm = new Struct("existence_error", e.getEnv().currentContext.currentGoal, Int.of(argNo), new Struct(objectType), culprit, message);
         String descriptionError = "Existence error" +
                                   " in argument " + argNo +
                                   " of " + e.getEnv().currentContext.currentGoal.toString();
@@ -75,7 +75,7 @@ public class PrologError extends Throwable {
 
     public static PrologError representation_error(EngineManager e, int argNo, String flag) {
         Term errorTerm = new Struct("representation_error", new Struct(flag));
-        Term tuPrologTerm = new Struct("representation_error", e.getEnv().currentContext.currentGoal, new Int(argNo), new Struct(flag));
+        Term tuPrologTerm = new Struct("representation_error", e.getEnv().currentContext.currentGoal, Int.of(argNo), new Struct(flag));
         String descriptionError = "Representation error" +
                                   " in argument " + argNo +
                                   " of " + e.getEnv().currentContext.currentGoal.toString();
@@ -84,7 +84,7 @@ public class PrologError extends Throwable {
 
     public static PrologError evaluation_error(EngineManager e, int argNo, String error) {
         Term errorTerm = new Struct("evaluation_error", new Struct(error));
-        Term tuPrologTerm = new Struct("evaluation_error", e.getEnv().currentContext.currentGoal, new Int(argNo), new Struct(error));
+        Term tuPrologTerm = new Struct("evaluation_error", e.getEnv().currentContext.currentGoal, Int.of(argNo), new Struct(error));
         String descriptionError = "Evaluation error" +
                                   " in argument " + argNo +
                                   " of " + e.getEnv().currentContext.currentGoal.toString();
@@ -103,7 +103,7 @@ public class PrologError extends Throwable {
                                            int clause,
                                            int line, int position, Term message) {
         Term errorTerm = new Struct("syntax_error", message);
-        Term tuPrologTerm = new Struct("syntax_error", e.getEnv().currentContext.currentGoal, new Int(line), new Int(position), message);
+        Term tuPrologTerm = new Struct("syntax_error", e.getEnv().currentContext.currentGoal, Int.of(line), Int.of(position), message);
 
         int[] errorInformation = {clause, line, position};
         String[] nameInformation = {"clause", "line", "position"};

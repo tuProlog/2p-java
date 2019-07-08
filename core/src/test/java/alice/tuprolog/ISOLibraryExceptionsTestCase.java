@@ -28,7 +28,7 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("atom_length", new Int(1), new Var("Y"))));
+        assertTrue(g.isEqual(new Struct("atom_length", Int.of(1), new Var("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -44,7 +44,7 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("atom_chars", new Int(1), new Var("X"))));
+        assertTrue(g.isEqual(new Struct("atom_chars", Int.of(1), new Var("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -108,7 +108,7 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("sub_atom_guard", new Int(1), new Var("B"), new Var("C"), new Var("D"), new Var("E"))));
+        assertTrue(g.isEqual(new Struct("sub_atom_guard", Int.of(1), new Var("B"), new Var("C"), new Var("D"), new Var("E"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");

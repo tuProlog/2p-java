@@ -29,7 +29,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("asserta", new Int(1))));
+        assertTrue(g.isEqual(new Struct("asserta", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -57,7 +57,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("assertz", new Int(1))));
+        assertTrue(g.isEqual(new Struct("assertz", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -85,7 +85,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$retract", new Int(1))));
+        assertTrue(g.isEqual(new Struct("$retract", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -113,7 +113,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("abolish", new Int(1))));
+        assertTrue(g.isEqual(new Struct("abolish", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -158,7 +158,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("halt", new Double(1.5))));
+        assertTrue(g.isEqual(new Struct("halt", Double.of(1.5))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -186,7 +186,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("load_library", new Int(1))));
+        assertTrue(g.isEqual(new Struct("load_library", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -233,7 +233,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("unload_library", new Int(1))));
+        assertTrue(g.isEqual(new Struct("unload_library", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -280,7 +280,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$call", new Int(1))));
+        assertTrue(g.isEqual(new Struct("$call", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -324,7 +324,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("is", new Var("X"), new Struct("/", new Int(1), new Int(0)))));
+        assertTrue(g.isEqual(new Struct("is", new Var("X"), new Struct("/", Int.of(1), Int.of(0)))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct error = (Struct) info.getTerm("Error");
@@ -338,7 +338,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("is", new Var("X"), new Struct("//", new Int(1), new Int(0)))));
+        assertTrue(g.isEqual(new Struct("is", new Var("X"), new Struct("//", Int.of(1), Int.of(0)))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct error = (Struct) info.getTerm("Error");
@@ -352,7 +352,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("is", new Var("X"), new Struct("div", new Int(1), new Int(0)))));
+        assertTrue(g.isEqual(new Struct("is", new Var("X"), new Struct("div", Int.of(1), Int.of(0)))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct error = (Struct) info.getTerm("Error");
@@ -381,7 +381,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g
-                           .isEqual(new Struct("$tolist", new Int(1), new Var("List"))));
+                           .isEqual(new Struct("$tolist", Int.of(1), new Var("List"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -487,7 +487,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(new Struct("set_prolog_flag", new Var("X"),
-                                        new Int(1))));
+                                        Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -512,7 +512,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("set_prolog_flag", new Int(1), new Int(
+        assertTrue(g.isEqual(new Struct("set_prolog_flag", Int.of(1), Int.of(
                 1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
@@ -548,7 +548,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(new Struct("set_prolog_flag", new Struct("a"),
-                                        new Int(1))));
+                                        Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
@@ -590,7 +590,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Struct culprit = (Struct) info.getTerm("Culprit");
         assertTrue(culprit.isEqual(new Struct("bounded")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(new Int(0)));
+        assertTrue(message.isEqual(Int.of(0)));
     }
 
     // verifico che get_prolog_flag(X, Value) lancia un errore di instanziazione
@@ -613,7 +613,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("get_prolog_flag", new Int(1), new Var(
+        assertTrue(g.isEqual(new Struct("get_prolog_flag", Int.of(1), new Var(
                 "Value"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
@@ -662,7 +662,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$op", new Int(600), new Var(
+        assertTrue(g.isEqual(new Struct("$op", Int.of(600), new Var(
                 "Specifier"), new Struct("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
@@ -675,7 +675,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$op", new Int(600), new Struct("yfx"),
+        assertTrue(g.isEqual(new Struct("$op", Int.of(600), new Struct("yfx"),
                                         new Var("Operator"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 3);
@@ -705,7 +705,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$op", new Int(600), new Int(1),
+        assertTrue(g.isEqual(new Struct("$op", Int.of(600), Int.of(1),
                                         new Struct("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
@@ -722,8 +722,8 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$op", new Int(600), new Struct("yfx"),
-                                        new Int(1))));
+        assertTrue(g.isEqual(new Struct("$op", Int.of(600), new Struct("yfx"),
+                                        Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 3);
         Struct validType = (Struct) info.getTerm("ValidType");
@@ -739,7 +739,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$op", new Int(1300),
+        assertTrue(g.isEqual(new Struct("$op", Int.of(1300),
                                         new Struct("yfx"), new Struct("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
@@ -756,7 +756,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$op", new Int(600), new Struct("a"),
+        assertTrue(g.isEqual(new Struct("$op", Int.of(600), new Struct("a"),
                                         new Struct("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);

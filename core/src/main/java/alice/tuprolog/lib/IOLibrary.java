@@ -264,7 +264,7 @@ public class IOLibrary extends Library {
                             e.getMessage()));
         }
         if (ch == -1) {
-            return unify(arg0, new Int(-1));
+            return unify(arg0, Int.of(-1));
         } else {
             return unify(arg0, new Struct(new Character((char) ch).toString()));
         }
@@ -282,7 +282,7 @@ public class IOLibrary extends Library {
             }
         } while (ch < 0x20 && ch >= 0);
         if (ch == -1) {
-            return unify(arg0, new Int(-1));
+            return unify(arg0, Int.of(-1));
         } else {
             return unify(arg0,
                          new Struct(new Character(((char) ch)).toString()));
@@ -462,7 +462,7 @@ public class IOLibrary extends Library {
     /**
      * Sets an arbitrary seed for the Random object.
      *
-     * @param seed Seed to use
+     * @param t Seed to use
      * @return true if seed Term has a valid long value, false otherwise
      */
     public boolean set_seed_1(Term t) throws PrologError {
@@ -479,12 +479,12 @@ public class IOLibrary extends Library {
     }
 
     public boolean rand_float_1(Term t) {
-        return unify(t, new alice.tuprolog.Double(gen.nextFloat()));
+        return unify(t, alice.tuprolog.Double.of(gen.nextFloat()));
     }
 
     public boolean rand_int_2(Term argNum, Term num) {
         alice.tuprolog.Number arg = (alice.tuprolog.Number) argNum.getTerm();
-        return unify(num, new Int(gen.nextInt(arg.intValue())));
+        return unify(num, Int.of(gen.nextInt(arg.intValue())));
     }
 
     private static final String THEORY;

@@ -314,7 +314,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "a :- 1",
                         new Struct(":-",
                                    new Struct("a"),
-                                   new Int(1))
+                                   Int.of(1))
                 ),
                 Stream.of(
                         "a; B :- 1",
@@ -322,14 +322,14 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    new Struct(";",
                                               new Struct("a"),
                                               new Var("B")),
-                                   new Int(1))
+                                   Int.of(1))
                 ),
                 Stream.of(
                         "a :- 1; '2'",
                         new Struct(":-",
                                    new Struct("a"),
                                    new Struct(";",
-                                              new Int(1),
+                                              Int.of(1),
                                               new Struct("2")))
                 ),
                 Stream.of(
@@ -339,7 +339,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct("a"),
                                               new Var("B")),
                                    new Struct(";",
-                                              new Int(1),
+                                              Int.of(1),
                                               new Struct("2")))
                 ),
                 Stream.of(
@@ -350,8 +350,8 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Var("B")),
                                    new Struct(";",
                                               new Struct(",",
-                                                         new Int(1),
-                                                         new Double(3.1)),
+                                                         Int.of(1),
+                                                         Double.of(3.1)),
                                               new Struct("2")))
                 ),
                 Stream.of(
@@ -361,10 +361,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct("a"),
                                               new Var("B")),
                                    new Struct(";",
-                                              new Int(1),
+                                              Int.of(1),
                                               new Struct(",",
                                                          new Struct("2"),
-                                                         new Double(3.1))))
+                                                         Double.of(3.1))))
                 ),
                 Stream.of(
                         "a, c(D); B :- 1, 3.1; '2'",
@@ -376,8 +376,8 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Var("B")),
                                    new Struct(";",
                                               new Struct(",",
-                                                         new Int(1),
-                                                         new Double(3.1)),
+                                                         Int.of(1),
+                                                         Double.of(3.1)),
                                               new Struct("2")))
                 ),
                 Stream.of(
@@ -390,8 +390,8 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          new Struct("c", new Var("D")))),
                                    new Struct(";",
                                               new Struct(",",
-                                                         new Int(1),
-                                                         new Double(3.1)),
+                                                         Int.of(1),
+                                                         Double.of(3.1)),
                                               new Struct("2")))
                 ),
                 Stream.of(
@@ -403,10 +403,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          new Struct("c", new Var("D"))),
                                               new Var("B")),
                                    new Struct(";",
-                                              new Int(1),
+                                              Int.of(1),
                                               new Struct(",",
                                                          new Struct("2"),
-                                                         new Double(3.1))))
+                                                         Double.of(3.1))))
                 ),
                 Stream.of(
                         "a; B, c(D) :- 1; '2', 3.1",
@@ -417,10 +417,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          new Var("B"),
                                                          new Struct("c", new Var("D")))),
                                    new Struct(";",
-                                              new Int(1),
+                                              Int.of(1),
                                               new Struct(",",
                                                          new Struct("2"),
-                                                         new Double(3.1))))
+                                                         Double.of(3.1))))
                 ),
                 Stream.of(
                         "a; B, c(D) :- 1, \"4\"; '2', 3.1",
@@ -432,11 +432,11 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          new Struct("c", new Var("D")))),
                                    new Struct(";",
                                               new Struct(",",
-                                                         new Int(1),
+                                                         Int.of(1),
                                                          new Struct("4")),
                                               new Struct(",",
                                                          new Struct("2"),
-                                                         new Double(3.1))))
+                                                         Double.of(3.1))))
                 ),
                 Stream.of(
                         "a, c(D); B, e(_f, [g]) :- 1; '2', 3.1",
@@ -453,10 +453,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                new Struct("g"),
                                                                                new Struct())))),
                                    new Struct(";",
-                                              new Int(1),
+                                              Int.of(1),
                                               new Struct(",",
                                                          new Struct("2"),
-                                                         new Double(3.1))))
+                                                         Double.of(3.1))))
                 ),
                 Stream.of(
                         "a; b; B, c(D) :- 1, \"4\", 5; '2', 3.1, 6.7",
@@ -471,15 +471,15 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                new Var("D"))))),
                                    new Struct(";",
                                               new Struct(",",
-                                                         new Int(1),
+                                                         Int.of(1),
                                                          new Struct(",",
                                                                     new Struct("4"),
-                                                                    new Int(5))),
+                                                                    Int.of(5))),
                                               new Struct(",",
                                                          new Struct("2"),
                                                          new Struct(",",
-                                                                    new Double(3.1),
-                                                                    new Double(6.7)))))
+                                                                    Double.of(3.1),
+                                                                    Double.of(6.7)))))
                 ),
                 Stream.of(
                         "a; b; B, c(D) :- 1, \"4\"; '2', 3.1",
@@ -494,11 +494,11 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                new Var("D"))))),
                                    new Struct(";",
                                               new Struct(",",
-                                                         new Int(1),
+                                                         Int.of(1),
                                                          new Struct("4")),
                                               new Struct(",",
                                                          new Struct("2"),
-                                                         new Double(3.1))))
+                                                         Double.of(3.1))))
                 ),
                 Stream.of(
                         "b, 1 -> 2; 3,4 :- a",
@@ -507,11 +507,11 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct("->",
                                                          new Struct(",",
                                                                     new Struct("b"),
-                                                                    new Int(1)),
-                                                         new Int(2)),
+                                                                    Int.of(1)),
+                                                         Int.of(2)),
                                               new Struct(",",
-                                                         new Int(3),
-                                                         new Int(4))),
+                                                         Int.of(3),
+                                                         Int.of(4))),
                                    new Struct("a"))
                 )
         ).map(s -> s.toArray(Object[]::new))
@@ -579,7 +579,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         new Struct("element_at",
                                    new Var("X"),
                                    new Struct(".", new Var("X"), new Var()),
-                                   new Int(1))
+                                   Int.of(1))
                 ),
                 Stream.of(
                         "element_at(X,[_|L],K) :- K > 1, K1 is K - 1, element_at(X,L,K1)",
@@ -591,13 +591,13 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    new Struct(",",
                                               new Struct(">",
                                                          new Var("K"),
-                                                         new Int(1)),
+                                                         Int.of(1)),
                                               new Struct(",",
                                                          new Struct("is",
                                                                     new Var("K1"),
                                                                     new Struct("-",
                                                                                new Var("K"),
-                                                                               new Int(1))),
+                                                                               Int.of(1))),
                                                          new Struct("element_at",
                                                                     new Var("X"),
                                                                     new Var("L"),
@@ -607,7 +607,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "my_length([],0)",
                         new Struct("my_length",
                                    new Struct(),
-                                   new Int(0))
+                                   Int.of(0))
                 ),
                 Stream.of(
                         "my_length([_|L],N) :- my_length(L,N1), N is N1 + 1",
@@ -623,7 +623,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          new Var("N"),
                                                          new Struct("+",
                                                                     new Var("N1"),
-                                                                    new Int(1)))))
+                                                                    Int.of(1)))))
                 ),
                 Stream.of(
                         "my_reverse(L1,L2) :- my_rev(L1,L2,[])",
@@ -726,7 +726,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                            new Struct(new Var[]{new Var("N"), new Var("X")})),
                                    new Struct(">",
                                               new Var("N"),
-                                              new Int(1)))
+                                              Int.of(1)))
                 ),
                 Stream.of(
                         "count(X,[Y|Ys],[Y|Ys],1,X) :- X \\= Y",
@@ -735,7 +735,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Var("X"),
                                               new Struct(".", new Var("Y"), new Var("Ys")),
                                               new Struct(".", new Var("Y"), new Var("Ys")),
-                                              new Int(1),
+                                              Int.of(1),
                                               new Var("X")),
                                    new Struct("\\=",
                                               new Var("X"),
@@ -753,7 +753,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    new Struct(",",
                                               new Struct(">",
                                                          new Var("N"),
-                                                         new Int(1)),
+                                                         Int.of(1)),
                                               new Struct("\\=",
                                                          new Var("X"),
                                                          new Var("Y"))))
@@ -772,7 +772,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          new Var("K1"),
                                                          new Struct("+",
                                                                     new Var("K"),
-                                                                    new Int(1))),
+                                                                    Int.of(1))),
                                               new Struct("count",
                                                          new Var("X"),
                                                          new Var("Xs"),
@@ -795,12 +795,12 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                     new Var("XMax"),
                                                                     new Struct("-",
                                                                                new Var("XSize"),
-                                                                               new Int(1))),
+                                                                               Int.of(1))),
                                                          new Struct("is",
                                                                     new Var("YMax"),
                                                                     new Struct("-",
                                                                                new Var("YSize"),
-                                                                               new Int(1))))))
+                                                                               Int.of(1))))))
                 ),
                 Stream.of(
                         "in_map(X, Y) :- X >= 0, Y >= 0, map_size(XSize, YSize), X < XSize, Y < YSize",
@@ -811,11 +811,11 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    new Struct(",",
                                               new Struct(">=",
                                                          new Var("X"),
-                                                         new Int(0)),
+                                                         Int.of(0)),
                                               new Struct(",",
                                                          new Struct(">=",
                                                                     new Var("Y"),
-                                                                    new Int(0)),
+                                                                    Int.of(0)),
                                                          new Struct(",",
                                                                     new Struct("map_size",
                                                                                new Var("XSize"),
@@ -859,9 +859,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                new Var("NY"),
                                                                                new Struct("+",
                                                                                           new Var("Y"),
-                                                                                          new Int(1))),
+                                                                                          Int.of(1))),
                                                                     new Struct("draw_char",
-                                                                               new Int(0),
+                                                                               Int.of(0),
                                                                                new Var("NY"))))))
                 ),
                 Stream.of(
@@ -923,7 +923,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                                      new Struct("floor",
                                                                                                                 new Struct("/",
                                                                                                                            new Var("XSize"),
-                                                                                                                           new Int(2))))),
+                                                                                                                           Int.of(2))))),
                                                                                new Struct("is",
                                                                                           new Var("Y"),
                                                                                           new Struct("-",
@@ -933,7 +933,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                                                            new Struct("-",
                                                                                                                                       new Var("YSize"),
                                                                                                                                       new Var("YMsgs")),
-                                                                                                                           new Int(2))))))))))
+                                                                                                                           Int.of(2))))))))))
                 )
         ).map(s -> s.toArray(Object[]::new))
                      .toArray(Object[][]::new);

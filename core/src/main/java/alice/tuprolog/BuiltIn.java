@@ -253,7 +253,7 @@ public class BuiltIn extends Library {
                         getEngine().getEngineManager(),
                         "modify",
                         "static_procedure",
-                        new Struct("/", new Struct(functor), new Int(arity)),
+                        new Struct("/", new Struct(functor), Int.of(arity)),
                         new Struct(String.format("No permission to modify static procedure `%s`", indicator))
                 );
             }
@@ -558,7 +558,7 @@ public class BuiltIn extends Library {
         }
         if (!getEngine().getFlagManager().isModifiable(name)) {
             throw PrologError.permission_error(getEngine().getEngineManager(), "modify", "flag",
-                                               arg0, new Int(0));
+                                               arg0, Int.of(0));
         }
         return getEngine().getFlagManager().setFlag(name, arg1);
     }

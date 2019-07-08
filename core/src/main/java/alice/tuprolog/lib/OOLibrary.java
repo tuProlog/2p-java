@@ -17,6 +17,9 @@
  */
 package alice.tuprolog.lib;
 
+import alice.tuprolog.Double;
+import alice.tuprolog.Float;
+import alice.tuprolog.Long;
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidObjectIdException;
@@ -1027,16 +1030,16 @@ public class OOLibrary extends Library {
             field.setAccessible(true);
             if (fc.equals(Integer.TYPE) || fc.equals(Byte.TYPE)) {
                 int value = field.getInt(obj);
-                return unify(what, new alice.tuprolog.Int(value));
+                return unify(what, Int.of(value));
             } else if (fc.equals(java.lang.Long.TYPE)) {
                 long value = field.getLong(obj);
-                return unify(what, new alice.tuprolog.Long(value));
+                return unify(what, Long.of(value));
             } else if (fc.equals(java.lang.Float.TYPE)) {
                 float value = field.getFloat(obj);
-                return unify(what, new alice.tuprolog.Float(value));
+                return unify(what, Float.of(value));
             } else if (fc.equals(java.lang.Double.TYPE)) {
                 double value = field.getDouble(obj);
-                return unify(what, new alice.tuprolog.Double(value));
+                return unify(what, Double.of(value));
             } else {
                 // the field value is an object
                 Object res = field.get(obj);
@@ -1175,14 +1178,14 @@ public class OOLibrary extends Library {
             }
             String name = cl.toString();
             if (name.equals("class [I")) {
-                Term value = new alice.tuprolog.Int(Array.getInt(obj, index.intValue()));
+                Term value = Int.of(Array.getInt(obj, index.intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
                     throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [D")) {
-                Term value = new alice.tuprolog.Double(Array.getDouble(obj, index.intValue()));
+                Term value = Double.of(Array.getDouble(obj, index.intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
@@ -1190,7 +1193,7 @@ public class OOLibrary extends Library {
                                                                                  .toString()));
                 }
             } else if (name.equals("class [F")) {
-                Term value = new alice.tuprolog.Float(Array.getFloat(obj, index
+                Term value = Float.of(Array.getFloat(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
@@ -1199,7 +1202,7 @@ public class OOLibrary extends Library {
                                                                                  .toString()));
                 }
             } else if (name.equals("class [L")) {
-                Term value = new alice.tuprolog.Long(Array.getLong(obj, index
+                Term value = Long.of(Array.getLong(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
@@ -1234,7 +1237,7 @@ public class OOLibrary extends Library {
                     }
                 }
             } else if (name.equals("class [B")) {
-                Term value = new alice.tuprolog.Int(Array.getByte(obj, index
+                Term value = Int.of(Array.getByte(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
@@ -1243,7 +1246,7 @@ public class OOLibrary extends Library {
                                                                                  .toString()));
                 }
             } else if (name.equals("class [S")) {
-                Term value = new alice.tuprolog.Int(Array.getInt(obj, index
+                Term value = Int.of(Array.getInt(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
@@ -1575,19 +1578,19 @@ public class OOLibrary extends Library {
                     return unify(id, Term.FALSE);
                 }
             } else if (obj instanceof Byte) {
-                return unify(id, new Int(((Byte) obj).intValue()));
+                return unify(id, Int.of(((Byte) obj).intValue()));
             } else if (obj instanceof Short) {
-                return unify(id, new Int(((Short) obj).intValue()));
+                return unify(id, Int.of(((Short) obj).intValue()));
             } else if (obj instanceof Integer) {
-                return unify(id, new Int(((Integer) obj).intValue()));
+                return unify(id, Int.of(((Integer) obj).intValue()));
             } else if (obj instanceof java.lang.Long) {
-                return unify(id, new alice.tuprolog.Long(((java.lang.Long) obj)
+                return unify(id, Long.of(((java.lang.Long) obj)
                                                                  .longValue()));
             } else if (obj instanceof java.lang.Float) {
-                return unify(id, new alice.tuprolog.Float(
+                return unify(id, Float.of(
                         ((java.lang.Float) obj).floatValue()));
             } else if (obj instanceof java.lang.Double) {
-                return unify(id, new alice.tuprolog.Double(
+                return unify(id, Double.of(
                         ((java.lang.Double) obj).doubleValue()));
             } else if (obj instanceof String) {
                 return unify(id, new Struct((String) obj));

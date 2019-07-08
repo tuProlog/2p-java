@@ -36,29 +36,29 @@ public class ParserTestCase extends TestCase {
         // GNU Prolog interprets "n(+100)" as "n(+(100))"
         // The ISO Standard says + is not a unary operator
         Term t = Term.createTerm("n(+100)");
-        Struct result = new Struct("n", new Int(100));
+        Struct result = new Struct("n", Int.of(100));
         assertEquals(result, t);
 
         t = Term.createTerm("n(+(100))");
 
-        result = new Struct("n", new Struct("+", new Int(100)));
+        result = new Struct("n", new Struct("+", Int.of(100)));
         assertEquals(result, t);
     }
 
     public void testUnaryMinusOperator() throws InvalidTermException {
         Term t = Term.createTerm("n(-100)");
-        Struct result = new Struct("n", new Int(-100));
+        Struct result = new Struct("n", Int.of(-100));
         assertEquals(result, t);
 
         t = Term.createTerm("n(-(100))");
 
-        result = new Struct("n", new Struct("-", new Int(100)));
+        result = new Struct("n", new Struct("-", Int.of(100)));
         assertEquals(result, t);
     }
 
     public void testBinaryMinusOperator() throws InvalidTermException {
         Term t = Term.createTerm("abs(3-11)");
-        Struct result = new Struct("abs", new Struct("-", new Int(3), new Int(11)));
+        Struct result = new Struct("abs", new Struct("-", Int.of(3), Int.of(11)));
         assertEquals(result, t);
     }
 
@@ -121,7 +121,7 @@ public class ParserTestCase extends TestCase {
     public void testIntegerBinaryRepresentation() throws InvalidTermException {
         String n = "0b101101";
         Term t = Term.createTerm(n);
-        alice.tuprolog.Number result = new Int(45);
+        alice.tuprolog.Number result = Int.of(45);
         assertEquals(result, t);
         String invalid = "0b101201";
         try {
@@ -135,7 +135,7 @@ public class ParserTestCase extends TestCase {
     public void testIntegerOctalRepresentation() throws InvalidTermException {
         String n = "0o77351";
         Term t = Term.createTerm(n);
-        alice.tuprolog.Number result = new Int(32489);
+        alice.tuprolog.Number result = Int.of(32489);
         assertEquals(result, t);
         String invalid = "0o78351";
         try {
@@ -148,7 +148,7 @@ public class ParserTestCase extends TestCase {
     public void testIntegerHexadecimalRepresentation() throws InvalidTermException {
         String n = "0xDECAF";
         Term t = Term.createTerm(n);
-        alice.tuprolog.Number result = new Int(912559);
+        alice.tuprolog.Number result = Int.of(912559);
         assertEquals(result, t);
         String invalid = "0xG";
         try {
@@ -187,7 +187,7 @@ public class ParserTestCase extends TestCase {
         String input = "{A =.. B, hotel, 2}";
         Struct result = new Struct("{}",
                             new Struct(",", new Struct("=..", new Var("A"), new Var("B")),
-                                new Struct(",", new Struct("hotel"), new Int(2))));
+                                new Struct(",", new Struct("hotel"), Int.of(2))));
         result.resolveTerm();
         Term t = Term.createTerm(input);
         assertEquals(result, t);

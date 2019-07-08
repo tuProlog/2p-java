@@ -312,9 +312,9 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
         java.lang.Number value = parseInteger(ctx);
 
         if (value instanceof Integer) {
-            return new Int(value.intValue());
+            return Int.of(value.intValue());
         } else {
-            return new alice.tuprolog.Long(value.longValue());
+            return alice.tuprolog.Long.of(value.longValue());
         }
     }
 
@@ -325,7 +325,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
             raw = ctx.sign.getText() + raw;
         }
         try {
-            return new alice.tuprolog.Double(Double.parseDouble(raw));
+            return alice.tuprolog.Double.of(Double.parseDouble(raw));
         } catch (NumberFormatException notAFloating) {
             throw new ParseException(ctx.value, notAFloating);
         }

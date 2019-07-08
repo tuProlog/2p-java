@@ -12,32 +12,32 @@ public class StructTestCase extends TestCase {
         } catch (InvalidTermException expected) {
         }
         try {
-            new Struct("p", new Int(1), null);
+            new Struct("p", Int.of(1), null);
             fail();
         } catch (InvalidTermException expected) {
         }
         try {
-            new Struct("p", new Int(1), new Int(2), null);
+            new Struct("p", Int.of(1), Int.of(2), null);
             fail();
         } catch (InvalidTermException expected) {
         }
         try {
-            new Struct("p", new Int(1), new Int(2), new Int(3), null);
+            new Struct("p", Int.of(1), Int.of(2), Int.of(3), null);
             fail();
         } catch (InvalidTermException expected) {
         }
         try {
-            new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), null);
+            new Struct("p", Int.of(1), Int.of(2), Int.of(3), Int.of(4), null);
             fail();
         } catch (InvalidTermException expected) {
         }
         try {
-            new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), new Int(5), null);
+            new Struct("p", Int.of(1), Int.of(2), Int.of(3), Int.of(4), Int.of(5), null);
             fail();
         } catch (InvalidTermException expected) {
         }
         try {
-            new Struct("p", new Int(1), new Int(2), new Int(3), new Int(4), new Int(5), new Int(6), null);
+            new Struct("p", Int.of(1), Int.of(2), Int.of(3), Int.of(4), Int.of(5), Int.of(6), null);
             fail();
         } catch (InvalidTermException expected) {
         }
@@ -51,7 +51,7 @@ public class StructTestCase extends TestCase {
 
     public void testStructWithNullName() {
         try {
-            new Struct(null, new Int(1), new Int(2));
+            new Struct(null, Int.of(1), Int.of(2));
             fail();
         } catch (InvalidTermException expected) {
         }
@@ -62,7 +62,7 @@ public class StructTestCase extends TestCase {
      */
     public void testStructWithEmptyName() {
         try {
-            new Struct("", new Int(1), new Int(2));
+            new Struct("", Int.of(1), Int.of(2));
             fail();
         } catch (InvalidTermException expected) {
         }
@@ -142,7 +142,7 @@ public class StructTestCase extends TestCase {
     }
 
     public void testNonListTail() {
-        Struct s = new Struct("h", new Int(1));
+        Struct s = new Struct("h", Int.of(1));
         try {
             assertNotNull(s.listTail()); // just to make an assertion...
             fail();
@@ -162,7 +162,7 @@ public class StructTestCase extends TestCase {
     }
 
     public void testNonListIterator() {
-        Struct s = new Struct("f", new Int(2));
+        Struct s = new Struct("f", Int.of(2));
         try {
             assertNotNull(s.listIterator()); // just to make an assertion...
             fail();
@@ -228,7 +228,7 @@ public class StructTestCase extends TestCase {
         assertTrue(emptyList.isAtomic());
         Struct atom = new Struct("atom");
         assertTrue(atom.isAtomic());
-        Struct list = new Struct(new Term[]{new Int(0), new Int(1)});
+        Struct list = new Struct(new Term[]{Int.of(0), Int.of(1)});
         assertFalse(list.isAtomic());
         Struct compound = new Struct("f", new Struct("a"), new Struct("b"));
         assertFalse(compound.isAtomic());
@@ -243,7 +243,7 @@ public class StructTestCase extends TestCase {
         assertTrue(emptyList.isAtom());
         Struct atom = new Struct("atom");
         assertTrue(atom.isAtom());
-        Struct list = new Struct(new Term[]{new Int(0), new Int(1)});
+        Struct list = new Struct(new Term[]{Int.of(0), Int.of(1)});
         assertFalse(list.isAtom());
         Struct compound = new Struct("f", new Struct("a"), new Struct("b"));
         assertFalse(compound.isAtom());
@@ -258,7 +258,7 @@ public class StructTestCase extends TestCase {
         assertFalse(emptyList.isCompound());
         Struct atom = new Struct("atom");
         assertFalse(atom.isCompound());
-        Struct list = new Struct(new Term[]{new Int(0), new Int(1)});
+        Struct list = new Struct(new Term[]{Int.of(0), Int.of(1)});
         assertTrue(list.isCompound());
         Struct compound = new Struct("f", new Struct("a"), new Struct("b"));
         assertTrue(compound.isCompound());

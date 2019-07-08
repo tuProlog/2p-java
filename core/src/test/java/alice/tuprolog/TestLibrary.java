@@ -30,7 +30,7 @@ public class TestLibrary extends StringLibrary {
     public Term sum_2(Number arg0, Number arg1) {
         int a0 = arg0.intValue();
         int a1 = arg1.intValue();
-        return new Int(a0 + a1);
+        return Int.of(a0 + a1);
     }
 
     public boolean println_1(Term arg0) {

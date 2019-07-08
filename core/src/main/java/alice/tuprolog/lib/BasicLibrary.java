@@ -129,7 +129,7 @@ public class BasicLibrary extends Library {
         java.util.Iterator<Operator> it = getEngine().getCurrentOperatorList().iterator();
         while (it.hasNext()) {
             Operator o = it.next();
-            list = new Struct(new Struct("op", new Int(o.getPriority()),
+            list = new Struct(new Struct("op", Int.of(o.getPriority()),
                     new Struct(o.getAssociativity().name().toLowerCase()), new Struct(o.getName())), list);
         }
         return unify(arg, list);
@@ -509,9 +509,9 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger()) {
                 return getIntegerNumber(Math.negateExact(val0n.longValue()));
             } else if (val0n instanceof alice.tuprolog.Double) {
-                return new alice.tuprolog.Double(-val0n.doubleValue());
+                return alice.tuprolog.Double.of(-val0n.doubleValue());
             } else {
-                return new alice.tuprolog.Float(-val0n.floatValue());
+                return alice.tuprolog.Float.of(-val0n.floatValue());
             }
         } else {
             return null;
@@ -526,7 +526,7 @@ public class BasicLibrary extends Library {
 
         }
         if (val0 != null && val0 instanceof Number) {
-            return new alice.tuprolog.Long(~((alice.tuprolog.Number) val0).longValue());
+            return alice.tuprolog.Long.of(~((alice.tuprolog.Number) val0).longValue());
         } else {
             return null;
         }
@@ -548,7 +548,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger())) {
                 return getIntegerNumber(Math.addExact(val0n.longValue(), val1n.longValue()));
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() + val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() + val1n.doubleValue());
             }
         } else {
             return null;
@@ -573,7 +573,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger())) {
                 return getIntegerNumber(Math.subtractExact(val0n.longValue(), val1n.longValue()));
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() - val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() - val1n.doubleValue());
             }
         } else {
             return null;
@@ -598,7 +598,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger())) {
                 return getIntegerNumber(Math.multiplyExact(val0n.longValue(), val1n.longValue()));
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() * val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() * val1n.doubleValue());
             }
         } else {
             return null;
@@ -623,7 +623,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && val1n.isInteger() && val0n.longValue() % val1n.longValue() == 0) {
                 return getIntegerNumber(val0n.longValue() / val1n.longValue());
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() / val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() / val1n.doubleValue());
             }
         } else {
             return null;
@@ -666,7 +666,7 @@ public class BasicLibrary extends Library {
             && (val1 instanceof Number)) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Double(Math.pow(val0n.doubleValue(), val1n.doubleValue()));
+            return alice.tuprolog.Double.of(Math.pow(val0n.doubleValue(), val1n.doubleValue()));
         } else {
             return null;
         }
@@ -687,7 +687,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() >> val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() >> val1n.longValue());
         } else {
             return null;
         }
@@ -708,7 +708,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() << val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() << val1n.longValue());
         } else {
             return null;
         }
@@ -729,7 +729,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() & val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() & val1n.longValue());
         } else {
             return null;
         }
@@ -750,7 +750,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() | val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() | val1n.longValue());
         } else {
             return null;
         }
@@ -917,12 +917,12 @@ public class BasicLibrary extends Library {
             }
             Term term = null;
             try {
-                term = new Int(java.lang.Integer.parseInt(st2));
+                term = Int.of(java.lang.Integer.parseInt(st2));
             } catch (Exception ex) {
             }
             if (term == null) {
                 try {
-                    term = new alice.tuprolog.Double(java.lang.Double
+                    term = alice.tuprolog.Double.of(java.lang.Double
                                                              .parseDouble(st2));
                 } catch (Exception ex) {
                 }

@@ -269,9 +269,9 @@ public abstract class Library implements Serializable, IPrimitives {
 
     protected alice.tuprolog.Number getIntegerNumber(long num) {
         if (num > Integer.MIN_VALUE && num < Integer.MAX_VALUE) {
-            return new Int((int) num);
+            return Int.of((int) num);
         } else {
-            return new alice.tuprolog.Long(num);
+            return Long.of(num);
         }
     }
 
@@ -279,7 +279,7 @@ public abstract class Library implements Serializable, IPrimitives {
         if (getEngine() == null) return struct;
 
         if (getEngine().getPrimitiveManager().isPredicate(struct) || getEngine().getTheoryManager().isStatic(struct)) {
-            final Struct indicator = new Struct("/", new Struct(struct.getName()), new Int(struct.getArity()));
+            final Struct indicator = new Struct("/", new Struct(struct.getName()), Int.of(struct.getArity()));
             throw PrologError.permission_error(
                     getEngine().getEngineManager(),
                     operation,

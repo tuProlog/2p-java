@@ -30,7 +30,7 @@ public class JavaException extends PrologException {
         if (cause != null) {
             causeTerm = new Struct(cause.toString());
         } else {
-            causeTerm = new Int(0);
+            causeTerm = Int.of(0);
         }
         // Message
         Term messageTerm = null;
@@ -38,7 +38,7 @@ public class JavaException extends PrologException {
         if (message != null) {
             messageTerm = new Struct(message);
         } else {
-            messageTerm = new Int(0);
+            messageTerm = Int.of(0);
         }
         // StackTrace
         Struct stackTraceTerm = new Struct();
