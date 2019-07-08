@@ -125,6 +125,15 @@ public class Struct extends Term {
         return new Struct(terms.iterator());
     }
 
+    public static Struct tuple(Term term1, Term term2, Term... terms) {
+        return tuple(
+                Stream.concat(
+                        Stream.of(term1, term2),
+                        Stream.of(terms)
+                )
+        );
+    }
+
     public static Struct tuple(Collection<? extends Term> terms) {
         return tuple(new ArrayList<>(terms));
     }

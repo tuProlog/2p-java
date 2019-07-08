@@ -39,17 +39,34 @@ public class Var extends Term {
     final static String ANY = "_";
     private static final long serialVersionUID = 1L;
     private static long fingerprint = 0; //Alberto //static version as global counter
-    @SuppressWarnings("unused")
-//    private String type = "Var";
-    // the name identifying the var
+
     private String name;
     private StringBuilder completeName;    /* Reviewed by Paolo Contessi */
     private Term link;                   /* link is used for unification process */
     private long internalTimestamp;      /* internalTimestamp is used for fix vars order (resolveTerm()) */
     private int ctxid;                  /* id of ExecCtx owners of this var util for renaming*/
 
-    //Alberto
     private long fingerPrint; //fingerPrint is a unique id (per run) used for var comparison
+
+    @SuppressWarnings({"deprecated"})
+    public static Var of(String name) {
+        return new Var(name);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Var anonymous() {
+        return new Var();
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Var whatever() {
+        return anonymous();
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Var any() {
+        return anonymous();
+    }
 
     /**
      * Creates a variable identified by a name.
@@ -60,6 +77,7 @@ public class Var extends Term {
      * @param n is the name
      * @throws InvalidTermException if n is not a valid Prolog variable name
      */
+    @Deprecated
     public Var(String n) {
         link = null;
         ctxid = Var.ORIGINAL; //no execCtx owners
@@ -82,6 +100,7 @@ public class Var extends Term {
      * <p>
      * This is equivalent to build a variable with name _
      */
+    @Deprecated
     public Var() {
         name = null;
         completeName = new StringBuilder();

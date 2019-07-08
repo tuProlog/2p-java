@@ -25,13 +25,19 @@ import java.util.List;
  */
 public class Long extends Number {
 
-    private static final long serialVersionUID = 1L;
-
-    @SuppressWarnings("unused")
-    private String type = "Long";
-
     private long value;
 
+    @SuppressWarnings({"deprecated"})
+    public static Long of(long value) {
+        return new Long(value);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Long of(java.lang.Long value) {
+        return new Long(value);
+    }
+
+    @Deprecated
     public Long(long v) {
         value = v;
     }

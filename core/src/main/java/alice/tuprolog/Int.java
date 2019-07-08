@@ -24,13 +24,19 @@ import java.util.List;
  */
 public class Int extends Number {
 
-    private static final long serialVersionUID = 1L;
-
-    @SuppressWarnings("unused")
-    private String type = "Int";
-
     private int value;
 
+    @SuppressWarnings({"deprecated"})
+    public static Int of(int value) {
+        return new Int(value);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Int of(Integer value) {
+        return new Int(value);
+    }
+
+    @Deprecated
     public Int(int v) {
         value = v;
     }
