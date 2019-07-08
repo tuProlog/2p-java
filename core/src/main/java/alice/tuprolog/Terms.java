@@ -95,6 +95,34 @@ public class Terms {
         return Struct.tuple(terms);
     }
 
+    public static Struct emptySet() {
+        return Struct.emptySet();
+    }
+
+    public static Struct set(Term term) {
+        return Struct.set(term);
+    }
+
+    public static Struct set(Term term1, Term term2, Term terms) {
+        return Struct.set(term1, term2, terms);
+    }
+
+    public static Struct set(Collection<? extends Term> terms) {
+        return Struct.set(terms);
+    }
+
+    public static Struct set(Stream<? extends Term> terms) {
+        return Struct.set(terms);
+    }
+
+    public static Struct set(Iterable<? extends Term> terms) {
+        return Struct.set(terms);
+    }
+
+    public static Struct set(Iterator<? extends Term> terms) {
+        return Struct.set(terms);
+    }
+
     public static Var var(String name) {
         return Var.of(name);
     }

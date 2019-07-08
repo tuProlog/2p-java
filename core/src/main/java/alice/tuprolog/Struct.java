@@ -64,6 +64,39 @@ public class Struct extends Term {
      */
     private boolean resolved = false;
 
+
+    public static Struct emptySet() {
+        return Struct.atom("{}");
+    }
+
+    public static Struct set(Term term) {
+        return Struct.of("{}", term);
+    }
+
+    public static Struct set(Term term1, Term term2, Term terms) {
+        return Struct.of("{}", tuple(term1, term2, terms));
+    }
+
+    public static Struct set(Collection<? extends Term> terms) {
+        switch (terms.size()) {
+            case 0: return emptySet();
+            case 1: return set(terms.iterator().next());
+            default: return set(tuple(terms));
+        }
+    }
+
+    public static Struct set(Stream<? extends Term> terms) {
+        return set(terms.collect(Collectors.toList()));
+    }
+
+    public static Struct set(Iterable<? extends Term> terms) {
+        return set(StreamUtils.stream(terms));
+    }
+
+    public static Struct set(Iterator<? extends Term> terms) {
+        return set(StreamUtils.stream(() -> terms));
+    }
+
     public static Struct cut() {
         return Struct.atom("!");
     }
