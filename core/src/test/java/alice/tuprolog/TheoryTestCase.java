@@ -16,8 +16,8 @@ public class TheoryTestCase extends TestCase {
     public void testAppendClauseLists() throws InvalidTheoryException, MalformedGoalException {
         Term[] clauseList = new Term[]{new Struct("p"), new Struct("q"), new Struct("r")};
         Term[] otherClauseList = new Term[]{new Struct("a"), new Struct("b"), new Struct("c")};
-        Theory theory = Theory.fromPrologList(new Struct(clauseList));
-        theory.append(Theory.fromPrologList(new Struct(otherClauseList)));
+        Theory theory = Theory.fromPrologList(Struct.list(clauseList));
+        theory.append(Theory.fromPrologList(Struct.list(otherClauseList)));
         Prolog engine = new Prolog();
         engine.setTheory(theory);
         assertTrue((engine.solve("p.")).isSuccess());

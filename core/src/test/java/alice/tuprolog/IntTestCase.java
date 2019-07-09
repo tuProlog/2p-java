@@ -18,7 +18,7 @@ public class IntTestCase extends TestCase {
     }
 
     public void testEqualsToStruct() {
-        Struct s = new Struct();
+        Struct s = Struct.emptyList();
         Int zero = Int.of(0);
         assertFalse(zero.equals(s));
     }

@@ -35,12 +35,12 @@ public class Terms {
         return Struct.atom(atom);
     }
 
-    public static Struct struct(String functor, Term first, Term... others) {
-        return Struct.of(functor, first, others);
+    public static Struct struct(String functor, Term... terms) {
+        return Struct.of(functor, terms);
     }
 
-    public static Struct compound(String functor, Term first, Term... others) {
-        return struct(functor, first, others);
+    public static Struct compound(String functor, Term... terms) {
+        return struct(functor, terms);
     }
 
     public static Struct cons(Term head, Term tail) {

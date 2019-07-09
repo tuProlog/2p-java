@@ -194,7 +194,7 @@ public class BuiltIn extends Library {
     }
 
     public boolean $log_1(Term format) {
-        return $log_2(format, new Struct());
+        return $log_2(format, Struct.emptyList());
     }
 
     public boolean $retract_1(Term arg0) throws PrologError {

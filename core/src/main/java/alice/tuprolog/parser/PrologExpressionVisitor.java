@@ -334,20 +334,14 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
     @Override
     public Term visitStructure(PrologParser.StructureContext ctx) {
         if (ctx.isList) {
-            return new Struct();
+            return Struct.emptyList();
         } else if (ctx.isSet) {
-//            if (ctx.arity == 0) {
-            return new Struct("{}");
-//            } else if (ctx.arity == 1) {
-//                return new Struct("{}", ctx.args.get(0).accept(this));
-//            } else {
-//                return new Struct("{}", createConjunction(ctx.args.stream().map(this::visitExpression)));
-//            }
+            return Struct.emptySet();
         }
         if (ctx.arity == 0) {
-            return new Struct(ctx.functor.getText());
+            return Struct.atom(ctx.functor.getText());
         } else {
-            return new Struct(ctx.functor.getText(), ctx.args.stream().map(this::visitExpression).toArray(Term[]::new));
+            return Struct.of(ctx.functor.getText(), ctx.args.stream().map(this::visitExpression).toArray(Term[]::new));
         }
     }
 
@@ -357,7 +351,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
         if (ctx.hasTail) {
             terms = Stream.concat(terms, Stream.of(this.visitExpression(ctx.tail)));
         } else {
-            return new Struct(terms.toArray(Term[]::new));
+            return Struct.list(terms);
         }
         return createListExact(terms);
     }
@@ -383,7 +377,7 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
     }
 
     private Struct createList(Stream<Term> terms) {
-        return new Struct(terms.iterator());
+        return Struct.list(terms.iterator());
     }
 
 }

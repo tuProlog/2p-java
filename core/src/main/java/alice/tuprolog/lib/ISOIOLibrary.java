@@ -213,7 +213,7 @@ public class ISOIOLibrary extends Library {
     }
 
     public boolean open_3(Term source_sink, Term mode, Term stream) throws PrologError {
-        return open_4(source_sink, mode, stream, new Struct());
+        return open_4(source_sink, mode, stream, Struct.emptyList());
     }
 
 //    public boolean open_3(Term source_sink, Term mode, Term stream) throws PrologError {
@@ -313,12 +313,13 @@ public class ISOIOLibrary extends Library {
 
     public boolean $output_streams_1(Term stream) throws PrologError {
         initLibrary();
-        return unify(stream, new Struct(outputStreams.keySet().stream().map(Objects::toString).map(Struct::new)));
+        return unify(stream, Struct.list(outputStreams.keySet().stream().map(Objects::toString).map(Struct::atom)));
     }
 
     public boolean $input_streams_1(Term stream) throws PrologError {
         initLibrary();
-        return unify(stream, new Struct(inputStreams.keySet().stream().map(Objects::toString).map(Struct::new)));
+        return unify(stream, Struct.list
+                (inputStreams.keySet().stream().map(Objects::toString).map(Struct::atom)));
     }
 
     private static Stream<Term> propertiesStrem(Map<String, Term> properties) {
@@ -352,7 +353,7 @@ public class ISOIOLibrary extends Library {
 
         final Map<String, Term> props = streamObj.get().getRight();
 
-        return unify(properties, new Struct(propertiesStrem(props)));
+        return unify(properties, Struct.list(propertiesStrem(props)));
     }
 
     public boolean close_2(Term stream_or_alias, Term closeOptions) throws PrologError {
@@ -535,13 +536,13 @@ public class ISOIOLibrary extends Library {
             for (Map.Entry<InputStream, Map<String, Term>> stream : inputStreams.entrySet()) {
                 resultList.add(new Struct(stream.getKey().toString()));
             }
-            Struct result = new Struct(resultList.toArray(new Struct[1]));
+            Struct result = Struct.list(resultList);
             return unify(list, result);
         } else if (propertyName.equals("output")) {
             for (Map.Entry<OutputStream, Map<String, Term>> stream : outputStreams.entrySet()) {
                 resultList.add(new Struct(stream.getKey().toString()));
             }
-            Struct result = new Struct(resultList.toArray(new Struct[1]));
+            Struct result = Struct.list(resultList);
             return unify(list, result);
         } else {
             for (Map.Entry<InputStream, Map<String, Term>> currentElement : inputStreams.entrySet()) {
@@ -592,7 +593,7 @@ public class ISOIOLibrary extends Library {
                 }
             }
         }
-        Struct result = new Struct(resultList.toArray(new Struct[1]));
+        Struct result = Struct.list(resultList);
         return unify(list, result);
     }
 
@@ -1497,15 +1498,15 @@ public class ISOIOLibrary extends Library {
                 Object obj = i.next();
                 option = (Struct) obj;
                 if (option.getName().equals("variables")) {
-                    variables = new Struct();
+                    variables = Struct.emptyList();
                     variables = (Struct) Term.createTerm(vars.toString());
                     unify(option.getArg(0), variables);
                 } else if (option.getName().equals("variable_name")) {
-                    variable_names = new Struct();
+                    variable_names = Struct.emptyList();
                     variable_names = (Struct) Term.createTerm(associations_table.toString());
                     unify(option.getArg(0), variable_names);
                 } else if (option.getName().equals("singletons")) {
-                    singletons = new Struct();
+                    singletons = Struct.emptyList();
                     singletons = (Struct) Term.createTerm(singl.toString());
                     unify(option.getArg(0), singletons);
                 }
@@ -1541,7 +1542,7 @@ public class ISOIOLibrary extends Library {
 
     public boolean read_2(Term stream_or_alias, Term in_term) throws PrologError {
         initLibrary();
-        Struct options = new Struct(".", new Struct());
+        Struct options = new Struct(".", Struct.emptyList());
         return read_term_3(stream_or_alias, in_term, options);
     }
 
@@ -1826,7 +1827,7 @@ public class ISOIOLibrary extends Library {
         initLibrary();
         Struct options = new Struct(".", new Struct("quoted", new Struct("false")),
                                     new Struct(".", new Struct("ignore_ops", new Struct("false")),
-                                               new Struct(".", new Struct("numbervars", new Struct("true")), new Struct())));
+                                               new Struct(".", new Struct("numbervars", new Struct("true")), Struct.emptyList())));
         return write_term_3(stream_or_alias, out_term, options);
     }
 
@@ -1843,7 +1844,7 @@ public class ISOIOLibrary extends Library {
         Struct stream_or_alias = new Struct(outputStream.toString());
         Struct options = new Struct(".", new Struct("quoted", new Struct("false")),
                                     new Struct(".", new Struct("ignore_ops", new Struct("false")),
-                                               new Struct(".", new Struct("numbervars", new Struct("true")), new Struct())));
+                                               new Struct(".", new Struct("numbervars", new Struct("true")), Struct.emptyList())));
         return write_term_3(stream_or_alias, out_term, options);
     }
 
@@ -1852,7 +1853,7 @@ public class ISOIOLibrary extends Library {
         Struct stream_or_alias = new Struct(outputStream.toString());
         Struct options = new Struct(".", new Struct("quoted", new Struct("true")),
                                     new Struct(".", new Struct("ignore_ops", new Struct("false")),
-                                               new Struct(".", new Struct("numbervars", new Struct("true")), new Struct())));
+                                               new Struct(".", new Struct("numbervars", new Struct("true")), Struct.emptyList())));
         return write_term_3(stream_or_alias, out_term, options);
     }
 
@@ -1860,7 +1861,7 @@ public class ISOIOLibrary extends Library {
         initLibrary();
         Struct options = new Struct(".", new Struct("quoted", new Struct("true")),
                                     new Struct(".", new Struct("ignore_ops", new Struct("false")),
-                                               new Struct(".", new Struct("numbervars", new Struct("true")), new Struct())));
+                                               new Struct(".", new Struct("numbervars", new Struct("true")), Struct.emptyList())));
         return write_term_3(stream_or_alias, out_term, options);
     }
 
@@ -1869,7 +1870,7 @@ public class ISOIOLibrary extends Library {
         Struct stream_or_alias = new Struct(outputStream.toString());
         Struct options = new Struct(".", new Struct("quoted", new Struct("true")),
                                     new Struct(".", new Struct("ignore_ops", new Struct("true")),
-                                               new Struct(".", new Struct("numbervars", new Struct("false")), new Struct())));
+                                               new Struct(".", new Struct("numbervars", new Struct("false")), Struct.emptyList())));
         return write_term_3(stream_or_alias, out_term, options);
     }
 
@@ -1877,7 +1878,7 @@ public class ISOIOLibrary extends Library {
         initLibrary();
         Struct options = new Struct(".", new Struct("quoted", new Struct("true")),
                                     new Struct(".", new Struct("ignore_ops", new Struct("true")),
-                                               new Struct(".", new Struct("numbervars", new Struct("false")), new Struct())));
+                                               new Struct(".", new Struct("numbervars", new Struct("false")), Struct.emptyList())));
         return write_term_3(stream_or_alias, out_term, options);
     }
 
@@ -1928,12 +1929,12 @@ public class ISOIOLibrary extends Library {
         map.put("mode", new Struct(mode));
         map.put("input", new Struct("false"));
         map.put("output", new Struct("false"));
-        map.put("alias", new Struct());
+        map.put("alias", Struct.emptyList());
         map.put("position", Int.of(0));
         map.put("end_of_stream", new Struct("not"));
         map.put("eof_action", new Struct("error"));
         map.put("reposition", new Struct("false"));
-        map.put("type", new Struct());
+        map.put("type", Struct.emptyList());
         return true;
     }
 

@@ -125,12 +125,15 @@ public class BasicLibrary extends Library {
 
     public boolean get_operators_list_1(Term argument) {
         Term arg = argument.getTerm();
-        Struct list = new Struct();
+        Struct list = Struct.emptyList();
         java.util.Iterator<Operator> it = getEngine().getCurrentOperatorList().iterator();
         while (it.hasNext()) {
             Operator o = it.next();
-            list = new Struct(new Struct("op", Int.of(o.getPriority()),
-                    new Struct(o.getAssociativity().name().toLowerCase()), new Struct(o.getName())), list);
+            list = Struct.cons(
+                    Struct.of("op", Int.of(o.getPriority()),
+                        Struct.atom(o.getAssociativity().name().toLowerCase()), Struct.atom(o.getName())),
+                    list
+            );
         }
         return unify(arg, list);
     }
@@ -1006,7 +1009,7 @@ public class BasicLibrary extends Library {
     }
 
     public boolean $dynamic_predicates_1(Term arg0) {
-        Struct clauses = new Struct(
+        Struct clauses = Struct.list(
                 getEngine().getTheoryManager()
                         .dynamicClausesStream()
                         .map(ClauseInfo::getHead)
@@ -1034,7 +1037,7 @@ public class BasicLibrary extends Library {
         }
         Stream<? extends Term> terms = arg0.castTo(Struct.class).listStream();
         terms = sortLexicographically(terms.map(Term.class::cast));
-        return unify(arg1, new Struct(terms));
+        return unify(arg1, Struct.list(terms));
     }
 
     public boolean $remove_duplicates_2(Term arg0, Term arg1) throws PrologError {
@@ -1047,11 +1050,11 @@ public class BasicLibrary extends Library {
         }
         Stream<? extends Term> terms = arg0.castTo(Struct.class).listStream();
         terms = removeDuplicates(sortLexicographically(terms.map(Term.class::cast)));
-        return unify(arg1, new Struct(terms));
+        return unify(arg1, Struct.list(terms));
     }
 
     public boolean $static_predicates_1(Term arg0) {
-        Struct clauses = new Struct(
+        Struct clauses = Struct.list(
                 getEngine().getTheoryManager()
                         .staticClausesStream()
                         .map(ClauseInfo::getHead)
@@ -1062,7 +1065,7 @@ public class BasicLibrary extends Library {
     }
 
     public boolean $predicates_1(Term arg0) {
-        Struct clauses = new Struct(
+        Struct clauses = Struct.list(
                 getEngine().getTheoryManager()
                         .clausesStream()
                         .map(ClauseInfo::getHead)
@@ -1166,7 +1169,7 @@ public class BasicLibrary extends Library {
 
     public boolean $wt_unify_3(Term witness, Term wtList, Term tList) {
         Struct list = (Struct) wtList.getTerm();
-        Struct result = new Struct();
+        Struct result = Struct.emptyList();
         for (java.util.Iterator<? extends Term> it = list.listIterator(); it.hasNext(); ) {
             Struct element = (Struct) it.next();
             Term w = element.getArg(0);
@@ -1180,7 +1183,7 @@ public class BasicLibrary extends Library {
 
     public boolean $s_next0_3(Term witness, Term wtList, Term sNext) {
         Struct list = (Struct) wtList.getTerm();
-        Struct result = new Struct();
+        Struct result = Struct.emptyList();
         for (java.util.Iterator<? extends Term> it = list.listIterator(); it.hasNext(); ) {
             Struct element = (Struct) it.next();
             Term w = element.getArg(0);

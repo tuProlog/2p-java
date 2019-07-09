@@ -134,9 +134,9 @@ public class ISOLibrary extends Library {
             String string = arg0.toString();
             Term[] numberList = new Term[string.length()];
             for (int i = 0; i < string.length(); i++) {
-                numberList[i] = new Struct(new String(new char[]{string.charAt(i)}));
+                numberList[i] = Struct.atom(new String(new char[]{string.charAt(i)}));
             }
-            Struct list = new Struct(numberList);
+            Struct list = Struct.list(numberList);
 
             return unify(arg1, list);
         }
@@ -181,7 +181,7 @@ public class ISOLibrary extends Library {
             for (int i = 0; i < st.length(); i++) {
                 tlist[i] = new Struct(new String(new char[]{st.charAt(i)}));
             }
-            Struct list = new Struct(tlist);
+            Struct list = Struct.list(tlist);
             /*
              * for (int i=0; i<st.length(); i++){ Struct ch=new Struct(new
              * String(new char[]{ st.charAt(st.length()-i-1)} )); list=new
@@ -227,7 +227,7 @@ public class ISOLibrary extends Library {
             for (int i = 0; i < st.length(); i++) {
                 codesList[i] = Int.of(st.charAt(i));
             }
-            Struct list = new Struct(codesList);
+            Struct list = Struct.list(codesList);
             return unify(arg1, list);
         }
     }

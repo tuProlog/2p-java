@@ -451,7 +451,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                     Var.of("_f"),
                                                                     new Struct(".",
                                                                                new Struct("g"),
-                                                                               new Struct())))),
+                                                                               Struct.emptyList())))),
                                    new Struct(";",
                                               Int.of(1),
                                               new Struct(",",
@@ -536,7 +536,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "my_last(X,[X])",
                         new Struct("my_last",
                                    Var.of("X"),
-                                   new Struct(".", Var.of("X"), new Struct()))
+                                   new Struct(".", Var.of("X"), Struct.emptyList()))
                 ),
                 Stream.of(
                         "my_last(X,[_|L]) :- my_last(X,L)",
@@ -606,7 +606,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                 Stream.of(
                         "my_length([],0)",
                         new Struct("my_length",
-                                   new Struct(),
+                                   Struct.emptyList(),
                                    Int.of(0))
                 ),
                 Stream.of(
@@ -634,13 +634,13 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    new Struct("my_rev",
                                               Var.of("L1"),
                                               Var.of("L2"),
-                                              new Struct()))
+                                              Struct.emptyList()))
                 ),
                 Stream.of(
                         "my_rev([],L2,L2) :- !",
                         new Struct(":-",
                                    new Struct("my_rev",
-                                              new Struct(),
+                                              Struct.emptyList(),
                                               Var.of("L2"),
                                               Var.of("L2")),
                                    new Struct("!"))
@@ -671,7 +671,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         new Struct(":-",
                                    new Struct("my_flatten",
                                               Var.of("X"),
-                                              new Struct(Var.of("X"))),
+                                              Struct.list(Var.of("X"))),
                                    new Struct("\\+",
                                               new Struct("is_list",
                                                          Var.of("X"))))
@@ -679,8 +679,8 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                 Stream.of(
                         "my_flatten([],[])",
                         new Struct("my_flatten",
-                                   new Struct(),
-                                   new Struct())
+                                   Struct.emptyList(),
+                                   Struct.emptyList())
                 ),
                 Stream.of(
                         "my_flatten([X|Xs],Zs) :- my_flatten(X,Y), my_flatten(Xs,Ys), append(Y,Ys,Zs)",
@@ -720,10 +720,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         new Struct(":-",
                                    new Struct("count",
                                               Var.of("X"),
-                                              new Struct(),
-                                              new Struct(),
+                                              Struct.emptyList(),
+                                              Struct.emptyList(),
                                               Var.of("N"),
-                                           new Struct(new Var[]{Var.of("N"), Var.of("X")})),
+                                              Struct.list(Var.of("N"), Var.of("X"))),
                                    new Struct(">",
                                               Var.of("N"),
                                               Int.of(1)))
@@ -749,7 +749,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               new Struct(".", Var.of("Y"), Var.of("Ys")),
                                               new Struct(".", Var.of("Y"), Var.of("Ys")),
                                               Var.of("N"),
-                                           new Struct(new Var[]{Var.of("N"), Var.of("X")})),
+                                              Struct.list(Var.of("N"), Var.of("X"))),
                                    new Struct(",",
                                               new Struct(">",
                                                          Var.of("N"),
@@ -896,7 +896,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                           Var.of("C")),
                                                                                new Struct("format",
                                                                                           new Struct("~s"),
-                                                                                          new Struct(Var.of("C"))))))))
+                                                                                          Struct.list(Var.of("C"))))))))
                 ),
                 Stream.of(
                         "display_offset(X, Y) :- player(XPos, YPos), tty_size(YSize, XSize), message_lines(YMsgs), X is XPos - floor(XSize / 2), Y is YPos - floor((YSize - YMsgs) / 2)",
@@ -936,7 +936,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                                                            Int.of(2))))))))))
                 )
         ).map(s -> s.toArray(Object[]::new))
-                     .toArray(Object[][]::new);
+         .toArray(Object[][]::new);
     }
 }
 

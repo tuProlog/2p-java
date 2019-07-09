@@ -119,8 +119,8 @@ public class Struct extends Term {
     }
 
     @SuppressWarnings({"deprecated"})
-    public static Struct of(String functor, Term first, Term... others) {
-        return new Struct(functor, Stream.concat(Stream.of(first), Stream.of(others)).toArray(Term[]::new));
+    public static Struct of(String functor, Term... terms) {
+        return new Struct(functor, terms);
     }
 
     @SuppressWarnings({"deprecated"})
@@ -234,7 +234,7 @@ public class Struct extends Term {
      * Builds a structure representing an emptyWithStandardOperators list
      */
     @Deprecated
-    public Struct() {
+    private Struct() {
         this("[]", 0);
         resolved = true;
     }
@@ -258,17 +258,17 @@ public class Struct extends Term {
      * Builds a list specifying the elements
      */
     @Deprecated
-    public Struct(Term... argList) {
+    private Struct(Term... argList) {
         this(argList, 0);
     }
 
     @Deprecated
-    public Struct(Stream<? extends Term> stream) {
+    private Struct(Stream<? extends Term> stream) {
         this(stream.iterator());
     }
 
     @Deprecated
-    public Struct(Iterator<? extends Term> i) {
+    private Struct(Iterator<? extends Term> i) {
         this(".", 2);
         if (i.hasNext()) {
             arg[0] = Objects.requireNonNull(i.next());
@@ -298,7 +298,7 @@ public class Struct extends Term {
      * Builds a compound, with a linked list of arguments
      */
     @Deprecated
-    Struct(String f, Deque<Term> al) {
+    private Struct(String f, Deque<Term> al) {
         name = f;
         arity = al.size();
         if (arity > 0) {

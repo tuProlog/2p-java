@@ -19,7 +19,7 @@ public class DoubleTestCase extends TestCase {
 
     public void testEqualsToStruct() {
         alice.tuprolog.Double zero = alice.tuprolog.Double.of(0);
-        Struct s = new Struct();
+        Struct s = Struct.emptyList();
         assertFalse(zero.equals(s));
     }
 

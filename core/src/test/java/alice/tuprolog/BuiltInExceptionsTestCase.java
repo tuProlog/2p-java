@@ -457,7 +457,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("$find", Var.of("X"), new Struct())));
+        assertTrue(g.isEqual(new Struct("$find", Var.of("X"), Struct.emptyList())));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }

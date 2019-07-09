@@ -41,7 +41,7 @@ public class JavaException extends PrologException {
             messageTerm = Int.of(0);
         }
         // StackTrace
-        Struct stackTraceTerm = new Struct();
+        Struct stackTraceTerm = Struct.emptyList();
         StackTraceElement[] elements = wrapped.getStackTrace();
         for (StackTraceElement element : elements) {
             stackTraceTerm.append(new Struct(element.toString()));

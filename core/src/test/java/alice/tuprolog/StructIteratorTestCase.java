@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class StructIteratorTestCase extends TestCase {
 
     public void testEmptyIterator() {
-        Struct list = new Struct();
+        Struct list = Struct.emptyList();
         Iterator<? extends Term> i = list.listIterator();
         assertFalse(i.hasNext());
         try {
@@ -22,7 +22,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testIteratorCount() {
-        Struct list = new Struct(new Term[]{Int.of(1), Int.of(2), Int.of(3), Int.of(5), Int.of(7)});
+        Struct list = Struct.list(Int.of(1), Int.of(2), Int.of(3), Int.of(5), Int.of(7));
         Iterator<? extends Term> i = list.listIterator();
         int count = 0;
         for (; i.hasNext(); count++) {
@@ -33,7 +33,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testMultipleHasNext() {
-        Struct list = new Struct(new Term[]{new Struct("p"), new Struct("q"), new Struct("r")});
+        Struct list = Struct.list(new Struct("p"), new Struct("q"), new Struct("r"));
         Iterator<? extends Term> i = list.listIterator();
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
@@ -42,7 +42,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testMultipleNext() {
-        Struct list = new Struct(new Term[]{Int.of(0), Int.of(1), Int.of(2), Int.of(3), Int.of(5), Int.of(7)});
+        Struct list = Struct.list(Int.of(0), Int.of(1), Int.of(2), Int.of(3), Int.of(5), Int.of(7));
         Iterator<? extends Term> i = list.listIterator();
         assertTrue(i.hasNext());
         i.next(); // skip the first term
@@ -61,7 +61,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testRemoveOperationNotSupported() {
-        Struct list = new Struct(Int.of(1), new Struct());
+        Struct list = new Struct(Int.of(1), Struct.emptyList());
         Iterator<? extends Term> i = list.listIterator();
         assertNotNull(i.next());
         try {
