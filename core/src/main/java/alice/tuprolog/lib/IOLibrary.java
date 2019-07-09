@@ -169,7 +169,7 @@ public class IOLibrary extends Library {
     }
 
     public boolean seeing_1(Term t) {
-        return unify(t, new Struct(inputStreamName));
+        return unify(t, Struct.of(inputStreamName));
     }
 
     public boolean tell_1(Term arg) throws PrologError {
@@ -178,8 +178,7 @@ public class IOLibrary extends Library {
             throw PrologError.instantiation_error(engine.getEngineManager(), 1);
         }
         if (!arg.isAtom()) {
-            throw PrologError.type_error(engine.getEngineManager(), 1, "atom",
-                                         arg);
+            throw PrologError.type_error(engine.getEngineManager(), 1, "atom", arg);
         }
         Struct arg0 = (Struct) arg.getTerm();
         if (outputStream != stdOut) /* If the current outputStream is the StandardOutput it will not be closed */ {
@@ -219,7 +218,7 @@ public class IOLibrary extends Library {
     }
 
     public boolean telling_1(Term arg0) {
-        return unify(arg0, new Struct(outputStreamName));
+        return unify(arg0, Struct.of(outputStreamName));
     }
 
     public boolean put_1(Term arg) throws PrologError {
@@ -245,7 +244,7 @@ public class IOLibrary extends Library {
                     } catch (IOException e) {
                         throw PrologError.permission_error(engine
                                                                    .getEngineManager(), "output", "stream",
-                                                           new Struct(outputStreamName), new Struct(e
+                                                           Struct.of(outputStreamName), Struct.of(e
                                                                                                             .getMessage()));
                     }
                 }
@@ -260,13 +259,13 @@ public class IOLibrary extends Library {
             ch = inputStream.read();
         } catch (IOException e) {
             throw PrologError.permission_error(engine.getEngineManager(),
-                                               "input", "stream", new Struct(inputStreamName), new Struct(
+                                               "input", "stream", Struct.of(inputStreamName), Struct.of(
                             e.getMessage()));
         }
         if (ch == -1) {
             return unify(arg0, Int.of(-1));
         } else {
-            return unify(arg0, new Struct(new Character((char) ch).toString()));
+            return unify(arg0, Struct.of(new Character((char) ch).toString()));
         }
     }
 
@@ -277,15 +276,15 @@ public class IOLibrary extends Library {
                 ch = inputStream.read();
             } catch (IOException e) {
                 throw PrologError.permission_error(engine.getEngineManager(),
-                                                   "input", "stream", new Struct(inputStreamName),
-                                                   new Struct(e.getMessage()));
+                                                   "input", "stream", Struct.of(inputStreamName),
+                                                   Struct.of(e.getMessage()));
             }
         } while (ch < 0x20 && ch >= 0);
         if (ch == -1) {
             return unify(arg0, Int.of(-1));
         } else {
             return unify(arg0,
-                         new Struct(new Character(((char) ch)).toString()));
+                         Struct.of(new Character(((char) ch)).toString()));
         }
     }
 
@@ -311,7 +310,7 @@ public class IOLibrary extends Library {
                 } catch (IOException e) {
                     throw PrologError.permission_error(engine
                                                                .getEngineManager(), "output", "stream",
-                                                       new Struct(outputStreamName), new Struct(e
+                                                       Struct.of(outputStreamName), Struct.of(e
                                                                                                         .getMessage()));
                 }
             }
@@ -334,8 +333,8 @@ public class IOLibrary extends Library {
                 ch = inputStream.read();
             } catch (IOException e) {
                 throw PrologError.permission_error(engine.getEngineManager(),
-                                                   "input", "stream", new Struct(inputStreamName),
-                                                   new Struct(e.getMessage()));
+                                                   "input", "stream", Struct.of(inputStreamName),
+                                                   Struct.of(e.getMessage()));
             }
 
             if (ch == -1) {
@@ -362,7 +361,7 @@ public class IOLibrary extends Library {
         try {
             unify(arg0, getEngine().toTerm(st));
         } catch (InvalidTermException e) {
-            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.getLine(), e.getPositionInLine(), new Struct(st));
+            throw PrologError.syntax_error(engine.getEngineManager(), -1, e.getLine(), e.getPositionInLine(), Struct.of(st));
         }
         return true;
     }
@@ -379,8 +378,8 @@ public class IOLibrary extends Library {
                 outputStream.write(arg0.toString().getBytes());
             } catch (IOException e) {
                 throw PrologError.permission_error(engine.getEngineManager(),
-                                                   "output", "stream", new Struct(outputStreamName),
-                                                   new Struct(e.getMessage()));
+                                                   "output", "stream", Struct.of(outputStreamName),
+                                                   Struct.of(e.getMessage()));
             }
         }
         return true;
@@ -400,8 +399,8 @@ public class IOLibrary extends Library {
                         arg0.toString()).getBytes());
             } catch (IOException e) {
                 throw PrologError.permission_error(engine.getEngineManager(),
-                                                   "output", "stream", new Struct(outputStreamName),
-                                                   new Struct(e.getMessage()));
+                                                   "output", "stream", Struct.of(outputStreamName),
+                                                   Struct.of(e.getMessage()));
             }
         }
         return true;
@@ -416,8 +415,8 @@ public class IOLibrary extends Library {
                 outputStream.write('\n');
             } catch (IOException e) {
                 throw PrologError.permission_error(engine.getEngineManager(),
-                                                   "output", "stream", new Struct(outputStreamName),
-                                                   new Struct(e.getMessage()));
+                                                   "output", "stream", Struct.of(outputStreamName),
+                                                   Struct.of(e.getMessage()));
             }
         }
         return true;
@@ -448,10 +447,10 @@ public class IOLibrary extends Library {
             path = engine.getCurrentDirectory() + File.separator + path;
         }
         try {
-            goal = new Struct(alice.util.Tools.loadText(path));
+            goal = Struct.of(alice.util.Tools.loadText(path));
         } catch (IOException e) {
             throw PrologError.existence_error(engine.getEngineManager(), 1,
-                                              "stream", file_name, new Struct(e.getMessage()));
+                                              "stream", file_name, Struct.of(e.getMessage()));
         }
         engine.resetDirectoryList(new File(path).getParent());
         return unify(text, goal);
@@ -559,8 +558,8 @@ public class IOLibrary extends Library {
                 outputStream.write(arg0.toString().getBytes());
             } catch (IOException e) {
                 throw PrologError.permission_error(engine.getEngineManager(),
-                                                   "output", "stream", new Struct(outputStreamName),
-                                                   new Struct(e.getMessage()));
+                                                   "output", "stream", Struct.of(outputStreamName),
+                                                   Struct.of(e.getMessage()));
             }
         }
         return true;

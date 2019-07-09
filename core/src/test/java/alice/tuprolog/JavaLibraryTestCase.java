@@ -36,11 +36,11 @@ public class JavaLibraryTestCase extends TestCase {
         TestCounter counter = new TestCounter();
         // check registering behaviour
         Struct t = lib.register(counter);
-        engine.solve(new Struct("demo", t));
+        engine.solve(Struct.of("demo", t));
         assertEquals(1, counter.getValue());
         // check unregistering behaviour
         lib.unregister(t);
-        SolveInfo goal = engine.solve(new Struct("demo", t));
+        SolveInfo goal = engine.solve(Struct.of("demo", t));
         assertFalse(goal.isSuccess());
     }
 

@@ -73,7 +73,7 @@ public class StateException extends State {
                 // This enables the dynamic linking of built-ins for
                 // terms coming from outside the demonstration context.
                 if (handlerTerm != curHandlerTerm) {
-                    handlerTerm = new Struct("call", curHandlerTerm);
+                    handlerTerm = Struct.of("call", curHandlerTerm);
                 }
                 Struct handler = (Struct) handlerTerm;
                 c.identify(handler);
@@ -164,10 +164,10 @@ public class StateException extends State {
                 // This enables the dynamic linking of built-ins for
                 // terms coming from outside the demonstration context.
                 if (handlerTerm != curHandlerTerm) {
-                    handlerTerm = new Struct("call", curHandlerTerm);
+                    handlerTerm = Struct.of("call", curHandlerTerm);
                 }
                 if (finallyTerm != curFinallyTerm) {
-                    finallyTerm = new Struct("call", curFinallyTerm);
+                    finallyTerm = Struct.of("call", curFinallyTerm);
                 }
 
                 Struct handler = (Struct) handlerTerm;

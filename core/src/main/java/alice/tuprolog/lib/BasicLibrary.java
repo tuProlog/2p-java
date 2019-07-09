@@ -57,7 +57,7 @@ public class BasicLibrary extends Library {
             getEngine().setTheory(Theory.parseLazilyWithOperators(theory.getName(), getEngine().getOperatorManager()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), Struct.of(ex.getMessage()));
         }
     }
 
@@ -80,7 +80,7 @@ public class BasicLibrary extends Library {
             getEngine().addTheory(Theory.parseLazilyWithStandardOperators(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), Struct.of(ex.getMessage()));
         }
     }
 
@@ -90,7 +90,7 @@ public class BasicLibrary extends Library {
     public boolean get_theory_1(Term arg) {
         arg = arg.getTerm();
         try {
-            Term theory = new Struct(getEngine().getTheory().toString());
+            Term theory = Struct.of(getEngine().getTheory().toString());
             return (unify(arg, theory));
         } catch (Exception ex) {
             return false;
@@ -772,7 +772,7 @@ public class BasicLibrary extends Library {
         getEngine().stdOutput(arg0.toString() +
                               "\n" + arg1.toString());
         if (!arg0.isGround()) {
-            return unify(arg0, new Struct(arg1.toString()));
+            return unify(arg0, Struct.of(arg1.toString()));
         } else {
             try {
                 String text = alice.util.Tools.removeApices(arg0.toString());
@@ -799,7 +799,7 @@ public class BasicLibrary extends Library {
         if (!source2.isAtom()) {
             throw PrologError.type_error(getEngine().getEngineManager(), 2, "atom", source2);
         }
-        return unify(dest, new Struct(((Struct) source1).getName() + ((Struct) source2).getName()));
+        return unify(dest, Struct.of(((Struct) source1).getName() + ((Struct) source2).getName()));
     }
 
     public boolean num_atom_2(Term arg0, Term arg1) throws PrologError {
@@ -816,7 +816,7 @@ public class BasicLibrary extends Library {
             } else {
                 st = Double.toString(n0.doubleValue());
             }
-            return (unify(arg1, new Struct(st)));
+            return (unify(arg1, Struct.of(st)));
         } else {
             if (!arg1.isAtom()) {
                 throw PrologError.type_error(getEngine().getEngineManager(), 2, "atom", arg1);
@@ -959,13 +959,13 @@ public class BasicLibrary extends Library {
         if (!(description instanceof Struct)) {
             throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
-        throw new PrologError(new Struct("error", error, term), ((Struct) description).getName());
+        throw new PrologError(Struct.of("error", error, term), ((Struct) description).getName());
     }
 
     public boolean throw_error_2(Term error, Term term) throws PrologError {
         error = error.getTerm();
         term = term.getTerm();
-        throw new PrologError(new Struct("error", error, term));
+        throw new PrologError(Struct.of("error", error, term));
     }
 
     private static final String THEORY;

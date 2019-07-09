@@ -33,12 +33,12 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testMultipleHasNext() {
-        Struct list = Struct.list(new Struct("p"), new Struct("q"), new Struct("r"));
+        Struct list = Struct.list(Struct.of("p"), Struct.of("q"), Struct.of("r"));
         Iterator<? extends Term> i = list.listIterator();
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
-        assertEquals(new Struct("p"), i.next());
+        assertEquals(Struct.of("p"), i.next());
     }
 
     public void testMultipleNext() {

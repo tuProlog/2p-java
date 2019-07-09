@@ -9,26 +9,26 @@ public class BuiltInTestCase extends TestCase {
 
     public void testConvertTermToGoal() throws InvalidTermException {
         Term t = Var.of("T");
-        Struct result = new Struct("call", t);
+        Struct result = Struct.of("call", t);
         assertEquals(result, BuiltIn.convertTermToGoal(t));
-        assertEquals(result, BuiltIn.convertTermToGoal(new Struct("call", t)));
+        assertEquals(result, BuiltIn.convertTermToGoal(Struct.of("call", t)));
 
         t = Int.of(2);
         assertNull(BuiltIn.convertTermToGoal(t));
 
-        t = new Struct("p", new Struct("a"), Var.of("B"), new Struct("c"));
+        t = Struct.of("p", Struct.of("a"), Var.of("B"), Struct.of("c"));
         result = (Struct) t;
         assertEquals(result, BuiltIn.convertTermToGoal(t));
 
         Var linked = Var.of("X");
-        linked.setLink(new Struct("!"));
+        linked.setLink(Struct.of("!"));
         Term[] arguments = new Term[]{linked, Var.of("Y")};
-        Term[] results = new Term[]{new Struct("!"), new Struct("call", Var.of("Y"))};
-        assertEquals((new Struct(";", results)).toString(), BuiltIn.convertTermToGoal(new Struct(";", arguments))
+        Term[] results = new Term[]{Struct.of("!"), Struct.of("call", Var.of("Y"))};
+        assertEquals((Struct.of(";", results)).toString(), BuiltIn.convertTermToGoal(Struct.of(";", arguments))
                                                                    .toString());
-        assertEquals((new Struct(",", results)).toString(), BuiltIn.convertTermToGoal(new Struct(",", arguments))
+        assertEquals((Struct.of(",", results)).toString(), BuiltIn.convertTermToGoal(Struct.of(",", arguments))
                                                                    .toString());
-        assertEquals((new Struct("->", results)).toString(), BuiltIn.convertTermToGoal(new Struct("->", arguments))
+        assertEquals((Struct.of("->", results)).toString(), BuiltIn.convertTermToGoal(Struct.of("->", arguments))
                                                                     .toString());
     }
 

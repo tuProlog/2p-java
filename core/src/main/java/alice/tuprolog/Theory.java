@@ -313,7 +313,7 @@ public class Theory implements Serializable {
 
     Struct getClauseListRepresentation() {
         if (clauseList == null) {
-            clauseList = new Struct(getClauses());
+            clauseList = Struct.list(getClauses());
         }
         return clauseList;
     }

@@ -218,7 +218,7 @@ public class Struct extends Term {
      * Builds a compound, with an array of arguments
      */
     @Deprecated
-    public Struct(String f, Term... argList) {
+    private Struct(String f, Term... argList) {
         this(f, argList.length);
         for (int i = 0; i < argList.length; i++) {
             if (argList[i] == null) {
@@ -240,7 +240,7 @@ public class Struct extends Term {
     }
 
     @Deprecated
-    public Struct(Collection<? extends Term> terms) {
+    private Struct(Collection<? extends Term> terms) {
         this(terms.iterator());
     }
 

@@ -325,7 +325,7 @@ public class TheoryManager implements Serializable {
         try {
             t = t.copy();
             if (!t.isClause()) {
-                t = new Struct(":-", t, new Struct("true"));
+                t = Struct.of(":-", t, Struct.of("true"));
             }
             primitiveManager.identifyPredicate(t);
             return t;
@@ -339,7 +339,7 @@ public class TheoryManager implements Serializable {
         while (!startGoalStack.empty()) {
             s = (s == null) ?
                 (Struct) startGoalStack.pop() :
-                new Struct(",", startGoalStack.pop(), s);
+                Struct.of(",", startGoalStack.pop(), s);
         }
         if (s != null) {
             try {

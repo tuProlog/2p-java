@@ -53,7 +53,7 @@ public class StateGoalEvaluation extends State {
                     PrologError error = (PrologError) t;
                     // sostituisco il gol in cui si ? verificato l'errore con il
                     // subgoal throw/1
-                    e.currentContext.currentGoal = new Struct("throw", error.getError());
+                    e.currentContext.currentGoal = Struct.of("throw", error.getError());
                     /*Castagna 06/2011*/
                     e.manager.exception(error.toString());
                     /**/
@@ -63,7 +63,7 @@ public class StateGoalEvaluation extends State {
 
                     // sostituisco il gol in cui si ? verificato l'errore con il
                     // subgoal java_throw/1
-                    e.currentContext.currentGoal = new Struct("java_throw", exception.toStruct());
+                    e.currentContext.currentGoal = Struct.of("java_throw", exception.toStruct());
                     /*Castagna 06/2011*/
                     e.manager.exception(exception.toStruct().toString());
                     /**/

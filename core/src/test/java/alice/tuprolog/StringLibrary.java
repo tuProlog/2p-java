@@ -25,6 +25,6 @@ public class StringLibrary extends Library {
 
     public boolean to_lower_case_2(Term arg0, Term arg1) {
         String dest = arg0.toString().toLowerCase();
-        return unify(arg1, new Struct(dest));
+        return unify(arg1, Struct.of(dest));
     }
 }

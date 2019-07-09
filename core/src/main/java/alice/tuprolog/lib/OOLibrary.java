@@ -407,10 +407,10 @@ public class OOLibrary extends Library {
      */
     protected void preregisterObjects() {
         try {
-            bindDynamicObject(new Struct("stdout"), System.out);
-            bindDynamicObject(new Struct("stderr"), System.err);
-            bindDynamicObject(new Struct("runtime"), Runtime.getRuntime());
-            bindDynamicObject(new Struct("current_thread"), Thread.currentThread());
+            bindDynamicObject(Struct.of("stdout"), System.out);
+            bindDynamicObject(Struct.of("stderr"), System.err);
+            bindDynamicObject(Struct.of("runtime"), Runtime.getRuntime());
+            bindDynamicObject(Struct.of("current_thread"), Thread.currentThread());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -861,7 +861,7 @@ public class OOLibrary extends Library {
             }
             URL[] urls = dynamicLoader.getURLs();
             final Struct pathTerm = Struct.list(
-                    Stream.of(urls).map(URL::getPath).map(File::new).map(File::getAbsolutePath).map(Struct::new)
+                    Stream.of(urls).map(URL::getPath).map(File::new).map(File::getAbsolutePath).map(Struct::atom)
             );
             return unify(paths, pathTerm);
         } catch (IllegalArgumentException e) {
@@ -1170,13 +1170,13 @@ public class OOLibrary extends Library {
             } else if (name.equals("class [Z")) {
                 boolean b = Array.getBoolean(obj, index.intValue());
                 if (b) {
-                    if (unify(what, alice.tuprolog.Term.TRUE)) {
+                    if (unify(what, Struct.truth(true))) {
                         return true;
                     } else {
                         throw new JavaException(new IllegalArgumentException(what.toString()));
                     }
                 } else {
-                    if (unify(what, alice.tuprolog.Term.FALSE)) {
+                    if (unify(what, Struct.of("false"))) {
                         return true;
                     } else {
                         throw new JavaException(new IllegalArgumentException(what.toString()));
@@ -1511,9 +1511,9 @@ public class OOLibrary extends Library {
         try {
             if (obj instanceof Boolean) {
                 if ((Boolean) obj) {
-                    return unify(id, Term.TRUE);
+                    return unify(id, Struct.truth(true));
                 } else {
-                    return unify(id, Term.FALSE);
+                    return unify(id, Struct.atom("false"));
                 }
             } else if (obj instanceof Byte) {
                 return unify(id, Int.of(((Byte) obj).intValue()));
@@ -1530,9 +1530,9 @@ public class OOLibrary extends Library {
                 return unify(id, Double.of(
                         ((java.lang.Double) obj).doubleValue()));
             } else if (obj instanceof String) {
-                return unify(id, new Struct((String) obj));
+                return unify(id, Struct.of((String) obj));
             } else if (obj instanceof Character) {
-                return unify(id, new Struct(((Character) obj).toString()));
+                return unify(id, Struct.of(((Character) obj).toString()));
             } else {
                 return bindDynamicObject(id, obj);
             }
@@ -1818,7 +1818,7 @@ public class OOLibrary extends Library {
      * @return
      */
     protected Struct generateFreshId() {
-        return new Struct("$obj_" + id++);
+        return Struct.of("$obj_" + id++);
     }
 
     /**
