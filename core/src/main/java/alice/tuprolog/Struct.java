@@ -213,75 +213,12 @@ public class Struct extends Term {
         resolved = false;
     }
 
-    /**
-     * Builds a Struct representing an atom
-     */
-    @Deprecated
-    public Struct(String f) {
-        this(f, 0);
-    }
-
-    /**
-     * Builds a compound, with one argument
-     */
-    @Deprecated
-    public Struct(String f, Term at0) {
-        this(f, new Term[]{at0});
-    }
-
-    /**
-     * Builds a compound, with two arguments
-     */
-    @Deprecated
-    public Struct(String f, Term at0, Term at1) {
-        this(f, new Term[]{at0, at1});
-    }
-
-    /**
-     * Builds a compound, with three arguments
-     */
-    @Deprecated
-    public Struct(String f, Term at0, Term at1, Term at2) {
-        this(f, new Term[]{at0, at1, at2});
-    }
-
-    /**
-     * Builds a compound, with four arguments
-     */
-    @Deprecated
-    public Struct(String f, Term at0, Term at1, Term at2, Term at3) {
-        this(f, new Term[]{at0, at1, at2, at3});
-    }
-
-    /**
-     * Builds a compound, with five arguments
-     */
-    @Deprecated
-    public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4) {
-        this(f, new Term[]{at0, at1, at2, at3, at4});
-    }
-
-    /**
-     * Builds a compound, with six arguments
-     */
-    @Deprecated
-    public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4, Term at5) {
-        this(f, new Term[]{at0, at1, at2, at3, at4, at5});
-    }
-
-    /**
-     * Builds a compound, with seven arguments
-     */
-    @Deprecated
-    public Struct(String f, Term at0, Term at1, Term at2, Term at3, Term at4, Term at5, Term at6) {
-        this(f, new Term[]{at0, at1, at2, at3, at4, at5, at6});
-    }
 
     /**
      * Builds a compound, with an array of arguments
      */
     @Deprecated
-    public Struct(String f, Term[] argList) {
+    public Struct(String f, Term... argList) {
         this(f, argList.length);
         for (int i = 0; i < argList.length; i++) {
             if (argList[i] == null) {

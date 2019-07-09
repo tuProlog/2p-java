@@ -24,11 +24,11 @@ public class Terms {
     }
 
     public static Struct directive(Term body) {
-        return Struct.of(":-", body);
+        return Struct.directive(body);
     }
 
     public static Struct rule(Term head, Term body) {
-        return Struct.of(":-", head, body);
+        return Struct.rule(head, body);
     }
 
     public static Struct atom(String atom) {

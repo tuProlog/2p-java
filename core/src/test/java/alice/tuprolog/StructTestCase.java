@@ -51,7 +51,7 @@ public class StructTestCase extends TestCase {
 
     public void testStructWithNullName() {
         try {
-            new Struct(null, Int.of(1), Int.of(2));
+            new Struct((String) null, Int.of(1), Int.of(2));
             fail();
         } catch (InvalidTermException expected) {
         }
