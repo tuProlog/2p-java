@@ -313,57 +313,57 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                 Stream.of(
                         "a :- 1",
                         Struct.of(":-",
-                                   Struct.of("a"),
+                                   Struct.atom("a"),
                                    Int.of(1))
                 ),
                 Stream.of(
                         "a; B :- 1",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Var.of("B")),
                                    Int.of(1))
                 ),
                 Stream.of(
                         "a :- 1; '2'",
                         Struct.of(":-",
-                                   Struct.of("a"),
+                                   Struct.atom("a"),
                                    Struct.of(";",
                                               Int.of(1),
-                                              Struct.of("2")))
+                                              Struct.atom("2")))
                 ),
                 Stream.of(
                         "a; B :- 1; '2'",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Var.of("B")),
                                    Struct.of(";",
                                               Int.of(1),
-                                              Struct.of("2")))
+                                              Struct.atom("2")))
                 ),
                 Stream.of(
                         "a; B :- 1, 3.1; '2'",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Var.of("B")),
                                    Struct.of(";",
                                               Struct.of(",",
                                                          Int.of(1),
                                                          Double.of(3.1)),
-                                              Struct.of("2")))
+                                              Struct.atom("2")))
                 ),
                 Stream.of(
                         "a; B :- 1; '2', 3.1",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Var.of("B")),
                                    Struct.of(";",
                                               Int.of(1),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Double.of(3.1))))
                 ),
                 Stream.of(
@@ -371,20 +371,20 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         Struct.of(":-",
                                    Struct.of(";",
                                               Struct.of(",",
-                                                         Struct.of("a"),
+                                                         Struct.atom("a"),
                                                          Struct.of("c", Var.of("D"))),
                                               Var.of("B")),
                                    Struct.of(";",
                                               Struct.of(",",
                                                          Int.of(1),
                                                          Double.of(3.1)),
-                                              Struct.of("2")))
+                                              Struct.atom("2")))
                 ),
                 Stream.of(
                         "a; B, c(D) :- 1, 3.1; '2'",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Struct.of(",",
                                                          Var.of("B"),
                                                          Struct.of("c", Var.of("D")))),
@@ -392,50 +392,50 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               Struct.of(",",
                                                          Int.of(1),
                                                          Double.of(3.1)),
-                                              Struct.of("2")))
+                                              Struct.atom("2")))
                 ),
                 Stream.of(
                         "a, c(D); B :- 1; '2', 3.1",
                         Struct.of(":-",
                                    Struct.of(";",
                                               Struct.of(",",
-                                                         Struct.of("a"),
+                                                         Struct.atom("a"),
                                                          Struct.of("c", Var.of("D"))),
                                               Var.of("B")),
                                    Struct.of(";",
                                               Int.of(1),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Double.of(3.1))))
                 ),
                 Stream.of(
                         "a; B, c(D) :- 1; '2', 3.1",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Struct.of(",",
                                                          Var.of("B"),
                                                          Struct.of("c", Var.of("D")))),
                                    Struct.of(";",
                                               Int.of(1),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Double.of(3.1))))
                 ),
                 Stream.of(
                         "a; B, c(D) :- 1, \"4\"; '2', 3.1",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Struct.of(",",
                                                          Var.of("B"),
                                                          Struct.of("c", Var.of("D")))),
                                    Struct.of(";",
                                               Struct.of(",",
                                                          Int.of(1),
-                                                         Struct.of("4")),
+                                                         Struct.atom("4")),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Double.of(3.1))))
                 ),
                 Stream.of(
@@ -443,28 +443,28 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         Struct.of(":-",
                                    Struct.of(";",
                                               Struct.of(",",
-                                                         Struct.of("a"),
+                                                         Struct.atom("a"),
                                                          Struct.of("c", Var.of("D"))),
                                               Struct.of(",",
                                                          Var.of("B"),
                                                          Struct.of("e",
                                                                     Var.of("_f"),
                                                                     Struct.of(".",
-                                                                               Struct.of("g"),
+                                                                               Struct.atom("g"),
                                                                                Struct.emptyList())))),
                                    Struct.of(";",
                                               Int.of(1),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Double.of(3.1))))
                 ),
                 Stream.of(
                         "a; b; B, c(D) :- 1, \"4\", 5; '2', 3.1, 6.7",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Struct.of(";",
-                                                         Struct.of("b"),
+                                                         Struct.atom("b"),
                                                          Struct.of(",",
                                                                     Var.of("B"),
                                                                     Struct.of("c",
@@ -473,10 +473,10 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               Struct.of(",",
                                                          Int.of(1),
                                                          Struct.of(",",
-                                                                    Struct.of("4"),
+                                                                    Struct.atom("4"),
                                                                     Int.of(5))),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Struct.of(",",
                                                                     Double.of(3.1),
                                                                     Double.of(6.7)))))
@@ -485,9 +485,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "a; b; B, c(D) :- 1, \"4\"; '2', 3.1",
                         Struct.of(":-",
                                    Struct.of(";",
-                                              Struct.of("a"),
+                                              Struct.atom("a"),
                                               Struct.of(";",
-                                                         Struct.of("b"),
+                                                         Struct.atom("b"),
                                                          Struct.of(",",
                                                                     Var.of("B"),
                                                                     Struct.of("c",
@@ -495,9 +495,9 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    Struct.of(";",
                                               Struct.of(",",
                                                          Int.of(1),
-                                                         Struct.of("4")),
+                                                         Struct.atom("4")),
                                               Struct.of(",",
-                                                         Struct.of("2"),
+                                                         Struct.atom("2"),
                                                          Double.of(3.1))))
                 ),
                 Stream.of(
@@ -506,13 +506,13 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                    Struct.of(";",
                                               Struct.of("->",
                                                          Struct.of(",",
-                                                                    Struct.of("b"),
+                                                                    Struct.atom("b"),
                                                                     Int.of(1)),
                                                          Int.of(2)),
                                               Struct.of(",",
                                                          Int.of(3),
                                                          Int.of(4))),
-                                   Struct.of("a"))
+                                   Struct.atom("a"))
                 )
         ).map(s -> s.toArray(Object[]::new))
                      .toArray(Object[][]::new);
@@ -643,7 +643,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                               Struct.emptyList(),
                                               Var.of("L2"),
                                               Var.of("L2")),
-                                   Struct.of("!"))
+                                   Struct.atom("!"))
                 ),
                 Stream.of(
                         "my_rev([X|Xs],L2,Acc) :- my_rev(Xs,L2,[X|Acc])",
@@ -832,7 +832,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "tile(wall, X, Y) :- \\+ in_map(X, Y)",
                         Struct.of(":-",
                                    Struct.of("tile",
-                                              Struct.of("wall"),
+                                              Struct.atom("wall"),
                                               Var.of("X"),
                                               Var.of("Y")),
                                    Struct.of("\\+",
@@ -872,7 +872,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                          Var.of("Y"),
                                                          Var.of("YMsgs")),
                                               Struct.of("write",
-                                                         Struct.of(" "))),
+                                                         Struct.atom(" "))),
                                    Struct.of(",",
                                               Struct.of("display_offset",
                                                          Var.of("XOff"),
@@ -895,7 +895,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                                                                                           Var.of("YMap"),
                                                                                           Var.of("C")),
                                                                                Struct.of("format",
-                                                                                          Struct.of("~s"),
+                                                                                          Struct.atom("~s"),
                                                                                           Struct.list(Var.of("C"))))))))
                 ),
                 Stream.of(

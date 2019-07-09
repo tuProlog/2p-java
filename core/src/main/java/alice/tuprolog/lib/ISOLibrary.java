@@ -151,7 +151,7 @@ public class ISOLibrary extends Library {
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
-                return unify(arg0, Struct.of(""));
+                return unify(arg0, Struct.atom(""));
             }
             String st = "";
             while (!(list.isEmptyList())) {
@@ -171,7 +171,7 @@ public class ISOLibrary extends Library {
                 st = st.concat(st1);
                 list = (Struct) list.getTerm(1);
             }
-            return unify(arg0, Struct.of(st));
+            return unify(arg0, Struct.atom(st));
         } else {
             if (!arg0.isAtom()) {
                 throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
@@ -179,7 +179,7 @@ public class ISOLibrary extends Library {
             String st = ((Struct) arg0).getName();
             Term[] tlist = new Term[st.length()];
             for (int i = 0; i < st.length(); i++) {
-                tlist[i] = Struct.of(new String(new char[]{st.charAt(i)}));
+                tlist[i] = Struct.atom(new String(new char[]{st.charAt(i)}));
             }
             Struct list = Struct.list(tlist);
             /*
@@ -201,7 +201,7 @@ public class ISOLibrary extends Library {
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
-                return unify(arg0, Struct.of(""));
+                return unify(arg0, Struct.atom(""));
             }
             StringBuilder sb = new StringBuilder();
             while (!(list.isEmptyList())) {
@@ -217,7 +217,7 @@ public class ISOLibrary extends Library {
 
                 list = list.listTail();
             }
-            return unify(arg0, Struct.of(sb.toString()));
+            return unify(arg0, Struct.atom(sb.toString()));
         } else {
             if (!arg0.isAtom()) {
                 throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
@@ -251,7 +251,7 @@ public class ISOLibrary extends Library {
         } else if ((arg1 instanceof Int)
                 || (arg1 instanceof alice.tuprolog.Long)) {
             char c = (char) ((Number) arg1).intValue();
-            return unify(arg0, Struct.of("" + c));
+            return unify(arg0, Struct.atom("" + c));
         } else {
             throw PrologError.type_error(getEngine().getEngineManager(), 2,
                     "integer", arg1);

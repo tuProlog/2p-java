@@ -224,7 +224,7 @@ public class ThreadLibraryTestCase {
         assertTrue(sinfo.isSuccess());
 
         Term X = sinfo.getVarValue("X");
-        assertEquals(Struct.of("messaggio molto importante"), X);
+        assertEquals(Struct.atom("messaggio molto importante"), X);
 
         theory =
                 "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), invio(ID, 'messaggio molto importante'), lettura(ID,X), thread_get_msg('CODA', a(X)).\n" +
@@ -238,7 +238,7 @@ public class ThreadLibraryTestCase {
         assertTrue(sinfo.isSuccess());
 
         Term X1 = sinfo.getVarValue("X");
-        assertEquals(Struct.of("messaggio molto importante"), X1);
+        assertEquals(Struct.atom("messaggio molto importante"), X1);
     }
 
     /**
@@ -260,7 +260,7 @@ public class ThreadLibraryTestCase {
         assertTrue(sinfo.isSuccess());
 
         Term X = sinfo.getVarValue("X");
-        assertEquals(Struct.of("messaggio molto importante"), X);
+        assertEquals(Struct.atom("messaggio molto importante"), X);
     }
 
     /**
@@ -293,7 +293,7 @@ public class ThreadLibraryTestCase {
         assertTrue(sinfo.isSuccess());
 
         Term X = sinfo.getVarValue("X");
-        assertEquals(Struct.of("messaggio molto importante"), X);
+        assertEquals(Struct.atom("messaggio molto importante"), X);
 
         theory = "start(X) :- msg_queue_create('CODA'), thread_create(ID, thread1(X)), lettura(ID,X).\n" +
                  "thread1(X) :- thread_peek_msg('CODA', a(X)). \n " +
@@ -334,7 +334,7 @@ public class ThreadLibraryTestCase {
         assertTrue(sinfo.isSuccess());
 
         Term X = sinfo.getVarValue("X");
-        assertEquals(Struct.of("messaggio molto importante"), X);
+        assertEquals(Struct.atom("messaggio molto importante"), X);
 
         //SI BLOCCA IN ATTESA DEL MESSAGGIO
 		/*theory = "start(X) :- message_queue_create('CODA'), thread_create(ID, thread1(X)), lettura(ID,X).\n" +	

@@ -33,7 +33,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("clause")));
+        assertTrue(validType.isEqual(Struct.atom("clause")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -61,7 +61,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("clause")));
+        assertTrue(validType.isEqual(Struct.atom("clause")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -89,7 +89,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("clause")));
+        assertTrue(validType.isEqual(Struct.atom("clause")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -117,7 +117,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("predicate_indicator")));
+        assertTrue(validType.isEqual(Struct.atom("predicate_indicator")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -134,7 +134,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("predicate_indicator")));
+        assertTrue(validType.isEqual(Struct.atom("predicate_indicator")));
         Struct culprit = (Struct) info.getTerm("Culprit");
         assertTrue(culprit.isEqual(Struct.of("p", Var.of("X"))));
     }
@@ -162,7 +162,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("integer")));
+        assertTrue(validType.isEqual(Struct.atom("integer")));
         Double culprit = (Double) info.getTerm("Culprit");
         assertTrue(culprit.doubleValue() == 1.5);
     }
@@ -190,7 +190,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -203,15 +203,15 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("load_library", Struct.of("a"))));
+        assertTrue(g.isEqual(Struct.of("load_library", Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ObjectType");
-        assertTrue(validType.isEqual(Struct.of("class")));
+        assertTrue(validType.isEqual(Struct.atom("class")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(Struct.of("InvalidLibraryException: a at -1:-1")));
+        assertTrue(message.isEqual(Struct.atom("InvalidLibraryException: a at -1:-1")));
     }
 
     // verifico che unload_library(X) lancia un errore di instanziazione
@@ -237,7 +237,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -250,15 +250,15 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("unload_library", Struct.of("a"))));
+        assertTrue(g.isEqual(Struct.of("unload_library", Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ObjectType");
-        assertTrue(validType.isEqual(Struct.of("class")));
+        assertTrue(validType.isEqual(Struct.atom("class")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(Struct.of("InvalidLibraryException: null at 0:0")));
+        assertTrue(message.isEqual(Struct.atom("InvalidLibraryException: null at 0:0")));
     }
 
     // verifico che '$call'(X) lancia un errore di instanziazione
@@ -284,7 +284,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("callable")));
+        assertTrue(validType.isEqual(Struct.atom("callable")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -308,13 +308,13 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("is", Var.of("X"), Struct.of("a"))));
+        assertTrue(g.isEqual(Struct.of("is", Var.of("X"), Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("evaluable")));
+        assertTrue(validType.isEqual(Struct.atom("evaluable")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che is(X, 1/0) lancia l'errore di valutazione "zero_divisor"
@@ -328,7 +328,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct error = (Struct) info.getTerm("Error");
-        assertTrue(error.isEqual(Struct.of("zero_divisor")));
+        assertTrue(error.isEqual(Struct.atom("zero_divisor")));
     }
 
     // verifico che is(X, 1//0) lancia l'errore di valutazione "zero_divisor"
@@ -342,7 +342,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct error = (Struct) info.getTerm("Error");
-        assertTrue(error.isEqual(Struct.of("zero_divisor")));
+        assertTrue(error.isEqual(Struct.atom("zero_divisor")));
     }
 
     // verifico che is(X, 1 div 0) lancia l'errore di valutazione "zero_divisor"
@@ -356,7 +356,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct error = (Struct) info.getTerm("Error");
-        assertTrue(error.isEqual(Struct.of("zero_divisor")));
+        assertTrue(error.isEqual(Struct.atom("zero_divisor")));
     }
 
     // verifico che '$tolist'(X, List) lancia un errore di instanziazione
@@ -385,7 +385,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("struct")));
+        assertTrue(validType.isEqual(Struct.atom("struct")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -411,13 +411,13 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("$fromlist", Var.of("Struct"),
-                                        Struct.of("a"))));
+                                        Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("list")));
+        assertTrue(validType.isEqual(Struct.atom("list")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che '$append'(a, X) lancia un errore di instanziazione
@@ -427,7 +427,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$append", Struct.of("a"),
+        assertTrue(g.isEqual(Struct.of("$append", Struct.atom("a"),
                                         Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
@@ -440,14 +440,14 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$append", Struct.of("a"), Struct.of(
+        assertTrue(g.isEqual(Struct.of("$append", Struct.atom("a"), Struct.atom(
                 "b"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("list")));
+        assertTrue(validType.isEqual(Struct.atom("list")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("b")));
+        assertTrue(culprit.isEqual(Struct.atom("b")));
     }
 
     // verifico che '$find'(X, []) lancia un errore di instanziazione
@@ -470,13 +470,13 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("$find", Struct.of("p", Var.of("X")),
-                                        Struct.of("a"))));
+                                        Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("list")));
+        assertTrue(validType.isEqual(Struct.atom("list")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che set_prolog_flag(X, 1) lancia un errore di instanziazione
@@ -499,7 +499,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("set_prolog_flag", Struct.of("a"),
+        assertTrue(g.isEqual(Struct.of("set_prolog_flag", Struct.atom("a"),
                                         Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
@@ -517,7 +517,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("struct")));
+        assertTrue(validType.isEqual(Struct.atom("struct")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -529,12 +529,12 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("set_prolog_flag", Struct.of("a"),
+        assertTrue(g.isEqual(Struct.of("set_prolog_flag", Struct.atom("a"),
                                         Struct.of("p", Var.of("X")))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("ground")));
+        assertTrue(validType.isEqual(Struct.atom("ground")));
         Struct culprit = (Struct) info.getTerm("Culprit");
         assertTrue(culprit.isEqual(Struct.of("p", Var.of("X"))));
     }
@@ -547,14 +547,14 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("set_prolog_flag", Struct.of("a"),
+        assertTrue(g.isEqual(Struct.of("set_prolog_flag", Struct.atom("a"),
                                         Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
-        assertTrue(validDomain.isEqual(Struct.of("prolog_flag")));
+        assertTrue(validDomain.isEqual(Struct.atom("prolog_flag")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che set_prolog_flag(bounded, a) lancia un errore di dominio
@@ -565,13 +565,13 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("set_prolog_flag",
-                                        Struct.of("bounded"), Struct.of("a"))));
+                                       Struct.atom("bounded"), Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
-        assertTrue(validDomain.isEqual(Struct.of("flag_value")));
+        assertTrue(validDomain.isEqual(Struct.atom("flag_value")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che set_prolog_flag(bounded, false) lancia un errore di permesso
@@ -582,13 +582,13 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("set_prolog_flag",
-                                        Struct.of("bounded"), Struct.of("false"))));
+                                       Struct.atom("bounded"), Struct.atom("false"))));
         Struct operation = (Struct) info.getTerm("Operation");
-        assertTrue(operation.isEqual(Struct.of("modify")));
+        assertTrue(operation.isEqual(Struct.atom("modify")));
         Struct objectType = (Struct) info.getTerm("ObjectType");
-        assertTrue(objectType.isEqual(Struct.of("flag")));
+        assertTrue(objectType.isEqual(Struct.atom("flag")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("bounded")));
+        assertTrue(culprit.isEqual(Struct.atom("bounded")));
         Term message = info.getTerm("Message");
         assertTrue(message.isEqual(Int.of(0)));
     }
@@ -618,7 +618,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("struct")));
+        assertTrue(validType.isEqual(Struct.atom("struct")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -631,14 +631,14 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("get_prolog_flag", Struct.of("a"),
+        assertTrue(g.isEqual(Struct.of("get_prolog_flag", Struct.atom("a"),
                                         Var.of("Value"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
-        assertTrue(validDomain.isEqual(Struct.of("prolog_flag")));
+        assertTrue(validDomain.isEqual(Struct.atom("prolog_flag")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che '$op'(Priority, yfx, '+') lancia un errore di instanziazione
@@ -648,8 +648,8 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$op", Var.of("Priority"), Struct.of(
-                "yfx"), Struct.of("+"))));
+        assertTrue(g.isEqual(Struct.of("$op", Var.of("Priority"), Struct.atom(
+                "yfx"), Struct.atom("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -663,7 +663,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Var.of(
-                "Specifier"), Struct.of("+"))));
+                "Specifier"), Struct.atom("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
     }
@@ -675,7 +675,7 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Struct.of("yfx"),
+        assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Struct.atom("yfx"),
                                         Var.of("Operator"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 3);
@@ -688,14 +688,14 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$op", Struct.of("a"), Struct.of(
-                "yfx"), Struct.of("+"))));
+        assertTrue(g.isEqual(Struct.of("$op", Struct.atom("a"), Struct.atom(
+                "yfx"), Struct.atom("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("integer")));
+        assertTrue(validType.isEqual(Struct.atom("integer")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che '$op'(600, 1, '+') lancia un errore di tipo
@@ -706,11 +706,11 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Int.of(1),
-                                        Struct.of("+"))));
+                                        Struct.atom("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -722,12 +722,12 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Struct.of("yfx"),
+        assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Struct.atom("yfx"),
                                         Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 3);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom_or_atom_list")));
+        assertTrue(validType.isEqual(Struct.atom("atom_or_atom_list")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -740,11 +740,11 @@ public class BuiltInExceptionsTestCase extends TestCase {
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
         assertTrue(g.isEqual(Struct.of("$op", Int.of(1300),
-                                        Struct.of("yfx"), Struct.of("+"))));
+                                       Struct.atom("yfx"), Struct.atom("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
-        assertTrue(validDomain.isEqual(Struct.of("operator_priority")));
+        assertTrue(validDomain.isEqual(Struct.atom("operator_priority")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1300);
     }
@@ -756,14 +756,14 @@ public class BuiltInExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Struct.of("a"),
-                                        Struct.of("+"))));
+        assertTrue(g.isEqual(Struct.of("$op", Int.of(600), Struct.atom("a"),
+                                        Struct.atom("+"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
-        assertTrue(validDomain.isEqual(Struct.of("operator_specifier")));
+        assertTrue(validDomain.isEqual(Struct.atom("operator_specifier")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
 }

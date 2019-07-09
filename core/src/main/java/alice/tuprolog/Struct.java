@@ -119,7 +119,11 @@ public class Struct extends Term {
     }
 
     @SuppressWarnings({"deprecated"})
-    public static Struct of(String functor, Term... terms) {
+    public static Struct of(String functor, Term term1, Term... terms) {
+        return new Struct(functor, Stream.concat(Stream.of(term1), Stream.of(terms)).toArray(Term[]::new));
+    }
+
+    public static Struct of(String functor, Term[] terms) {
         return new Struct(functor, terms);
     }
 

@@ -28,7 +28,7 @@ public class JavaException extends PrologException {
         Term causeTerm = null;
         Throwable cause = wrapped.getCause();
         if (cause != null) {
-            causeTerm = Struct.of(cause.toString());
+            causeTerm = Struct.atom(cause.toString());
         } else {
             causeTerm = Int.of(0);
         }
@@ -36,7 +36,7 @@ public class JavaException extends PrologException {
         Term messageTerm = null;
         String message = wrapped.getMessage();
         if (message != null) {
-            messageTerm = Struct.of(message);
+            messageTerm = Struct.atom(message);
         } else {
             messageTerm = Int.of(0);
         }
@@ -44,7 +44,7 @@ public class JavaException extends PrologException {
         Struct stackTraceTerm = Struct.emptyList();
         StackTraceElement[] elements = wrapped.getStackTrace();
         for (StackTraceElement element : elements) {
-            stackTraceTerm.append(Struct.of(element.toString()));
+            stackTraceTerm.append(Struct.atom(element.toString()));
         }
         // return
         return Struct.of(java_exception, causeTerm, messageTerm,

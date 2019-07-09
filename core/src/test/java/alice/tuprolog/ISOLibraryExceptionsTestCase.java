@@ -32,7 +32,7 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -48,7 +48,7 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -60,13 +60,13 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("atom_chars", Var.of("X"), Struct.of("a"))));
+        assertTrue(g.isEqual(Struct.of("atom_chars", Var.of("X"), Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("list")));
+        assertTrue(validType.isEqual(Struct.atom("list")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che char_code(ab, X) lancia un errore di tipo
@@ -76,13 +76,13 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("char_code", Struct.of("ab"), Var.of("X"))));
+        assertTrue(g.isEqual(Struct.of("char_code", Struct.atom("ab"), Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("character")));
+        assertTrue(validType.isEqual(Struct.atom("character")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("ab")));
+        assertTrue(culprit.isEqual(Struct.atom("ab")));
     }
 
     // verifico che char_code(X, a) lancia un errore di tipo
@@ -92,13 +92,13 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(Struct.of("char_code", Var.of("X"), Struct.of("a"))));
+        assertTrue(g.isEqual(Struct.of("char_code", Var.of("X"), Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("integer")));
+        assertTrue(validType.isEqual(Struct.atom("integer")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(Struct.of("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che sub_atom(1, B, C, D, E) lancia un errore di tipo
@@ -112,7 +112,7 @@ public class ISOLibraryExceptionsTestCase extends TestCase {
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(Struct.of("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }

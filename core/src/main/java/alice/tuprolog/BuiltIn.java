@@ -216,7 +216,7 @@ public class BuiltIn extends Library {
             if (c != null) {
                 Struct clause = null;
                 if (!sarg0.isClause()) {
-                    clause = Struct.of(":-", arg0, Struct.of("true"));
+                    clause = Struct.of(":-", arg0, Struct.atom("true"));
                 } else {
                     clause = sarg0;
                 }
@@ -253,8 +253,8 @@ public class BuiltIn extends Library {
                         getEngine().getEngineManager(),
                         "modify",
                         "static_procedure",
-                        Struct.of("/", Struct.of(functor), Int.of(arity)),
-                        Struct.of(String.format("No permission to modify static procedure `%s`", indicator))
+                        Struct.of("/", Struct.atom(functor), Int.of(arity)),
+                        Struct.atom(String.format("No permission to modify static procedure `%s`", indicator))
                 );
             }
         } else {
@@ -293,7 +293,7 @@ public class BuiltIn extends Library {
             return true;
         } catch (Exception ex) {
             throw PrologError.existence_error(getEngine().getEngineManager(), 1, "class", arg0,
-                                              Struct.of(ex.getMessage()));
+                                              Struct.atom(ex.getMessage()));
         }
     }
 
@@ -317,14 +317,14 @@ public class BuiltIn extends Library {
         try {
             String[] paths = getStringArrayFromStruct((Struct) arg1);
             if (paths == null || paths.length == 0) {
-                throw PrologError.existence_error(getEngine().getEngineManager(), 2, "paths", arg1, Struct.of("Invalid paths' list."));
+                throw PrologError.existence_error(getEngine().getEngineManager(), 2, "paths", arg1, Struct.atom("Invalid paths' list."));
             }
             getEngine().getLibraryManager().loadLibrary(((Struct) arg0).getName(), paths);
             return true;
 
         } catch (Exception ex) {
             throw PrologError.existence_error(getEngine().getEngineManager(), 1, "class", arg0,
-                                              Struct.of(ex.getMessage()));
+                                              Struct.atom(ex.getMessage()));
         }
     }
 
@@ -356,7 +356,7 @@ public class BuiltIn extends Library {
             return true;
         } catch (Exception ex) {
             throw PrologError.existence_error(getEngine().getEngineManager(), 1, "class", arg0,
-                                              Struct.of(ex.getMessage()));
+                                              Struct.atom(ex.getMessage()));
         }
     }
 

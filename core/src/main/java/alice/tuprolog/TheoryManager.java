@@ -325,7 +325,7 @@ public class TheoryManager implements Serializable {
         try {
             t = t.copy();
             if (!t.isClause()) {
-                t = Struct.of(":-", t, Struct.of("true"));
+                t = Struct.of(":-", t, Struct.atom("true"));
             }
             primitiveManager.identifyPredicate(t);
             return t;

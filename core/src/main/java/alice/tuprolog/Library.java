@@ -279,16 +279,16 @@ public abstract class Library implements Serializable, IPrimitives {
         if (getEngine() == null) return struct;
 
         if (getEngine().getPrimitiveManager().isPredicate(struct) || getEngine().getTheoryManager().isStatic(struct)) {
-            final Struct indicator = Struct.of("/", Struct.of(struct.getName()), Int.of(struct.getArity()));
+            final Struct indicator = Struct.of("/", Struct.atom(struct.getName()), Int.of(struct.getArity()));
             throw PrologError.permission_error(
                     getEngine().getEngineManager(),
                     operation,
                     objectType,
                     indicator,
-                    Struct.of(String.format("No permission to %s %s`%s`",
-                                             operation,
-                                             objectType.replace("_", " "),
-                                             indicator))
+                    Struct.atom(String.format("No permission to %s %s`%s`",
+                                              operation,
+                                              objectType.replace("_", " "),
+                                              indicator))
             );
         }
         return struct;

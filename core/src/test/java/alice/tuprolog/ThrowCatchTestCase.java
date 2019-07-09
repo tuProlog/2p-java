@@ -19,7 +19,7 @@ public class ThrowCatchTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct e = (Struct) info.getTerm("E");
-        assertTrue(e.isEqual(Struct.of("error")));
+        assertTrue(e.isEqual(Struct.atom("error")));
         Int length = (Int) info.getTerm("Length");
         assertTrue(length.intValue() == 5);
         Int x = (Int) info.getTerm("X");
@@ -38,7 +38,7 @@ public class ThrowCatchTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct e = (Struct) info.getTerm("E");
-        assertTrue(e.isEqual(Struct.of("error")));
+        assertTrue(e.isEqual(Struct.atom("error")));
         Int length = (Int) info.getTerm("Length");
         assertTrue(length.intValue() == 5);
     }

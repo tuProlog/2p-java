@@ -407,10 +407,10 @@ public class OOLibrary extends Library {
      */
     protected void preregisterObjects() {
         try {
-            bindDynamicObject(Struct.of("stdout"), System.out);
-            bindDynamicObject(Struct.of("stderr"), System.err);
-            bindDynamicObject(Struct.of("runtime"), Runtime.getRuntime());
-            bindDynamicObject(Struct.of("current_thread"), Thread.currentThread());
+            bindDynamicObject(Struct.atom("stdout"), System.out);
+            bindDynamicObject(Struct.atom("stderr"), System.err);
+            bindDynamicObject(Struct.atom("runtime"), Runtime.getRuntime());
+            bindDynamicObject(Struct.atom("current_thread"), Thread.currentThread());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -1176,7 +1176,7 @@ public class OOLibrary extends Library {
                         throw new JavaException(new IllegalArgumentException(what.toString()));
                     }
                 } else {
-                    if (unify(what, Struct.of("false"))) {
+                    if (unify(what, Struct.atom("false"))) {
                         return true;
                     } else {
                         throw new JavaException(new IllegalArgumentException(what.toString()));
@@ -1530,9 +1530,9 @@ public class OOLibrary extends Library {
                 return unify(id, Double.of(
                         ((java.lang.Double) obj).doubleValue()));
             } else if (obj instanceof String) {
-                return unify(id, Struct.of((String) obj));
+                return unify(id, Struct.atom((String) obj));
             } else if (obj instanceof Character) {
-                return unify(id, Struct.of(((Character) obj).toString()));
+                return unify(id, Struct.atom(((Character) obj).toString()));
             } else {
                 return bindDynamicObject(id, obj);
             }
@@ -1818,7 +1818,7 @@ public class OOLibrary extends Library {
      * @return
      */
     protected Struct generateFreshId() {
-        return Struct.of("$obj_" + id++);
+        return Struct.atom("$obj_" + id++);
     }
 
     /**

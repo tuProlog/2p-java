@@ -43,7 +43,7 @@ public class TermIteratorTestCase extends TestCase {
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
-        assertEquals(Struct.of("p"), i.next());
+        assertEquals(Struct.atom("p"), i.next());
     }
 
     public void testMultipleNext() {

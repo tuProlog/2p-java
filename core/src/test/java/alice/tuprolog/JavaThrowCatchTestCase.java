@@ -20,7 +20,7 @@ public class JavaThrowCatchTestCase extends TestCase {
         Int cause = (Int) info.getTerm("Cause");
         assertTrue(cause.intValue() == 0);
         Struct message = (Struct) info.getTerm("Message");
-        assertTrue(message.isEqual(Struct.of("Counter")));
+        assertTrue(message.isEqual(Struct.atom("Counter")));
         Struct stackTrace = (Struct) info.getTerm("StackTrace");
         assertTrue(stackTrace.isList());
         Int x = (Int) info.getTerm("X");
@@ -42,7 +42,7 @@ public class JavaThrowCatchTestCase extends TestCase {
         Int cause = (Int) info.getTerm("Cause");
         assertTrue(cause.intValue() == 0);
         Struct message = (Struct) info.getTerm("Message");
-        assertTrue(message.isEqual(Struct.of("Counter")));
+        assertTrue(message.isEqual(Struct.atom("Counter")));
         Struct stackTrace = (Struct) info.getTerm("StackTrace");
         assertTrue(stackTrace.isList());
         Int x = (Int) info.getTerm("X");

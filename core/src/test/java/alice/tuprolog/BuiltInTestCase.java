@@ -16,14 +16,14 @@ public class BuiltInTestCase extends TestCase {
         t = Int.of(2);
         assertNull(BuiltIn.convertTermToGoal(t));
 
-        t = Struct.of("p", Struct.of("a"), Var.of("B"), Struct.of("c"));
+        t = Struct.of("p", Struct.atom("a"), Var.of("B"), Struct.atom("c"));
         result = (Struct) t;
         assertEquals(result, BuiltIn.convertTermToGoal(t));
 
         Var linked = Var.of("X");
-        linked.setLink(Struct.of("!"));
+        linked.setLink(Struct.atom("!"));
         Term[] arguments = new Term[]{linked, Var.of("Y")};
-        Term[] results = new Term[]{Struct.of("!"), Struct.of("call", Var.of("Y"))};
+        Term[] results = new Term[]{Struct.atom("!"), Struct.of("call", Var.of("Y"))};
         assertEquals((Struct.of(";", results)).toString(), BuiltIn.convertTermToGoal(Struct.of(";", arguments))
                                                                    .toString());
         assertEquals((Struct.of(",", results)).toString(), BuiltIn.convertTermToGoal(Struct.of(",", arguments))
