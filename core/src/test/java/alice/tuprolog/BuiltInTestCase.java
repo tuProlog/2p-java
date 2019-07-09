@@ -8,27 +8,27 @@ import junit.framework.TestCase;
 public class BuiltInTestCase extends TestCase {
 
     public void testConvertTermToGoal() throws InvalidTermException {
-        Term t = new Var("T");
-        Struct result = new Struct("call", t);
+        Term t = Var.of("T");
+        Struct result = Struct.of("call", t);
         assertEquals(result, BuiltIn.convertTermToGoal(t));
-        assertEquals(result, BuiltIn.convertTermToGoal(new Struct("call", t)));
+        assertEquals(result, BuiltIn.convertTermToGoal(Struct.of("call", t)));
 
-        t = new Int(2);
+        t = Int.of(2);
         assertNull(BuiltIn.convertTermToGoal(t));
 
-        t = new Struct("p", new Struct("a"), new Var("B"), new Struct("c"));
+        t = Struct.of("p", Struct.atom("a"), Var.of("B"), Struct.atom("c"));
         result = (Struct) t;
         assertEquals(result, BuiltIn.convertTermToGoal(t));
 
-        Var linked = new Var("X");
-        linked.setLink(new Struct("!"));
-        Term[] arguments = new Term[]{linked, new Var("Y")};
-        Term[] results = new Term[]{new Struct("!"), new Struct("call", new Var("Y"))};
-        assertEquals((new Struct(";", results)).toString(), BuiltIn.convertTermToGoal(new Struct(";", arguments))
+        Var linked = Var.of("X");
+        linked.setLink(Struct.atom("!"));
+        Term[] arguments = new Term[]{linked, Var.of("Y")};
+        Term[] results = new Term[]{Struct.atom("!"), Struct.of("call", Var.of("Y"))};
+        assertEquals((Struct.of(";", results)).toString(), BuiltIn.convertTermToGoal(Struct.of(";", arguments))
                                                                    .toString());
-        assertEquals((new Struct(",", results)).toString(), BuiltIn.convertTermToGoal(new Struct(",", arguments))
+        assertEquals((Struct.of(",", results)).toString(), BuiltIn.convertTermToGoal(Struct.of(",", arguments))
                                                                    .toString());
-        assertEquals((new Struct("->", results)).toString(), BuiltIn.convertTermToGoal(new Struct("->", arguments))
+        assertEquals((Struct.of("->", results)).toString(), BuiltIn.convertTermToGoal(Struct.of("->", arguments))
                                                                     .toString());
     }
 

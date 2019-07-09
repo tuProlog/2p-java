@@ -67,7 +67,7 @@ public class BuiltIn extends Library {
         }
         term = term.getTerm();
         if (term instanceof Var) {
-            return new Struct("call", term);
+            return Struct.of("call", term);
         }
         if (term instanceof Struct) {
             Struct s = (Struct) term;
@@ -194,7 +194,7 @@ public class BuiltIn extends Library {
     }
 
     public boolean $log_1(Term format) {
-        return $log_2(format, new Struct());
+        return $log_2(format, Struct.emptyList());
     }
 
     public boolean $retract_1(Term arg0) throws PrologError {
@@ -216,7 +216,7 @@ public class BuiltIn extends Library {
             if (c != null) {
                 Struct clause = null;
                 if (!sarg0.isClause()) {
-                    clause = new Struct(":-", arg0, new Struct("true"));
+                    clause = Struct.of(":-", arg0, Struct.atom("true"));
                 } else {
                     clause = sarg0;
                 }
@@ -253,8 +253,8 @@ public class BuiltIn extends Library {
                         getEngine().getEngineManager(),
                         "modify",
                         "static_procedure",
-                        new Struct("/", new Struct(functor), new Int(arity)),
-                        new Struct(String.format("No permission to modify static procedure `%s`", indicator))
+                        Struct.of("/", Struct.atom(functor), Int.of(arity)),
+                        Struct.atom(String.format("No permission to modify static procedure `%s`", indicator))
                 );
             }
         } else {
@@ -293,7 +293,7 @@ public class BuiltIn extends Library {
             return true;
         } catch (Exception ex) {
             throw PrologError.existence_error(getEngine().getEngineManager(), 1, "class", arg0,
-                                              new Struct(ex.getMessage()));
+                                              Struct.atom(ex.getMessage()));
         }
     }
 
@@ -317,14 +317,14 @@ public class BuiltIn extends Library {
         try {
             String[] paths = getStringArrayFromStruct((Struct) arg1);
             if (paths == null || paths.length == 0) {
-                throw PrologError.existence_error(getEngine().getEngineManager(), 2, "paths", arg1, new Struct("Invalid paths' list."));
+                throw PrologError.existence_error(getEngine().getEngineManager(), 2, "paths", arg1, Struct.atom("Invalid paths' list."));
             }
             getEngine().getLibraryManager().loadLibrary(((Struct) arg0).getName(), paths);
             return true;
 
         } catch (Exception ex) {
             throw PrologError.existence_error(getEngine().getEngineManager(), 1, "class", arg0,
-                                              new Struct(ex.getMessage()));
+                                              Struct.atom(ex.getMessage()));
         }
     }
 
@@ -356,7 +356,7 @@ public class BuiltIn extends Library {
             return true;
         } catch (Exception ex) {
             throw PrologError.existence_error(getEngine().getEngineManager(), 1, "class", arg0,
-                                              new Struct(ex.getMessage()));
+                                              Struct.atom(ex.getMessage()));
         }
     }
 
@@ -372,7 +372,7 @@ public class BuiltIn extends Library {
     public boolean comma_2(Term arg0, Term arg1) {
         arg0 = arg0.getTerm();
         arg1 = arg1.getTerm();
-        Struct s = new Struct(",", arg0, arg1);
+        Struct s = Struct.of(",", arg0, arg1);
         getEngine().getEngineManager().pushSubGoal(ClauseInfo.extractBody(s));
         return true;
     }
@@ -558,7 +558,7 @@ public class BuiltIn extends Library {
         }
         if (!getEngine().getFlagManager().isModifiable(name)) {
             throw PrologError.permission_error(getEngine().getEngineManager(), "modify", "flag",
-                                               arg0, new Int(0));
+                                               arg0, Int.of(0));
         }
         return getEngine().getFlagManager().setFlag(name, arg1);
     }
@@ -643,13 +643,12 @@ public class BuiltIn extends Library {
         flagDefault = flagDefault.getTerm();
         flagModifiable = flagModifiable.getTerm();
         if (flagSet.isList()
-            && (flagModifiable.equals(Term.TRUE) || flagModifiable
-                .equals(Term.FALSE))) {
+            && (flagModifiable.equals(Struct.truth(true)) || flagModifiable.equals(Struct.atom("false")))) {
             // TODO libName che futuro deve avere?? --------------------
             String libName = "";
 
             getEngine().getFlagManager().defineFlag(flagName.toString(), (Struct) flagSet,
-                                   flagDefault, flagModifiable.equals(Term.TRUE), libName);
+                                   flagDefault, flagModifiable.equals(Struct.truth(true)), libName);
         }
     }
 

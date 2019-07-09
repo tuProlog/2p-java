@@ -40,15 +40,6 @@ import java.util.*;
  */
 public abstract class Term implements Serializable {
 
-    // true and false constants
-    public static final Term TRUE = new Struct("true");
-    public static final Term FALSE = new Struct("false");
-    private static final long serialVersionUID = 1L;
-
-    //boolean isCyclic = false; //Alberto -> da usare quando si supporteranno i termini ciclici
-
-    // checking type and properties of the Term
-
     /**
      * Static service to create a Term from a string.
      *
@@ -269,9 +260,9 @@ public abstract class Term implements Serializable {
     public Term copyResult(Collection<Var> goalVars, List<Var> resultVars) {
         IdentityHashMap<Var, Var> originals = new IdentityHashMap<Var, Var>();
         for (Var key : goalVars) {
-            Var clone = new Var();
+            Var clone = Var.underscore();
             if (!key.isAnonymous()) {
-                clone = new Var(key.getOriginalName());
+                clone = Var.of(key.getOriginalName());
             }
             originals.put(key, clone);
             resultVars.add(clone);

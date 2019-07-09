@@ -57,7 +57,7 @@ public class BasicLibrary extends Library {
             getEngine().setTheory(Theory.parseLazilyWithOperators(theory.getName(), getEngine().getOperatorManager()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), Struct.atom(ex.getMessage()));
         }
     }
 
@@ -80,7 +80,7 @@ public class BasicLibrary extends Library {
             getEngine().addTheory(Theory.parseLazilyWithStandardOperators(theory.getName()));
             return true;
         } catch (InvalidTheoryException ex) {
-            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), new Struct(ex.getMessage()));
+            throw PrologError.syntax_error(getEngine().getEngineManager(), ex.getClause(), ex.getLine(), ex.getPositionInLine(), Struct.atom(ex.getMessage()));
         }
     }
 
@@ -90,7 +90,7 @@ public class BasicLibrary extends Library {
     public boolean get_theory_1(Term arg) {
         arg = arg.getTerm();
         try {
-            Term theory = new Struct(getEngine().getTheory().toString());
+            Term theory = Struct.atom(getEngine().getTheory().toString());
             return (unify(arg, theory));
         } catch (Exception ex) {
             return false;
@@ -125,12 +125,15 @@ public class BasicLibrary extends Library {
 
     public boolean get_operators_list_1(Term argument) {
         Term arg = argument.getTerm();
-        Struct list = new Struct();
+        Struct list = Struct.emptyList();
         java.util.Iterator<Operator> it = getEngine().getCurrentOperatorList().iterator();
         while (it.hasNext()) {
             Operator o = it.next();
-            list = new Struct(new Struct("op", new Int(o.getPriority()),
-                    new Struct(o.getAssociativity().name().toLowerCase()), new Struct(o.getName())), list);
+            list = Struct.cons(
+                    Struct.of("op", Int.of(o.getPriority()),
+                        Struct.atom(o.getAssociativity().name().toLowerCase()), Struct.atom(o.getName())),
+                    list
+            );
         }
         return unify(arg, list);
     }
@@ -509,9 +512,9 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger()) {
                 return getIntegerNumber(Math.negateExact(val0n.longValue()));
             } else if (val0n instanceof alice.tuprolog.Double) {
-                return new alice.tuprolog.Double(-val0n.doubleValue());
+                return alice.tuprolog.Double.of(-val0n.doubleValue());
             } else {
-                return new alice.tuprolog.Float(-val0n.floatValue());
+                return alice.tuprolog.Float.of(-val0n.floatValue());
             }
         } else {
             return null;
@@ -526,7 +529,7 @@ public class BasicLibrary extends Library {
 
         }
         if (val0 != null && val0 instanceof Number) {
-            return new alice.tuprolog.Long(~((alice.tuprolog.Number) val0).longValue());
+            return alice.tuprolog.Long.of(~((alice.tuprolog.Number) val0).longValue());
         } else {
             return null;
         }
@@ -548,7 +551,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger())) {
                 return getIntegerNumber(Math.addExact(val0n.longValue(), val1n.longValue()));
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() + val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() + val1n.doubleValue());
             }
         } else {
             return null;
@@ -573,7 +576,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger())) {
                 return getIntegerNumber(Math.subtractExact(val0n.longValue(), val1n.longValue()));
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() - val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() - val1n.doubleValue());
             }
         } else {
             return null;
@@ -598,7 +601,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && (val1n.isInteger())) {
                 return getIntegerNumber(Math.multiplyExact(val0n.longValue(), val1n.longValue()));
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() * val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() * val1n.doubleValue());
             }
         } else {
             return null;
@@ -623,7 +626,7 @@ public class BasicLibrary extends Library {
             if (val0n.isInteger() && val1n.isInteger() && val0n.longValue() % val1n.longValue() == 0) {
                 return getIntegerNumber(val0n.longValue() / val1n.longValue());
             } else {
-                return new alice.tuprolog.Double(val0n.doubleValue() / val1n.doubleValue());
+                return alice.tuprolog.Double.of(val0n.doubleValue() / val1n.doubleValue());
             }
         } else {
             return null;
@@ -666,7 +669,7 @@ public class BasicLibrary extends Library {
             && (val1 instanceof Number)) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Double(Math.pow(val0n.doubleValue(), val1n.doubleValue()));
+            return alice.tuprolog.Double.of(Math.pow(val0n.doubleValue(), val1n.doubleValue()));
         } else {
             return null;
         }
@@ -687,7 +690,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() >> val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() >> val1n.longValue());
         } else {
             return null;
         }
@@ -708,7 +711,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() << val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() << val1n.longValue());
         } else {
             return null;
         }
@@ -729,7 +732,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() & val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() & val1n.longValue());
         } else {
             return null;
         }
@@ -750,7 +753,7 @@ public class BasicLibrary extends Library {
             && val1 instanceof Number) {
             alice.tuprolog.Number val0n = (alice.tuprolog.Number) val0;
             alice.tuprolog.Number val1n = (alice.tuprolog.Number) val1;
-            return new alice.tuprolog.Long(val0n.longValue() | val1n.longValue());
+            return alice.tuprolog.Long.of(val0n.longValue() | val1n.longValue());
         } else {
             return null;
         }
@@ -769,7 +772,7 @@ public class BasicLibrary extends Library {
         getEngine().stdOutput(arg0.toString() +
                               "\n" + arg1.toString());
         if (!arg0.isGround()) {
-            return unify(arg0, new Struct(arg1.toString()));
+            return unify(arg0, Struct.atom(arg1.toString()));
         } else {
             try {
                 String text = alice.util.Tools.removeApices(arg0.toString());
@@ -796,7 +799,7 @@ public class BasicLibrary extends Library {
         if (!source2.isAtom()) {
             throw PrologError.type_error(getEngine().getEngineManager(), 2, "atom", source2);
         }
-        return unify(dest, new Struct(((Struct) source1).getName() + ((Struct) source2).getName()));
+        return unify(dest, Struct.atom(((Struct) source1).getName() + ((Struct) source2).getName()));
     }
 
     public boolean num_atom_2(Term arg0, Term arg1) throws PrologError {
@@ -813,7 +816,7 @@ public class BasicLibrary extends Library {
             } else {
                 st = Double.toString(n0.doubleValue());
             }
-            return (unify(arg1, new Struct(st)));
+            return (unify(arg1, Struct.atom(st)));
         } else {
             if (!arg1.isAtom()) {
                 throw PrologError.type_error(getEngine().getEngineManager(), 2, "atom", arg1);
@@ -917,12 +920,12 @@ public class BasicLibrary extends Library {
             }
             Term term = null;
             try {
-                term = new Int(java.lang.Integer.parseInt(st2));
+                term = Int.of(java.lang.Integer.parseInt(st2));
             } catch (Exception ex) {
             }
             if (term == null) {
                 try {
-                    term = new alice.tuprolog.Double(java.lang.Double
+                    term = alice.tuprolog.Double.of(java.lang.Double
                                                              .parseDouble(st2));
                 } catch (Exception ex) {
                 }
@@ -956,13 +959,13 @@ public class BasicLibrary extends Library {
         if (!(description instanceof Struct)) {
             throw PrologError.instantiation_error(getEngine().getEngineManager(), 2);
         }
-        throw new PrologError(new Struct("error", error, term), ((Struct) description).getName());
+        throw new PrologError(Struct.of("error", error, term), ((Struct) description).getName());
     }
 
     public boolean throw_error_2(Term error, Term term) throws PrologError {
         error = error.getTerm();
         term = term.getTerm();
-        throw new PrologError(new Struct("error", error, term));
+        throw new PrologError(Struct.of("error", error, term));
     }
 
     private static final String THEORY;
@@ -1006,7 +1009,7 @@ public class BasicLibrary extends Library {
     }
 
     public boolean $dynamic_predicates_1(Term arg0) {
-        Struct clauses = new Struct(
+        Struct clauses = Struct.list(
                 getEngine().getTheoryManager()
                         .dynamicClausesStream()
                         .map(ClauseInfo::getHead)
@@ -1034,7 +1037,7 @@ public class BasicLibrary extends Library {
         }
         Stream<? extends Term> terms = arg0.castTo(Struct.class).listStream();
         terms = sortLexicographically(terms.map(Term.class::cast));
-        return unify(arg1, new Struct(terms));
+        return unify(arg1, Struct.list(terms));
     }
 
     public boolean $remove_duplicates_2(Term arg0, Term arg1) throws PrologError {
@@ -1047,11 +1050,11 @@ public class BasicLibrary extends Library {
         }
         Stream<? extends Term> terms = arg0.castTo(Struct.class).listStream();
         terms = removeDuplicates(sortLexicographically(terms.map(Term.class::cast)));
-        return unify(arg1, new Struct(terms));
+        return unify(arg1, Struct.list(terms));
     }
 
     public boolean $static_predicates_1(Term arg0) {
-        Struct clauses = new Struct(
+        Struct clauses = Struct.list(
                 getEngine().getTheoryManager()
                         .staticClausesStream()
                         .map(ClauseInfo::getHead)
@@ -1062,7 +1065,7 @@ public class BasicLibrary extends Library {
     }
 
     public boolean $predicates_1(Term arg0) {
-        Struct clauses = new Struct(
+        Struct clauses = Struct.list(
                 getEngine().getTheoryManager()
                         .clausesStream()
                         .map(ClauseInfo::getHead)
@@ -1166,7 +1169,7 @@ public class BasicLibrary extends Library {
 
     public boolean $wt_unify_3(Term witness, Term wtList, Term tList) {
         Struct list = (Struct) wtList.getTerm();
-        Struct result = new Struct();
+        Struct result = Struct.emptyList();
         for (java.util.Iterator<? extends Term> it = list.listIterator(); it.hasNext(); ) {
             Struct element = (Struct) it.next();
             Term w = element.getArg(0);
@@ -1180,7 +1183,7 @@ public class BasicLibrary extends Library {
 
     public boolean $s_next0_3(Term witness, Term wtList, Term sNext) {
         Struct list = (Struct) wtList.getTerm();
-        Struct result = new Struct();
+        Struct result = Struct.emptyList();
         for (java.util.Iterator<? extends Term> it = list.listIterator(); it.hasNext(); ) {
             Struct element = (Struct) it.next();
             Term w = element.getArg(0);

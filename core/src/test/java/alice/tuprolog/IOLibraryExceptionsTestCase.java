@@ -20,7 +20,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("see", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("see", Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -32,11 +32,11 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("see", new Int(1))));
+        assertTrue(g.isEqual(Struct.of("see", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -49,13 +49,13 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("see", new Struct("a"))));
+        assertTrue(g.isEqual(Struct.of("see", Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validDomain = (Struct) info.getTerm("ValidDomain");
-        assertTrue(validDomain.isEqual(new Struct("stream")));
+        assertTrue(validDomain.isEqual(Struct.atom("stream")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che tell(X) lancia un errore di instanziazione
@@ -65,7 +65,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("tell", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("tell", Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -77,11 +77,11 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("tell", new Int(1))));
+        assertTrue(g.isEqual(Struct.of("tell", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -93,7 +93,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("put", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("put", Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -105,11 +105,11 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("put", new Int(1))));
+        assertTrue(g.isEqual(Struct.of("put", Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("character")));
+        assertTrue(validType.isEqual(Struct.atom("character")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -121,13 +121,13 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("put", new Struct("aa"))));
+        assertTrue(g.isEqual(Struct.of("put", Struct.atom("aa"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("character")));
+        assertTrue(validType.isEqual(Struct.atom("character")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("aa")));
+        assertTrue(culprit.isEqual(Struct.atom("aa")));
     }
 
     // verifico che tab(X) lancia un errore di instanziazione
@@ -137,7 +137,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("tab", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("tab", Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -149,13 +149,13 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("tab", new Struct("a"))));
+        assertTrue(g.isEqual(Struct.of("tab", Struct.atom("a"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("integer")));
+        assertTrue(validType.isEqual(Struct.atom("integer")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("a")));
+        assertTrue(culprit.isEqual(Struct.atom("a")));
     }
 
     // verifico che set_read_1 lancia un errore di sintassi se si verifica un
@@ -169,13 +169,13 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("read", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("read", Var.of("X"))));
         Int line = (Int) info.getTerm("Line");
         assertTrue(line.intValue() == 1);
         Int position = (Int) info.getTerm("Line");
         assertTrue(position.intValue() == 1);
         Struct message = (Struct) info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("@term")));
+        assertTrue(message.isEqual(Struct.atom("@term")));
         File f = new File("read");
         f.delete();
     }
@@ -187,7 +187,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("write", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("write", Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -199,7 +199,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("print", new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("print", Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -211,8 +211,8 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("text_from_file", new Var("X"),
-                                        new Var("Y"))));
+        assertTrue(g.isEqual(Struct.of("text_from_file", Var.of("X"),
+                                        Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
     }
@@ -224,12 +224,12 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("text_from_file", new Int(1), new Var(
+        assertTrue(g.isEqual(Struct.of("text_from_file", Int.of(1), Var.of(
                 "Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -242,16 +242,16 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("text_from_file", new Struct("text"),
-                                        new Var("Y"))));
+        assertTrue(g.isEqual(Struct.of("text_from_file", Struct.atom("text"),
+                                        Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ObjectType");
-        assertTrue(validType.isEqual(new Struct("stream")));
+        assertTrue(validType.isEqual(Struct.atom("stream")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("text")));
+        assertTrue(culprit.isEqual(Struct.atom("text")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("File not found.")));
+        assertTrue(message.isEqual(Struct.atom("File not found.")));
     }
 
     // verifico che agent_file(X) lancia un errore di instanziazione
@@ -261,7 +261,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Var("X"), new Var(
+        assertTrue(g.match(Struct.of("text_from_file", Var.of("X"), Var.of(
                 "Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
@@ -274,12 +274,12 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Int(1),
-                                      new Var("Y"))));
+        assertTrue(g.match(Struct.of("text_from_file", Int.of(1),
+                                      Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -292,16 +292,16 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Struct("text"),
-                                      new Var("Y"))));
+        assertTrue(g.match(Struct.of("text_from_file", Struct.atom("text"),
+                                      Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ObjectType");
-        assertTrue(validType.isEqual(new Struct("stream")));
+        assertTrue(validType.isEqual(Struct.atom("stream")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("text")));
+        assertTrue(culprit.isEqual(Struct.atom("text")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("File not found.")));
+        assertTrue(message.isEqual(Struct.atom("File not found.")));
     }
 
     // verifico che solve_file(X, g) lancia un errore di instanziazione
@@ -311,7 +311,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Var("X"), new Var(
+        assertTrue(g.match(Struct.of("text_from_file", Var.of("X"), Var.of(
                 "Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
@@ -324,12 +324,12 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Int(1),
-                                      new Var("Y"))));
+        assertTrue(g.match(Struct.of("text_from_file", Int.of(1),
+                                      Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -342,16 +342,16 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Struct("text"),
-                                      new Var("Y"))));
+        assertTrue(g.match(Struct.of("text_from_file", Struct.atom("text"),
+                                      Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ObjectType");
-        assertTrue(validType.isEqual(new Struct("stream")));
+        assertTrue(validType.isEqual(Struct.atom("stream")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("text")));
+        assertTrue(culprit.isEqual(Struct.atom("text")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("File not found.")));
+        assertTrue(message.isEqual(Struct.atom("File not found.")));
     }
 
     // verifico che solve_file(text, X) lancia un errore di instanziazione
@@ -361,8 +361,8 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("solve_file_goal_guard", new Struct(
-                "text"), new Var("X"))));
+        assertTrue(g.isEqual(Struct.of("solve_file_goal_guard", Struct.atom(
+                "text"), Var.of("X"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
     }
@@ -374,12 +374,12 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.isEqual(new Struct("solve_file_goal_guard", new Struct(
-                "text"), new Int(1))));
+        assertTrue(g.isEqual(Struct.of("solve_file_goal_guard", Struct.atom(
+                "text"), Int.of(1))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 2);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("callable")));
+        assertTrue(validType.isEqual(Struct.atom("callable")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -391,7 +391,7 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Var("X"), new Var(
+        assertTrue(g.match(Struct.of("text_from_file", Var.of("X"), Var.of(
                 "Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
@@ -404,12 +404,12 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Int(1),
-                                      new Var("Y"))));
+        assertTrue(g.match(Struct.of("text_from_file", Int.of(1),
+                                      Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ValidType");
-        assertTrue(validType.isEqual(new Struct("atom")));
+        assertTrue(validType.isEqual(Struct.atom("atom")));
         Int culprit = (Int) info.getTerm("Culprit");
         assertTrue(culprit.intValue() == 1);
     }
@@ -422,16 +422,16 @@ public class IOLibraryExceptionsTestCase extends TestCase {
         SolveInfo info = engine.solve(goal);
         assertTrue(info.isSuccess());
         Struct g = (Struct) info.getTerm("Goal");
-        assertTrue(g.match(new Struct("text_from_file", new Struct("text"),
-                                      new Var("Y"))));
+        assertTrue(g.match(Struct.of("text_from_file", Struct.atom("text"),
+                                      Var.of("Y"))));
         Int argNo = (Int) info.getTerm("ArgNo");
         assertTrue(argNo.intValue() == 1);
         Struct validType = (Struct) info.getTerm("ObjectType");
-        assertTrue(validType.isEqual(new Struct("stream")));
+        assertTrue(validType.isEqual(Struct.atom("stream")));
         Struct culprit = (Struct) info.getTerm("Culprit");
-        assertTrue(culprit.isEqual(new Struct("text")));
+        assertTrue(culprit.isEqual(Struct.atom("text")));
         Term message = info.getTerm("Message");
-        assertTrue(message.isEqual(new Struct("File not found.")));
+        assertTrue(message.isEqual(Struct.atom("File not found.")));
     }
 
 }

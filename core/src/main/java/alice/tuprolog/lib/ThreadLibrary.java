@@ -24,7 +24,7 @@ public class ThreadLibrary extends Library {
     //Tenta di unificare a t l'identificativo del thread corrente
     public boolean thread_id_1(Term t) throws PrologError {
         int id = engineManager.runnerId();
-        unify(t, new Int(id));
+        unify(t, Int.of(id));
         return true;
     }
 
@@ -223,7 +223,7 @@ public class ThreadLibrary extends Library {
         if (size < 0) {
             return false;
         }
-        return unify(n, new Int(size));
+        return unify(n, Int.of(size));
     }
 
     public boolean mutex_create_1(Term mutex) throws PrologError {

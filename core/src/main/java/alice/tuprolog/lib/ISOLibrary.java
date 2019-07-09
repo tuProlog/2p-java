@@ -54,7 +54,7 @@ public class ISOLibrary extends Library {
         }
         if (len instanceof Var || len instanceof Int || len instanceof alice.tuprolog.Long) {
             Struct atom = (Struct) arg0;
-            return unify(len, new Int(atom.getName().length()));
+            return unify(len, Int.of(atom.getName().length()));
         } else {
             throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
         }
@@ -98,14 +98,14 @@ public class ISOLibrary extends Library {
 
             if (numString.contains("'")) {
                 numString = numString.replace("0'", "");
-                return unify(arg0, new alice.tuprolog.Int(numString.charAt(0)));
+                return unify(arg0, Int.of(numString.charAt(0)));
             }
 
             try {
 
                 if (numString.contains(".")) {
                     double val = Double.parseDouble(numString);
-                    return unify(arg0, new alice.tuprolog.Double(val));
+                    return unify(arg0, alice.tuprolog.Double.of(val));
                 }
 
                 int radix = 10;
@@ -122,7 +122,7 @@ public class ISOLibrary extends Library {
                 }
 
                 long val = Long.parseLong(numString, radix);
-                return unify(arg0, new alice.tuprolog.Long(val));
+                return unify(arg0, Int.of(val));
             } catch (NumberFormatException e) {
                 throw PrologError.domain_error(getEngine().getEngineManager(), 2, "[digit | Digits]", arg1);
             }
@@ -134,9 +134,9 @@ public class ISOLibrary extends Library {
             String string = arg0.toString();
             Term[] numberList = new Term[string.length()];
             for (int i = 0; i < string.length(); i++) {
-                numberList[i] = new Struct(new String(new char[]{string.charAt(i)}));
+                numberList[i] = Struct.atom(new String(new char[]{string.charAt(i)}));
             }
-            Struct list = new Struct(numberList);
+            Struct list = Struct.list(numberList);
 
             return unify(arg1, list);
         }
@@ -151,7 +151,7 @@ public class ISOLibrary extends Library {
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
-                return unify(arg0, new Struct(""));
+                return unify(arg0, Struct.atom(""));
             }
             String st = "";
             while (!(list.isEmptyList())) {
@@ -171,7 +171,7 @@ public class ISOLibrary extends Library {
                 st = st.concat(st1);
                 list = (Struct) list.getTerm(1);
             }
-            return unify(arg0, new Struct(st));
+            return unify(arg0, Struct.atom(st));
         } else {
             if (!arg0.isAtom()) {
                 throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
@@ -179,11 +179,11 @@ public class ISOLibrary extends Library {
             String st = ((Struct) arg0).getName();
             Term[] tlist = new Term[st.length()];
             for (int i = 0; i < st.length(); i++) {
-                tlist[i] = new Struct(new String(new char[]{st.charAt(i)}));
+                tlist[i] = Struct.atom(new String(new char[]{st.charAt(i)}));
             }
-            Struct list = new Struct(tlist);
+            Struct list = Struct.list(tlist);
             /*
-             * for (int i=0; i<st.length(); i++){ Struct ch=new Struct(new
+             * for (int i=0; i<st.length(); i++){ Struct ch=Struct.of(new
              * String(new char[]{ st.charAt(st.length()-i-1)} )); list=new
              * Struct( ch, list); }
              */
@@ -201,7 +201,7 @@ public class ISOLibrary extends Library {
             }
             Struct list = (Struct) arg1;
             if (list.isEmptyList()) {
-                return unify(arg0, new Struct(""));
+                return unify(arg0, Struct.atom(""));
             }
             StringBuilder sb = new StringBuilder();
             while (!(list.isEmptyList())) {
@@ -217,7 +217,7 @@ public class ISOLibrary extends Library {
 
                 list = list.listTail();
             }
-            return unify(arg0, new Struct(sb.toString()));
+            return unify(arg0, Struct.atom(sb.toString()));
         } else {
             if (!arg0.isAtom()) {
                 throw PrologError.type_error(getEngine().getEngineManager(), 1, "atom", arg0);
@@ -225,9 +225,9 @@ public class ISOLibrary extends Library {
             String st = ((Struct) arg0).getName();
             Term[] codesList = new Term[st.length()];
             for (int i = 0; i < st.length(); i++) {
-                codesList[i] = new Int(st.charAt(i));
+                codesList[i] = Int.of(st.charAt(i));
             }
-            Struct list = new Struct(codesList);
+            Struct list = Struct.list(codesList);
             return unify(arg1, list);
         }
     }
@@ -239,7 +239,7 @@ public class ISOLibrary extends Library {
             if (arg0.isAtom()) {
                 String st = ((Struct) arg0).getName();
                 if (st.length() <= 1) {
-                    return unify(arg1, new Int(st.charAt(0)));
+                    return unify(arg1, Int.of(st.charAt(0)));
                 } else {
                     throw PrologError.type_error(getEngine().getEngineManager(), 1,
                             "character", arg0);
@@ -251,7 +251,7 @@ public class ISOLibrary extends Library {
         } else if ((arg1 instanceof Int)
                 || (arg1 instanceof alice.tuprolog.Long)) {
             char c = (char) ((Number) arg1).intValue();
-            return unify(arg0, new Struct("" + c));
+            return unify(arg0, Struct.atom("" + c));
         } else {
             throw PrologError.type_error(getEngine().getEngineManager(), 2,
                     "integer", arg1);
@@ -272,7 +272,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.sin(((Number) val0)
+            return alice.tuprolog.Double.of(Math.sin(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -288,7 +288,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.cos(((Number) val0)
+            return alice.tuprolog.Double.of(Math.cos(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -304,7 +304,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.exp(((Number) val0).doubleValue()));
+            return alice.tuprolog.Double.of(Math.exp(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -319,7 +319,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.atan(((Number) val0)
+            return alice.tuprolog.Double.of(Math.atan(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -335,7 +335,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.log(((Number) val0)
+            return alice.tuprolog.Double.of(Math.log(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -351,7 +351,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(Math.sqrt(((Number) val0)
+            return alice.tuprolog.Double.of(Math.sqrt(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -367,11 +367,11 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long) {
-            return new alice.tuprolog.Int(Math.abs(((Number) val0).intValue()));
+            return Int.of(Math.abs(((Number) val0).intValue()));
         }
         if (val0 instanceof alice.tuprolog.Double
                 || val0 instanceof alice.tuprolog.Float) {
-            return new alice.tuprolog.Double(Math.abs(((Number) val0)
+            return alice.tuprolog.Double.of(Math.abs(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -387,12 +387,12 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Int || val0 instanceof alice.tuprolog.Long) {
-            return new alice.tuprolog.Double(
+            return alice.tuprolog.Double.of(
                     ((Number) val0).intValue() > 0 ? 1.0 : -1.0);
         }
         if (val0 instanceof alice.tuprolog.Double
                 || val0 instanceof alice.tuprolog.Float) {
-            return new alice.tuprolog.Double(
+            return alice.tuprolog.Double.of(
                     ((Number) val0).doubleValue() > 0 ? 1.0 : -1.0);
         }
         return null;
@@ -408,7 +408,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double((long) Math.rint(((Number) val0)
+            return alice.tuprolog.Double.of((long) Math.rint(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -425,7 +425,7 @@ public class ISOLibrary extends Library {
         }
         if (val0 instanceof Number) {
             double fl = ((Number) val0).doubleValue();
-            return new alice.tuprolog.Double(Math.abs(fl - Math.rint(fl)));
+            return alice.tuprolog.Double.of(Math.abs(fl - Math.rint(fl)));
         }
         return null;
     }
@@ -440,7 +440,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Double(((Number) val0).doubleValue());
+            return alice.tuprolog.Double.of(((Number) val0).doubleValue());
         }
         return null;
     }
@@ -455,7 +455,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new Int((int) Math.floor(((Number) val0).doubleValue()));
+            return Int.of((int) Math.floor(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -470,7 +470,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new alice.tuprolog.Long(Math.round(((Number) val0)
+            return alice.tuprolog.Long.of(Math.round(((Number) val0)
                     .doubleValue()));
         }
         return null;
@@ -486,7 +486,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new Int((int) Math.rint(((Number) val0).doubleValue()));
+            return Int.of((int) Math.rint(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -501,7 +501,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number) {
-            return new Int((int) Math.ceil(((Number) val0).doubleValue()));
+            return Int.of((int) Math.ceil(((Number) val0).doubleValue()));
         }
         return null;
     }
@@ -538,7 +538,7 @@ public class ISOLibrary extends Library {
             int x = ((Number) val0).intValue();
             int y = ((Number) val1).intValue();
             int f = java.lang.Double.valueOf(Math.floor((double) x / (double) y)).intValue();
-            return new Int(x - (f * y));
+            return Int.of(x - (f * y));
         }
         return null;
     }
@@ -555,7 +555,7 @@ public class ISOLibrary extends Library {
             throw new IllegalStateException(ex);
         }
         if (val0 instanceof Number && val1 instanceof Number) {
-            return new alice.tuprolog.Double(Math.IEEEremainder(((Number) val0)
+            return alice.tuprolog.Double.of(Math.IEEEremainder(((Number) val0)
                     .doubleValue(), ((Number) val1).doubleValue()));
         }
         return null;

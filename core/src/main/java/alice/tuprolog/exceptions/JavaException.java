@@ -28,26 +28,26 @@ public class JavaException extends PrologException {
         Term causeTerm = null;
         Throwable cause = wrapped.getCause();
         if (cause != null) {
-            causeTerm = new Struct(cause.toString());
+            causeTerm = Struct.atom(cause.toString());
         } else {
-            causeTerm = new Int(0);
+            causeTerm = Int.of(0);
         }
         // Message
         Term messageTerm = null;
         String message = wrapped.getMessage();
         if (message != null) {
-            messageTerm = new Struct(message);
+            messageTerm = Struct.atom(message);
         } else {
-            messageTerm = new Int(0);
+            messageTerm = Int.of(0);
         }
         // StackTrace
-        Struct stackTraceTerm = new Struct();
+        Struct stackTraceTerm = Struct.emptyList();
         StackTraceElement[] elements = wrapped.getStackTrace();
         for (StackTraceElement element : elements) {
-            stackTraceTerm.append(new Struct(element.toString()));
+            stackTraceTerm.append(Struct.atom(element.toString()));
         }
         // return
-        return new Struct(java_exception, causeTerm, messageTerm,
+        return Struct.of(java_exception, causeTerm, messageTerm,
                           stackTraceTerm);
     }
 

@@ -35,14 +35,24 @@ import java.util.Map;
  */
 public abstract class Number extends Term implements Comparable<Number> {
 
-    private static final long serialVersionUID = 1L;
-
     public static Number createNumber(String s) {
         Term t = Term.createTerm(s);
         if (t instanceof Number) {
             return (Number) t;
         }
         throw new InvalidTermException("Term " + t + " is not a number.");
+    }
+
+    public static Number of(java.lang.Number value) {
+        if (java.lang.Double.class.equals(value.getClass())) {
+            return Double.of(value.doubleValue());
+        } else if (java.lang.Float.class.equals(value.getClass())) {
+            return Float.of(value.floatValue());
+        } else if (java.lang.Long.class.equals(value.getClass())) {
+            return Long.of(value.longValue());
+        } else {
+            return Int.of(value.intValue());
+        }
     }
 
     /**

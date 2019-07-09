@@ -11,7 +11,7 @@ import java.util.NoSuchElementException;
 public class StructIteratorTestCase extends TestCase {
 
     public void testEmptyIterator() {
-        Struct list = new Struct();
+        Struct list = Struct.emptyList();
         Iterator<? extends Term> i = list.listIterator();
         assertFalse(i.hasNext());
         try {
@@ -22,7 +22,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testIteratorCount() {
-        Struct list = new Struct(new Term[]{new Int(1), new Int(2), new Int(3), new Int(5), new Int(7)});
+        Struct list = Struct.list(Int.of(1), Int.of(2), Int.of(3), Int.of(5), Int.of(7));
         Iterator<? extends Term> i = list.listIterator();
         int count = 0;
         for (; i.hasNext(); count++) {
@@ -33,24 +33,24 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testMultipleHasNext() {
-        Struct list = new Struct(new Term[]{new Struct("p"), new Struct("q"), new Struct("r")});
+        Struct list = Struct.list(Struct.atom("p"), Struct.atom("q"), Struct.atom("r"));
         Iterator<? extends Term> i = list.listIterator();
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
         assertTrue(i.hasNext());
-        assertEquals(new Struct("p"), i.next());
+        assertEquals(Struct.atom("p"), i.next());
     }
 
     public void testMultipleNext() {
-        Struct list = new Struct(new Term[]{new Int(0), new Int(1), new Int(2), new Int(3), new Int(5), new Int(7)});
+        Struct list = Struct.list(Int.of(0), Int.of(1), Int.of(2), Int.of(3), Int.of(5), Int.of(7));
         Iterator<? extends Term> i = list.listIterator();
         assertTrue(i.hasNext());
         i.next(); // skip the first term
-        assertEquals(new Int(1), i.next());
-        assertEquals(new Int(2), i.next());
-        assertEquals(new Int(3), i.next());
-        assertEquals(new Int(5), i.next());
-        assertEquals(new Int(7), i.next());
+        assertEquals(Int.of(1), i.next());
+        assertEquals(Int.of(2), i.next());
+        assertEquals(Int.of(3), i.next());
+        assertEquals(Int.of(5), i.next());
+        assertEquals(Int.of(7), i.next());
         // no more terms
         assertFalse(i.hasNext());
         try {
@@ -61,7 +61,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testRemoveOperationNotSupported() {
-        Struct list = new Struct(new Int(1), new Struct());
+        Struct list = Struct.cons(Int.of(1), Struct.emptyList());
         Iterator<? extends Term> i = list.listIterator();
         assertNotNull(i.next());
         try {

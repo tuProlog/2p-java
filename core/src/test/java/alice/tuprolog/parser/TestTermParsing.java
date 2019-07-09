@@ -28,29 +28,29 @@ public class TestTermParsing extends BaseTestPrologParsing {
 
     public List<List<Object>> getSpaceInvariantTerms() {
         return asList(
-                asList("a", new Struct("a")),
-                asList("a(1)", new Struct("a", new Int(1))),
-                asList("a(1, b(2), c(d(3), e))", new Struct("a", new Int(1), new Struct("b", new Int(2)), new Struct("c", new Struct("d", new Int(3)), new Struct("e")))),
-                asList("X", new Var("X")),
-                asList("_", new Var()),
-                asList("[]", new Struct()),
-                asList("[1]", new Struct(new Int(1), new Struct())),
-                asList("[2]", new Struct(new Int(2))),
-                asList("[3]", new Struct(new Int(3))),
-                asList("[4]", new Struct(new Int(4), new Struct())),
-                asList("[1, a, 2, b]", new Struct(new Int(1), new Struct("a"), new Int(2), new Struct("b"))),
-                asList("[H | T]", new Struct(new Var("H"), new Var("T"))),
-                asList("[H | T]", new Struct(new Var("H"), new Var("T"))),
-                asList("1", new Int(1))
+                asList("a", Struct.atom("a")),
+                asList("a(1)", Struct.of("a", Int.of(1))),
+                asList("a(1, b(2), c(d(3), e))", Struct.of("a", Int.of(1), Struct.of("b", Int.of(2)), Struct.of("c", Struct.of("d", Int.of(3)), Struct.atom("e")))),
+                asList("X", Var.of("X")),
+                asList("_", Var.underscore()),
+                asList("[]", Struct.emptyList()),
+                asList("[1]", Struct.cons(Int.of(1), Struct.emptyList())),
+                asList("[2]", Struct.list(Int.of(2))),
+                asList("[3]", Struct.list(Int.of(3))),
+                asList("[4]", Struct.cons(Int.of(4), Struct.emptyList())),
+                asList("[1, a, 2, b]", Struct.list(Int.of(1), Struct.atom("a"), Int.of(2), Struct.atom("b"))),
+                asList("[H | T]", Struct.cons(Var.of("H"), Var.of("T"))),
+                asList("[H | T]", Struct.cons(Var.of("H"), Var.of("T"))),
+                asList("1", Int.of(1))
         );
     }
 
     public List<List<Object>> getSpaceSensibleTerms() {
         return asList(
-                asList(java.lang.Long.valueOf(java.lang.Long.MAX_VALUE).toString(), new Long(java.lang.Long.MAX_VALUE)),
-                asList("1.1", new Double(1.1)),
-                asList("true", new Struct("true")),
-                asList("fail", new Struct("fail"))
+                asList(java.lang.Long.valueOf(java.lang.Long.MAX_VALUE).toString(), Long.of(java.lang.Long.MAX_VALUE)),
+                asList("1.1", Double.of(1.1)),
+                asList("true", Struct.atom("true")),
+                asList("fail", Struct.atom("fail"))
         );
     }
 

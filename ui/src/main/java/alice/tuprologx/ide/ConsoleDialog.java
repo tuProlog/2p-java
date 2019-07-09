@@ -505,7 +505,7 @@ public class ConsoleDialog
                                 String value = v.getTerm().toString();
                                 ;
                                 if (v == v.getTerm()) {
-                                    value = new Var().getName();
+                                    value = Var.underscore().getName();
                                 }
                                 tableModelList.add(value);
                             }
@@ -601,7 +601,7 @@ public class ConsoleDialog
                     String value = v.getTerm().toString();
                     ;
                     if (v == v.getTerm()) {
-                        value = new Var().getName();
+                        value = Var.underscore().getName();
                     }
                     tableModelList.add(value);
                 }
@@ -616,7 +616,7 @@ public class ConsoleDialog
                 for (Var v : bindings) {
                     String value = v.getTerm().toString();
                     if (v == v.getTerm()) {
-                        value = new Var().getName();
+                        value = Var.underscore().getName();
                     }
                     tableModelList.add(v.getName());
                     tableModelList.add(value);

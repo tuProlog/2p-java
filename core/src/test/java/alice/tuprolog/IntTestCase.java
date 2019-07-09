@@ -6,34 +6,34 @@ import junit.framework.TestCase;
 public class IntTestCase extends TestCase {
 
     public void testIsAtomic() {
-        assertTrue(new Int(0).isAtomic());
+        assertTrue(Int.of(0).isAtomic());
     }
 
     public void testIsAtom() {
-        assertFalse(new Int(0).isAtom());
+        assertFalse(Int.of(0).isAtom());
     }
 
     public void testIsCompound() {
-        assertFalse(new Int(0).isCompound());
+        assertFalse(Int.of(0).isCompound());
     }
 
     public void testEqualsToStruct() {
-        Struct s = new Struct();
-        Int zero = new Int(0);
+        Struct s = Struct.emptyList();
+        Int zero = Int.of(0);
         assertFalse(zero.equals(s));
     }
 
     public void testEqualsToVar() throws InvalidTermException {
-        Var x = new Var("X");
-        Int one = new Int(1);
+        Var x = Var.of("X");
+        Int one = Int.of(1);
         assertFalse(one.equals(x));
     }
 
     public void testEqualsToInt() {
-        Int zero = new Int(0);
-        Int one = new Int(1);
+        Int zero = Int.of(0);
+        Int one = Int.of(1);
         assertFalse(zero.equals(one));
-        Int anotherZero = new Int(1 - 1);
+        Int anotherZero = Int.of(1 - 1);
         assertTrue(anotherZero.equals(zero));
     }
 
@@ -42,8 +42,8 @@ public class IntTestCase extends TestCase {
     }
 
     public void testEqualsToDouble() {
-        Int integerOne = new Int(1);
-        alice.tuprolog.Double doubleOne = new alice.tuprolog.Double(1);
+        Int integerOne = Int.of(1);
+        alice.tuprolog.Double doubleOne = alice.tuprolog.Double.of(1);
         assertFalse(integerOne.equals(doubleOne));
     }
 

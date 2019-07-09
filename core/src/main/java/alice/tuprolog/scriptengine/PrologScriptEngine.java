@@ -157,7 +157,7 @@ public class PrologScriptEngine implements ScriptEngine, ExceptionListener, Outp
         if (ooLib != null) {
             for (Map.Entry<String, Object> keyPair : bindings.entrySet()) {
                 try {
-                    ooLib.register(new Struct(keyPair.getKey()), keyPair.getValue());
+                    ooLib.register(Struct.atom(keyPair.getKey()), keyPair.getValue());
                 } catch (InvalidObjectIdException ex) {
                     throw new ScriptException(
                             "Could not register object(" + keyPair.getKey() + "): " + ex.getMessage());

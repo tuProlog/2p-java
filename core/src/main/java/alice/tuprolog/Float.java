@@ -24,13 +24,19 @@ import java.util.List;
  */
 public class Float extends Number {
 
-    private static final long serialVersionUID = 1L;
-
-    @SuppressWarnings("unused")
-    private String type = "Float";
-
     private float value;
 
+    @SuppressWarnings({"deprecated"})
+    public static Float of(float value) {
+        return new Float(value);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Float of(java.lang.Float value) {
+        return new Float(value);
+    }
+
+    @Deprecated
     public Float(float v) {
         value = v;
     }

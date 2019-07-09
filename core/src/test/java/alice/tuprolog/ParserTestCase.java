@@ -7,7 +7,7 @@ public class ParserTestCase extends TestCase {
 
     public void testReadingTerms() throws InvalidTermException {
         Term t = Term.createTerm("hello");
-        Struct result = new Struct("hello");
+        Struct result = Struct.atom("hello");
         assertEquals(result, t);
     }
 
@@ -36,35 +36,35 @@ public class ParserTestCase extends TestCase {
         // GNU Prolog interprets "n(+100)" as "n(+(100))"
         // The ISO Standard says + is not a unary operator
         Term t = Term.createTerm("n(+100)");
-        Struct result = new Struct("n", new Int(100));
+        Struct result = Struct.of("n", Int.of(100));
         assertEquals(result, t);
 
         t = Term.createTerm("n(+(100))");
 
-        result = new Struct("n", new Struct("+", new Int(100)));
+        result = Struct.of("n", Struct.of("+", Int.of(100)));
         assertEquals(result, t);
     }
 
     public void testUnaryMinusOperator() throws InvalidTermException {
         Term t = Term.createTerm("n(-100)");
-        Struct result = new Struct("n", new Int(-100));
+        Struct result = Struct.of("n", Int.of(-100));
         assertEquals(result, t);
 
         t = Term.createTerm("n(-(100))");
 
-        result = new Struct("n", new Struct("-", new Int(100)));
+        result = Struct.of("n", Struct.of("-", Int.of(100)));
         assertEquals(result, t);
     }
 
     public void testBinaryMinusOperator() throws InvalidTermException {
         Term t = Term.createTerm("abs(3-11)");
-        Struct result = new Struct("abs", new Struct("-", new Int(3), new Int(11)));
+        Struct result = Struct.of("abs", Struct.of("-", Int.of(3), Int.of(11)));
         assertEquals(result, t);
     }
 
     public void testListWithTail() throws InvalidTermException {
         Term t = Term.createTerm("[p|Y]");
-        Struct result = new Struct(new Struct("p"), new Var("Y"));
+        Struct result = Struct.cons(Struct.atom("p"), Var.of("Y"));
         result.resolveTerm();
         assertEquals(result.toString(), t.toString());
     }
@@ -77,7 +77,7 @@ public class ParserTestCase extends TestCase {
 
     public void testUnivOperator() throws InvalidTermException {
         Term t = Term.createTerm("p =.. q");
-        Struct result = new Struct("=..", new Struct("p"), new Struct("q"));
+        Struct result = Struct.of("=..", Struct.atom("p"), Struct.atom("q"));
         assertEquals(result, t);
     }
 
@@ -86,8 +86,8 @@ public class ParserTestCase extends TestCase {
         OperatorManager om = OperatorManager.standardOperatorsPlus(
                 Operator.xfx(".", 600)
         );
-        Struct result = new Struct(".", new Struct("class", new Struct("java.lang.Integer")),
-                                   new Struct("MAX_VALUE"));
+        Struct result = Struct.of(".", Struct.of("class", Struct.atom("java.lang.Integer")),
+                                   Struct.atom("MAX_VALUE"));
         Term t = Term.createTerm(s, om);
         assertEquals(result, t);
     }
@@ -100,7 +100,7 @@ public class ParserTestCase extends TestCase {
                 Operator.yfx("b2", 500),
                 Operator.yfx("b3", 300)
         );
-        Struct result = new Struct("b2", new Struct("u", new Struct("b1")), new Struct("b3"));
+        Struct result = Struct.of("b2", Struct.of("u", Struct.atom("b1")), Struct.atom("b3"));
         Term t = Term.createTerm(s, om);
         assertEquals(result, t);
     }
@@ -113,7 +113,7 @@ public class ParserTestCase extends TestCase {
                 Operator.yfx("b2", 500),
                 Operator.yfx("b3", 300)
         );
-        Struct result = new Struct("b1", new Struct("u"), new Struct("b3", new Struct("b2"), new Struct("a")));
+        Struct result = Struct.of("b1", Struct.atom("u"), Struct.of("b3", Struct.atom("b2"), Struct.atom("a")));
         Term t = Term.createTerm(s, om);
         assertEquals(result, t);
     }
@@ -121,7 +121,7 @@ public class ParserTestCase extends TestCase {
     public void testIntegerBinaryRepresentation() throws InvalidTermException {
         String n = "0b101101";
         Term t = Term.createTerm(n);
-        alice.tuprolog.Number result = new Int(45);
+        alice.tuprolog.Number result = Int.of(45);
         assertEquals(result, t);
         String invalid = "0b101201";
         try {
@@ -135,7 +135,7 @@ public class ParserTestCase extends TestCase {
     public void testIntegerOctalRepresentation() throws InvalidTermException {
         String n = "0o77351";
         Term t = Term.createTerm(n);
-        alice.tuprolog.Number result = new Int(32489);
+        alice.tuprolog.Number result = Int.of(32489);
         assertEquals(result, t);
         String invalid = "0o78351";
         try {
@@ -148,7 +148,7 @@ public class ParserTestCase extends TestCase {
     public void testIntegerHexadecimalRepresentation() throws InvalidTermException {
         String n = "0xDECAF";
         Term t = Term.createTerm(n);
-        alice.tuprolog.Number result = new Int(912559);
+        alice.tuprolog.Number result = Int.of(912559);
         assertEquals(result, t);
         String invalid = "0xG";
         try {
@@ -161,23 +161,23 @@ public class ParserTestCase extends TestCase {
 
     public void testEmptyDCGAction() throws InvalidTermException {
         String s = "{}";
-        Struct result = new Struct("{}");
+        Struct result = Struct.atom("{}");
         Term t = Term.createTerm(s);
         assertEquals(result, t);
     }
 
     public void testSingleDCGAction() throws InvalidTermException {
         String s = "{hello}";
-        Struct result = new Struct("{}", new Struct("hello"));
+        Struct result = Struct.of("{}", Struct.atom("hello"));
         Term t = Term.createTerm(s);
         assertEquals(result, t);
     }
 
     public void testMultipleDCGAction() throws InvalidTermException {
         String s = "{a, b, c}";
-        Struct result = new Struct("{}",
-                                   new Struct(",", new Struct("a"),
-                                              new Struct(",", new Struct("b"), new Struct("c"))));
+        Struct result = Struct.of("{}",
+                                   Struct.of(",", Struct.atom("a"),
+                                              Struct.of(",", Struct.atom("b"), Struct.atom("c"))));
         Term t = Term.createTerm(s);
         assertEquals(result, t);
     }
@@ -185,9 +185,9 @@ public class ParserTestCase extends TestCase {
 //     This is an error both in 2.0.1 and in 2.1... don't know why, though.
 	public void testDCGActionWithOperators() throws Exception {
         String input = "{A =.. B, hotel, 2}";
-        Struct result = new Struct("{}",
-                            new Struct(",", new Struct("=..", new Var("A"), new Var("B")),
-                                new Struct(",", new Struct("hotel"), new Int(2))));
+        Struct result = Struct.of("{}",
+                            Struct.of(",", Struct.of("=..", Var.of("A"), Var.of("B")),
+                                Struct.of(",", Struct.atom("hotel"), Int.of(2))));
         result.resolveTerm();
         Term t = Term.createTerm(input);
         assertEquals(result, t);
@@ -238,7 +238,7 @@ public class ParserTestCase extends TestCase {
                         "*/" + "\n" +
                         "t3." + "\n";
         Theory theory = Theory.parseWithStandardOperators(text);
-        Theory expected = Theory.of(new Struct("t1"), new Struct("t3"));
+        Theory expected = Theory.of(Struct.atom("t1"), Struct.atom("t3"));
         assertEquals(expected, theory);
     }
 
@@ -257,31 +257,31 @@ public class ParserTestCase extends TestCase {
 
     public void testSingleQuotedEscaping() {
         String input = "'a''b'";
-        Struct result = new Struct("a'b");
+        Struct result = Struct.atom("a'b");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
 
         input = "'a\"\"b'";
-        result = new Struct("a\"\"b");
+        result = Struct.atom("a\"\"b");
         t = Term.createTerm(input);
         assertEquals(result, t);
     }
 
     public void testDoubleQuotedEscaping() {
         String input = "\"a\"\"b\"";
-        Struct result = new Struct("a\"b");
+        Struct result = Struct.atom("a\"b");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
 
         input = "\"a''b\"";
-        result = new Struct("a''b");
+        result = Struct.atom("a''b");
         t = Term.createTerm(input);
         assertEquals(result, t);
     }
 
     public void testMultilineSingleQuotedStrings() throws InvalidTermException {
         String input = "'a \\\n b'";
-        Struct result = new Struct("a  b");
+        Struct result = Struct.atom("a  b");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
 
@@ -294,7 +294,7 @@ public class ParserTestCase extends TestCase {
         char c = 'G';
 
         String input = "'ab\\x" + Integer.toString(c, 16) + "\\c'";
-        Struct result = new Struct("ab" + c +"c");
+        Struct result = Struct.atom("ab" + c + "c");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
 
@@ -315,7 +315,7 @@ public class ParserTestCase extends TestCase {
         char c = 'G';
 
         String input = "'ab\\" + Integer.toString(c, 8) + "\\c'";
-        Struct result = new Struct("ab" + c +"c");
+        Struct result = Struct.atom("ab" + c + "c");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
 
@@ -327,7 +327,7 @@ public class ParserTestCase extends TestCase {
 
     public void testStringEscaping() throws InvalidTermException {
         String input = "'\\a\\b\\f\\n\\r\\t\\v\\\\\\'\\\"\\`'";
-        Struct result = new Struct("\u0007\b\f\n\r\t\u000b\\'\"`");
+        Struct result = Struct.atom("\u0007\b\f\n\r\t\u000b\\'\"`");
         Term t = Term.createTerm(input);
         assertEquals(result, t);
 

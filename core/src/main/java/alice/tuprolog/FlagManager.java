@@ -41,10 +41,10 @@ class FlagManager {
         flags = new ArrayList<Flag>();
 
         //occursCheck flag -> a default è on!
-        Struct s = new Struct();
-        s.append(new Struct("on"));
-        s.append(new Struct("off"));
-        defineFlag("occursCheck", s, new Struct("on"), true, "BuiltIn");
+        Struct s = Struct.emptyList();
+        s.append(Struct.atom("on"));
+        s.append(Struct.atom("off"));
+        defineFlag("occursCheck", s, Struct.atom("on"), true, "BuiltIn");
     }
 
     /**
@@ -80,12 +80,11 @@ class FlagManager {
     }
 
     public synchronized Struct getPrologFlagList() {
-        Struct flist = new Struct();
+        Struct flist = Struct.emptyList();
         java.util.Iterator<Flag> it = flags.iterator();
         while (it.hasNext()) {
             Flag fl = it.next();
-            flist = new Struct(new Struct("flag", new Struct(fl.getName()), fl
-                    .getValue()), flist);
+            flist = Struct.cons(Struct.of("flag", Struct.atom(fl.getName()), fl.getValue()), flist);
         }
         return flist;
     }

@@ -81,7 +81,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener {
                         bottom = sub.get(0);
                     } else {
                         Term[] subt = new Term[sub.size()];
-                        bottom = new Struct(name, sub.toArray(subt));
+                        bottom = Struct.of(name, sub.toArray(subt));
                     }
                 } else {
                     bottom = c;

@@ -57,7 +57,7 @@ public class StateGoalSelection extends State {
                 // This enables the dynamic linking of built-ins for
                 // terms coming from outside the demonstration context.
                 if (curGoal != goal_app) {
-                    curGoal = new Struct("call", goal_app);
+                    curGoal = Struct.of("call", goal_app);
                 }
 
                 e.currentContext.currentGoal = (Struct) curGoal;

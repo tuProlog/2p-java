@@ -25,12 +25,17 @@ import java.util.List;
 
 public class Double extends Number {
 
-    private static final long serialVersionUID = 1L;
-
-    @SuppressWarnings("unused")
-    private String type = "Double";
-
     private double value;
+
+    @SuppressWarnings({"deprecated"})
+    public static Double of(double value) {
+        return new Double(value);
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Double of(java.lang.Double value) {
+        return new Double(value);
+    }
 
     public Double(double v) {
         value = v;

@@ -17,6 +17,9 @@
  */
 package alice.tuprolog.lib;
 
+import alice.tuprolog.Double;
+import alice.tuprolog.Float;
+import alice.tuprolog.Long;
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidObjectIdException;
@@ -36,6 +39,8 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static alice.util.Tools.*;
 
 /**
  * This class represents a tuProlog library enabling the interaction with the
@@ -99,8 +104,7 @@ public class OOLibrary extends Library {
         }
     }
 
-    private static Method lookupMethod(Class<?> target, String name,
-                                       Class<?>[] argClasses, Object[] argValues)
+    private static Method lookupMethod(Class<?> target, String name, Class<?>[] argClasses, Object[] argValues)
             throws NoSuchMethodException {
         // first try for exact match
         try {
@@ -156,8 +160,7 @@ public class OOLibrary extends Library {
         }
     }
 
-    private static Constructor<?> lookupConstructor(Class<?> target,
-                                                    Class<?>[] argClasses, Object[] argValues)
+    private static Constructor<?> lookupConstructor(Class<?> target, Class<?>[] argClasses, Object[] argValues)
             throws NoSuchMethodException {
         // first try for exact match
         try {
@@ -227,8 +230,7 @@ public class OOLibrary extends Library {
         if (assignable) {
             return true;
         } else {
-            return mclass.equals(java.lang.Long.TYPE)
-                   && (pclass.equals(Integer.TYPE));
+            return mclass.equals(java.lang.Long.TYPE) && (pclass.equals(Integer.TYPE));
         }
     }
 
@@ -335,20 +337,17 @@ public class OOLibrary extends Library {
                            && pclasses[i].equals(java.lang.Double.TYPE)) {
                     // arg required: a float, arg provided: a double
                     // so we need an explicit conversion...
-                    newvalues[i] = new java.lang.Float(
-                            ((java.lang.Double) values[i]).floatValue());
+                    newvalues[i] = ((java.lang.Double) values[i]).floatValue();
                 } else if (mclasses[i].equals(java.lang.Float.TYPE)
                            && pclasses[i].equals(java.lang.Integer.TYPE)) {
                     // arg required: a float, arg provided: an int
                     // so we need an explicit conversion...
-                    newvalues[i] = new java.lang.Float(
-                            ((java.lang.Integer) values[i]).intValue());
+                    newvalues[i] = (float) (Integer) values[i];
                 } else if (mclasses[i].equals(java.lang.Double.TYPE)
                            && pclasses[i].equals(java.lang.Integer.TYPE)) {
                     // arg required: a double, arg provided: an int
                     // so we need an explicit conversion...
-                    newvalues[i] = new java.lang.Double(
-                            ((java.lang.Integer) values[i]).doubleValue());
+                    newvalues[i] = ((Integer) values[i]).doubleValue();
                 } else if (values[i] == null && !mclasses[i].isPrimitive()) {
                     newvalues[i] = null;
                 } else {
@@ -365,7 +364,7 @@ public class OOLibrary extends Library {
 
     static {
         try {
-            THEORY = Tools.loadText(OOLibrary.class.getResourceAsStream(OOLibrary.class.getSimpleName() + ".pl"));
+            THEORY = loadText(OOLibrary.class.getResourceAsStream(OOLibrary.class.getSimpleName() + ".pl"));
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -408,11 +407,10 @@ public class OOLibrary extends Library {
      */
     protected void preregisterObjects() {
         try {
-            bindDynamicObject(new Struct("stdout"), System.out);
-            bindDynamicObject(new Struct("stderr"), System.err);
-            bindDynamicObject(new Struct("runtime"), Runtime.getRuntime());
-            bindDynamicObject(new Struct("current_thread"), Thread
-                    .currentThread());
+            bindDynamicObject(Struct.atom("stdout"), System.out);
+            bindDynamicObject(Struct.atom("stderr"), System.err);
+            bindDynamicObject(Struct.atom("runtime"), Runtime.getRuntime());
+            bindDynamicObject(Struct.atom("current_thread"), Thread.currentThread());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -439,8 +437,7 @@ public class OOLibrary extends Library {
         Struct arg = (Struct) argl.getTerm();
         id = id.getTerm();
         if (!className.isAtom()) {
-            throw new JavaException(new ClassNotFoundException(
-                    "Java class not found: " + className));
+            throw new JavaException(new ClassNotFoundException("Java class not found: " + className));
         }
         String clName = ((Struct) className).getName();
         // check for array type
@@ -465,8 +462,7 @@ public class OOLibrary extends Library {
             Constructor<?> co = lookupConstructor(cl, args.getTypes(), args_value);
             if (co == null) {
                 getEngine().warn("Constructor not found: class " + clName);
-                throw new JavaException(new NoSuchMethodException(
-                        "Constructor not found: class " + clName));
+                throw new JavaException(new NoSuchMethodException("Constructor not found: class " + clName));
             }
 
             Object obj = co.newInstance(args_value);
@@ -487,9 +483,7 @@ public class OOLibrary extends Library {
             getEngine().warn("Constructor not found: " + args.getTypes());
             throw new JavaException(ex);
         } catch (InstantiationException ex) {
-            getEngine().warn(
-                    "Objects of class " + clName
-                    + " cannot be instantiated");
+            getEngine().warn("Objects of class " + clName + " cannot be instantiated");
             throw new JavaException(ex);
         } catch (IllegalArgumentException ex) {
             getEngine().warn("Illegal constructor arguments  " + args);
@@ -625,7 +619,7 @@ public class OOLibrary extends Library {
         Struct classPathes = (Struct) clPathes.getTerm();
         id = id.getTerm();
         try {
-            String fullClassName = alice.util.Tools.removeApices(className.toString());
+            String fullClassName = removeApices(className.toString());
 
             String fullClassPath = fullClassName.replace('.', '/');
             final String cp = classPathes.listStream()
@@ -635,7 +629,7 @@ public class OOLibrary extends Library {
                     .map(File::getAbsolutePath)
                     .collect(Collectors.joining(File.separator, "-cp \"", "\""));
 
-            String text = alice.util.Tools.removeApices(classSource.toString());
+            String text = removeApices(classSource.toString());
             final File sourcePath = getTempFile(fullClassPath + ".java");
 
             try {
@@ -746,7 +740,7 @@ public class OOLibrary extends Library {
             if (args == null) {
                 throw new JavaException(new IllegalArgumentException());
             }
-            String objName = alice.util.Tools.removeApices(objId.toString());
+            String objName = removeApices(objId.toString());
             obj = staticObjects.containsKey(objName) ? staticObjects.get(objName) : currentObjects.get(objName);
             Object res = null;
             if (obj == null) {
@@ -775,8 +769,7 @@ public class OOLibrary extends Library {
 
                     if (id.getArity() == 1 && id.getName().equals("class")) {
                         try {
-                            String clName = alice.util.Tools
-                                    .removeApices(id.getArg(0).toString());
+                            String clName = removeApices(id.getArg(0).toString());
                             Class<?> cl = Class.forName(clName, true, dynamicLoader);
 
                             Method m = InspectionUtils.searchForMethod(cl, methodName, args.getTypes());
@@ -796,8 +789,7 @@ public class OOLibrary extends Library {
                     }
                 } else {
                     // the object is the string itself
-                    Method m = java.lang.String.class.getMethod(methodName,
-                                                                args.getTypes());
+                    Method m = java.lang.String.class.getMethod(methodName, args.getTypes());
                     m.setAccessible(true);
                     res = m.invoke(objName, args.getValues());
                 }
@@ -816,9 +808,7 @@ public class OOLibrary extends Library {
                     + ex.getTargetException());
             throw new JavaException(new IllegalArgumentException());
         } catch (NoSuchMethodException ex) {
-            getEngine().warn(
-                    "Method not found: " + methodName + " - ( signature: "
-                    + args + " )");
+            getEngine().warn("Method not found: " + methodName + " - ( signature: " + args + " )");
             throw new JavaException(ex);
         } catch (IllegalArgumentException ex) {
             getEngine().warn(
@@ -870,24 +860,8 @@ public class OOLibrary extends Library {
                 throw new IllegalArgumentException();
             }
             URL[] urls = dynamicLoader.getURLs();
-//            String stringURLs = null;
-//            Term pathTerm = null;
-//            if (urls.length > 0) {
-//                stringURLs = "[";
-//
-//                for (URL url : urls) {
-//                    File file = new File(URLDecoder.decode(url.getFile(), "UTF-8"));
-//                    stringURLs = stringURLs + "'" + file.getPath() + "',";
-//                }
-//
-//                stringURLs = stringURLs.substring(0, stringURLs.length() - 1);
-//                stringURLs = stringURLs + "]";
-//            } else {
-//                stringURLs = "[]";
-//            }
-//            pathTerm = Term.createTerm(stringURLs);
-            final Struct pathTerm = new Struct(
-                    Stream.of(urls).map(URL::getPath).map(File::new).map(File::getAbsolutePath).map(Struct::new)
+            final Struct pathTerm = Struct.list(
+                    Stream.of(urls).map(URL::getPath).map(File::new).map(File::getAbsolutePath).map(Struct::atom)
             );
             return unify(paths, pathTerm);
         } catch (IllegalArgumentException e) {
@@ -914,7 +888,7 @@ public class OOLibrary extends Library {
                 String clName = null;
                 // Case: class(className)
                 if (((Struct) objId).getArity() == 1) {
-                    clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
+                    clName = removeApices(((Struct) objId).getArg(0).toString());
                 }
                 if (clName != null) {
                     try {
@@ -927,15 +901,12 @@ public class OOLibrary extends Library {
                                 "Static field "
                                 + fieldName
                                 + " not found in class "
-                                + alice.util.Tools
-                                        .removeApices(((Struct) objId)
-                                                              .getArg(0).toString()));
+                                + removeApices(((Struct) objId).getArg(0).toString()));
                         return false;
                     }
                 }
             } else {
-                String objName = alice.util.Tools
-                        .removeApices(objId.toString());
+                String objName = removeApices(objId.toString());
                 obj = currentObjects.get(objName);
                 if (obj != null) {
                     cl = obj.getClass();
@@ -960,8 +931,7 @@ public class OOLibrary extends Library {
                     return false;
                 }
             } else {
-                String what_name = alice.util.Tools.removeApices(what
-                                                                         .toString());
+                String what_name = removeApices(what.toString());
                 Object obj2 = currentObjects.get(what_name);
                 if (obj2 != null) {
                     field.set(obj, obj2);
@@ -994,7 +964,7 @@ public class OOLibrary extends Library {
             if (objId.isCompound() && ((Struct) objId).getName().equals("class")) {
                 String clName = null;
                 if (((Struct) objId).getArity() == 1) {
-                    clName = alice.util.Tools.removeApices(((Struct) objId).getArg(0).toString());
+                    clName = removeApices(((Struct) objId).getArg(0).toString());
                 }
                 if (clName != null) {
                     try {
@@ -1007,14 +977,12 @@ public class OOLibrary extends Library {
                                 "Static field "
                                 + fieldName
                                 + " not found in class "
-                                + alice.util.Tools
-                                        .removeApices(((Struct) objId)
-                                                              .getArg(0).toString()));
+                                + removeApices(((Struct) objId).getArg(0).toString()));
                         return false;
                     }
                 }
             } else {
-                String objName = alice.util.Tools.removeApices(objId.toString());
+                String objName = removeApices(objId.toString());
                 obj = currentObjects.get(objName);
                 if (obj == null) {
                     return false;
@@ -1027,16 +995,16 @@ public class OOLibrary extends Library {
             field.setAccessible(true);
             if (fc.equals(Integer.TYPE) || fc.equals(Byte.TYPE)) {
                 int value = field.getInt(obj);
-                return unify(what, new alice.tuprolog.Int(value));
+                return unify(what, Int.of(value));
             } else if (fc.equals(java.lang.Long.TYPE)) {
                 long value = field.getLong(obj);
-                return unify(what, new alice.tuprolog.Long(value));
+                return unify(what, Long.of(value));
             } else if (fc.equals(java.lang.Float.TYPE)) {
                 float value = field.getFloat(obj);
-                return unify(what, new alice.tuprolog.Float(value));
+                return unify(what, Float.of(value));
             } else if (fc.equals(java.lang.Double.TYPE)) {
                 double value = field.getDouble(obj);
-                return unify(what, new alice.tuprolog.Double(value));
+                return unify(what, Double.of(value));
             } else {
                 // the field value is an object
                 Object res = field.get(obj);
@@ -1044,8 +1012,7 @@ public class OOLibrary extends Library {
             }
 
         } catch (NoSuchFieldException ex) {
-            getEngine().warn(
-                    "Field " + fieldName + " not found in class " + objId);
+            getEngine().warn("Field " + fieldName + " not found in class " + objId);
             return false;
         } catch (Exception ex) {
             getEngine().warn("Generic error in accessing the field");
@@ -1060,50 +1027,43 @@ public class OOLibrary extends Library {
         what = what.getTerm();
         Object obj = null;
         if (!index.isInteger()) {
-            throw new JavaException(new IllegalArgumentException(index
-                                                                         .toString()));
+            throw new JavaException(new IllegalArgumentException(index.toString()));
         }
         try {
             Class<?> cl = null;
-            String objName = alice.util.Tools.removeApices(objId.toString());
+            String objName = removeApices(objId.toString());
             obj = currentObjects.get(objName);
             if (obj != null) {
                 cl = obj.getClass();
             } else {
-                throw new JavaException(new IllegalArgumentException(objId
-                                                                             .toString()));
+                throw new JavaException(new IllegalArgumentException(objId.toString()));
             }
 
             if (!cl.isArray()) {
-                throw new JavaException(new IllegalArgumentException(objId
-                                                                             .toString()));
+                throw new JavaException(new IllegalArgumentException(objId.toString()));
             }
             String name = cl.toString();
             if (name.equals("class [I")) {
                 if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
                 byte v = (byte) ((Number) what).intValue();
                 Array.setInt(obj, index.intValue(), v);
             } else if (name.equals("class [D")) {
                 if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
                 double v = ((Number) what).doubleValue();
                 Array.setDouble(obj, index.intValue(), v);
             } else if (name.equals("class [F")) {
                 if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
                 float v = ((Number) what).floatValue();
                 Array.setFloat(obj, index.intValue(), v);
             } else if (name.equals("class [L")) {
                 if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
                 long v = ((Number) what).longValue();
                 Array.setFloat(obj, index.intValue(), v);
@@ -1117,20 +1077,17 @@ public class OOLibrary extends Library {
                 } else if (s.equals("false")) {
                     Array.setBoolean(obj, index.intValue(), false);
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [B")) {
                 if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
                 int v = ((Number) what).intValue();
                 Array.setByte(obj, index.intValue(), (byte) v);
             } else if (name.equals("class [S")) {
                 if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
                 short v = (short) ((Number) what).intValue();
                 Array.setShort(obj, index.intValue(), v);
@@ -1162,7 +1119,7 @@ public class OOLibrary extends Library {
         }
         try {
             Class<?> cl = null;
-            String objName = alice.util.Tools.removeApices(objId.toString());
+            String objName = removeApices(objId.toString());
             obj = currentObjects.get(objName);
             if (obj != null) {
                 cl = obj.getClass();
@@ -1175,81 +1132,71 @@ public class OOLibrary extends Library {
             }
             String name = cl.toString();
             if (name.equals("class [I")) {
-                Term value = new alice.tuprolog.Int(Array.getInt(obj, index.intValue()));
+                Term value = Int.of(Array.getInt(obj, index.intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
                     throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [D")) {
-                Term value = new alice.tuprolog.Double(Array.getDouble(obj, index.intValue()));
+                Term value = Double.of(Array.getDouble(obj, index.intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [F")) {
-                Term value = new alice.tuprolog.Float(Array.getFloat(obj, index
+                Term value = Float.of(Array.getFloat(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [L")) {
-                Term value = new alice.tuprolog.Long(Array.getLong(obj, index
-                        .intValue()));
+                Term value = Long.of(Array.getLong(obj, index.intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [C")) {
-                Term value = new alice.tuprolog.Struct(""
-                                                       + Array.getChar(obj, index.intValue()));
+                Term value = alice.tuprolog.Struct.atom(""+ Array.getChar(obj, index.intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [Z")) {
                 boolean b = Array.getBoolean(obj, index.intValue());
                 if (b) {
-                    if (unify(what, alice.tuprolog.Term.TRUE)) {
+                    if (unify(what, Struct.truth(true))) {
                         return true;
                     } else {
-                        throw new JavaException(new IllegalArgumentException(
-                                what.toString()));
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
                     }
                 } else {
-                    if (unify(what, alice.tuprolog.Term.FALSE)) {
+                    if (unify(what, Struct.atom("false"))) {
                         return true;
                     } else {
-                        throw new JavaException(new IllegalArgumentException(
-                                what.toString()));
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
                     }
                 }
             } else if (name.equals("class [B")) {
-                Term value = new alice.tuprolog.Int(Array.getByte(obj, index
+                Term value = Int.of(Array.getByte(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else if (name.equals("class [S")) {
-                Term value = new alice.tuprolog.Int(Array.getInt(obj, index
+                Term value = Int.of(Array.getInt(obj, index
                         .intValue()));
                 if (unify(what, value)) {
                     return true;
                 } else {
-                    throw new JavaException(new IllegalArgumentException(what
-                                                                                 .toString()));
+                    throw new JavaException(new IllegalArgumentException(what.toString()));
                 }
             } else {
                 throw new JavaException(new Exception());
@@ -1329,7 +1276,7 @@ public class OOLibrary extends Library {
         Iterator<? extends Term> it = list.listIterator();
         int count = 0;
         while (it.hasNext()) {
-            String path = alice.util.Tools.removeApices(it.next().toString());
+            String path = removeApices(it.next().toString());
             args[count++] = path;
         }
         return args;
@@ -1366,7 +1313,7 @@ public class OOLibrary extends Library {
                 values[i] = null;
                 types[i] = null;
             } else if (term.isAtom()) {
-                String name = alice.util.Tools.removeApices(term.toString());
+                String name = removeApices(term.toString());
                 if (name.equals("true")) {
                     values[i] = Boolean.TRUE;
                     types[i] = Boolean.TYPE;
@@ -1385,16 +1332,16 @@ public class OOLibrary extends Library {
             } else if (term instanceof Number) {
                 Number t = (Number) term;
                 if (t instanceof Int) {
-                    values[i] = new java.lang.Integer(t.intValue());
+                    values[i] = t.intValue();
                     types[i] = java.lang.Integer.TYPE;
                 } else if (t instanceof alice.tuprolog.Double) {
-                    values[i] = new java.lang.Double(t.doubleValue());
+                    values[i] = t.doubleValue();
                     types[i] = java.lang.Double.TYPE;
                 } else if (t instanceof alice.tuprolog.Long) {
-                    values[i] = new java.lang.Long(t.longValue());
+                    values[i] = t.longValue();
                     types[i] = java.lang.Long.TYPE;
                 } else if (t instanceof alice.tuprolog.Float) {
-                    values[i] = new java.lang.Float(t.floatValue());
+                    values[i] = t.floatValue();
                     types[i] = java.lang.Float.TYPE;
                 }
             } else if (term instanceof Struct) {
@@ -1404,11 +1351,9 @@ public class OOLibrary extends Library {
                     return parse_as(values, types, i, tc.getTerm(0), tc
                             .getTerm(1));
                 } else {
-                    Object obj = currentObjects.get(alice.util.Tools
-                                                            .removeApices(tc.toString()));
+                    Object obj = currentObjects.get(removeApices(tc.toString()));
                     if (obj == null) {
-                        values[i] = alice.util.Tools
-                                .removeApices(tc.toString());
+                        values[i] = removeApices(tc.toString());
                     } else {
                         values[i] = obj;
                     }
@@ -1434,17 +1379,15 @@ public class OOLibrary extends Library {
                              Term castWhat, Term castTo) {
         try {
             if (!(castWhat instanceof Number)) {
-                String castTo_name = alice.util.Tools
-                        .removeApices(((Struct) castTo).getName());
-                String castWhat_name = alice.util.Tools.removeApices(castWhat
-                                                                             .getTerm().toString());
-                // System.out.println(castWhat_name+" "+castTo_name);
-                if (castTo_name.equals("java.lang.String")
+                String castTo_name = removeApices(((Struct) castTo).getName());
+                String castWhat_name = removeApices(castWhat.getTerm().toString());
+
+                if (castTo_name.equals(String.class.getName())
                     && castWhat_name.equals("true")) {
                     values[i] = "true";
                     types[i] = String.class;
                     return true;
-                } else if (castTo_name.equals("java.lang.String")
+                } else if (castTo_name.equals(String.class.getName())
                            && castWhat_name.equals("false")) {
                     values[i] = "false";
                     types[i] = String.class;
@@ -1467,9 +1410,7 @@ public class OOLibrary extends Library {
                     } else if (castTo_name.equals("double[]")) {
                         castTo_name = "[D";
                     } else {
-                        castTo_name = "[L"
-                                      + castTo_name.substring(0,
-                                                              castTo_name.length() - 2) + ";";
+                        castTo_name = "[L" + castTo_name.substring(0, castTo_name.length() - 2) + ";";
                     }
                 }
                 if (!castWhat_name.equals("null")) {
@@ -1477,9 +1418,9 @@ public class OOLibrary extends Library {
                     if (obj_to_cast == null) {
                         if (castTo_name.equals("boolean")) {
                             if (castWhat_name.equals("true")) {
-                                values[i] = new Boolean(true);
+                                values[i] = Boolean.TRUE;
                             } else if (castWhat_name.equals("false")) {
-                                values[i] = new Boolean(false);
+                                values[i] = Boolean.FALSE;
                             } else {
                                 return false;
                             }
@@ -1530,22 +1471,22 @@ public class OOLibrary extends Library {
                 Number num = (Number) castWhat;
                 String castTo_name = ((Struct) castTo).getName();
                 if (castTo_name.equals("byte")) {
-                    values[i] = new Byte((byte) num.intValue());
+                    values[i] = (byte) num.intValue();
                     types[i] = Byte.TYPE;
                 } else if (castTo_name.equals("short")) {
-                    values[i] = new Short((short) num.intValue());
+                    values[i] = (short) num.intValue();
                     types[i] = Short.TYPE;
                 } else if (castTo_name.equals("int")) {
-                    values[i] = new Integer(num.intValue());
+                    values[i] = num.intValue();
                     types[i] = Integer.TYPE;
                 } else if (castTo_name.equals("long")) {
-                    values[i] = new java.lang.Long(num.longValue());
+                    values[i] = num.longValue();
                     types[i] = java.lang.Long.TYPE;
                 } else if (castTo_name.equals("float")) {
-                    values[i] = new java.lang.Float(num.floatValue());
+                    values[i] = num.floatValue();
                     types[i] = java.lang.Float.TYPE;
                 } else if (castTo_name.equals("double")) {
-                    values[i] = new java.lang.Double(num.doubleValue());
+                    values[i] = num.doubleValue();
                     types[i] = java.lang.Double.TYPE;
                 } else {
                     return false;
@@ -1565,39 +1506,37 @@ public class OOLibrary extends Library {
     private boolean parseResult(Term id, Object obj) {
         if (obj == null) {
             // return unify(id,Term.TRUE);
-            return unify(id, new Var());
+            return unify(id, Var.underscore());
         }
         try {
             if (obj instanceof Boolean) {
-                if (((Boolean) obj).booleanValue()) {
-                    return unify(id, Term.TRUE);
+                if ((Boolean) obj) {
+                    return unify(id, Struct.truth(true));
                 } else {
-                    return unify(id, Term.FALSE);
+                    return unify(id, Struct.atom("false"));
                 }
             } else if (obj instanceof Byte) {
-                return unify(id, new Int(((Byte) obj).intValue()));
+                return unify(id, Int.of(((Byte) obj).intValue()));
             } else if (obj instanceof Short) {
-                return unify(id, new Int(((Short) obj).intValue()));
+                return unify(id, Int.of(((Short) obj).intValue()));
             } else if (obj instanceof Integer) {
-                return unify(id, new Int(((Integer) obj).intValue()));
+                return unify(id, Int.of(((Integer) obj).intValue()));
             } else if (obj instanceof java.lang.Long) {
-                return unify(id, new alice.tuprolog.Long(((java.lang.Long) obj)
-                                                                 .longValue()));
+                return unify(id, Long.of(((java.lang.Long) obj).longValue()));
             } else if (obj instanceof java.lang.Float) {
-                return unify(id, new alice.tuprolog.Float(
+                return unify(id, Float.of(
                         ((java.lang.Float) obj).floatValue()));
             } else if (obj instanceof java.lang.Double) {
-                return unify(id, new alice.tuprolog.Double(
+                return unify(id, Double.of(
                         ((java.lang.Double) obj).doubleValue()));
             } else if (obj instanceof String) {
-                return unify(id, new Struct((String) obj));
+                return unify(id, Struct.atom((String) obj));
             } else if (obj instanceof Character) {
-                return unify(id, new Struct(((Character) obj).toString()));
+                return unify(id, Struct.atom(((Character) obj).toString()));
             } else {
                 return bindDynamicObject(id, obj);
             }
         } catch (Exception ex) {
-            // ex.printStackTrace();
             return false;
         }
     }
@@ -1638,8 +1577,7 @@ public class OOLibrary extends Library {
                 // object already referenced
                 return false;
             } else {
-                String raw_name = alice.util.Tools.removeApices(id.getTerm()
-                                                                  .toString());
+                String raw_name = removeApices(id.getTerm().toString());
                 staticObjects.put(raw_name, obj);
                 staticObjects_inverse.put(obj, id);
                 return true;
@@ -1727,12 +1665,9 @@ public class OOLibrary extends Library {
             throw new InvalidObjectIdException();
         }
         synchronized (staticObjects) {
-            return staticObjects.get(alice.util.Tools.removeApices(id
-                                                                           .toString()));
+            return staticObjects.get(removeApices(id.toString()));
         }
     }
-
-    // --------------------------------------------------
 
     /**
      * Unregisters an object, given its identifier
@@ -1746,7 +1681,7 @@ public class OOLibrary extends Library {
             throw new InvalidObjectIdException();
         }
         synchronized (staticObjects) {
-            String raw_name = alice.util.Tools.removeApices(id.toString());
+            String raw_name = removeApices(id.toString());
             Object obj = staticObjects.remove(raw_name);
             if (obj != null) {
                 staticObjects_inverse.remove(obj);
@@ -1765,7 +1700,7 @@ public class OOLibrary extends Library {
      */
     public void registerDynamic(Struct id, Object obj) {
         synchronized (currentObjects) {
-            String raw_name = alice.util.Tools.removeApices(id.toString());
+            String raw_name = removeApices(id.toString());
             currentObjects.put(raw_name, obj);
             currentObjects_inverse.put(obj, id);
         }
@@ -1809,8 +1744,7 @@ public class OOLibrary extends Library {
             throw new InvalidObjectIdException();
         }
         synchronized (currentObjects) {
-            return currentObjects.get(alice.util.Tools.removeApices(id
-                                                                            .toString()));
+            return currentObjects.get(removeApices(id.toString()));
         }
     }
 
@@ -1822,7 +1756,7 @@ public class OOLibrary extends Library {
      */
     public boolean unregisterDynamic(Struct id) {
         synchronized (currentObjects) {
-            String raw_name = alice.util.Tools.removeApices(id.toString());
+            String raw_name = removeApices(id.toString());
             Object obj = currentObjects.remove(raw_name);
             if (obj != null) {
                 currentObjects_inverse.remove(obj);
@@ -1841,7 +1775,7 @@ public class OOLibrary extends Library {
     protected boolean bindDynamicObject(Term id, Object obj) {
         // null object are considered to _ variable
         if (obj == null) {
-            return unify(id, new Var());
+            return unify(id, Var.underscore());
         }
         // already registered object?
         synchronized (currentObjects) {
@@ -1862,8 +1796,7 @@ public class OOLibrary extends Library {
                     return true;
                 } else {
                     // verify of the id is already used
-                    String raw_name = alice.util.Tools.removeApices(id
-                                                                            .getTerm().toString());
+                    String raw_name = removeApices(id.getTerm().toString());
                     Object linkedobj = currentObjects.get(raw_name);
                     if (linkedobj == null) {
                         registerDynamic((Struct) (id.getTerm()), obj);
@@ -1885,7 +1818,7 @@ public class OOLibrary extends Library {
      * @return
      */
     protected Struct generateFreshId() {
-        return new Struct("$obj_" + id++);
+        return Struct.atom("$obj_" + id++);
     }
 
     /**
@@ -1947,8 +1880,7 @@ class Signature implements Serializable {
     public String toString() {
         String st = "";
         for (int i = 0; i < types.length; i++) {
-            st = st + "\n  Argument " + i + " -  VALUE: " + values[i]
-                 + " TYPE: " + types[i];
+            st = st + "\n  Argument " + i + " -  VALUE: " + values[i] + " TYPE: " + types[i];
         }
         return st;
     }
@@ -1969,23 +1901,5 @@ class ClassLoader extends URLClassLoader {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(e);
         }
-    }
-}
-
-/**
- * Information about an EventListener
- */
-@SuppressWarnings("serial")
-class ListenerInfo implements Serializable {
-    public String listenerInterfaceName;
-    public EventListener listener;
-    // public String eventName;
-    public String eventFullClass;
-
-    public ListenerInfo(EventListener l, String eventClass, String n) {
-        listener = l;
-        // this.eventName=eventName;
-        this.eventFullClass = eventClass;
-        listenerInterfaceName = n;
     }
 }
