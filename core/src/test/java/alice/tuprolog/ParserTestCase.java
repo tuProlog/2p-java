@@ -64,7 +64,7 @@ public class ParserTestCase extends TestCase {
 
     public void testListWithTail() throws InvalidTermException {
         Term t = Term.createTerm("[p|Y]");
-        Struct result = new Struct(new Struct("p"), Var.of("Y"));
+        Struct result = Struct.cons(new Struct("p"), Var.of("Y"));
         result.resolveTerm();
         assertEquals(result.toString(), t.toString());
     }

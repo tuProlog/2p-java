@@ -554,7 +554,7 @@ public class TestExpressionParsing extends BaseTestPrologParsing {
                         "last_but_one(X,[X,_])",
                         new Struct("last_but_one",
                                    Var.of("X"),
-                                   new Struct(
+                                   Struct.list(
                                            Var.of("X"),
                                            Var.underscore()))
                 ),

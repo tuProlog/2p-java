@@ -369,9 +369,9 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
     private Struct createListExact(Stream<Term> terms) {
         final List<Term> termsList = terms.collect(Collectors.toList());
         int i = termsList.size() - 1;
-        Struct result = new Struct(termsList.get(i - 1), termsList.get(i));
+        Struct result = Struct.cons(termsList.get(i - 1), termsList.get(i));
         for (i -= 2; i >= 0; i--) {
-            result = new Struct(termsList.get(i), result);
+            result = Struct.cons(termsList.get(i), result);
         }
         return result;
     }

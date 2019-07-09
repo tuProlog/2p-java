@@ -61,7 +61,7 @@ public class StructIteratorTestCase extends TestCase {
     }
 
     public void testRemoveOperationNotSupported() {
-        Struct list = new Struct(Int.of(1), Struct.emptyList());
+        Struct list = Struct.cons(Int.of(1), Struct.emptyList());
         Iterator<? extends Term> i = list.listIterator();
         assertNotNull(i.next());
         try {

@@ -84,8 +84,7 @@ class FlagManager {
         java.util.Iterator<Flag> it = flags.iterator();
         while (it.hasNext()) {
             Flag fl = it.next();
-            flist = new Struct(new Struct("flag", new Struct(fl.getName()), fl
-                    .getValue()), flist);
+            flist = Struct.cons(Struct.of("flag", Struct.atom(fl.getName()), fl.getValue()), flist);
         }
         return flist;
     }

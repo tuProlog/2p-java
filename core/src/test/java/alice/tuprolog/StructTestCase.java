@@ -123,9 +123,9 @@ public class StructTestCase extends TestCase {
     }
 
     public void testListSize() {
-        Struct list = new Struct(new Struct("a"),
-                                 new Struct(new Struct("b"),
-                                            new Struct(new Struct("c"), Struct.emptyList())));
+        Struct list = Struct.cons(new Struct("a"),
+                                 Struct.cons(new Struct("b"),
+                                            Struct.cons(new Struct("c"), Struct.emptyList())));
         assertTrue(list.isList());
         assertFalse(list.isEmptyList());
         assertEquals(3, list.listSize());
@@ -173,7 +173,7 @@ public class StructTestCase extends TestCase {
 
     public void testToList() {
         Struct emptyList = Struct.emptyList();
-        Struct emptyListToList = new Struct(new Struct("[]"), Struct.emptyList());
+        Struct emptyListToList = Struct.cons(new Struct("[]"), Struct.emptyList());
         assertEquals(emptyListToList, emptyList.toList());
     }
 
@@ -182,31 +182,31 @@ public class StructTestCase extends TestCase {
         assertEquals("[]", emptyList.toString());
         Struct s = new Struct("f", Var.of("X"));
         assertEquals("f(X)", s.toString());
-        Struct list = new Struct(new Struct("a"),
-                                 new Struct(new Struct("b"),
-                                            new Struct(new Struct("c"), Struct.emptyList())));
+        Struct list = Struct.cons(new Struct("a"),
+                                 Struct.cons(new Struct("b"),
+                                            Struct.cons(new Struct("c"), Struct.emptyList())));
         assertEquals("[a,b,c]", list.toString());
     }
 
     public void testAppend() {
         Struct emptyList = Struct.emptyList();
-        Struct list = new Struct(new Struct("a"),
-                                 new Struct(new Struct("b"),
-                                            new Struct(new Struct("c"), Struct.emptyList())));
+        Struct list = Struct.cons(new Struct("a"),
+                                 Struct.cons(new Struct("b"),
+                                            Struct.cons(new Struct("c"), Struct.emptyList())));
         emptyList.append(new Struct("a"));
         emptyList.append(new Struct("b"));
         emptyList.append(new Struct("c"));
         assertEquals(list, emptyList);
-        Struct tail = new Struct(new Struct("b"),
-                                 new Struct(new Struct("c"), Struct.emptyList()));
+        Struct tail = Struct.cons(new Struct("b"),
+                                 Struct.cons(new Struct("c"), Struct.emptyList()));
         assertEquals(tail, emptyList.listTail());
 
         emptyList = Struct.emptyList();
         emptyList.append(Struct.emptyList());
-        assertEquals(new Struct(Struct.emptyList(), Struct.emptyList()), emptyList);
+        assertEquals(Struct.cons(Struct.emptyList(), Struct.emptyList()), emptyList);
 
-        Struct anotherList = new Struct(new Struct("d"),
-                                        new Struct(new Struct("e"), Struct.emptyList()));
+        Struct anotherList = Struct.cons(new Struct("d"),
+                                        Struct.cons(new Struct("e"), Struct.emptyList()));
         list.append(anotherList);
         assertEquals(anotherList, list.listTail().listTail().listTail().listHead());
     }

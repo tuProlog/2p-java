@@ -248,7 +248,7 @@ public class Struct extends Term {
      * Builds a list providing head and tail
      */
     @Deprecated
-    public Struct(Term h, Term t) {
+    private Struct(Term h, Term t) {
         this(".", 2);
         arg[0] = Objects.requireNonNull(h);
         arg[1] = Objects.requireNonNull(t);
@@ -281,19 +281,6 @@ public class Struct extends Term {
         }
     }
 
-    private Struct(Term[] argList, int index) {
-        this(".", 2);
-        if (index < argList.length) {
-            arg[0] = Objects.requireNonNull(argList[index]);
-            arg[1] = new Struct(argList, index + 1);
-        } else {
-            // build an emptyWithStandardOperators list
-            name = "[]";
-            arity = 0;
-            arg = null;
-        }
-    }
-
     /**
      * Builds a compound, with a linked list of arguments
      */
@@ -309,6 +296,19 @@ public class Struct extends Term {
         }
         predicateIndicator = name + "/" + arity;
         resolved = false;
+    }
+
+    private Struct(Term[] argList, int index) {
+        this(".", 2);
+        if (index < argList.length) {
+            arg[0] = Objects.requireNonNull(argList[index]);
+            arg[1] = new Struct(argList, index + 1);
+        } else {
+            // build an emptyWithStandardOperators list
+            name = "[]";
+            arity = 0;
+            arg = null;
+        }
     }
 
     private Struct(int arity) {
