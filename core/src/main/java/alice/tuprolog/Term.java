@@ -269,9 +269,9 @@ public abstract class Term implements Serializable {
     public Term copyResult(Collection<Var> goalVars, List<Var> resultVars) {
         IdentityHashMap<Var, Var> originals = new IdentityHashMap<Var, Var>();
         for (Var key : goalVars) {
-            Var clone = new Var();
+            Var clone = Var.underscore();
             if (!key.isAnonymous()) {
-                clone = new Var(key.getOriginalName());
+                clone = Var.of(key.getOriginalName());
             }
             originals.put(key, clone);
             resultVars.add(clone);

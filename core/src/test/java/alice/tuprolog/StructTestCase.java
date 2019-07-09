@@ -42,7 +42,7 @@ public class StructTestCase extends TestCase {
         } catch (InvalidTermException expected) {
         }
         try {
-            Term[] args = new Term[]{new Struct("a"), null, new Var("P")};
+            Term[] args = new Term[]{new Struct("a"), null, Var.of("P")};
             new Struct("p", args);
             fail();
         } catch (InvalidTermException expected) {
@@ -132,7 +132,7 @@ public class StructTestCase extends TestCase {
     }
 
     public void testNonListHead() throws InvalidTermException {
-        Struct s = new Struct("f", new Var("X"));
+        Struct s = new Struct("f", Var.of("X"));
         try {
             assertNotNull(s.listHead()); // just to make an assertion...
             fail();
@@ -152,7 +152,7 @@ public class StructTestCase extends TestCase {
     }
 
     public void testNonListSize() throws InvalidTermException {
-        Struct s = new Struct("f", new Var("X"));
+        Struct s = new Struct("f", Var.of("X"));
         try {
             assertEquals(0, s.listSize()); // just to make an assertion...
             fail();
@@ -180,7 +180,7 @@ public class StructTestCase extends TestCase {
     public void testToString() throws InvalidTermException {
         Struct emptyList = new Struct();
         assertEquals("[]", emptyList.toString());
-        Struct s = new Struct("f", new Var("X"));
+        Struct s = new Struct("f", Var.of("X"));
         assertEquals("f(X)", s.toString());
         Struct list = new Struct(new Struct("a"),
                                  new Struct(new Struct("b"),
@@ -212,7 +212,7 @@ public class StructTestCase extends TestCase {
     }
 
     public void testIteratedGoalTerm() throws Exception {
-        Var x = new Var("X");
+        Var x = Var.of("X");
         Struct foo = new Struct("foo", x);
         Struct term = new Struct("^", x, foo);
         assertEquals(foo, term.iteratedGoalTerm());

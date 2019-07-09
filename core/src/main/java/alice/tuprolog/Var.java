@@ -54,13 +54,18 @@ public class Var extends Term {
     }
 
     @SuppressWarnings({"deprecated"})
-    public static Var anonymous() {
+    public static Var of() {
         return new Var();
     }
 
     @SuppressWarnings({"deprecated"})
-    public static Var whatever() {
-        return anonymous();
+    public static Var underscore() {
+        return new Var();
+    }
+
+    @SuppressWarnings({"deprecated"})
+    public static Var anonymous() {
+        return new Var();
     }
 
     /**

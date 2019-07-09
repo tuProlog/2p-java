@@ -31,16 +31,16 @@ public class TestTermParsing extends BaseTestPrologParsing {
                 asList("a", new Struct("a")),
                 asList("a(1)", new Struct("a", Int.of(1))),
                 asList("a(1, b(2), c(d(3), e))", new Struct("a", Int.of(1), new Struct("b", Int.of(2)), new Struct("c", new Struct("d", Int.of(3)), new Struct("e")))),
-                asList("X", new Var("X")),
-                asList("_", new Var()),
+                asList("X", Var.of("X")),
+                asList("_", Var.underscore()),
                 asList("[]", new Struct()),
                 asList("[1]", new Struct(Int.of(1), new Struct())),
                 asList("[2]", new Struct(Int.of(2))),
                 asList("[3]", new Struct(Int.of(3))),
                 asList("[4]", new Struct(Int.of(4), new Struct())),
                 asList("[1, a, 2, b]", new Struct(Int.of(1), new Struct("a"), Int.of(2), new Struct("b"))),
-                asList("[H | T]", new Struct(new Var("H"), new Var("T"))),
-                asList("[H | T]", new Struct(new Var("H"), new Var("T"))),
+                asList("[H | T]", new Struct(Var.of("H"), Var.of("T"))),
+                asList("[H | T]", new Struct(Var.of("H"), Var.of("T"))),
                 asList("1", Int.of(1))
         );
     }

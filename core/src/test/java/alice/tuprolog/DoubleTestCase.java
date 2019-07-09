@@ -25,7 +25,7 @@ public class DoubleTestCase extends TestCase {
 
     public void testEqualsToVar() throws InvalidTermException {
         alice.tuprolog.Double one = alice.tuprolog.Double.of(1);
-        Var x = new Var("X");
+        Var x = Var.of("X");
         assertFalse(one.equals(x));
     }
 

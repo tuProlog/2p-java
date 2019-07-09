@@ -8,7 +8,7 @@ import junit.framework.TestCase;
 public class BuiltInTestCase extends TestCase {
 
     public void testConvertTermToGoal() throws InvalidTermException {
-        Term t = new Var("T");
+        Term t = Var.of("T");
         Struct result = new Struct("call", t);
         assertEquals(result, BuiltIn.convertTermToGoal(t));
         assertEquals(result, BuiltIn.convertTermToGoal(new Struct("call", t)));
@@ -16,14 +16,14 @@ public class BuiltInTestCase extends TestCase {
         t = Int.of(2);
         assertNull(BuiltIn.convertTermToGoal(t));
 
-        t = new Struct("p", new Struct("a"), new Var("B"), new Struct("c"));
+        t = new Struct("p", new Struct("a"), Var.of("B"), new Struct("c"));
         result = (Struct) t;
         assertEquals(result, BuiltIn.convertTermToGoal(t));
 
-        Var linked = new Var("X");
+        Var linked = Var.of("X");
         linked.setLink(new Struct("!"));
-        Term[] arguments = new Term[]{linked, new Var("Y")};
-        Term[] results = new Term[]{new Struct("!"), new Struct("call", new Var("Y"))};
+        Term[] arguments = new Term[]{linked, Var.of("Y")};
+        Term[] results = new Term[]{new Struct("!"), new Struct("call", Var.of("Y"))};
         assertEquals((new Struct(";", results)).toString(), BuiltIn.convertTermToGoal(new Struct(";", arguments))
                                                                    .toString());
         assertEquals((new Struct(",", results)).toString(), BuiltIn.convertTermToGoal(new Struct(",", arguments))

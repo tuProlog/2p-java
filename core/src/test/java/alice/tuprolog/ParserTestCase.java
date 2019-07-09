@@ -64,7 +64,7 @@ public class ParserTestCase extends TestCase {
 
     public void testListWithTail() throws InvalidTermException {
         Term t = Term.createTerm("[p|Y]");
-        Struct result = new Struct(new Struct("p"), new Var("Y"));
+        Struct result = new Struct(new Struct("p"), Var.of("Y"));
         result.resolveTerm();
         assertEquals(result.toString(), t.toString());
     }
@@ -186,7 +186,7 @@ public class ParserTestCase extends TestCase {
 	public void testDCGActionWithOperators() throws Exception {
         String input = "{A =.. B, hotel, 2}";
         Struct result = new Struct("{}",
-                            new Struct(",", new Struct("=..", new Var("A"), new Var("B")),
+                            new Struct(",", new Struct("=..", Var.of("A"), Var.of("B")),
                                 new Struct(",", new Struct("hotel"), Int.of(2))));
         result.resolveTerm();
         Term t = Term.createTerm(input);

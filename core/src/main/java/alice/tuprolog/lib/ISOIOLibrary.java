@@ -1,6 +1,5 @@
 package alice.tuprolog.lib;
 
-import alice.tuprolog.Long;
 import alice.tuprolog.Number;
 import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidLibraryException;
@@ -777,7 +776,7 @@ public class ISOIOLibrary extends Library {
             if (value != -1) {
                 //vado a controllare il prossimo carattere
                 //se e' fine file, end_of_stream diventa "at"
-                Var nextChar = new Var();
+                Var nextChar = Var.underscore();
                 peek_code_2(stream_or_alias, nextChar);
                 Term nextCharTerm = nextChar.getTerm();
                 Number nextCharValue = (Number) nextCharTerm;
@@ -876,7 +875,7 @@ public class ISOIOLibrary extends Library {
             element.put("position", Int.of(i2));
 
             if (value != -1) {
-                Var nextChar = new Var();
+                Var nextChar = Var.underscore();
                 peek_code_2(stream_or_alias, nextChar);
                 Term nextCharTerm = nextChar.getTerm();
                 Number nextCharValue = (Number) nextCharTerm;
@@ -1211,7 +1210,7 @@ public class ISOIOLibrary extends Library {
             element.put("position", Int.of(i2));
 
             //if(b != -1){
-            Var nextByte = new Var();
+            Var nextByte = Var.underscore();
             peek_byte_2(stream_or_alias, nextByte);
             Term nextByteTerm = nextByte.getTerm();
             Number nextByteValue = (Number) nextByteTerm;
@@ -1438,7 +1437,7 @@ public class ISOIOLibrary extends Library {
             if (!variables_bool && !variable_names_bool && !singletons_bool) {
                 return unify(in_term, getEngine().toTerm(st.toString()));
             }
-            Var input_term = new Var();
+            Var input_term = Var.underscore();
             unify(input_term, Term.createTerm(st.toString()));
 
             //opzione variables + variables_name
@@ -1465,7 +1464,7 @@ public class ISOIOLibrary extends Library {
                             associations_table.put(t, "X" + num);
                         }
                     }
-                    vars.add(new Var("X" + num));
+                    vars.add(Var.of("X" + num));
                 }
             }
 

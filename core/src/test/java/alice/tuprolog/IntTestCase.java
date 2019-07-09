@@ -24,7 +24,7 @@ public class IntTestCase extends TestCase {
     }
 
     public void testEqualsToVar() throws InvalidTermException {
-        Var x = new Var("X");
+        Var x = Var.of("X");
         Int one = Int.of(1);
         assertFalse(one.equals(x));
     }

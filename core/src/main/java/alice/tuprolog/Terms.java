@@ -135,8 +135,8 @@ public class Terms {
         return Var.anonymous();
     }
 
-    public static Var whatever() {
-        return Var.whatever();
+    public static Var underscore() {
+        return Var.underscore();
     }
 
     public static Number number(java.lang.Number value) {

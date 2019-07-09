@@ -35,11 +35,11 @@ public class PrologExpressionVisitor extends PrologParserBaseVisitor<Term> {
 
     protected Var getVarByName(String name) {
         if ("_".equals(name)) {
-            return new Var();
+            return Var.underscore();
         } else {
             Var variable = variables.get(name);
             if (variable == null) {
-                variables.put(name, variable = new Var(name));
+                variables.put(name, variable = Var.of(name));
             }
             return variable;
         }
