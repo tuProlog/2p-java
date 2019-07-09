@@ -12,7 +12,7 @@ public class StructTestCase extends TestCase {
         } catch (InvalidTermException expected) {
         }
         try {
-            Struct.of("p", Int.of(1), null);
+            Struct.of("p", Int.of(1), (Term) null);
             fail();
         } catch (InvalidTermException expected) {
         }
