@@ -18,7 +18,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
-import alice.tuprolog.interfaces.TermVisitor;
 
 import java.util.HashMap;
 import java.util.List;

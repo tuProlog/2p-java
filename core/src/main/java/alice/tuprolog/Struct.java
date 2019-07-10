@@ -18,7 +18,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
-import alice.tuprolog.interfaces.TermVisitor;
 import com.codepoetics.protonpack.StreamUtils;
 
 import java.util.*;

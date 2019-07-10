@@ -19,7 +19,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
-import alice.tuprolog.interfaces.TermVisitor;
 import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.parser.ParseException;
 import alice.tuprolog.parser.PrologExpressionVisitor;

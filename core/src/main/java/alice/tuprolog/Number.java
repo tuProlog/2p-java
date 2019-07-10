@@ -19,7 +19,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
-import alice.tuprolog.interfaces.TermVisitor;
 
 import java.util.Map;
 
