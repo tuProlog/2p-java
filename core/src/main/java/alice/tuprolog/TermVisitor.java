@@ -61,7 +61,17 @@ public interface TermVisitor<T> {
     }
 
     default T visit(Number number) {
-        return getDefaultValue(number);
+        if (number instanceof Double) {
+            return visit((Double) number);
+        } else if (number instanceof Float) {
+            return visit((Float) number);
+        } else if (number instanceof Int) {
+            return visit((Int) number);
+        } else if (number instanceof Long) {
+            return visit((Long) number);
+        } else {
+            throw new IllegalStateException();
+        }
     }
 
     default T visit(Double number) {

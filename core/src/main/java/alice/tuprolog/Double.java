@@ -207,4 +207,9 @@ public class Double extends Number {
     boolean unify(List<Var> varsUnifiedArg1, List<Var> varsUnifiedArg2, Term t) {
         return unify(varsUnifiedArg1, varsUnifiedArg2, t, true);
     }
+
+    @Override
+    public <T> T accept(TermVisitor<T> tv) {
+        return tv.visit(this);
+    }
 }
