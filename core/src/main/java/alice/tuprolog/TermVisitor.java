@@ -14,6 +14,18 @@ public interface TermVisitor<T> {
         return getDefaultValue(struct);
     }
 
+    default T visitSet(Struct struct, Stream<Term> items) {
+        return getDefaultValue(struct);
+    }
+
+    default T visitTuple(Struct struct, Stream<Term> items) {
+        return getDefaultValue(struct);
+    }
+
+    default T visitCons(Struct struct, Stream<Term> items) {
+        return getDefaultValue(struct);
+    }
+
     default T visitList(Struct struct, Stream<Term> items) {
         return getDefaultValue(struct);
     }
@@ -23,10 +35,16 @@ public interface TermVisitor<T> {
     }
 
     default T visit(Struct struct) {
-        if (struct.isAtom()) {
-            return visitAtom(struct, struct.getName());
-        } else if (struct.isList()) {
+        if (struct.isList()) {
             return visitList(struct, struct.listStream().map(Term.class::cast));
+        } else if (struct.isCons()) {
+            return visitCons(struct, struct.unfoldedListStream().map(Term.class::cast));
+        } else if (struct.isTuple()) {
+            return visitTuple(struct, struct.unfoldedTupleStream().map(Term.class::cast));
+        } else if (struct.isSet()) {
+            return visitSet(struct, struct.unfoldedSetStream().map(Term.class::cast));
+        } else if (struct.isAtom()) {
+            return visitAtom(struct, struct.getName());
         } else {
             return visitCompound(struct, struct.getName(), struct.getArity(), struct::getArg);
         }

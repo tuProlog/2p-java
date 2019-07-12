@@ -781,6 +781,10 @@ public class Struct extends Term {
         }
     }
 
+    public Iterator<? extends Term> unfoldedSetIterator() {
+        return unfoldedSetStream().iterator();
+    }
+
     public Stream<? extends Term> listStream() {
         return StreamUtils.ofNullable(this::listIterator);
     }
@@ -791,6 +795,21 @@ public class Struct extends Term {
 
     public Stream<? extends Term> unfoldedTupleStream() {
         return StreamUtils.ofNullable(this::unfoldedTupleIterator);
+    }
+
+    public Stream<? extends Term> unfoldedSetStream() {
+        if (isEmptySet()) {
+            return Stream.empty();
+        } else if (isSet()) {
+            final Term item = getArg(0);
+            if (item.isTuple()) {
+                return item.castTo(Struct.class).unfoldedTupleStream();
+            } else {
+                return Stream.of(item);
+            }
+        } else {
+            throw new IllegalArgumentException(String.format("The structure %s is not a set.", this));
+        }
     }
 
     /**

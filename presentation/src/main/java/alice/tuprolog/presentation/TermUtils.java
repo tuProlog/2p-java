@@ -55,7 +55,7 @@ public class TermUtils {
 
             @Override
             public Object visitCompound(final Struct struct, final String functor, final int arity, final IntFunction<Term> args) {
-                final Map<String, Object> map = new HashMap<>();
+                final Map<String, Object> map = new LinkedHashMap<>();
                 map.put("fun", functor);
                 map.put("args", IntStream.range(0, arity).mapToObj(args).map(it -> it.accept(this)).collect(Collectors.toList()));
                 return Collections.unmodifiableMap(map);
@@ -63,7 +63,39 @@ public class TermUtils {
 
             @Override
             public Object visitList(final Struct struct, final Stream<Term> items) {
-                return items.map(it -> it.accept(this)).collect(Collectors.toList());
+                return Collections.singletonMap(
+                        "list",
+                        items.map(it -> it.accept(this)).collect(Collectors.toList())
+                );
+            }
+
+            @Override
+            public Object visitSet(final Struct struct, final Stream<Term> items) {
+                return Collections.singletonMap(
+                        "set",
+                        items.map(it -> it.accept(this)).collect(Collectors.toList())
+                );
+            }
+
+            @Override
+            public Object visitTuple(final Struct struct, final Stream<Term> items) {
+                return Collections.singletonMap(
+                        "tuple",
+                        items.map(it -> it.accept(this)).collect(Collectors.toList())
+                );
+            }
+
+            @Override
+            public Object visitCons(final Struct struct, final Stream<Term> items) {
+                final List<Object> elems = new ArrayList<>(items.map(it -> it.accept(this)).collect(Collectors.toList())) ;
+                final int lastIndex = elems.size() - 1;
+
+                elems.set(lastIndex, Collections.singletonMap("tail", elems.get(lastIndex)));
+
+                return Collections.singletonMap(
+                        "list",
+                        Collections.unmodifiableList(elems)
+                );
             }
 
             @Override
