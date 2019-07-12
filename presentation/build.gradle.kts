@@ -17,6 +17,7 @@ dependencies {
     implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-yaml", jacksonVersion)
 
     testImplementation("junit", "junit", "4.12")
+    testImplementation("pl.pragmatists", "JUnitParams", "1.1.1")
 }
 
 configure<JavaPluginConvention> {
