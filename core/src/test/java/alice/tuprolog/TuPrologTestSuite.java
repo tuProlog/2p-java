@@ -13,7 +13,7 @@ import org.junit.runners.Suite.SuiteClasses;
                DoubleTestCase.class,
                SolveInfoTestCase.class,
                StateRuleSelectionTestCase.class,
-               StructIteratorTestCase.class,
+               LogicListIteratorTestCase.class,
                StructTestCase.class,
                TermIteratorTestCase.class,
                TheoryTestCase.class,

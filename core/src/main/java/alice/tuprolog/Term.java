@@ -147,51 +147,73 @@ public abstract class Term implements Serializable {
      *
      * @deprecated Use <tt>instanceof Number</tt> instead.
      */
-    public abstract boolean isNumber();
+    public boolean isNumber() {
+        return false;
+    }
 
     /**
      * is this term a struct?
      *
      * @deprecated Use <tt>instanceof Struct</tt> instead.
      */
-    public abstract boolean isStruct();
+    public boolean isStruct() {
+        return false;
+    }
 
     /**
      * is this term a variable?
      *
      * @deprecated Use <tt>instanceof Var</tt> instead.
      */
-    public abstract boolean isVar();
+    public boolean isVar() {
+        return false;
+    }
 
     /**
      * is this term a null term?
      */
-    public abstract boolean isEmptyList();
+    public boolean isEmptyList() {
+        return false;
+    }
 
     /**
      * is this term a constant prolog term?
      */
-    public abstract boolean isAtomic();
+    public boolean isAtomic() {
+        return false;
+    }
 
     /**
      * is this term a prolog compound term?
      */
-    public abstract boolean isCompound();
+    public boolean isCompound() {
+        return false;
+    }
 
     /**
      * is this term a prolog (alphanumeric) atom?
      */
-    public abstract boolean isAtom();
+    public boolean isAtom() {
+        return false;
+    }
+
+    public boolean isCons() {
+        return false;
+    }
 
     /**
      * is this term a prolog list?
      */
-    public abstract boolean isList();
+    public boolean isList() {
+        return false;
+    }
 
     /**
      * is this term a ground term?
      */
-    public abstract boolean isGround();
+    public boolean isGround() {
+        return false;
+    }
 
     /**
      * Tests for the equality of two object terms
@@ -371,6 +393,18 @@ public abstract class Term implements Serializable {
      */
     public boolean match(Term t) {
         return match(true, t); //Alberto
+    }
+
+    public boolean isEmptySet() {
+        return false;
+    }
+
+    public boolean isSet() {
+        return false;
+    }
+
+    public boolean isTuple() {
+        return false;
     }
 
     /**

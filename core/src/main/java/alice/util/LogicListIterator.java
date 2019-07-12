@@ -16,42 +16,42 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-package alice.tuprolog;
+package alice.util;
+
+import alice.tuprolog.Struct;
+import alice.tuprolog.Term;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * This class represents an iterator through the arguments of a Struct list.
  *
  * @see Struct
  */
-class StructIterator implements java.util.Iterator<Term>, java.io.Serializable {
+public class LogicListIterator implements java.util.Iterator<Term> {
 
-    private static final long serialVersionUID = 1L;
+    private Struct list;
 
-    Struct list;
-
-    StructIterator(Struct t) {
-        this.list = t;
+    public LogicListIterator(Struct term) {
+        this.list = Objects.requireNonNull(term);
+        if (!term.isList()) {
+            throw new IllegalArgumentException(String.format("The structure %s is not a list.", term));
+        }
     }
 
+    @Override
     public boolean hasNext() {
         return !list.isEmptyList();
     }
 
+    @Override
     public Term next() {
         if (list.isEmptyList()) {
             throw new NoSuchElementException();
         }
-        // Using Struct#getTerm(int) instead of Struct#listHead and Struct#listTail
-        // to avoid redundant Struct#isList calls since it is only possible to get
-        // a StructIterator on a Struct instance which is already a list.
-        Term head = list.getTerm(0);
+        final Term head = list.getTerm(0);
         list = (Struct) list.getTerm(1);
         return head;
-    }
-
-    public void remove() {
-        throw new UnsupportedOperationException();
     }
 }

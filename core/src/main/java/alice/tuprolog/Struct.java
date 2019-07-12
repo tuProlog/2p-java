@@ -18,6 +18,10 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
+import alice.util.ArrayIterator;
+import alice.util.DeepLogicListIterator;
+import alice.util.LogicListIterator;
+import alice.util.LogicTupleIterator;
 import com.codepoetics.protonpack.StreamUtils;
 
 import java.util.*;
@@ -138,27 +142,49 @@ public class Struct extends Term {
 
     @SuppressWarnings({"deprecated"})
     public static Struct list(Term... terms) {
-        return new Struct(terms);
+        return list(new ArrayIterator<>(terms), emptyList());
     }
 
     @SuppressWarnings({"deprecated"})
     public static Struct list(Stream<? extends Term> terms) {
-        return new Struct(terms);
-    }
-
-    @SuppressWarnings({"deprecated"})
-    public static Struct list(Collection<? extends Term> terms) {
-        return new Struct(terms);
+        return list(terms.iterator(), emptyList());
     }
 
     @SuppressWarnings({"deprecated"})
     public static Struct list(Iterator<? extends Term> terms) {
-        return new Struct(terms);
+        return list(terms, emptyList());
     }
 
     @SuppressWarnings({"deprecated"})
     public static Struct list(Iterable<? extends Term> terms) {
-        return new Struct(terms.iterator());
+        return list(terms.iterator(), emptyList());
+    }
+
+    public static Struct list(Term[] items, Term last) {
+        return list(new ArrayIterator<>(items), last);
+    }
+
+    public static Struct list(Stream<? extends Term> items, Term last) {
+        return list(items.iterator(), last);
+    }
+
+    public static Struct list(Iterable<? extends Term> items, Term last) {
+        return list(items.iterator(), last);
+    }
+
+    public static Struct list(Iterator<? extends Term> items, Term last) {
+        Objects.requireNonNull(last);
+        Objects.requireNonNull(items);
+
+        if (!items.hasNext()) {
+            if (last.isList()) {
+                return (Struct) last;
+            } else {
+                throw new IllegalArgumentException(String.format("Cannot build a list of the %s term alone", last));
+            }
+        }
+
+        return new Struct(items, last);
     }
 
     public static Struct tuple(Term term1, Term term2, Term... terms) {
@@ -268,6 +294,18 @@ public class Struct extends Term {
     @Deprecated
     public Struct(Stream<? extends Term> stream) {
         this(stream.iterator());
+    }
+
+    private Struct(Iterator<? extends Term> i, Term last) {
+        this(".", 2);
+
+        arg[0] = i.next();
+
+        if (i.hasNext()) {
+            arg[1] = new Struct(i, last);
+        } else {
+            arg[1] = last;
+        }
     }
 
     @Deprecated
@@ -412,10 +450,6 @@ public class Struct extends Term {
 
     public boolean isAtom() {
         return (arity == 0 || isEmptyList());
-    }
-
-    public boolean isList() {
-        return (name.equals(".") && arity == 2 && arg[1].isList()) || isEmptyList();
     }
 
     public boolean isGround() {
@@ -643,19 +677,34 @@ public class Struct extends Term {
         return newcount;
     }
 
-    /**
-     * Is this structure an emptyWithStandardOperators list?
-     */
+    @Override
+    public boolean isCons() {
+        return name.equals(".") && arity == 2;
+    }
+
+    @Override
+    public boolean isList() {
+        return isCons() && getArg(1).isList() || isEmptyList();
+    }
+
+    @Override
     public boolean isEmptyList() {
-        return name.equals("[]") && arity == 0;
+        return "[]".equals(name) && arity == 0;
     }
 
+    @Override
     public boolean isEmptySet() {
-        return name.equals("{}") && arity == 0;
+        return "{}".equals(name) && arity == 0;
     }
 
+    @Override
     public boolean isSet() {
-        return name.equals("{}");
+        return "{}".equals(name) && arity <= 1;
+    }
+
+    @Override
+    public boolean isTuple() {
+        return ",".equals(name) && arity == 2;
     }
 
     /**
@@ -709,27 +758,50 @@ public class Struct extends Term {
      * </p>
      */
     public Iterator<? extends Term> listIterator() {
-        if (!isList()) {
-            throw new UnsupportedOperationException("The structure " + this + " is not a list.");
+        try {
+            return new LogicListIterator(this);
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedOperationException(e.getMessage());
         }
-        return new StructIterator(this);
+    }
+
+    public Iterator<? extends Term> unfoldedListIterator() {
+        try {
+            return new DeepLogicListIterator(this);
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedOperationException(e.getMessage());
+        }
+    }
+
+    public Iterator<? extends Term> unfoldedTupleIterator() {
+        try {
+            return new LogicTupleIterator(this);
+        } catch (IllegalArgumentException e) {
+            throw new UnsupportedOperationException(e.getMessage());
+        }
     }
 
     public Stream<? extends Term> listStream() {
         return StreamUtils.ofNullable(this::listIterator);
     }
 
-    // hidden services
+    public Stream<? extends Term> unfoldedListStream() {
+        return StreamUtils.ofNullable(this::unfoldedListIterator);
+    }
+
+    public Stream<? extends Term> unfoldedTupleStream() {
+        return StreamUtils.ofNullable(this::unfoldedTupleIterator);
+    }
 
     /**
      * Gets a list Struct representation, with the functor as first element.
      */
     Struct toList() {
-        Struct t = new Struct();
+        Struct t = emptyList();
         for (int c = arity - 1; c >= 0; c--) {
-            t = new Struct(arg[c].getTerm(), t);
+            t = cons(arg[c].getTerm(), t);
         }
-        return new Struct(new Struct(name), t);
+        return cons(new Struct(name), t);
     }
 
     /**

@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 /**
  * @author <a href="mailto:giulio.piancastelli@unibo.it">Giulio Piancastelli</a>
  */
-public class StructIteratorTestCase extends TestCase {
+public class LogicListIteratorTestCase extends TestCase {
 
     public void testEmptyIterator() {
         Struct list = Struct.emptyList();
