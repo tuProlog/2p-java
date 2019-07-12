@@ -42,7 +42,7 @@ public class DeepLogicListIterator implements java.util.Iterator<Term> {
 
     @Override
     public Term next() {
-        if (list.isList()) {
+        if (list.isCons()) {
             final Struct list = this.list.castTo(Struct.class);
             final Term head = list.getTerm(0);
             this.list = list.getTerm(1);

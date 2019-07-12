@@ -412,6 +412,46 @@ public class Var extends Term {
         }
     }
 
+    @Override
+    public boolean isCons() {
+        Term t = getTerm();
+        if (t == this) {
+            return false;
+        } else {
+            return t.isCons();
+        }
+    }
+
+    @Override
+    public boolean isEmptySet() {
+        Term t = getTerm();
+        if (t == this) {
+            return false;
+        } else {
+            return t.isEmptySet();
+        }
+    }
+
+    @Override
+    public boolean isSet() {
+        Term t = getTerm();
+        if (t == this) {
+            return false;
+        } else {
+            return t.isSet();
+        }
+    }
+
+    @Override
+    public boolean isTuple() {
+        Term t = getTerm();
+        if (t == this) {
+            return false;
+        } else {
+            return t.isTuple();
+        }
+    }
+
     public boolean isGround() {
         Term t = getTerm();
         if (t == this) {

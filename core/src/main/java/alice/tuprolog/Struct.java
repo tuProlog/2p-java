@@ -449,7 +449,7 @@ public class Struct extends Term {
     }
 
     public boolean isAtom() {
-        return (arity == 0 || isEmptyList());
+        return arity == 0;
     }
 
     public boolean isGround() {
@@ -913,6 +913,56 @@ public class Struct extends Term {
         return ATOM_REGEX.matcher(getName()).matches();
     }
 
+    private String setToString() {
+        final Term item = getArg(0).getTerm();
+        if (item.isTuple()) {
+            return "{" + item.castTo(Struct.class).tupleToString(false) + "}";
+        } else {
+            return "{" + item + "}";
+        }
+    }
+
+    private String funcToString() {
+        final Stream<String> args = Stream.of(arg).map(Term::getTerm).map(Term::toString);
+
+        return args.collect(Collectors.joining(",", atomToString() + "(", ")"));
+    }
+
+    private String tupleToString() {
+        return tupleToString(true);
+    }
+
+    private String tupleToString(boolean parenteses) {
+        final Stream<String> strings = unfoldedTupleStream().map(Term::getTerm).map(Term::toString);
+
+        if (parenteses) {
+            return strings.collect(Collectors.joining(",", "(", ")"));
+        } else {
+            return strings.collect(Collectors.joining(","));
+        }
+    }
+
+    private String consToString() {
+        final List<Term> unfolded = unfoldedListStream().map(Term::getTerm).collect(Collectors.toList());
+        final int lastIndex = unfolded.size() - 1;
+        final Term last = unfolded.get(lastIndex);
+
+        if (last.isEmptyList()) {
+            return unfolded.stream().limit(lastIndex).map(Term::toString)
+                           .collect(Collectors.joining(",", "[", "]"));
+        } else {
+            return unfolded.stream().limit(lastIndex).map(Term::toString)
+                           .collect(Collectors.joining(",", "[", "|" + last + "]"));
+        }
+    }
+
+    private String atomToString() {
+        if (isEmptyList() || isEmptySet() || ATOM_REGEX.matcher(getName()).matches()) {
+            return getName();
+        } else {
+            return "'" + getName() + "'";
+        }
+    }
 
     /**
      * Gets the string representation of this structure
@@ -922,65 +972,16 @@ public class Struct extends Term {
      */
     public String toString() {
         // emptyWithStandardOperators list case
-        if (isEmptyList()) {
-            return "[]";
-        } else if (isEmptySet()) {
-            return "{}";
-        } else if (this.isList()) {
-            return ("[" + toString0() + "]");
+        if (isAtom()) {
+            return atomToString();
+        } else if (isCons()) {
+            return consToString();
+        } else if (isTuple()) {
+            return tupleToString();
         } else if (isSet()) {
-            return ("{" + toString0_bracket() + "}");
+            return setToString();
         } else {
-            String s = (isFunctorAtomic() ? name : "'" + name + "'");
-            if (arity > 0) {
-                s = s + "(";
-                for (int c = 1; c < arity; c++) {
-                    if (!(arg[c - 1] instanceof Var)) {
-                        s = s + arg[c - 1].toString() + ",";
-                    } else {
-                        s = s + ((Var) arg[c - 1]).toStringFlattened() + ",";
-                    }
-                }
-                if (!(arg[arity - 1] instanceof Var)) {
-                    s = s + arg[arity - 1].toString() + ")";
-                } else {
-                    s = s + ((Var) arg[arity - 1]).toStringFlattened() + ")";
-                }
-            }
-            return s;
-        }
-    }
-
-    private String toString0() {
-        Term h = arg[0].getTerm();
-        Term t = arg[1].getTerm();
-        if (t.isEmptyList()) {
-            if (h instanceof Var) {
-                return ((Var) h).toStringFlattened();
-            } else {
-                return h.toString();
-            }
-        } else if (t.isList()) {
-            Struct tl = (Struct) t;
-            if (h instanceof Var) {
-                return (((Var) h).toStringFlattened() + "," + tl.toString0());
-            } else {
-                return (h.toString() + "," + tl.toString0());
-            }
-        } else {
-            String h0;
-            String t0;
-            if (h instanceof Var) {
-                h0 = ((Var) h).toStringFlattened();
-            } else {
-                h0 = h.toString();
-            }
-            if (t instanceof Var) {
-                t0 = ((Var) t).toStringFlattened();
-            } else {
-                t0 = t.toString();
-            }
-            return (h0 + "|" + t0);
+            return funcToString();
         }
     }
 
