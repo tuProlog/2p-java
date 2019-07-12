@@ -1,4 +1,7 @@
-package alice.tuprolog;
+package alice.tuprolog.presentation;
+
+import alice.tuprolog.*;
+import alice.tuprolog.Double;
 
 import java.util.*;
 import java.util.function.IntFunction;
@@ -15,9 +18,9 @@ public class TermUtils {
         } else if (object instanceof java.lang.Integer) {
             return Int.of((Integer) object);
         } else if (object instanceof java.lang.Float) {
-            return Float.of((java.lang.Float) object);
+            return alice.tuprolog.Float.of((java.lang.Float) object);
         } else if (object instanceof java.lang.Long) {
-            return Long.of((java.lang.Long) object);
+            return alice.tuprolog.Long.of((java.lang.Long) object);
         } else if (object instanceof String) {
             return Struct.atom(object.toString());
         } else if (object instanceof List) {
@@ -54,13 +57,13 @@ public class TermUtils {
             public Object visitCompound(final Struct struct, final String functor, final int arity, final IntFunction<Term> args) {
                 final Map<String, Object> map = new HashMap<>();
                 map.put("fun", functor);
-                map.put("args", IntStream.range(0, arity).mapToObj(args).collect(Collectors.toList()));
+                map.put("args", IntStream.range(0, arity).mapToObj(args).map(it -> it.accept(this)).collect(Collectors.toList()));
                 return Collections.unmodifiableMap(map);
             }
 
             @Override
             public Object visitList(final Struct struct, final Stream<Term> items) {
-                return items.collect(Collectors.toList());
+                return items.map(it -> it.accept(this)).collect(Collectors.toList());
             }
 
             @Override
@@ -94,12 +97,12 @@ public class TermUtils {
             }
 
             @Override
-            public Object visit(final Long number) {
+            public Object visit(final alice.tuprolog.Long number) {
                 return number.longValue();
             }
 
             @Override
-            public Object visit(final Float number) {
+            public Object visit(final alice.tuprolog.Float number) {
                 return number.floatValue();
             }
         });

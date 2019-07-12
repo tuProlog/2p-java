@@ -1,7 +1,8 @@
-package alice.tuprolog;
+package alice.tuprolog.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.util.Collections;
 import java.util.List;
@@ -10,19 +11,19 @@ import java.util.stream.Collectors;
 
 abstract class DynamicDeserializer<T> extends SimpleDeserializer<T> {
 
-    DynamicDeserializer(Class<T> clazz, MIMETypes mimeType, ObjectMapper mapper) {
+    DynamicDeserializer(Class<T> clazz, MIMEType mimeType, ObjectMapper mapper) {
         super(clazz, mimeType, mapper);
     }
 
     protected abstract T fromDynamicObject(Object dynamicObject);
 
     @Override
-    public T read(Reader reader) {
+    public T read(Reader reader) throws IOException {
         return fromDynamicObject(readImpl(reader, Object.class));
     }
 
     @Override
-    public List<T> readList(Reader reader) {
+    public List<T> readList(Reader reader) throws IOException {
         return listFromDynamicObject(readImpl(reader, Object.class));
     }
 

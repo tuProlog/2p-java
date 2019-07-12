@@ -1,30 +1,35 @@
-package alice.tuprolog;
+package alice.tuprolog.presentation;
 
 import java.util.stream.Stream;
 
-public enum MIMETypes {
+public enum MIMEType {
 
-    APPLICATION_JSON("application", "json"),
+    APPLICATION_JSON("application", "json", ".json"),
 
-    APPLICATION_YAML("application", "yaml"),
+    APPLICATION_YAML("application", "yaml", ".yml"),
 
-    APPLICATION_XML("application", "xml"),
+    APPLICATION_XML("application", "xml", ".xml"),
 
-    APPLICATION_PROLOG("application", "prolog"),
+    APPLICATION_PROLOG("application", "prolog", ".pl"),
 
-    TEXT_HTML("text", "html"),
+    TEXT_HTML("text", "html", ".html"),
 
-    TEXT_PLAIN("text", "plain"),
+    TEXT_PLAIN("text", "plain", ".txt"),
 
-    ANY("*", "*"),
+    ANY("*", "*", ""),
 
-    APPLICATION_ANY("application", "*");
+    APPLICATION_ANY("application", "*", ".*");
 
-    private final String type, subtype;
+    private final String type, subtype, extension;
 
-    MIMETypes(String type, String subtype) {
+    MIMEType(String type, String subtype, String extension) {
         this.type = type;
         this.subtype = subtype;
+        this.extension = extension;
+    }
+
+    public String getFileExtension() {
+        return extension;
     }
 
     public String getType() {
@@ -44,7 +49,7 @@ public enum MIMETypes {
         return match(this, other);
     }
 
-    public static boolean match(MIMETypes mime, String other) {
+    public static boolean match(MIMEType mime, String other) {
         if (other == null || !other.contains("/")) return false;
 
         final String[] parts = other.split("/");
@@ -54,14 +59,14 @@ public enum MIMETypes {
         return match(mime, parts[0], parts[1]);
     }
 
-    private static boolean match(MIMETypes mime, String type, String subtype) {
+    private static boolean match(MIMEType mime, String type, String subtype) {
         return (Stream.of(mime.getType(), type).anyMatch("*"::equals)
                 || mime.getType().equalsIgnoreCase(type))
                 && (Stream.of(mime.getSubtype(), subtype).anyMatch("*"::equals)
                         || mime.getSubtype().equalsIgnoreCase(subtype));
     }
 
-    public static MIMETypes parse(String string) {
+    public static MIMEType parse(String string) {
         return Stream.of(values()).filter(it -> it.toString().equalsIgnoreCase(string)).findAny().orElseGet(() -> {
            throw new IllegalArgumentException(string);
         });
