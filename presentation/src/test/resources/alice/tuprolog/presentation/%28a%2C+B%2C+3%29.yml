@@ -1,0 +1,4 @@
+tuple:
+  - a
+  - var: B
+  - 3
