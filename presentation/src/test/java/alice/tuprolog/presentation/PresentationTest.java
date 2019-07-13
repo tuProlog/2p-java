@@ -16,33 +16,50 @@ import java.net.URLEncoder;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import static alice.tuprolog.presentation.MIMEType.*;
+import static alice.tuprolog.presentation.MIMEType.APPLICATION_JSON;
+import static alice.tuprolog.presentation.MIMEType.APPLICATION_YAML;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
 public class PresentationTest {
 
-
     public Object[][] getTerms() {
+
+        final MIMEType[] types = {APPLICATION_JSON, APPLICATION_YAML};
+        
         return Stream.of(
-                tests("atom", APPLICATION_JSON, APPLICATION_YAML),
-                tests("Variable", APPLICATION_JSON, APPLICATION_YAML),
-                tests("_", APPLICATION_JSON, APPLICATION_YAML),
-                tests("1", APPLICATION_JSON, APPLICATION_YAML),
-                tests("1.2", APPLICATION_JSON, APPLICATION_YAML),
-                tests(Integer.toString(Integer.MAX_VALUE), APPLICATION_JSON, APPLICATION_YAML),
-                tests(Integer.toString(Integer.MIN_VALUE), APPLICATION_JSON, APPLICATION_YAML),
-                tests(Long.toString(Long.MAX_VALUE), APPLICATION_JSON, APPLICATION_YAML),
-                tests(Long.toString(Long.MIN_VALUE), APPLICATION_JSON, APPLICATION_YAML),
-                tests("f(a, B, c(1, 2.3))", APPLICATION_JSON, APPLICATION_YAML)
+//                tests("atom", types),
+//                tests("Variable", types),
+//                tests("_", types),
+//                tests("_", types),
+//                tests("1", types),
+//                tests("1.2", types),
+//                tests(Integer.toString(Integer.MAX_VALUE), types),
+//                tests(Integer.toString(Integer.MIN_VALUE), types),
+//                tests(Long.toString(Long.MAX_VALUE), types),
+//                tests(Long.toString(Long.MIN_VALUE), types),
+//                tests("f(a, B, c(1, 2.3))", types),
+                tests("[]", types),
+                tests("[a]", types),
+                tests("[a | B]", types),
+                tests("[a, B, 3]", types),
+                tests("[a, B, 3, 4.5]", types),
+                tests("[a, B, 3, 4.5, f(g)]", types),
+                tests("[a, B, 3 | c]", types)//,
+//                tests("{}", types),
+//                tests("{a}", types),
+//                tests("{a, B}", types),
+//                tests("{a, B, 3}", types),
+//                tests("{a, B, 3, 4.5, _}", types),
+//                tests("(a)", types),
+//                tests("(a, B)", types),
+//                tests("(a, B, 3)", types),
+//                tests("(a, B, 3, 4.5, _)", types)
             ).flatMap(Function.identity()).map(it -> it.toArray(Object[]::new)).toArray(Object[][]::new);
     }
 
-    private Stream<Stream<Object>> tests(String term, MIMEType type, MIMEType... types) {
-        return Stream.concat(
-                Stream.of(type),
-                Stream.of(types)
-        ).map(t -> test(term, t));
+    private Stream<Stream<Object>> tests(String term, MIMEType... types) {
+        return Stream.of(types).map(t -> test(term, t));
     }
 
     private Stream<Object> test(String term, MIMEType type) {
