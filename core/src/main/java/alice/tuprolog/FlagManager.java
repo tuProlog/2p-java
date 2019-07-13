@@ -17,10 +17,6 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.json.AbstractEngineState;
-import alice.tuprolog.json.FullEngineState;
-import alice.tuprolog.json.JSONSerializerManager;
-
 import java.util.ArrayList;
 
 /**
@@ -134,28 +130,6 @@ class FlagManager {
             }
         }
         return false;
-    }
-
-    //Alberto
-    public void serializeFlags(AbstractEngineState brain) {
-        if (brain instanceof FullEngineState) {
-            ArrayList<String> a = new ArrayList<String>();
-            for (Flag f : flags) {
-                a.add(JSONSerializerManager.toJSON(f));
-            }
-            ((FullEngineState) brain).setFlags(a);
-        }
-    }
-
-    //Alberto
-    public void reloadFlags(FullEngineState brain) {
-        ArrayList<String> a = brain.getFlags();
-        ArrayList<Flag> f = new ArrayList<Flag>();
-        for (String s : a) {
-            Flag fl = JSONSerializerManager.fromJSON(s, Flag.class);
-            f.add(fl);
-        }
-        flags = f;
     }
 
 }

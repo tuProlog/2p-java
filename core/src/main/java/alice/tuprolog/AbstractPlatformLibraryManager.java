@@ -5,23 +5,16 @@ import alice.tuprolog.event.WarningEvent;
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
 import alice.tuprolog.interfaces.ILibraryManager;
-import alice.tuprolog.json.JSONSerializerManager;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Set;
 
-//Alberto
 public abstract class AbstractPlatformLibraryManager implements ILibraryManager {
 
     protected transient Prolog prolog;
     protected Hashtable<String, URL> externalLibraries = new Hashtable<String, URL>();
-    /**
-     * @author Alberto Sita
-     */
-
     private ArrayList<Library> currentLibraries = new ArrayList<Library>();
     private TheoryManager theoryManager;
     private PrimitiveManager primitiveManager;
@@ -193,28 +186,6 @@ public abstract class AbstractPlatformLibraryManager implements ILibraryManager 
     @Override
     public synchronized boolean isExternalLibrary(String name) {
         return externalLibraries.containsKey(name);
-    }
-
-    ///Management
-
-    public synchronized String fetchCurrentLibraries() {
-        String[] libs = new String[currentLibraries.size()];
-        for (int i = 0; i < libs.length; i++) {
-            libs[i] = currentLibraries.get(i).getName();
-        }
-
-        return JSONSerializerManager.toJSON(libs);
-    }
-
-    public synchronized String fetchCurrentExternalLibraries() {
-        String[] libs = new String[externalLibraries.keySet().size()];
-        Set<String> set = externalLibraries.keySet();
-        int i = 0;
-        for (String str : set) {
-            libs[i] = str;
-            i++;
-        }
-        return JSONSerializerManager.toJSON(libs);
     }
 
     public synchronized boolean loadLibraryIntoEngine(String libraryClass) {

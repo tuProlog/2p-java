@@ -1,5 +1,10 @@
 package alice.tuprolog.factories;
 
+import alice.tuprolog.lib.BasicLibrary;
+import alice.tuprolog.lib.IOLibrary;
+import alice.tuprolog.lib.ISOLibrary;
+import alice.tuprolog.lib.OOLibrary;
+
 //Alberto
 public final class DefaultLibrariesSet {
 
@@ -9,11 +14,12 @@ public final class DefaultLibrariesSet {
 
     public static String[] getDefaultLibrariesSetForCurrentPlatform() {
         if (System.getProperty("java.vm.name").equals("IKVM.NET")) {
-            return new String[]{"alice.tuprolog.lib.BasicLibrary", "alice.tuprolog.lib.ISOLibrary",
-                                "alice.tuprolog.lib.IOLibrary", "OOLibrary.OOLibrary, OOLibrary"};
+            return new String[]{
+                    BasicLibrary.class.getName(), ISOLibrary.class.getName(),
+                    IOLibrary.class.getName(), "OOLibrary.OOLibrary, OOLibrary"};
         } else {
-            return new String[]{"alice.tuprolog.lib.BasicLibrary", "alice.tuprolog.lib.ISOLibrary",
-                                "alice.tuprolog.lib.IOLibrary", "alice.tuprolog.lib.OOLibrary"};
+            return new String[]{BasicLibrary.class.getName(), ISOLibrary.class.getName(),
+                    IOLibrary.class.getName(), OOLibrary.class.getName()};
         }
     }
 }

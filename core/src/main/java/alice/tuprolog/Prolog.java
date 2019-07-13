@@ -25,17 +25,11 @@ import alice.tuprolog.factories.LibraryManagerFactory;
 import alice.tuprolog.interfaces.ILibraryManager;
 import alice.tuprolog.interfaces.IProlog;
 import alice.tuprolog.interfaces.event.*;
-import alice.tuprolog.json.AbstractEngineState;
-import alice.tuprolog.json.FullEngineState;
-import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.json.ReducedEngineState;
 import alice.util.Tools;
 
-import javax.management.MBeanServerFactory;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -43,9 +37,6 @@ import java.util.List;
  */
 
 public class Prolog implements IProlog, Serializable {
-    public static final boolean INCLUDE_KB_IN_SERIALIZATION = true;
-    public static final boolean EXCLUDE_KB_IN_SERIALIZATION = false;
-    private static final long serialVersionUID = 1L;
 
     /*  manager of current theory */
     private TheoryManager theoryManager;
@@ -203,57 +194,6 @@ public class Prolog implements IProlog, Serializable {
         initializeManagers();
     }
 
-    //Alberto
-    public static AbstractEngineState getEngineStateFromJSON(String jsonString) {
-        AbstractEngineState brain = null;
-        if (jsonString.contains("FullEngineState")) {
-            brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
-        } else if (jsonString.contains("ReducedEngineState")) {
-            brain = JSONSerializerManager.fromJSON(jsonString, ReducedEngineState.class);
-        }
-        return brain;
-    }
-
-    //Alberto
-    public static Prolog fromJSON(String jsonString) {
-        AbstractEngineState brain = null;
-        Prolog p = null;
-        if (jsonString.contains("FullEngineState")) {
-            brain = JSONSerializerManager.fromJSON(jsonString, FullEngineState.class);
-        } else {
-            return p;
-        }
-        try {
-            p = new Prolog(((FullEngineState) brain).getLibraries());
-            p.opManager = OperatorManager.standardOperators();
-            p.setTheory(Theory.parseLazilyWithStandardOperators(((FullEngineState) brain).getDynTheory()));
-            LinkedList<Operator> l = ((FullEngineState) brain).getOp();
-            for (Operator o : l) {
-                p.opManager.add(o);
-            }
-        } catch (InvalidLibraryException e) {
-            e.printStackTrace();
-            return null;
-        } catch (InvalidTheoryException e) {
-            e.printStackTrace();
-            return null;
-        }
-        p.flagManager.reloadFlags((FullEngineState) brain);
-        int i = 0;
-        int n = brain.getNumberAskedResults();
-        if (brain.hasOpenAlternatives()) {
-            p.solve(brain.getQuery());
-            while (i < n) {
-                try {
-                    p.solveNext();
-                } catch (NoMoreSolutionException e) {
-                }
-                i++;
-            }
-        }
-        return p;
-    }
-
     /**
      * Gets the current version of the tuProlog system
      */
@@ -307,25 +247,6 @@ public class Prolog implements IProlog, Serializable {
         flagManager.initialize(this);
         primitiveManager.initialize(this);
         engineManager.initialize(this);
-    }
-
-    //Alberto
-    public String toJSON(boolean alsoKB) {
-        AbstractEngineState brain = null;
-        if (alsoKB) {
-            brain = new FullEngineState();
-            this.theoryManager.serializeLibraries((FullEngineState) brain);
-            this.theoryManager.serializeDynDataBase((FullEngineState) brain);
-            ((FullEngineState) brain).setOp((LinkedList<Operator>) this.opManager.getOperators());
-        } else {
-            brain = new ReducedEngineState();
-        }
-
-        this.theoryManager.serializeTimestamp(brain);
-        this.engineManager.serializeQueryState(brain);
-        this.flagManager.serializeFlags(brain);
-
-        return JSONSerializerManager.toJSON(brain);
     }
 
     /**

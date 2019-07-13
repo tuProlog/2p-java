@@ -20,8 +20,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.interfaces.IPrimitiveManager;
 import alice.tuprolog.interfaces.IPrimitives;
-import alice.tuprolog.json.JSONSerializerManager;
-import alice.tuprolog.parser.dynamic.StringType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;

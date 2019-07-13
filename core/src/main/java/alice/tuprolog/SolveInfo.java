@@ -19,7 +19,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.NoSolutionException;
 import alice.tuprolog.exceptions.UnknownVarException;
-import alice.tuprolog.json.JSONSerializerManager;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -68,11 +67,6 @@ public class SolveInfo implements Serializable {
         bindings = resultVars;
         endState = resultDemo;
         isSuccess = (endState > FALSE);
-    }
-
-    //Alberto
-    public static SolveInfo fromJSON(String jsonString) {
-        return JSONSerializerManager.fromJSON(jsonString, SolveInfo.class);
     }
 
     /**
@@ -204,10 +198,5 @@ public class SolveInfo implements Serializable {
                 return "no.";
             }
         }
-    }
-
-    //Alberto
-    public String toJSON() {
-        return JSONSerializerManager.toJSON(this);
     }
 }
