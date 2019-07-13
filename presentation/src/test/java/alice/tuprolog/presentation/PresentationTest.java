@@ -111,6 +111,6 @@ public class PresentationTest {
         final Term expected = Term.createTerm(expectedTerm);
         final Term actual = Deserializer.of(Term.class, mimeType).fromString(representation);
 
-        assertTrue(expected.equals(actual, VARIABLES_BY_NAME, NUMBERS_BY_VALUE));
+        assertTrue(String.format("Expected: %s Actual:%s", expected, actual), expected.equals(actual, VARIABLES_BY_NAME, NUMBERS_BY_VALUE));
     }
 }
