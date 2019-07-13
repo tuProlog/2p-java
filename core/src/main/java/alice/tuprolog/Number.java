@@ -20,6 +20,7 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
 
+import java.util.EnumSet;
 import java.util.Map;
 
 /**
@@ -272,6 +273,57 @@ public abstract class Number extends Term implements Comparable<Number> {
             return longValue() == other.longValue();
         } else if (isReal() && other.isReal()) {
             return java.lang.Double.compare(doubleValue(), other.doubleValue()) == 0;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean equals(Term other, EnumSet<Comparison> comparison) {
+        if (comparison.contains(Comparison.NUMBERS_BY_TYPE)) {
+            if (!(other.getTerm() instanceof Number)) return false;
+
+            final Number otherNumber = (Number) other.getTerm();
+
+            if (isInteger() && otherNumber.isInteger()) {
+                return longValue() == otherNumber.longValue();
+            } else if (isReal() && otherNumber.isReal()) {
+                return java.lang.Double.compare(doubleValue(), otherNumber.doubleValue()) == 0;
+            }
+        } else if (comparison.contains(Comparison.NUMBERS_BY_VALUE)) {
+            if (!(other.getTerm() instanceof Number)) return false;
+
+            final Number otherNumber = (Number) other.getTerm();
+
+            if (isInteger() && otherNumber.isInteger()) {
+                return longValue() == otherNumber.longValue();
+            } else if (isReal() || otherNumber.isReal()) {
+                return java.lang.Double.compare(doubleValue(), otherNumber.doubleValue()) == 0;
+            }
+        } else if (comparison.contains(Comparison.CONSTANTS_BY_REPRESENTED_VALUE)) {
+            if (other.getTerm().isAtom()) {
+                final Term parsed = Term.createTerm(other.getTerm().toString());
+
+                if (parsed instanceof Number) {
+                    final Number otherNumber = (Number) other.getTerm();
+
+                    if (isInteger() && otherNumber.isInteger()) {
+                        return longValue() == otherNumber.longValue();
+                    } else if (isReal() || otherNumber.isReal()) {
+                        return java.lang.Double.compare(doubleValue(), otherNumber.doubleValue()) == 0;
+                    }
+                }
+            } else if (other.getTerm() instanceof Number) {
+                final Number otherNumber = (Number) other.getTerm();
+
+                if (isInteger() && otherNumber.isInteger()) {
+                    return longValue() == otherNumber.longValue();
+                } else if (isReal() || otherNumber.isReal()) {
+                    return java.lang.Double.compare(doubleValue(), otherNumber.doubleValue()) == 0;
+                }
+            }
+        } else {
+            return this == other;
         }
 
         return false;

@@ -39,6 +39,10 @@ import java.util.*;
  */
 public abstract class Term implements Serializable {
 
+    public boolean equals(Term other, Comparison comparison1, Comparison... comparisons) {
+        return equals(other, EnumSet.of(comparison1, comparisons));
+    }
+
     /**
      * Static service to create a Term from a string.
      *
@@ -503,5 +507,22 @@ public abstract class Term implements Serializable {
             }
             return t1.toString().compareTo(t2.toString());
         };
+    }
+
+    public abstract boolean equals(Term other, EnumSet<Term.Comparison> comparison);
+
+    public enum Comparison {
+        VARIABLES_AS_PLACEHOLDERS,
+        VARIABLES_BY_NAME,
+        VARIABLES_BY_COMPLETE_NAME,
+        NUMBERS_BY_TYPE,
+        NUMBERS_BY_VALUE,
+        CONSTANTS_BY_REPRESENTED_VALUE;
+
+        public static final EnumSet<Comparison> STRICT = EnumSet.of(VARIABLES_BY_COMPLETE_NAME, NUMBERS_BY_TYPE);
+        public static final EnumSet<Comparison> NORMAL = EnumSet.of(VARIABLES_BY_NAME, NUMBERS_BY_VALUE);
+        public static final EnumSet<Comparison> LOOSE = EnumSet.of(VARIABLES_BY_NAME, CONSTANTS_BY_REPRESENTED_VALUE);
+        public static final EnumSet<Comparison> STRUCTURAL = EnumSet.of(VARIABLES_AS_PLACEHOLDERS, NUMBERS_BY_TYPE);
+
     }
 }

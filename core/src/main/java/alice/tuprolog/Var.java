@@ -19,9 +19,7 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This class represents a variable term.
@@ -85,8 +83,7 @@ public class Var extends Term {
         if (n.equals(ANY)) {
             name = null;
             completeName = new StringBuilder();
-        } else if (Character.isUpperCase(n.charAt(0)) ||
-                   (n.startsWith(ANY))) {
+        } else if (Character.isUpperCase(n.charAt(0)) || n.startsWith(ANY)) {
             name = n;
             completeName = new StringBuilder(n);
         } else {
@@ -182,6 +179,40 @@ public class Var extends Term {
             if (!(other instanceof Var)) {
                 return thiz.equals(other);
             }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean equals(Term other, EnumSet<Comparison> comparison) {
+        Term thiz = getTerm();
+        Term otherTerm = other.getTerm();
+
+        if (comparison.contains(Comparison.VARIABLES_AS_PLACEHOLDERS)) {
+            return thiz instanceof Var && otherTerm instanceof Var;
+        } else if (comparison.contains(Comparison.VARIABLES_BY_NAME)) {
+            if (thiz instanceof Var) {
+                if (otherTerm instanceof Var) {
+                    return Objects.equals(((Var) thiz).name, ((Var) otherTerm).name);
+                }
+            } else {
+                if (!(otherTerm instanceof Var)) {
+                    return thiz.equals(otherTerm, comparison);
+                }
+            }
+        } else if (comparison.contains(Comparison.VARIABLES_BY_COMPLETE_NAME)) {
+            if (thiz instanceof Var) {
+                if (otherTerm instanceof Var) {
+                    return ((Var) thiz).getName().equals(((Var) otherTerm).getName());
+                }
+            } else {
+                if (!(otherTerm instanceof Var)) {
+                    return thiz.equals(otherTerm, comparison);
+                }
+            }
+        } else {
+            return thiz == otherTerm;
         }
 
         return false;

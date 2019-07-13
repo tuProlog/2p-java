@@ -27,6 +27,7 @@ import com.codepoetics.protonpack.StreamUtils;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 //import java.util.ArrayList;
@@ -476,6 +477,29 @@ public class Struct extends Term {
                 Optional.ofNullable(arg).orElseGet(() -> new Term[0]),
                 Optional.ofNullable(other.arg).orElseGet(() -> new Term[0])
         );
+    }
+
+    @Override
+    public boolean equals(Term other, EnumSet<Comparison> comparison) {
+        Term otherTerm = other.getTerm();
+
+        if (isCompound() && otherTerm.isCompound()) {
+            final Struct otherStruct = (Struct) otherTerm;
+
+            return getName().equals(otherStruct.getName())
+                    && getArity() == otherStruct.getArity()
+                    && IntStream.range(0, getArity())
+                    .allMatch(i -> getArg(i).equals(otherStruct.getArg(i), comparison));
+
+        } else if (isAtom() && otherTerm instanceof Number) {
+            return otherTerm.equals(this, comparison);
+        } else if (isAtom() && other.isAtom()) {
+            final Struct otherStruct = (Struct) otherTerm;
+
+            return getName().equals(otherStruct.getName());
+        }
+
+        return false;
     }
 
     @Override
