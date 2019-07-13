@@ -16,9 +16,12 @@ import java.net.URLEncoder;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static alice.tuprolog.Term.Comparison.NUMBERS_BY_VALUE;
+import static alice.tuprolog.Term.Comparison.VARIABLES_BY_NAME;
 import static alice.tuprolog.presentation.MIMEType.APPLICATION_JSON;
 import static alice.tuprolog.presentation.MIMEType.APPLICATION_YAML;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(JUnitParamsRunner.class)
 public class PresentationTest {
@@ -99,5 +102,15 @@ public class PresentationTest {
         final JsonNode actual = Presentation.getObjectMapper(mimeType).readTree(serialised);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    @Parameters(method = "getTerms")
+    public void testTermDeserializationAsString(String expectedTerm, String type, String representation) throws IOException {
+        final MIMEType mimeType = MIMEType.parse(type);
+        final Term expected = Term.createTerm(expectedTerm);
+        final Term actual = Deserializer.of(Term.class, mimeType).fromString(representation);
+
+        assertTrue(expected.equals(actual, VARIABLES_BY_NAME, NUMBERS_BY_VALUE));
     }
 }
