@@ -1,15 +1,14 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.NoMoreSolutionException;
-import alice.tuprolog.json.AbstractEngineState;
-import alice.tuprolog.json.JSONSerializerManager;
 
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class EngineManager implements java.io.Serializable {
-
-    private static final long serialVersionUID = 1L;
 
     private Prolog vm;
     private Hashtable<Integer, EngineRunner> runners;    //key: id;  obj: runner
@@ -438,132 +437,9 @@ public class EngineManager implements java.io.Serializable {
         er.identify(t);
     }
 
-    //Alberto
-    public void serializeQueryState(AbstractEngineState brain) {
-        brain.setQuery(findRunner().getQuery());
-        if (findRunner().env == null) {
-            brain.setNumberAskedResults(0);
-            brain.setHasOpenAlternatives(false);
-        } else {
-            brain.setNumberAskedResults(findRunner().env.getNResultAsked());
-            brain.setHasOpenAlternatives(findRunner().env.hasOpenAlternatives());
-        }
-    }
-
     public synchronized SolveInfo solve(Term query, long maxTime) {
         er1.setGoal(query);
         SolveInfo s = er1.solve(maxTime);
         return s;
     }
-
-    public synchronized String solveUntimed(String goal) {
-        try {
-            Term t = Term.createTerm(goal, vm.getOperatorManager());
-            return this.solve(t).toJSON();
-        } catch (Exception e) {
-            return "Error in solving: " + goal;
-        }
-    }
-
-    public synchronized String solveNextUntimed() {
-        try {
-            return this.solveNext().toJSON();
-        } catch (NoMoreSolutionException e) {
-            return "No more solutions!";
-        }
-    }
-
-    public synchronized String solveTimed(String goal, long maxTime) {
-        try {
-            Term t = Term.createTerm(goal, vm.getOperatorManager());
-            return this.solve(t).toJSON();
-        } catch (Exception e) {
-            return "Error in solving: " + goal;
-        }
-    }
-
-    public synchronized String solveNextTimed(long maxTime) {
-        try {
-            return this.solveNext(maxTime).toJSON();
-        } catch (NoMoreSolutionException e) {
-            return "No more solutions!";
-        }
-    }
-
-    public synchronized String solveNUntimed(String goal, int numberSol) {
-        ArrayList<String> res = new ArrayList<String>();
-        String s = this.solveUntimed(goal);
-        res.add(s);
-        if (s.contains("Error")) {
-            return JSONSerializerManager.toJSON(res);
-        } else {
-            for (int i = 1; i < numberSol; i++) {
-                s = this.solveNextUntimed();
-                if (s.equals("No more solutions!")) {
-                    break;
-                } else {
-                    res.add(s);
-                }
-            }
-        }
-        return JSONSerializerManager.toJSON(res);
-    }
-
-    public synchronized String solveNTimed(String goal, int numberSol, long maxTime) {
-        ArrayList<String> res = new ArrayList<String>();
-        String s = this.solveTimed(goal, maxTime);
-        res.add(s);
-        if (s.contains("Error")) {
-            return JSONSerializerManager.toJSON(res);
-        } else {
-            for (int i = 1; i < numberSol; i++) {
-                s = this.solveNextTimed(maxTime);
-                if (s.equals("No more solutions!")) {
-                    break;
-                } else {
-                    res.add(s);
-                }
-            }
-        }
-        return JSONSerializerManager.toJSON(res);
-    }
-
-    public synchronized String solveAllUntimed(String goal) {
-        ArrayList<String> res = new ArrayList<String>();
-        String s = this.solveUntimed(goal);
-        res.add(s);
-        if (s.contains("Error")) {
-            return JSONSerializerManager.toJSON(res);
-        } else {
-            for (; ; ) {
-                s = this.solveNextUntimed();
-                if (s.equals("No more solutions!")) {
-                    break;
-                } else {
-                    res.add(s);
-                }
-            }
-        }
-        return JSONSerializerManager.toJSON(res);
-    }
-
-    public synchronized String solveAllTimed(String goal, long maxTime) {
-        ArrayList<String> res = new ArrayList<String>();
-        String s = this.solveTimed(goal, maxTime);
-        res.add(s);
-        if (s.contains("Error")) {
-            return JSONSerializerManager.toJSON(res);
-        } else {
-            for (; ; ) {
-                s = this.solveNextTimed(maxTime);
-                if (s.equals("No more solutions!")) {
-                    break;
-                } else {
-                    res.add(s);
-                }
-            }
-        }
-        return JSONSerializerManager.toJSON(res);
-    }
-
 }

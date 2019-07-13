@@ -41,7 +41,7 @@ public class StateBacktrack extends State {
         if (curChoice == null) {
             e.nextState = c.END_FALSE;
             Struct goal = e.currentContext.currentGoal;
-            if (!c.getTheoryManager().checkExistance(goal.getPredicateIndicator())) //Alberto
+            if (!c.getTheoryManager().checkExistence(goal.getPredicateIndicator())) //Alberto
             {
                 c.warn("The predicate " + goal.getPredicateIndicator() + " is unknown.");
             }

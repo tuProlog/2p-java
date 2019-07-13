@@ -19,7 +19,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTheoryException;
-import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.parser.ParseException;
 import alice.tuprolog.parser.PrologExpressionVisitor;
 import alice.tuprolog.parser.PrologParserFactory;
@@ -196,11 +195,6 @@ public class Theory implements Serializable {
         this.theory = Objects.requireNonNull(text);
     }
 
-    //Alberto
-    public static Theory fromJSON(String jsonString) {
-        return JSONSerializerManager.fromJSON(jsonString, Theory.class);
-    }
-
     private List<Term> slitPrologList() {
         final List<Term> clauses = new LinkedList<>();
         for (Iterator<? extends Term> i = clauseList.listIterator(); i.hasNext();) {
@@ -320,11 +314,6 @@ public class Theory implements Serializable {
 
     public String toString() {
         return getText();
-    }
-
-    //Alberto
-    public String toJSON() {
-        return JSONSerializerManager.toJSON(this);
     }
 
     @Override

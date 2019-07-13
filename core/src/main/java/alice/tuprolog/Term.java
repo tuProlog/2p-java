@@ -19,7 +19,6 @@
 package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
-import alice.tuprolog.json.JSONSerializerManager;
 import alice.tuprolog.parser.ParseException;
 import alice.tuprolog.parser.PrologExpressionVisitor;
 import alice.tuprolog.parser.PrologParserFactory;
@@ -125,25 +124,6 @@ public abstract class Term implements Serializable {
                 }
             }
         };
-    }
-
-    //Alberto
-    public static Term fromJSON(String jsonString) {
-        if (jsonString.contains("Var")) {
-            return JSONSerializerManager.fromJSON(jsonString, Var.class);
-        } else if (jsonString.contains("Struct")) {
-            return JSONSerializerManager.fromJSON(jsonString, Struct.class);
-        } else if (jsonString.contains("Double")) {
-            return JSONSerializerManager.fromJSON(jsonString, Double.class);
-        } else if (jsonString.contains("Int")) {
-            return JSONSerializerManager.fromJSON(jsonString, Int.class);
-        } else if (jsonString.contains("Long")) {
-            return JSONSerializerManager.fromJSON(jsonString, Long.class);
-        } else if (jsonString.contains("Float")) {
-            return JSONSerializerManager.fromJSON(jsonString, Float.class);
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -484,11 +464,6 @@ public abstract class Term implements Serializable {
      * @param tv - Visitor
      */
     public abstract <T> T accept(TermVisitor<T> tv);
-
-    //Alberto
-    public String toJSON() {
-        return JSONSerializerManager.toJSON(this);
-    }
 
     public <T extends Term> T castTo(Class<T> klass) {
         return klass.cast(this);

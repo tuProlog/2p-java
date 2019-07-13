@@ -19,9 +19,6 @@ package alice.tuprolog;
 
 import alice.tuprolog.exceptions.InvalidTermException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
-import alice.tuprolog.json.AbstractEngineState;
-import alice.tuprolog.json.FullEngineState;
-import alice.tuprolog.json.JSONSerializerManager;
 import alice.util.Tools;
 import com.codepoetics.protonpack.StreamUtils;
 
@@ -402,29 +399,8 @@ public class TheoryManager implements Serializable {
         this.retractDBase = new ClauseDatabase();
     }
 
-    //Alberto
-    public boolean checkExistance(String predicateIndicator) {
+    public boolean checkExistence(String predicateIndicator) {
         return (this.dynamicDBase.containsKey(predicateIndicator) || this.staticDBase.containsKey(predicateIndicator));
-    }
-
-    //Alberto
-    public void serializeLibraries(FullEngineState brain) {
-        brain.setLibraries(engine.getCurrentLibraries());
-    }
-
-    //Alberto
-    public void serializeTimestamp(AbstractEngineState brain) {
-        brain.setSerializationTimestamp(System.currentTimeMillis());
-    }
-
-    //Alberto
-    public void serializeDynDataBase(FullEngineState brain) {
-        brain.setDynTheory(getTheory(true));
-    }
-
-    public synchronized String fetchKnowledgeBase(boolean all) {
-        String res = getTheory(all);
-        return JSONSerializerManager.toJSON(res);
     }
 
     public synchronized void clearKnowledgeBase() {
@@ -432,11 +408,6 @@ public class TheoryManager implements Serializable {
         staticDBase = new ClauseDatabase();
         retractDBase = new ClauseDatabase();
         lastConsultedTheory = Theory.emptyWithStandardOperators();
-    }
-
-    public synchronized String fetchMostRecentConsultedTheory() {
-        String res = this.lastConsultedTheory.toString();
-        return JSONSerializerManager.toJSON(res);
     }
 
     public synchronized void consultTheory(String theory, boolean dynamicTheory, String libName) throws InvalidTheoryException {
