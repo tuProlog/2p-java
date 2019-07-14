@@ -87,7 +87,7 @@ public class InvalidLibraryException extends InvalidPrologException {
     }
 
     public String toString() {
-        return "InvalidLibraryException: " + libraryName + " at " + line + ":" + pos;
+        return "InvalidLibraryException: " + libraryName + " at " + getLine() + ":" + getPositionInLine();
     }
 
 }

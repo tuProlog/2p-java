@@ -29,7 +29,7 @@ import alice.util.AbstractDynamicClassLoader;
 import alice.util.AndroidDynamicClassLoader;
 import alice.util.InspectionUtils;
 import alice.util.JavaDynamicClassLoader;
-import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.io.File;
 import java.io.FileWriter;

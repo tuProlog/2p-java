@@ -388,12 +388,11 @@ public class Prolog implements IProlog, Serializable {
     /**
      * Clears current theory
      */
-
     public void clearTheory() {    //no syn
         try {
-            setTheory(new Theory());
+            setTheory(Theory.emptyWithStandardOperators());
         } catch (InvalidTheoryException e) {
-            // this should never happen
+            throw new IllegalStateException("this should never happen", e);
         }
     }
 

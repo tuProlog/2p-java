@@ -33,14 +33,17 @@ import java.util.stream.Stream;
  */
 public class OperatorManager implements Serializable {
 
+    @SuppressWarnings("deprecation")
     public static OperatorManager empty() {
         return new OperatorManager();
     }
 
+    @SuppressWarnings("deprecation")
     public static OperatorManager standardOperators() {
         return new DefaultOperatorManager();
     }
 
+    @SuppressWarnings("deprecation")
     public static OperatorManager with(Operator op, Operator ops) {
         return new OperatorManager().add(op).addAll(ops);
     }
@@ -59,8 +62,6 @@ public class OperatorManager implements Serializable {
     public static final int OP_HIGH = 1200;
 
     private final Map<Pair<String, Associativity>, Operator> index;
-//    private final SortedSet<Operator> operators;
-
 
     @Deprecated
     public OperatorManager() {

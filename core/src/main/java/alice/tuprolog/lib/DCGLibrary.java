@@ -57,7 +57,7 @@ public class DCGLibrary extends Library {
     public boolean phrase_guard_2(Term arg0, Term arg1) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         return true;
     }
@@ -65,7 +65,7 @@ public class DCGLibrary extends Library {
     public boolean phrase_guard_3(Term arg0, Term arg1, Term arg2) throws PrologError {
         arg0 = arg0.getTerm();
         if (arg0 instanceof Var) {
-            throw PrologError.instantiation_error(engine.getEngineManager(), 1);
+            throw PrologError.instantiation_error(getEngine().getEngineManager(), 1);
         }
         return true;
     }

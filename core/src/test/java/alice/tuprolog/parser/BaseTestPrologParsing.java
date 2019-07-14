@@ -15,7 +15,7 @@ abstract public class BaseTestPrologParsing {
     }
 
     protected OperatorManager getOperatorManager() {
-        return new OperatorManager();
+        return OperatorManager.empty();
     }
 
     protected Term parseTerm(String string) {

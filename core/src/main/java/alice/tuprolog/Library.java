@@ -111,6 +111,7 @@ public abstract class Library implements Serializable, IPrimitives {
     /**
      * @param en
      */
+    @SuppressWarnings("deprecated")
     public void setEngine(Prolog en) {
         engine = en;
     }
