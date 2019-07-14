@@ -31,10 +31,7 @@ public class SpyEvent extends EventObject {
      * event description
      */
     private String msg;
-    /**
-     * @uml.property name="env"
-     * @uml.associationEnd
-     */
+
     private Engine env;
 
     public SpyEvent(Object source, String msg_) {

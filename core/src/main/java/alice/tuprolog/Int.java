@@ -88,7 +88,7 @@ public class Int extends Number {
     /**
      * is an int Integer number?
      *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
+     * @deprecated Use <code>instanceof Int</code> instead.
      */
     final public boolean isTypeInt() {
         return true;
@@ -97,7 +97,7 @@ public class Int extends Number {
     /**
      * is an int Integer number?
      *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
+     * @deprecated Use <code>instanceof Int</code> instead.
      */
     final public boolean isInt() {
         return true;
@@ -106,7 +106,7 @@ public class Int extends Number {
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Float</code> instead.
      */
     final public boolean isTypeFloat() {
         return false;
@@ -115,7 +115,7 @@ public class Int extends Number {
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Float</code> instead.
      */
     final public boolean isFloat() {
         return false;
@@ -124,7 +124,7 @@ public class Int extends Number {
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Double</code> instead.
      */
     final public boolean isTypeDouble() {
         return false;
@@ -133,7 +133,7 @@ public class Int extends Number {
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Double</code> instead.
      */
     final public boolean isDouble() {
         return false;
@@ -142,7 +142,7 @@ public class Int extends Number {
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Long</code> instead.
      */
     final public boolean isTypeLong() {
         return false;
@@ -151,7 +151,7 @@ public class Int extends Number {
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Long</code> instead.
      */
     final public boolean isLong() {
         return false;

@@ -22,10 +22,8 @@ import javax.swing.text.Segment;
  * @version $Id: KeywordMap.java,v 1.16 1999/12/13 03:40:30 sp Exp $
  */
 public class KeywordMap {
-    /**
-     * @uml.property name="mapLength"
-     */
-    protected int mapLength;
+
+    private int mapLength;
     private Keyword[] map;
     private boolean ignoreCase;
 
@@ -84,7 +82,7 @@ public class KeywordMap {
      * Adds a key-value mapping.
      *
      * @param keyword The key
-     * @Param id The value
+     * @param id The value
      */
     public void add(String keyword, byte id) {
         int key = getStringMapKey(keyword);

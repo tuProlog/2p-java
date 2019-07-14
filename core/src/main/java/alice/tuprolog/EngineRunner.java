@@ -121,7 +121,6 @@ public class EngineRunner implements java.io.Serializable, Runnable {
     /**
      * Solves a query
      *
-     * @param g the term representing the goal to be demonstrated
      * @return the result of the demonstration
      * @see SolveInfo
      **/

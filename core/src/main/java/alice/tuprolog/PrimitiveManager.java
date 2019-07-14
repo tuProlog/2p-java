@@ -90,7 +90,7 @@ public class PrimitiveManager implements IPrimitiveManager {
      * predicates and functors, and setting up related structures and links
      *
      * @return term with the identified built-in directive
-     * @parm term the term to be identified
+     * @param term the term to be identified
      */
     public Term identifyDirective(Term term) {
         identify(term, PrimitiveInfo.DIRECTIVE);

@@ -369,7 +369,7 @@ public class ThreadLibraryTestCase {
     /**
      * start(X) -> prelevo la soluzione, poi distruggo la coda.
      * start2(X) -> distruggo la coda, poi prelevo la soluzione.
-     * Test method for {@link alice.tuprolog.lib.ThreadLibrary#message_queue_destroy_1(alice.tuprolog.Term)}.
+
      * @throws InvalidTheoryException
      * @throws MalformedGoalException
      */

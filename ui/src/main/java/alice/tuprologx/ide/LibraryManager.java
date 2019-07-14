@@ -194,7 +194,6 @@ public final class LibraryManager {
      * Remove a library to the manager.
      *
      * @param libraryClassname The name of the .class of the library to be removed.
-     * @throws ClassNotFoundException  if the library class cannot be found.
      * @throws InvalidLibraryException if the library is not a valid tuProlog library.
      */
     public void removeLibrary(String libraryClassname) throws InvalidLibraryException {

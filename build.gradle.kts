@@ -52,24 +52,24 @@ subprojects {
                 }
             }
 
-            create<MavenPublication>(this@subprojects.name + "Publication") {
+            create<MavenPublication>(this@subprojects.name) {
                 groupId = rootProject.group.toString()
                 artifactId = "${rootProject.name}-${this@subprojects.name}"
                 version = rootProject.version.toString()
 
                 artifact(tasks["jar"])
-                artifact(tasks["javadocJar"])
+//                artifact(tasks["javadocJar"])
 
                 println("$groupId:$artifactId:$version")
 
                 pom {
                     name.set("tuProlog ${capitalize(this@subprojects.name)}")
-                    description.set("${capitalize(this@subprojects.name)} for tuProlog")
+                    description.set("${capitalize(this@subprojects.name)} module for tuProlog")
                     url.set("http://tuprolog.unibo.it")
 
                     licenses {
                         license {
-                            name.set("GNU LGPL 2.1<")
+                            name.set("GNU LGPL 2.1")
                             url.set("http://www.gnu.org/licenses/lgpl-2.1.html")
                         }
                     }

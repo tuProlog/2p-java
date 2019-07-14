@@ -499,10 +499,11 @@ public class OOLibrary extends Library {
     }
 
     /**
-     * @param interfaceName  represent the name of the target interface i.e. 'java.util.function.Predicate<String>'
-     * @param implementation contains the function implementation i.e. 's -> s.length()>4 '
-     * @param id             represent the identification_name of the created object function i.e. MyLambda
-     * @throws JavaException, Exception
+     * @param interfaceName  represent the name of the target interface i.e. {@link java.util.function.Predicate}
+     * @param implementation contains the function implementation i.e. <code>s -&gt; s.length() &gt; 4</code>
+     * @param id             represent the <code>identification_name</code> of the created object function i.e. MyLambda
+     * @throws JavaException
+     * @throws Exception
      * @author Roberta Calegari
      * <p>
      * Creates of a lambda object - not backtrackable case

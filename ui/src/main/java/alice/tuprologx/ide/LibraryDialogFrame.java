@@ -320,7 +320,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
      * Add a library from file chooser path.
      *
      * @param libraryClassname The name of the .class of the library to be added.
-     * @param path             from file chooser.
+     * @param file             from file chooser.
      */
     public void addLibrary(String libraryClassname, File file) {
         try {
@@ -430,7 +430,7 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
     }
 
     /**
-     * @see alice.tuprologx.ide.SwingFrame#onClose()
+     * @see GenericFrame#onClose()
      */
     public void closeLibraryDialog() {
         onClose();

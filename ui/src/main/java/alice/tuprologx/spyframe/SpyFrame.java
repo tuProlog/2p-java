@@ -233,7 +233,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener {
     /**
      * Display the spied information in form of a tree. This method reacts only
      * on prolog-Calls and skips even those if the number of steps set in
-     * {@link actionPerformed} is bigger than 1. In this case the number is
+     * {@link #actionPerformed(ActionEvent)} is bigger than 1. In this case the number is
      * decremented to skip these steps. After display the prolog process is
      * suspended until the user presses enter.
      *

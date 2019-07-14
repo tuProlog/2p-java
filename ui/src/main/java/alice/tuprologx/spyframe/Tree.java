@@ -73,7 +73,7 @@ public class Tree<T> extends JComponent {
     /**
      * Creates a component to display a tree.
      *
-     * @param totree to consult for constructing the tree.
+     * @param treemaker to consult for constructing the tree.
      */
     public Tree(ToTree<T> treemaker) {
         this.totree = treemaker;
@@ -82,7 +82,7 @@ public class Tree<T> extends JComponent {
     /**
      * Creates a component to display a tree.
      *
-     * @param totree to consult for constructing the tree.
+     * @param treemaker to consult for constructing the tree.
      * @param str    the structure to be displayed as a tree.
      */
     public Tree(ToTree<T> treemaker, T str) {
