@@ -43,8 +43,6 @@ public class JavaIDE
 
     private static final long serialVersionUID = 1L;
     private static ConsoleManager consoleManager;
-    //private Prolog engine;
-    private ToolBar toolBar;
     private TheoryTabbedPane tabbedPane;
 
     public JavaIDE() {
@@ -69,7 +67,8 @@ public class JavaIDE
 
         tabbedPane = new TheoryTabbedPane(commonCompletionProvider);
         tabbedPane.setEngine(engine);
-        toolBar = new ToolBar(tabbedPane, this);
+        //private Prolog engine;
+        ToolBar toolBar = new ToolBar(tabbedPane, this);
         tabbedPane.setToolBar(toolBar);
 
         StatusBar statusBar = new StatusBar();

@@ -8,7 +8,7 @@ public interface FileEditArea {
      * @return <code>true</code> if the theory has been modified,
      * <code>false</code> otherwise.
      */
-    public boolean isSaved();
+    boolean isSaved();
 
     /**
      * Set the saved flag for the theory contained in the edit area after
@@ -17,6 +17,6 @@ public interface FileEditArea {
      * @param flag <code>true</code> if the theory has been modified ,
      *             <code>false</code> otherwise.
      */
-    public void setSaved(boolean flag);
+    void setSaved(boolean flag);
 
 }

@@ -146,17 +146,13 @@ public class JEditTextArea extends JComponent {
         painter.addMouseMotionListener(new DragHandler());
         addFocusListener(new FocusHandler());
 
-        addMouseWheelListener(new MouseWheelListener() {
-
-
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
-                    vertical.setValue(vertical.getValue() + e.getUnitsToScroll());
-                } else {
-                    //in questo caso si ha che scroll type == MouseWheelEvent.WHEEL_BLOCK_SCROLL
-                    vertical.setValue(vertical.getValue() + e.getWheelRotation() > 0 ? vertical.getBlockIncrement(1)
-                                                                                     : vertical.getBlockIncrement(-1));
-                }
+        addMouseWheelListener(e -> {
+            if (e.getScrollType() == MouseWheelEvent.WHEEL_UNIT_SCROLL) {
+                vertical.setValue(vertical.getValue() + e.getUnitsToScroll());
+            } else {
+                //in questo caso si ha che scroll type == MouseWheelEvent.WHEEL_BLOCK_SCROLL
+                vertical.setValue(vertical.getValue() + e.getWheelRotation() > 0 ? vertical.getBlockIncrement(1)
+                                                                                 : vertical.getBlockIncrement(-1));
             }
         });
 
@@ -1693,13 +1689,11 @@ public class JEditTextArea extends JComponent {
             // If this is not done, mousePressed events accumilate
             // and the result is that scrolling doesn't stop after
             // the mouse is released
-            SwingUtilities.invokeLater(new Runnable() {
-                public void run() {
-                    if (evt.getAdjustable() == vertical) {
-                        setFirstLine(vertical.getValue());
-                    } else {
-                        setHorizontalOffset(-horizontal.getValue());
-                    }
+            SwingUtilities.invokeLater(() -> {
+                if (evt.getAdjustable() == vertical) {
+                    setFirstLine(vertical.getValue());
+                } else {
+                    setHorizontalOffset(-horizontal.getValue());
                 }
             });
         }

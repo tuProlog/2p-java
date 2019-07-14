@@ -3,7 +3,6 @@ package alice.tuprolog;
 import alice.util.OneWayList;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -86,9 +85,7 @@ public class ClauseStore {
         List<Term> saveUnifications = new ArrayList<Term>();
         //List saveUnifications = new LinkedList();
         //deunifico le variabili termporaneamente
-        Iterator<Var> it = varsToDeunify.iterator();
-        while (it.hasNext()) {
-            Var v = it.next();
+        for (Var v : varsToDeunify) {
             saveUnifications.add(v.getLink());
             v.free();
         }

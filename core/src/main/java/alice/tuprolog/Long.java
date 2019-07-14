@@ -197,7 +197,7 @@ public class Long extends Number {
      * @author Paolo Contessi
      */
     public int compareTo(Number o) {
-        return (new java.lang.Long(value)).compareTo(o.longValue());
+        return java.lang.Long.compare(value, o.longValue());
     }
 
     @Override

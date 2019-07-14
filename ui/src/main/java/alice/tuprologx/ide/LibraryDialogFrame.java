@@ -9,8 +9,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -107,21 +105,13 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
         bOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bOpen.setToolTipText("Load preferences");
         bOpen.setPreferredSize(new Dimension(32, 32));
-        bOpen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                loadPreferences();
-            }
-        });
+        bOpen.addActionListener(event -> loadPreferences());
         JButton bSave = new JButton();
         urlImage = getClass().getResource("img/Save24.png");
         bSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bSave.setToolTipText("Save preferences");
         bSave.setPreferredSize(new Dimension(32, 32));
-        bSave.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                savePreferences();
-            }
-        });
+        bSave.addActionListener(event -> savePreferences());
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(bOpen);
         buttonsPanel.add(bSave);
@@ -135,17 +125,9 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
         librariesDisplayPanel.setLayout(new GridBagLayout());
 
         JButton ok = new JButton("OK");
-        ok.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                setLibraryManagerStatus();
-            }
-        });
+        ok.addActionListener(event -> setLibraryManagerStatus());
         JButton cancel = new JButton("Cancel");
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                closeLibraryDialog();
-            }
-        });
+        cancel.addActionListener(event -> closeLibraryDialog());
         sb = new StatusBar();
         okCancelStatusBarPanel.setLayout(new BorderLayout());
         okCancelStatusBarPanel.add(okCancelPanel, BorderLayout.NORTH);
@@ -166,22 +148,16 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
         JLabel libraryFullNameLabel = new JLabel("Library full name:");
         JButton add = new JButton("add");
 
-        add.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                addLibrary(libraryClassnameField.getText());
-            }
-        });
+        add.addActionListener(event -> addLibrary(libraryClassnameField.getText()));
 
-        browseButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                JFileChooser fc = new JFileChooser();
-                fc.showOpenDialog(LibraryDialogFrame.this);
-                File file = fc.getSelectedFile();
-                try {
-                    addLibrary(libraryClassnameField.getText(), file);
-                } catch (Exception e) {
-                    setStatusMessage("Loading library error!");
-                }
+        browseButton.addActionListener(event -> {
+            JFileChooser fc = new JFileChooser();
+            fc.showOpenDialog(LibraryDialogFrame.this);
+            File file = fc.getSelectedFile();
+            try {
+                addLibrary(libraryClassnameField.getText(), file);
+            } catch (Exception e) {
+                setStatusMessage("Loading library error!");
             }
         });
 
@@ -238,18 +214,18 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
         constraints.weightx = 2;
         librariesDisplayPanel.add(new JLabel(" "), constraints);
         constraints.gridy++;
-        for (int i = 0; i < libraries.length; i++) {
+        for (Object library : libraries) {
             constraints.gridx++;
             constraints.weightx = 2;
             constraints.anchor = GridBagConstraints.WEST;
-            librariesDisplayPanel.add(createLabel(libraries[i]), constraints);
+            librariesDisplayPanel.add(createLabel(library), constraints);
             constraints.gridx++;
             constraints.gridx++;
             constraints.fill = GridBagConstraints.HORIZONTAL;
-            librariesDisplayPanel.add(createComboBox(libraries[i]), constraints);
+            librariesDisplayPanel.add(createComboBox(library), constraints);
             constraints.gridx++;
             constraints.fill = GridBagConstraints.HORIZONTAL;
-            librariesDisplayPanel.add(createButton(libraries[i]), constraints);
+            librariesDisplayPanel.add(createButton(library), constraints);
             constraints.gridx = 0;
             constraints.gridy++;
         }
@@ -297,12 +273,10 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
     private JButton createButton(Object library) {
         final String libraryClassname = library.toString();
         JButton remove = new JButton("remove");
-        remove.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                removeLibrary(libraryClassname);
-                pack();
-                setSize(395, getSize().height);
-            }
+        remove.addActionListener(event -> {
+            removeLibrary(libraryClassname);
+            pack();
+            setSize(395, getSize().height);
         });
         return remove;
     }
@@ -526,8 +500,8 @@ public class LibraryDialogFrame extends GenericFrame implements LibraryListener 
                 librariesDisplayPanel.removeAll();
                 libraryManager.resetLibraries();
                 Object[] libraries = getLibrariesFromFile(fileIDE);
-                for (int i = 0; i < libraries.length; i++) {
-                    addLibrary(libraries[i].toString());
+                for (Object library : libraries) {
+                    addLibrary(library.toString());
                 }
                 pack();
                 setSize(395, getSize().height);

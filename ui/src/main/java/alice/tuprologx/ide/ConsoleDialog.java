@@ -20,8 +20,6 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
@@ -68,8 +66,6 @@ public class ConsoleDialog
     private JTextPane output;
     /*Castagna 06/2011*/
     private JTextPane exception;
-    /**/
-    private InputDialog input;
 
     private JButton bNext;
     private JButton bAccept;
@@ -136,47 +132,27 @@ public class ConsoleDialog
         URL urlImage = getClass().getResource("img/Next16.png");
         bNext.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bNext.setEnabled(false);
-        bNext.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                getNextSolution();
-            }
-        });
+        bNext.addActionListener(event -> getNextSolution());
         bAccept = new JButton("Accept");
         urlImage = getClass().getResource("img/Accept16.png");
         bAccept.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bAccept.setEnabled(false);
-        bAccept.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                acceptSolution();
-            }
-        });
+        bAccept.addActionListener(event -> acceptSolution());
         bStop = new JButton("Stop");
         urlImage = getClass().getResource("img/Stop16.png");
         bStop.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bStop.setEnabled(false);
-        bStop.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                stopEngine();
-            }
-        });
+        bStop.addActionListener(event -> stopEngine());
         bClear = new JButton("Clear");
         urlImage = getClass().getResource("img/Clear16.png");
         bClear.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bClear.setEnabled(false);
-        bClear.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                clear();
-            }
-        });
+        bClear.addActionListener(event -> clear());
         bExport = new JButton("Export CSV");
         urlImage = getClass().getResource("img/ExportCSV24.png");
         bExport.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bExport.setEnabled(false);
-        bExport.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                exportCSV();
-            }
-        });
+        bExport.addActionListener(event -> exportCSV());
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(bNext);
         buttonsPanel.add(bAccept);
@@ -201,8 +177,8 @@ public class ConsoleDialog
      * Method to insert an InputDialog inside the ConsoleDialog
      */
     public void setInputDialog(InputDialog input) {
-        this.input = input;
-        tp.setComponentAt(INPUT_INDEX, new JScrollPane(this.input));
+        /**/
+        tp.setComponentAt(INPUT_INDEX, new JScrollPane(input));
     }
 
     /**
@@ -503,7 +479,7 @@ public class ConsoleDialog
                         for (Var v : solution.getBindingVars()) {
                             if (!v.isAnonymous()) {
                                 String value = v.getTerm().toString();
-                                ;
+
                                 if (v == v.getTerm()) {
                                     value = Var.underscore().getName();
                                 }
@@ -529,10 +505,10 @@ public class ConsoleDialog
     private String[] getVariablesName(Object[] querySolutions) {
         int columns = getVariablesNumber(querySolutions);
         if (columns > 0) {
-            for (int i = 0; i < querySolutions.length; i++) {
-                if (getVariablesNumber(((QueryEvent) querySolutions[i]).getSolveInfo()) ==
-                    getVariablesNumber(querySolutions)) {
-                    return getVariablesName(((QueryEvent) querySolutions[i]).getSolveInfo());
+            for (Object querySolution : querySolutions) {
+                if (getVariablesNumber(((QueryEvent) querySolution).getSolveInfo()) ==
+                        getVariablesNumber(querySolutions)) {
+                    return getVariablesName(((QueryEvent) querySolution).getSolveInfo());
                 }
             }
             return null;//never executed
@@ -565,8 +541,8 @@ public class ConsoleDialog
 
     private int getVariablesNumber(Object[] querySolutions) {
         int count = 0;
-        for (int i = 0; i < querySolutions.length; i++) {
-            int n = getVariablesNumber(((QueryEvent) querySolutions[i]).getSolveInfo());
+        for (Object querySolution : querySolutions) {
+            int n = getVariablesNumber(((QueryEvent) querySolution).getSolveInfo());
             if (count < n) {
                 count = n;
             }
@@ -599,7 +575,7 @@ public class ConsoleDialog
                 ArrayList<String> tableModelList = new ArrayList<String>();
                 for (Var v : bindings) {
                     String value = v.getTerm().toString();
-                    ;
+
                     if (v == v.getTerm()) {
                         value = Var.underscore().getName();
                     }
@@ -709,20 +685,12 @@ public class ConsoleDialog
         }
         if (selectDisplayModality == 1) {
             for (int j = 0; j < length; j++) {
-                if (j % variables.length == 0) {
-                    array[j] = true;
-                } else {
-                    array[j] = false;
-                }
+                array[j] = j % variables.length == 0;
             }
         }
         if (selectDisplayModality == 2) {
             for (int j = 0; j < length; j++) {
-                if (j % (bindings.size() / variables.length) == 0) {
-                    array[j] = true;
-                } else {
-                    array[j] = false;
-                }
+                array[j] = j % (bindings.size() / variables.length) == 0;
             }
         }
         return array;

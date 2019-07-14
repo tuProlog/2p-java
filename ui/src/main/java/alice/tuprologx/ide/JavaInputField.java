@@ -22,8 +22,6 @@ import org.fife.ui.autocomplete.CompletionProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URL;
@@ -60,11 +58,7 @@ public class JavaInputField
                 inputFieldKeyReleased(event);
             }
         });
-        inputField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                solve();
-            }
-        });
+        inputField.addActionListener(event -> solve());
 
         // Add text completion
         AutoCompletion ac = new AutoCompletion(completionProvider);
@@ -78,22 +72,14 @@ public class JavaInputField
         solveButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         solveButton.setPreferredSize(new Dimension(18, 18));
         solveButton.setToolTipText("Solve");
-        solveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                solve();
-            }
-        });
+        solveButton.addActionListener(event -> solve());
 
         JButton solveAllButton = new JButton();
         urlImage = getClass().getResource("img/SolveAll18.png");
         solveAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         solveAllButton.setPreferredSize(new Dimension(18, 18));
         solveAllButton.setToolTipText("Solve All");
-        solveAllButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                solveAll();
-            }
-        });
+        solveAllButton.addActionListener(event -> solveAll());
 
 
         history = new History();

@@ -5,16 +5,16 @@ public interface FontDimensionHandler {
     /**
      * Increment the font dimension of the IDE's editor
      */
-    public void incFontDimension();
+    void incFontDimension();
 
     /**
      * Increment the font dimension of the IDE's editor
      */
-    public void decFontDimension();
+    void decFontDimension();
 
-    public int getFontDimension();
+    int getFontDimension();
 
-    public void setFontDimension(int dimension);
+    void setFontDimension(int dimension);
 
 
 }

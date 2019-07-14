@@ -95,11 +95,7 @@ public class Prolog implements IProlog, Serializable {
     private InputStream theoryInputStream;
     private String goalText;
 
-    private OutputListener defaultOutputListener = new OutputListener() {
-        public void onOutput(OutputEvent ev) {
-            System.out.print(ev.getMsg());
-        }
-    };
+    private OutputListener defaultOutputListener = ev -> System.out.print(ev.getMsg());
 
     //Alberto
     private boolean canSpawn = false;
@@ -159,8 +155,8 @@ public class Prolog implements IProlog, Serializable {
         this(false, true);
 
         if (libs != null) {
-            for (int i = 0; i < libs.length; i++) {
-                loadLibrary(libs[i]);
+            for (String lib : libs) {
+                loadLibrary(lib);
             }
         }
 
@@ -224,9 +220,9 @@ public class Prolog implements IProlog, Serializable {
         //Alberto
         String[] defaultLibrariesSet = DefaultLibrariesSet.getDefaultLibrariesSetForCurrentPlatform();
 
-        for (int i = 0; i < defaultLibrariesSet.length; i++) {
+        for (String s : defaultLibrariesSet) {
             try {
-                loadLibrary(defaultLibrariesSet[i]);
+                loadLibrary(s);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -618,8 +614,7 @@ public class Prolog implements IProlog, Serializable {
      */
 
     public boolean hasOpenAlternatives() {    //no syn
-        boolean b = engineManager.hasOpenAlternatives();
-        return b;
+        return engineManager.hasOpenAlternatives();
     }
 
     /**
@@ -1194,12 +1189,10 @@ public class Prolog implements IProlog, Serializable {
 
     public Term termSolve(String st) {
         try {
-            Term t = Term.createTerm(st, opManager);
-            return t;
+            return Term.createTerm(st, opManager);
         } catch (InvalidTermException e) {
             String s = "null";
-            Term t = Term.createTerm(s);
-            return t;
+            return Term.createTerm(s);
         }
     }
 

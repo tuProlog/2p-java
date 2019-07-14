@@ -43,7 +43,7 @@ interface InputField {
      *
      * @return The goal displayed in the input field.
      */
-    public String getGoal();
+    String getGoal();
 
     /**
      * Add the displayed goal to the history of the requested goals.

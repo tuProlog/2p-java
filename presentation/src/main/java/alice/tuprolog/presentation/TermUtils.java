@@ -10,8 +10,8 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TermUtils {
-    private static final Prolog HELPER = new Prolog();
 
+    @SuppressWarnings("unchecked")
     public static Term dynamicObjectToTerm(Object object) {
         if (object instanceof java.lang.Double) {
             return Double.of((java.lang.Double) object);

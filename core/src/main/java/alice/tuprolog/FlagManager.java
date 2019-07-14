@@ -60,9 +60,7 @@ class FlagManager {
     }
 
     public synchronized boolean setFlag(String name, Term value) {
-        java.util.Iterator<Flag> it = flags.iterator();
-        while (it.hasNext()) {
-            Flag flag = it.next();
+        for (Flag flag : flags) {
             if (flag.getName().equals(name)) {
                 if (flag.isModifiable() && flag.isValidValue(value)) {
                     flag.setValue(value);
@@ -77,18 +75,14 @@ class FlagManager {
 
     public synchronized Struct getPrologFlagList() {
         Struct flist = Struct.emptyList();
-        java.util.Iterator<Flag> it = flags.iterator();
-        while (it.hasNext()) {
-            Flag fl = it.next();
+        for (Flag fl : flags) {
             flist = Struct.cons(Struct.of("flag", Struct.atom(fl.getName()), fl.getValue()), flist);
         }
         return flist;
     }
 
     public synchronized Term getFlag(String name) {
-        java.util.Iterator<Flag> it = flags.iterator();
-        while (it.hasNext()) {
-            Flag fl = it.next();
+        for (Flag fl : flags) {
             if (fl.getName().equals(name)) {
                 return fl.getValue();
             }
@@ -99,9 +93,7 @@ class FlagManager {
     // restituisce true se esiste un flag di nome name, e tale flag ?
     // modificabile
     public synchronized boolean isModifiable(String name) {
-        java.util.Iterator<Flag> it = flags.iterator();
-        while (it.hasNext()) {
-            Flag flag = it.next();
+        for (Flag flag : flags) {
             if (flag.getName().equals(name)) {
                 return flag.isModifiable();
             }
@@ -112,9 +104,7 @@ class FlagManager {
     // restituisce true se esiste un flag di nome name, e Value ? un valore
     // ammissibile per tale flag
     public boolean isValidValue(String name, Term value) {
-        java.util.Iterator<Flag> it = flags.iterator();
-        while (it.hasNext()) {
-            Flag flag = it.next();
+        for (Flag flag : flags) {
             if (flag.getName().equals(name)) {
                 return flag.isValidValue(value);
             }

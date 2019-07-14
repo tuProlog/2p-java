@@ -41,6 +41,7 @@ class Presentation {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Serializer<T> getSerializer(Class<? extends T> type, MIMEType mimeType) {
         final Pair<Class<?>, MIMEType> key1 = Pair.of(type, mimeType);
         final Optional<Pair<Class<?>, MIMEType>> key2;
@@ -51,12 +52,13 @@ class Presentation {
                                .filter(it -> it.getRight().equals(mimeType))
                                .filter(it -> it.getLeft().isAssignableFrom(type))
                                .findAny()).isPresent()) {
-            return (Serializer<T>) serializers.get(key2);
+            return (Serializer<T>) serializers.get(key2.get());
         } else {
             throw new IllegalArgumentException("Class-MIMEType combo not supported: " + type.getName() + " --> " + mimeType);
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> Deserializer<T> getDeserializer(Class<? extends T> type, MIMEType mimeType) {
         final Pair<Class<?>, MIMEType> key1 = Pair.of(type, mimeType);
         final Optional<Pair<Class<?>, MIMEType>> key2;
@@ -67,7 +69,7 @@ class Presentation {
                                       .filter(it -> it.getRight().equals(mimeType))
                                       .filter(it -> it.getLeft().isAssignableFrom(type))
                                       .findAny()).isPresent()) {
-            return (Deserializer<T>) deserializers.get(key2);
+            return (Deserializer<T>) deserializers.get(key2.get());
         } else {
             throw new IllegalArgumentException("Class-MIMEType combo not supported: " + type.getName() + " <-- " + mimeType);
         }

@@ -21,6 +21,7 @@ import alice.tuprolog.interfaces.IPrimitives;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 
 /**
@@ -144,21 +145,21 @@ public class PrimitiveInfo {
     }
 
     public String toString() {
-        return "[ primitive: method " + method.getName() + " - " + primitive_args + " - N args: " +
+        return "[ primitive: method " + method.getName() + " - " + Arrays.toString(primitive_args) + " - N args: " +
                primitive_args.length + " - " + source.getClass().getName() + " ]\n";
     }
 
     //Alberto
     public String toStringFlat() {
-        String s = "[ primitive: method " + method.getName() + " - ";
-        for (int i = 0; i < this.primitive_args.length; i++) {
-            if (this.primitive_args[i] == null) {
+        StringBuilder s = new StringBuilder("[ primitive: method " + method.getName() + " - ");
+        for (Object primitive_arg : this.primitive_args) {
+            if (primitive_arg == null) {
                 continue;
             }
-            s = s + this.primitive_args[i].toString() + " ";
+            s.append(primitive_arg.toString()).append(" ");
         }
-        s = s + "- N args: " + primitive_args.length + " - " + source.getClass().getName() + " ]\n";
-        return s;
+        s.append("- N args: ").append(primitive_args.length).append(" - ").append(source.getClass().getName()).append(" ]\n");
+        return s.toString();
     }
 
 }

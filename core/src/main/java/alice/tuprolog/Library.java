@@ -21,6 +21,7 @@ package alice.tuprolog;
 import alice.tuprolog.interfaces.IPrimitives;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -204,22 +205,26 @@ public abstract class Library implements Serializable, IPrimitives {
             mapPrimitives.put(PrimitiveInfo.FUNCTOR, new ArrayList<PrimitiveInfo>());
             mapPrimitives.put(PrimitiveInfo.PREDICATE, new ArrayList<PrimitiveInfo>());
 
-            for (int i = 0; i < mlist.length; i++) {
-                String name = mlist[i].getName();
+            for (Method method : mlist) {
+                String name = method.getName();
 
-                Class<?>[] clist = mlist[i].getParameterTypes();
-                Class<?> rclass = mlist[i].getReturnType();
+                Class<?>[] clist = method.getParameterTypes();
+                Class<?> rclass = method.getReturnType();
                 String returnTypeName = rclass.getName();
 
                 int type;
-                if (returnTypeName.equals("boolean")) {
-                    type = PrimitiveInfo.PREDICATE;
-                } else if (returnTypeName.equals("alice.tuprolog.Term")) {
-                    type = PrimitiveInfo.FUNCTOR;
-                } else if (returnTypeName.equals("void")) {
-                    type = PrimitiveInfo.DIRECTIVE;
-                } else {
-                    continue;
+                switch (returnTypeName) {
+                    case "boolean":
+                        type = PrimitiveInfo.PREDICATE;
+                        break;
+                    case "alice.tuprolog.Term":
+                        type = PrimitiveInfo.FUNCTOR;
+                        break;
+                    case "void":
+                        type = PrimitiveInfo.DIRECTIVE;
+                        break;
+                    default:
+                        continue;
                 }
 
                 int index = name.lastIndexOf('_');
@@ -238,7 +243,7 @@ public abstract class Library implements Serializable, IPrimitives {
                             if (valid) {
                                 String rawName = name.substring(0, index);
                                 String key = rawName + "/" + arity;
-                                PrimitiveInfo prim = new PrimitiveInfo(type, key, this, mlist[i], arity);
+                                PrimitiveInfo prim = new PrimitiveInfo(type, key, this, method, arity);
                                 mapPrimitives.get(type).add(prim);
                                 //
                                 // adding also or synonims
@@ -249,7 +254,7 @@ public abstract class Library implements Serializable, IPrimitives {
                                         String[] map = opMappingCached[j];
                                         if (map[2].equals(stringFormat[type]) && map[1].equals(rawName)) {
                                             key = map[0] + "/" + arity;
-                                            prim = new PrimitiveInfo(type, key, this, mlist[i], arity);
+                                            prim = new PrimitiveInfo(type, key, this, method, arity);
                                             mapPrimitives.get(type).add(prim);
                                         }
                                     }

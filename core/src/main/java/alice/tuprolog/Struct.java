@@ -532,17 +532,17 @@ public class Struct extends Term {
         if (arity == 0) {
             return null;
         }
-        for (int i = 0; i < arg.length; i++) {
-            if (arg[i] instanceof Struct) {
-                Struct s = (Struct) arg[i];
+        for (Term term : arg) {
+            if (term instanceof Struct) {
+                Struct s = (Struct) term;
                 if (s.getName().equals(name)) {
                     return s;
                 }
             }
         }
-        for (int i = 0; i < arg.length; i++) {
-            if (arg[i] instanceof Struct) {
-                Struct s = (Struct) arg[i];
+        for (Term term : arg) {
+            if (term instanceof Struct) {
+                Struct s = (Struct) term;
                 Struct sol = s.getArg(name);
                 if (sol != null) {
                     return sol;

@@ -142,9 +142,7 @@ public class JavaIOManager extends IOFileOperations {
                     return true;
                 }
                 String extension = getExtension(f);
-                if (extension != null && isMatchingExtension(extension)) {
-                    return true;
-                }
+                return extension != null && isMatchingExtension(extension);
             }
             return false;
         }

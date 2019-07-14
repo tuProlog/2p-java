@@ -14,8 +14,11 @@ import java.io.*;
 /**
  * miscellaneous static services
  */
-public class Tools extends Object {
+public class Tools {
 
+    private Tools() {
+        throw new IllegalStateException();
+    }
 
     /**
      * loads a text file and returns its
@@ -69,8 +72,8 @@ public class Tools extends Object {
      * the presence of the option of the specified prefix
      */
     public static boolean isOpt(String[] args, String prefix) {
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals(prefix)) {
+        for (String arg : args) {
+            if (arg.equals(prefix)) {
                 return true;
             }
         }

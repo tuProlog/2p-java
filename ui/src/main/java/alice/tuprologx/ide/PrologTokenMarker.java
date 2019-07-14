@@ -9,8 +9,6 @@ import javax.swing.text.Segment;
 public class PrologTokenMarker extends TokenMarker {
     // private members
     private static KeywordMap libraryKeywords;
-    @SuppressWarnings("unused")
-    private boolean cpp;
     private KeywordMap keywords;
     private int lastOffset;
     private int lastKeyword;
@@ -19,7 +17,6 @@ public class PrologTokenMarker extends TokenMarker {
         this(true, getKeywords());
     }
     public PrologTokenMarker(boolean cpp, KeywordMap keywords) {
-        this.cpp = cpp;
         this.keywords = keywords;
     }
 
@@ -303,18 +300,16 @@ public class PrologTokenMarker extends TokenMarker {
                             backslash = false;
                             doKeyword(line, i, c);
                             if (length - i > 1) {
-                                switch (array[i1]) {
-                                    /* COMMENT2! */
-                                    case '*':
-                                        addToken(i - lastOffset, token);
-                                        lastOffset = lastKeyword = i;
-                                        if (length - i > 2 && array[i + 2] == '*') {
-                                            token = Token.COMMENT2;
-                                        } else {
-                                            token = Token.COMMENT1;
-                                        }
-                                        break;
-                        /*
+                                /* COMMENT2! */
+                                if (array[i1] == '*') {
+                                    addToken(i - lastOffset, token);
+                                    lastOffset = lastKeyword = i;
+                                    if (length - i > 2 && array[i + 2] == '*') {
+                                        token = Token.COMMENT2;
+                                    } else {
+                                        token = Token.COMMENT1;
+                                    }
+                                        /*
                         case '/':
                             addToken(i - lastOffset,token);
                             addToken(length - i,Token.COMMENT1);

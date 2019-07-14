@@ -198,7 +198,7 @@ public class Int extends Number {
      * @author Paolo Contessi
      */
     public int compareTo(Number o) {
-        return (new java.lang.Integer(value)).compareTo(o.intValue());
+        return Integer.compare(value, o.intValue());
     }
 
     @Override

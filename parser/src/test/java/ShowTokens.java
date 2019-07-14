@@ -21,14 +21,12 @@ public class ShowTokens {
             System.out.print("> ");
             final Stream<Token> tokens = tokenStream(stdin.readLine(), args);
 
-            tokens.forEach(it -> {
-                System.out.printf("%s: «%s» %d:%d\n",
-                                  PrologLexer.VOCABULARY.getSymbolicName(it.getType()),
-                                  it.getText(),
-                                  it.getLine(),
-                                  it.getCharPositionInLine()
-                );
-            });
+            tokens.forEach(it -> System.out.printf("%s: «%s» %d:%d\n",
+                              PrologLexer.VOCABULARY.getSymbolicName(it.getType()),
+                              it.getText(),
+                              it.getLine(),
+                              it.getCharPositionInLine()
+            ));
 
             System.out.println();
         }

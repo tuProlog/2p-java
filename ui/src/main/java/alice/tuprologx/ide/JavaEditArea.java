@@ -23,8 +23,6 @@ import org.fife.ui.rsyntaxtextarea.*;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.*;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.undo.CannotRedoException;
@@ -104,11 +102,7 @@ public class JavaEditArea extends JPanel implements TheoryEditArea, FileEditArea
         constraints.weighty = 1;
         //constraints.insets = new java.awt.Insets(0, 0, 10, 0);
 
-        inputTheory.addCaretListener(new CaretListener() {
-            public void caretUpdate(CaretEvent event) {
-                setCaretLine(inputTheory.getCaretLineNumber() + 1);
-            }
-        });
+        inputTheory.addCaretListener(event -> setCaretLine(inputTheory.getCaretLineNumber() + 1));
 
         dirty = false;
         saved = true;

@@ -6,8 +6,6 @@ import alice.tuprolog.exceptions.InvalidTheoryException;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.URL;
@@ -57,41 +55,25 @@ public class TheoryEditor
         bGetTheory.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bGetTheory.setToolTipText("Get Theory");
         bGetTheory.setPreferredSize(new Dimension(32, 32));
-        bGetTheory.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                getEngineTheory();
-            }
-        });
+        bGetTheory.addActionListener(event -> getEngineTheory());
         bSetTheory = new JButton();
         urlImage = getClass().getResource("img/SetTheory20.png");
         bSetTheory.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bSetTheory.setToolTipText("Set Theory");
         bSetTheory.setPreferredSize(new Dimension(32, 32));
-        bSetTheory.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                setEngineTheory();
-            }
-        });
+        bSetTheory.addActionListener(event -> setEngineTheory());
         JButton bUndo = new JButton();
         urlImage = getClass().getResource("img/Undo20.png");
         bUndo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bUndo.setToolTipText("Undo Edit Action");
         bUndo.setPreferredSize(new Dimension(32, 32));
-        bUndo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                undo();
-            }
-        });
+        bUndo.addActionListener(event -> undo());
         JButton bRedo = new JButton();
         urlImage = getClass().getResource("img/Redo20.png");
         bRedo.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bRedo.setToolTipText("Redo Edit Action");
         bRedo.setPreferredSize(new Dimension(32, 32));
-        bRedo.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                redo();
-            }
-        });
+        bRedo.addActionListener(event -> redo());
         buttonsPanel.add(bGetTheory);
         buttonsPanel.add(bSetTheory);
         buttonsPanel.add(bUndo);

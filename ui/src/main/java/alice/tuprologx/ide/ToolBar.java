@@ -8,8 +8,6 @@ import alice.tuprologx.spyframe.SpyFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.net.URL;
@@ -40,10 +38,6 @@ public class ToolBar extends JPanel {
      */
     private PrologConfigFrame configFrame;
     /**
-     * The About window launched by the toolbar.
-     */
-    private AboutFrame about;
-    /**
      * The file manager launched by the toolbar.
      */
     private IOFileOperations fileManager;
@@ -62,10 +56,6 @@ public class ToolBar extends JPanel {
     private JButton bSave;
     private JButton bSaveAs;
     private JButton bLibMan;
-    private JButton bDebug;
-    private JButton bConfigure;
-    private JButton bAbout;
-    private JButton bSpy;
 
 
     public ToolBar(IDE ide, JFrame parent) {
@@ -86,98 +76,64 @@ public class ToolBar extends JPanel {
         bNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bNew.setToolTipText("New Theory");
         bNew.setPreferredSize(new Dimension(32, 32));
-        bNew.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                newTheory();
-            }
-        });
+        bNew.addActionListener(event -> newTheory());
         bOpen = new JButton();
         urlImage = getClass().getResource("img/Open24.png");
         bOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bOpen.setToolTipText("Load Theory");
         bOpen.setPreferredSize(new Dimension(32, 32));
-        bOpen.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                loadTheory();
-            }
-        });
+        bOpen.addActionListener(event -> loadTheory());
         bSave = new JButton();
         urlImage = getClass().getResource("img/Save24.png");
         bSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bSave.setToolTipText("Save Theory");
         bSave.setPreferredSize(new Dimension(32, 32));
-        bSave.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                saveTheory();
-            }
-        });
+        bSave.addActionListener(event -> saveTheory());
         bSaveAs = new JButton();
         urlImage = getClass().getResource("img/SaveAs24.png");
         bSaveAs.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bSaveAs.setToolTipText("Save Theory As...");
         bSaveAs.setPreferredSize(new Dimension(32, 32));
-        bSaveAs.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                saveTheoryAs();
-            }
-        });
+        bSaveAs.addActionListener(event -> saveTheoryAs());
         bLibMan = new JButton();
         urlImage = getClass().getResource("img/Library24.png");
         bLibMan.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bLibMan.setToolTipText("Open Library Manager");
         bLibMan.setPreferredSize(new Dimension(32, 32));
-        bLibMan.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                openLibraryManager();
-            }
-        });
-        bDebug = new JButton();
+        bLibMan.addActionListener(event -> openLibraryManager());
+        JButton bDebug = new JButton();
         urlImage = getClass().getResource("img/Debugger24.png");
         bDebug.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bDebug.setToolTipText("View Debug Information");
         bDebug.setPreferredSize(new Dimension(32, 32));
-        bDebug.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                viewDebugInformation();
-            }
-        });
-        bConfigure = new JButton();
+        bDebug.addActionListener(event -> viewDebugInformation());
+        JButton bConfigure = new JButton();
         urlImage = getClass().getResource("img/Configure24.png");
         bConfigure.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bConfigure.setToolTipText("Configure tuProlog");
         bConfigure.setPreferredSize(new Dimension(32, 32));
-        bConfigure.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                configure();
-            }
-        });
-        bAbout = new JButton();
+        bConfigure.addActionListener(event -> configure());
+        JButton bAbout = new JButton();
         urlImage = getClass().getResource("img/About24.png");
         bAbout.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bAbout.setToolTipText("About...");
         bAbout.setPreferredSize(new Dimension(32, 32));
-        bAbout.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                viewAboutInformation();
-            }
-        });
+        bAbout.addActionListener(event -> viewAboutInformation());
 
-        bSpy = new JButton();
+        JButton bSpy = new JButton();
         urlImage = getClass().getResource("img/AlberoBinario.png");
         bSpy.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         bSpy.setToolTipText("Spy Frame");
         bSpy.setPreferredSize(new Dimension(32, 32));
-        bSpy.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                ConsoleManager consoleManager = JavaIDE.getConsoleManager();
-                Theory theory = engine.getTheory();
-                Term rich = engine.termSolve(consoleManager.getGoal());
-                try {
-                    new SpyFrame(theory, rich);
-                } catch (InvalidTheoryException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
+        bSpy.addActionListener(event -> {
+            ConsoleManager consoleManager = JavaIDE.getConsoleManager();
+            Theory theory = engine.getTheory();
+            Term rich = engine.termSolve(consoleManager.getGoal());
+            try {
+                new SpyFrame(theory, rich);
+            } catch (InvalidTheoryException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         });
 
@@ -417,7 +373,10 @@ public class ToolBar extends JPanel {
      * Display an About dialog with information on the system and its crafters.
      */
     public void viewAboutInformation() {
-        about = new AboutFrame(parent);
+        /**
+         * The About window launched by the toolbar.
+         */
+        AboutFrame about = new AboutFrame(parent);
         parent.setEnabled(false);
         about.pack();
         about.setVisible(true);

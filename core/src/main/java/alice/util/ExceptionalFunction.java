@@ -17,6 +17,7 @@ public interface ExceptionalFunction<T, R, E extends Throwable> {
         };
     }
 
+    @SuppressWarnings("unchecked")
     static <T, R, E extends Throwable> Function<T, R> wrap(ExceptionalFunction<T, R, E> f, BiFunction<E, T, R> onError) {
         return x -> {
             try {

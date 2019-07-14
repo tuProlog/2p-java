@@ -520,9 +520,7 @@ public class BuiltIn extends Library {
         } catch (RuntimeException e) {
 
         }
-        java.util.Iterator<ClauseInfo> it = l.iterator();
-        while (it.hasNext()) {
-            ClauseInfo b = it.next();
+        for (ClauseInfo b : l) {
             if (match(arg0, b.getHead())) {
                 b.getClause().resolveTerm();
                 ((Struct) arg1).append(b.getClause());

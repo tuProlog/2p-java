@@ -748,14 +748,16 @@ public class ISOIOLibrary extends Library {
                 Term actionTemp = element.get("eof_action");
                 String action = ((Struct) actionTemp).getName();
 
-                if (action.equals("error")) {
-                    throw PrologError.permission_error(getEngine().getEngineManager(), "input", "past_end_of_stream", Struct.atom("reader"), Struct.atom("End of file is reached."));
-                } else if (action.equals("eof_code")) {
-                    return unify(arg, Struct.atom("-1"));
-                } else if (action.equals("reset")) {
-                    element.put("end_of_stream", Struct.atom("not"));
-                    element.put("position", Int.of(0));
-                    stream.reset();
+                switch (action) {
+                    case "error":
+                        throw PrologError.permission_error(getEngine().getEngineManager(), "input", "past_end_of_stream", Struct.atom("reader"), Struct.atom("End of file is reached."));
+                    case "eof_code":
+                        return unify(arg, Struct.atom("-1"));
+                    case "reset":
+                        element.put("end_of_stream", Struct.atom("not"));
+                        element.put("position", Int.of(0));
+                        stream.reset();
+                        break;
                 }
             }
 
@@ -1500,18 +1502,22 @@ public class ISOIOLibrary extends Library {
             while (i.hasNext()) {
                 Object obj = i.next();
                 option = (Struct) obj;
-                if (option.getName().equals("variables")) {
-                    variables = Struct.emptyList();
-                    variables = (Struct) Term.createTerm(vars.toString());
-                    unify(option.getArg(0), variables);
-                } else if (option.getName().equals("variable_name")) {
-                    variable_names = Struct.emptyList();
-                    variable_names = (Struct) Term.createTerm(associations_table.toString());
-                    unify(option.getArg(0), variable_names);
-                } else if (option.getName().equals("singletons")) {
-                    singletons = Struct.emptyList();
-                    singletons = (Struct) Term.createTerm(singl.toString());
-                    unify(option.getArg(0), singletons);
+                switch (option.getName()) {
+                    case "variables":
+                        variables = Struct.emptyList();
+                        variables = (Struct) Term.createTerm(vars.toString());
+                        unify(option.getArg(0), variables);
+                        break;
+                    case "variable_name":
+                        variable_names = Struct.emptyList();
+                        variable_names = (Struct) Term.createTerm(associations_table.toString());
+                        unify(option.getArg(0), variable_names);
+                        break;
+                    case "singletons":
+                        singletons = Struct.emptyList();
+                        singletons = (Struct) Term.createTerm(singl.toString());
+                        unify(option.getArg(0), singletons);
+                        break;
                 }
             }
 
@@ -1585,14 +1591,18 @@ public class ISOIOLibrary extends Library {
                         throw PrologError.instantiation_error(getEngine().getEngineManager(), 3);
                     }
                     writeOption = (Struct) obj;
-                    if (writeOption.getName().equals("quoted")) {
-                        quoted = ((Struct) writeOption.getArg(0)).getName().equals("true");
-                    } else if (writeOption.getName().equals("ignore_ops")) {
-                        ignore_ops = ((Struct) writeOption.getArg(0)).getName().equals("true");
-                    } else if (writeOption.getName().equals("numbervars")) {
-                        numbervars = ((Struct) writeOption.getArg(0)).getName().equals("true");
-                    } else {
-                        throw PrologError.domain_error(getEngine().getEngineManager(), 3, "write_options", writeOptionsList.getTerm());
+                    switch (writeOption.getName()) {
+                        case "quoted":
+                            quoted = ((Struct) writeOption.getArg(0)).getName().equals("true");
+                            break;
+                        case "ignore_ops":
+                            ignore_ops = ((Struct) writeOption.getArg(0)).getName().equals("true");
+                            break;
+                        case "numbervars":
+                            numbervars = ((Struct) writeOption.getArg(0)).getName().equals("true");
+                            break;
+                        default:
+                            throw PrologError.domain_error(getEngine().getEngineManager(), 3, "write_options", writeOptionsList.getTerm());
                     }
                 }
             }

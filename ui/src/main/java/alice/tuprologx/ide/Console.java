@@ -5,18 +5,15 @@ package alice.tuprologx.ide;
  */
 
 public interface Console {
-    public boolean hasOpenAlternatives();
+    boolean hasOpenAlternatives();
 
-    public void enableTheoryCommands(boolean flag);
+    void enableTheoryCommands(boolean flag);
 
-    public void getNextSolution();
+    void getNextSolution();
 
-    public void acceptSolution();
+    void acceptSolution();
 
-    public void stopEngine();
+    void stopEngine();
 
-    /**
-     * @uml.property name="goal"
-     */
-    public String getGoal();
+    String getGoal();
 }

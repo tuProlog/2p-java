@@ -220,12 +220,12 @@ public final class LibraryManager {
     }
 
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         Object[] array = getLibraries();
-        for (int i = 0; i < array.length; i++) {
-            result = result + array[i] + "\n";
+        for (Object o : array) {
+            result.append(o).append("\n");
         }
-        return result;
+        return result.toString();
     }
 
     /**

@@ -126,12 +126,10 @@ public class BasicLibrary extends Library {
     public boolean get_operators_list_1(Term argument) {
         Term arg = argument.getTerm();
         Struct list = Struct.emptyList();
-        java.util.Iterator<Operator> it = getEngine().getCurrentOperatorList().iterator();
-        while (it.hasNext()) {
-            Operator o = it.next();
+        for (Operator o : getEngine().getCurrentOperatorList()) {
             list = Struct.cons(
                     Struct.of("op", Int.of(o.getPriority()),
-                        Struct.atom(o.getAssociativity().name().toLowerCase()), Struct.atom(o.getName())),
+                            Struct.atom(o.getAssociativity().name().toLowerCase()), Struct.atom(o.getName())),
                     list
             );
         }

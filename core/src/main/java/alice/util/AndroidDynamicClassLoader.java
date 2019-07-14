@@ -4,7 +4,6 @@ import java.net.URL;
 
 public class AndroidDynamicClassLoader extends AbstractDynamicClassLoader {
     private String dexPath;
-    private ClassLoader classLoader;
 
     public AndroidDynamicClassLoader() {
         super();
@@ -41,6 +40,7 @@ public class AndroidDynamicClassLoader extends AbstractDynamicClassLoader {
     public Class<?> findClass(String className) throws ClassNotFoundException {
         setDexPath(createPathString());
 
+        ClassLoader classLoader;
         try {
             /**
              * More informations on the use of reflection here can be found in the class LibraryManager

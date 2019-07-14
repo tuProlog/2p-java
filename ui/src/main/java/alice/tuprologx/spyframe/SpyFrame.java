@@ -139,7 +139,7 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener {
         steps = 1;
         c.add(topp, BorderLayout.NORTH);
         //JSplitPane at CENTER containing the tree and the results
-        tree = new Tree<List<ExecutionContext>>(contexts2tree);
+        tree = new Tree<>(contexts2tree);
         results = new JTextArea("", 4, 40);
         JSplitPane jsp = new JSplitPane(
                 JSplitPane.VERTICAL_SPLIT,
@@ -165,32 +165,29 @@ public class SpyFrame extends JFrame implements ActionListener, SpyListener {
         prolog.setTheory(theory);
         prolog.addSpyListener(this);
         prolog.setSpy(true);
-        pprocess = new Thread() {
-            @Override
-            public void run() {
-                Term sol;
-                SolveInfo sinfo = prolog.solve(goal);
-                if (sinfo != null) {
-                    while (sinfo.isSuccess()) {
-                        try {
-                            sol = sinfo.getSolution();
-                            results.append("\nsolution: " + sol);
-                            results.append("\ninfo:     " + sinfo);
-                            if (sinfo.hasOpenAlternatives()) {
-                                sinfo = prolog.solveNext();
-                            } else {
-                                break;
-                            }
-                        } catch (Exception ex) {
-                            System.out.println(ex);
+        pprocess = new Thread(() -> {
+            Term sol;
+            SolveInfo sinfo = prolog.solve(goal);
+            if (sinfo != null) {
+                while (sinfo.isSuccess()) {
+                    try {
+                        sol = sinfo.getSolution();
+                        results.append("\nsolution: " + sol);
+                        results.append("\ninfo:     " + sinfo);
+                        if (sinfo.hasOpenAlternatives()) {
+                            sinfo = prolog.solveNext();
+                        } else {
+                            break;
                         }
+                    } catch (Exception ex) {
+                        System.out.println(ex);
                     }
-                    results.append("\nNo more solutions.");
-                    next.setEnabled(false);
-
                 }
+                results.append("\nNo more solutions.");
+                next.setEnabled(false);
+
             }
-        };
+        });
     }
 
     /**

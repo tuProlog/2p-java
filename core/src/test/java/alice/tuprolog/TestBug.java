@@ -6,9 +6,6 @@
  */
 package alice.tuprolog;
 
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.interfaces.event.SpyListener;
-
 /**
  * @author aricci
  * <p>
@@ -37,11 +34,7 @@ public class TestBug {
 
 
         Prolog engine = new Prolog();
-        engine.addSpyListener(new SpyListener() {
-            public void onSpy(SpyEvent e) {
-                System.out.println(e);
-            }
-        });
+        engine.addSpyListener(System.out::println);
         //engine.setSpy(true);
         engine.setTheory(Theory.parseLazilyWithStandardOperators(st));
         SolveInfo info = engine.solve("test(L1,L2).");

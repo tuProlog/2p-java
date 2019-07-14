@@ -34,7 +34,7 @@ public class GenericFrame
         setVisible(false);
         this.mainWindow = mainWindow;
         setTitle(title);
-        if (iconPathName != "") {
+        if (!iconPathName.equals("")) {
             // Set a title bar icon
             ImageIcon icon = new ImageIcon(getClass().getResource(getFrameIcon()));
             setIconImage(icon.getImage());

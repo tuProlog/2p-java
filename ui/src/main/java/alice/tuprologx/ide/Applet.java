@@ -38,8 +38,8 @@ public class Applet extends JApplet {
         // Remove the attached window listener, causing the applet to
         // exit and the browser to close due to a System.exit() call.
         WindowListener[] listeners = ide.getWindowListeners();
-        for (int i = 0; i < listeners.length; i++) {
-            ide.removeWindowListener(listeners[i]);
+        for (WindowListener listener : listeners) {
+            ide.removeWindowListener(listener);
         }
 
         ide.pack();

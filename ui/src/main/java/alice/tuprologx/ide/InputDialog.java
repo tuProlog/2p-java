@@ -1,7 +1,5 @@
 package alice.tuprologx.ide;
 
-import alice.tuprolog.event.ReadEvent;
-import alice.tuprolog.interfaces.event.ReadListener;
 import alice.tuprolog.lib.UserContextInputStream;
 
 import javax.swing.*;
@@ -24,13 +22,10 @@ public class InputDialog extends JPanel {
     public InputDialog(UserContextInputStream str) {
         initComponent();
         stream = str;
-        stream.setReadListener(new ReadListener() {
-            @Override
-            public void readCalled(ReadEvent event) {
-                setVisible(true);
-                inputText.requestFocus();
-                inputText.setCaretPosition(0);
-            }
+        stream.setReadListener(event -> {
+            setVisible(true);
+            inputText.requestFocus();
+            inputText.setCaretPosition(0);
         });
     }
 

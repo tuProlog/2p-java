@@ -25,7 +25,10 @@ import alice.tuprolog.*;
 import alice.tuprolog.exceptions.InvalidObjectIdException;
 import alice.tuprolog.exceptions.JavaException;
 import alice.tuprolog.lib.annotations.OOLibraryEnableLambdas;
-import alice.util.*;
+import alice.util.AbstractDynamicClassLoader;
+import alice.util.AndroidDynamicClassLoader;
+import alice.util.InspectionUtils;
+import alice.util.JavaDynamicClassLoader;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.File;
@@ -40,7 +43,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static alice.util.Tools.*;
+import static alice.util.Tools.loadText;
+import static alice.util.Tools.removeApices;
 
 /**
  * This class represents a tuProlog library enabling the interaction with the
@@ -108,8 +112,7 @@ public class OOLibrary extends Library {
             throws NoSuchMethodException {
         // first try for exact match
         try {
-            Method m = target.getMethod(name, argClasses);
-            return m;
+            return target.getMethod(name, argClasses);
         } catch (NoSuchMethodException e) {
             if (argClasses.length == 0) { // if no args & no exact match, out of
                 // luck
@@ -390,9 +393,7 @@ public class OOLibrary extends Library {
     public void onSolveBegin(Term goal) {
         currentObjects.clear();
         currentObjects_inverse.clear();
-        Iterator<Map.Entry<Object, Struct>> it = staticObjects_inverse.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Object, Struct> en = it.next();
+        for (Map.Entry<Object, Struct> en : staticObjects_inverse.entrySet()) {
             bindDynamicObject(en.getValue(), en.getKey());
         }
         preregisterObjects();
@@ -480,7 +481,7 @@ public class OOLibrary extends Library {
             getEngine().warn("Invalid constructor arguments.");
             throw new JavaException(ex);
         } catch (NoSuchMethodException ex) {
-            getEngine().warn("Constructor not found: " + args.getTypes());
+            getEngine().warn("Constructor not found: " + Arrays.toString(args.getTypes()));
             throw new JavaException(ex);
         } catch (InstantiationException ex) {
             getEngine().warn("Objects of class " + clName + " cannot be instantiated");
@@ -1043,56 +1044,73 @@ public class OOLibrary extends Library {
                 throw new JavaException(new IllegalArgumentException(objId.toString()));
             }
             String name = cl.toString();
-            if (name.equals("class [I")) {
-                if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+            switch (name) {
+                case "class [I": {
+                    if (!(what instanceof Number)) {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    byte v = (byte) ((Number) what).intValue();
+                    Array.setInt(obj, index.intValue(), v);
+                    break;
                 }
-                byte v = (byte) ((Number) what).intValue();
-                Array.setInt(obj, index.intValue(), v);
-            } else if (name.equals("class [D")) {
-                if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [D": {
+                    if (!(what instanceof Number)) {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    double v = ((Number) what).doubleValue();
+                    Array.setDouble(obj, index.intValue(), v);
+                    break;
                 }
-                double v = ((Number) what).doubleValue();
-                Array.setDouble(obj, index.intValue(), v);
-            } else if (name.equals("class [F")) {
-                if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [F": {
+                    if (!(what instanceof Number)) {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    float v = ((Number) what).floatValue();
+                    Array.setFloat(obj, index.intValue(), v);
+                    break;
                 }
-                float v = ((Number) what).floatValue();
-                Array.setFloat(obj, index.intValue(), v);
-            } else if (name.equals("class [L")) {
-                if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [L": {
+                    if (!(what instanceof Number)) {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    long v = ((Number) what).longValue();
+                    Array.setFloat(obj, index.intValue(), v);
+                    break;
                 }
-                long v = ((Number) what).longValue();
-                Array.setFloat(obj, index.intValue(), v);
-            } else if (name.equals("class [C")) {
-                String s = what.toString();
-                Array.setChar(obj, index.intValue(), s.charAt(0));
-            } else if (name.equals("class [Z")) {
-                String s = what.toString();
-                if (s.equals("true")) {
-                    Array.setBoolean(obj, index.intValue(), true);
-                } else if (s.equals("false")) {
-                    Array.setBoolean(obj, index.intValue(), false);
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [C": {
+                    String s = what.toString();
+                    Array.setChar(obj, index.intValue(), s.charAt(0));
+                    break;
                 }
-            } else if (name.equals("class [B")) {
-                if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [Z": {
+                    String s = what.toString();
+                    if (s.equals("true")) {
+                        Array.setBoolean(obj, index.intValue(), true);
+                    } else if (s.equals("false")) {
+                        Array.setBoolean(obj, index.intValue(), false);
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    break;
                 }
-                int v = ((Number) what).intValue();
-                Array.setByte(obj, index.intValue(), (byte) v);
-            } else if (name.equals("class [S")) {
-                if (!(what instanceof Number)) {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [B": {
+                    if (!(what instanceof Number)) {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    int v = ((Number) what).intValue();
+                    Array.setByte(obj, index.intValue(), (byte) v);
+                    break;
                 }
-                short v = (short) ((Number) what).intValue();
-                Array.setShort(obj, index.intValue(), v);
-            } else {
-                throw new JavaException(new Exception());
+                case "class [S": {
+                    if (!(what instanceof Number)) {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                    short v = (short) ((Number) what).intValue();
+                    Array.setShort(obj, index.intValue(), v);
+                    break;
+                }
+                default:
+                    throw new JavaException(new Exception());
             }
             return true;
         } catch (Exception ex) {
@@ -1131,75 +1149,83 @@ public class OOLibrary extends Library {
                 throw new JavaException(new IllegalArgumentException(objId.toString()));
             }
             String name = cl.toString();
-            if (name.equals("class [I")) {
-                Term value = Int.of(Array.getInt(obj, index.intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
-                }
-            } else if (name.equals("class [D")) {
-                Term value = Double.of(Array.getDouble(obj, index.intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
-                }
-            } else if (name.equals("class [F")) {
-                Term value = Float.of(Array.getFloat(obj, index
-                        .intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
-                }
-            } else if (name.equals("class [L")) {
-                Term value = Long.of(Array.getLong(obj, index.intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
-                }
-            } else if (name.equals("class [C")) {
-                Term value = alice.tuprolog.Struct.atom(""+ Array.getChar(obj, index.intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
-                }
-            } else if (name.equals("class [Z")) {
-                boolean b = Array.getBoolean(obj, index.intValue());
-                if (b) {
-                    if (unify(what, Struct.truth(true))) {
-                        return true;
-                    } else {
-                        throw new JavaException(new IllegalArgumentException(what.toString()));
-                    }
-                } else {
-                    if (unify(what, Struct.atom("false"))) {
+            switch (name) {
+                case "class [I": {
+                    Term value = Int.of(Array.getInt(obj, index.intValue()));
+                    if (unify(what, value)) {
                         return true;
                     } else {
                         throw new JavaException(new IllegalArgumentException(what.toString()));
                     }
                 }
-            } else if (name.equals("class [B")) {
-                Term value = Int.of(Array.getByte(obj, index
-                        .intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [D": {
+                    Term value = Double.of(Array.getDouble(obj, index.intValue()));
+                    if (unify(what, value)) {
+                        return true;
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
                 }
-            } else if (name.equals("class [S")) {
-                Term value = Int.of(Array.getInt(obj, index
-                        .intValue()));
-                if (unify(what, value)) {
-                    return true;
-                } else {
-                    throw new JavaException(new IllegalArgumentException(what.toString()));
+                case "class [F": {
+                    Term value = Float.of(Array.getFloat(obj, index
+                            .intValue()));
+                    if (unify(what, value)) {
+                        return true;
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
                 }
-            } else {
-                throw new JavaException(new Exception());
+                case "class [L": {
+                    Term value = Long.of(Array.getLong(obj, index.intValue()));
+                    if (unify(what, value)) {
+                        return true;
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                }
+                case "class [C": {
+                    Term value = Struct.atom("" + Array.getChar(obj, index.intValue()));
+                    if (unify(what, value)) {
+                        return true;
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                }
+                case "class [Z":
+                    boolean b = Array.getBoolean(obj, index.intValue());
+                    if (b) {
+                        if (unify(what, Struct.truth(true))) {
+                            return true;
+                        } else {
+                            throw new JavaException(new IllegalArgumentException(what.toString()));
+                        }
+                    } else {
+                        if (unify(what, Struct.atom("false"))) {
+                            return true;
+                        } else {
+                            throw new JavaException(new IllegalArgumentException(what.toString()));
+                        }
+                    }
+                case "class [B": {
+                    Term value = Int.of(Array.getByte(obj, index
+                            .intValue()));
+                    if (unify(what, value)) {
+                        return true;
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                }
+                case "class [S": {
+                    Term value = Int.of(Array.getInt(obj, index
+                            .intValue()));
+                    if (unify(what, value)) {
+                        return true;
+                    } else {
+                        throw new JavaException(new IllegalArgumentException(what.toString()));
+                    }
+                }
+                default:
+                    throw new JavaException(new Exception());
             }
         } catch (Exception ex) {
             // ex.printStackTrace();
@@ -1213,25 +1239,35 @@ public class OOLibrary extends Library {
             Object array = null;
             String obtype = type.substring(0, type.length() - 2);
 
-            if (obtype.equals("boolean")) {
-                array = new boolean[nargs];
-            } else if (obtype.equals("byte")) {
-                array = new byte[nargs];
-            } else if (obtype.equals("char")) {
-                array = new char[nargs];
-            } else if (obtype.equals("short")) {
-                array = new short[nargs];
-            } else if (obtype.equals("int")) {
-                array = new int[nargs];
-            } else if (obtype.equals("long")) {
-                array = new long[nargs];
-            } else if (obtype.equals("float")) {
-                array = new float[nargs];
-            } else if (obtype.equals("double")) {
-                array = new double[nargs];
-            } else {
-                Class<?> cl = Class.forName(obtype, true, dynamicLoader);
-                array = Array.newInstance(cl, nargs);
+            switch (obtype) {
+                case "boolean":
+                    array = new boolean[nargs];
+                    break;
+                case "byte":
+                    array = new byte[nargs];
+                    break;
+                case "char":
+                    array = new char[nargs];
+                    break;
+                case "short":
+                    array = new short[nargs];
+                    break;
+                case "int":
+                    array = new int[nargs];
+                    break;
+                case "long":
+                    array = new long[nargs];
+                    break;
+                case "float":
+                    array = new float[nargs];
+                    break;
+                case "double":
+                    array = new double[nargs];
+                    break;
+                default:
+                    Class<?> cl = Class.forName(obtype, true, dynamicLoader);
+                    array = Array.newInstance(cl, nargs);
+                    break;
             }
             return bindDynamicObject(id, array);
         } catch (Exception ex) {
@@ -1393,24 +1429,34 @@ public class OOLibrary extends Library {
                     types[i] = String.class;
                     return true;
                 } else if (castTo_name.endsWith("[]")) {
-                    if (castTo_name.equals("boolean[]")) {
-                        castTo_name = "[Z";
-                    } else if (castTo_name.equals("byte[]")) {
-                        castTo_name = "[B";
-                    } else if (castTo_name.equals("short[]")) {
-                        castTo_name = "[S";
-                    } else if (castTo_name.equals("char[]")) {
-                        castTo_name = "[C";
-                    } else if (castTo_name.equals("int[]")) {
-                        castTo_name = "[I";
-                    } else if (castTo_name.equals("long[]")) {
-                        castTo_name = "[L";
-                    } else if (castTo_name.equals("float[]")) {
-                        castTo_name = "[F";
-                    } else if (castTo_name.equals("double[]")) {
-                        castTo_name = "[D";
-                    } else {
-                        castTo_name = "[L" + castTo_name.substring(0, castTo_name.length() - 2) + ";";
+                    switch (castTo_name) {
+                        case "boolean[]":
+                            castTo_name = "[Z";
+                            break;
+                        case "byte[]":
+                            castTo_name = "[B";
+                            break;
+                        case "short[]":
+                            castTo_name = "[S";
+                            break;
+                        case "char[]":
+                            castTo_name = "[C";
+                            break;
+                        case "int[]":
+                            castTo_name = "[I";
+                            break;
+                        case "long[]":
+                            castTo_name = "[L";
+                            break;
+                        case "float[]":
+                            castTo_name = "[F";
+                            break;
+                        case "double[]":
+                            castTo_name = "[D";
+                            break;
+                        default:
+                            castTo_name = "[L" + castTo_name.substring(0, castTo_name.length() - 2) + ";";
+                            break;
                     }
                 }
                 if (!castWhat_name.equals("null")) {
@@ -1441,55 +1487,72 @@ public class OOLibrary extends Library {
                     }
                 } else {
                     values[i] = null;
-                    if (castTo_name.equals("byte")) {
-                        types[i] = Byte.TYPE;
-                    } else if (castTo_name.equals("short")) {
-                        types[i] = Short.TYPE;
-                    } else if (castTo_name.equals("char")) {
-                        types[i] = Character.TYPE;
-                    } else if (castTo_name.equals("int")) {
-                        types[i] = java.lang.Integer.TYPE;
-                    } else if (castTo_name.equals("long")) {
-                        types[i] = java.lang.Long.TYPE;
-                    } else if (castTo_name.equals("float")) {
-                        types[i] = java.lang.Float.TYPE;
-                    } else if (castTo_name.equals("double")) {
-                        types[i] = java.lang.Double.TYPE;
-                    } else if (castTo_name.equals("boolean")) {
-                        types[i] = java.lang.Boolean.TYPE;
-                    } else {
-                        try {
-                            types[i] = Class.forName(castTo_name, true, dynamicLoader);
-                        } catch (ClassNotFoundException ex) {
-                            getEngine().warn(
-                                    "Java class not found: " + castTo_name);
-                            return false;
-                        }
+                    switch (castTo_name) {
+                        case "byte":
+                            types[i] = Byte.TYPE;
+                            break;
+                        case "short":
+                            types[i] = Short.TYPE;
+                            break;
+                        case "char":
+                            types[i] = Character.TYPE;
+                            break;
+                        case "int":
+                            types[i] = Integer.TYPE;
+                            break;
+                        case "long":
+                            types[i] = java.lang.Long.TYPE;
+                            break;
+                        case "float":
+                            types[i] = java.lang.Float.TYPE;
+                            break;
+                        case "double":
+                            types[i] = java.lang.Double.TYPE;
+                            break;
+                        case "boolean":
+                            types[i] = Boolean.TYPE;
+                            break;
+                        default:
+                            try {
+                                types[i] = Class.forName(castTo_name, true, dynamicLoader);
+                            } catch (ClassNotFoundException ex) {
+                                getEngine().warn(
+                                        "Java class not found: " + castTo_name);
+                                return false;
+                            }
+                            break;
                     }
                 }
             } else {
                 Number num = (Number) castWhat;
                 String castTo_name = ((Struct) castTo).getName();
-                if (castTo_name.equals("byte")) {
-                    values[i] = (byte) num.intValue();
-                    types[i] = Byte.TYPE;
-                } else if (castTo_name.equals("short")) {
-                    values[i] = (short) num.intValue();
-                    types[i] = Short.TYPE;
-                } else if (castTo_name.equals("int")) {
-                    values[i] = num.intValue();
-                    types[i] = Integer.TYPE;
-                } else if (castTo_name.equals("long")) {
-                    values[i] = num.longValue();
-                    types[i] = java.lang.Long.TYPE;
-                } else if (castTo_name.equals("float")) {
-                    values[i] = num.floatValue();
-                    types[i] = java.lang.Float.TYPE;
-                } else if (castTo_name.equals("double")) {
-                    values[i] = num.doubleValue();
-                    types[i] = java.lang.Double.TYPE;
-                } else {
-                    return false;
+                switch (castTo_name) {
+                    case "byte":
+                        values[i] = (byte) num.intValue();
+                        types[i] = Byte.TYPE;
+                        break;
+                    case "short":
+                        values[i] = (short) num.intValue();
+                        types[i] = Short.TYPE;
+                        break;
+                    case "int":
+                        values[i] = num.intValue();
+                        types[i] = Integer.TYPE;
+                        break;
+                    case "long":
+                        values[i] = num.longValue();
+                        types[i] = java.lang.Long.TYPE;
+                        break;
+                    case "float":
+                        values[i] = num.floatValue();
+                        types[i] = java.lang.Float.TYPE;
+                        break;
+                    case "double":
+                        values[i] = num.doubleValue();
+                        types[i] = java.lang.Double.TYPE;
+                        break;
+                    default:
+                        return false;
                 }
             }
         } catch (Exception ex) {

@@ -13,8 +13,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.StringTokenizer;
 
@@ -98,55 +96,35 @@ public class DebugAreaFrame extends GenericFrame implements SpyListener, Warning
         clear.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         clear.setToolTipText("Clear");
         clear.setPreferredSize(new Dimension(32, 32));
-        clear.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                clear();
-            }
-        });
+        clear.addActionListener(event -> clear());
         collapseAllButton = new JButton();
         urlImage = getClass().getResource("img/collapseAll.png");
         collapseAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         collapseAllButton.setEnabled(false);
         collapseAllButton.setPreferredSize(new Dimension(32, 32));
         collapseAllButton.setToolTipText("Collapse all nodes");
-        collapseAllButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                collapseAll();
-            }
-        });
+        collapseAllButton.addActionListener(event -> collapseAll());
         expandAllButton = new JButton();
         urlImage = getClass().getResource("img/expandAll.png");
         expandAllButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         expandAllButton.setEnabled(false);
         expandAllButton.setPreferredSize(new Dimension(32, 32));
         expandAllButton.setToolTipText("Expand all nodes");
-        expandAllButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                expandAll();
-            }
-        });
+        expandAllButton.addActionListener(event -> expandAll());
         expandSelectedNodesButton = new JButton();
         urlImage = getClass().getResource("img/expandSelected.png");
         expandSelectedNodesButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         expandSelectedNodesButton.setEnabled(false);
         expandSelectedNodesButton.setPreferredSize(new Dimension(32, 32));
         expandSelectedNodesButton.setToolTipText("Expand selected nodes");
-        expandSelectedNodesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                expandSelectedNodes();
-            }
-        });
+        expandSelectedNodesButton.addActionListener(event -> expandSelectedNodes());
         collapseSelectedNodesButton = new JButton();
         urlImage = getClass().getResource("img/collapseSelected.png");
         collapseSelectedNodesButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(urlImage)));
         collapseSelectedNodesButton.setEnabled(false);
         collapseSelectedNodesButton.setPreferredSize(new Dimension(32, 32));
         collapseSelectedNodesButton.setToolTipText("Collapse selected nodes");
-        collapseSelectedNodesButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                collapseSelectedNodes();
-            }
-        });
+        collapseSelectedNodesButton.addActionListener(event -> collapseSelectedNodes());
 
         buttonsPanel.add(clear);
         buttonsPanel.add(expandAllButton);
@@ -211,8 +189,8 @@ public class DebugAreaFrame extends GenericFrame implements SpyListener, Warning
     public void expandSelectedNodes() {
         TreePath[] paths = spyTree.getSelectionPaths();
         if (paths != null) {
-            for (int i = 0; i < paths.length; i++) {
-                spyTree.expandPath(paths[i]);
+            for (TreePath path : paths) {
+                spyTree.expandPath(path);
             }
         }
     }
@@ -220,8 +198,8 @@ public class DebugAreaFrame extends GenericFrame implements SpyListener, Warning
     public void collapseSelectedNodes() {
         TreePath[] paths = spyTree.getSelectionPaths();
         if (paths != null) {
-            for (int i = 0; i < paths.length; i++) {
-                spyTree.collapsePath(paths[i]);
+            for (TreePath path : paths) {
+                spyTree.collapsePath(path);
             }
         }
     }

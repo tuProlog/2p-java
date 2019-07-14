@@ -81,7 +81,7 @@ public abstract class DynamicParser extends Parser {
                && operators.get(functor).containsKey(a);
     }
 
-    protected static final void log(String format, Object... args) {
+    protected static void log(String format, Object... args) {
         if (DEBUG) {
             System.err.printf(format, args);
         }

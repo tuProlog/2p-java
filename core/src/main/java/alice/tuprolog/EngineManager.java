@@ -3,7 +3,6 @@ package alice.tuprolog;
 import alice.tuprolog.exceptions.NoMoreSolutionException;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,7 +12,6 @@ public class EngineManager implements java.io.Serializable {
     private Prolog vm;
     private Hashtable<Integer, EngineRunner> runners;    //key: id;  obj: runner
     private Hashtable<Integer, Integer> threads;        //key: pid; obj: id
-    private int rootID = 0;
     private EngineRunner er1;
     private int id = 0;
 
@@ -26,6 +24,7 @@ public class EngineManager implements java.io.Serializable {
         threads = new Hashtable<Integer, Integer>();
         queues = new Hashtable<String, TermQueue>();
         locks = new Hashtable<String, ReentrantLock>();
+        int rootID = 0;
         er1 = new EngineRunner(rootID);
         er1.initialize(vm);
     }
@@ -71,8 +70,7 @@ public class EngineManager implements java.io.Serializable {
         if (er == null || er.isDetached()) {
             return null;
         }
-        SolveInfo solution = er.read();
-        return solution;
+        return er.read();
     }
 
     public boolean hasNext(int id) {
@@ -88,8 +86,7 @@ public class EngineManager implements java.io.Serializable {
         if (er == null || er.isDetached()) {
             return false;
         }
-        boolean bool = er.nextSolution();
-        return bool;
+        return er.nextSolution();
     }
 
     public void detach(int id) {
@@ -245,8 +242,7 @@ public class EngineManager implements java.io.Serializable {
 
     public synchronized SolveInfo solve(Term query) {
         er1.setGoal(query);
-        SolveInfo s = er1.solve();
-        return s;
+        return er1.solve();
     }
 
     public void solveEnd() {
@@ -411,10 +407,9 @@ public class EngineManager implements java.io.Serializable {
     public void unlockAll() {
         synchronized (locks) {
             Set<String> mutexList = locks.keySet();
-            Iterator<String> it = mutexList.iterator();
 
-            while (it.hasNext()) {
-                ReentrantLock mutex = locks.get(it.next());
+            for (String s : mutexList) {
+                ReentrantLock mutex = locks.get(s);
                 boolean unlocked = false;
                 while (!unlocked) {
                     try {
@@ -439,7 +434,6 @@ public class EngineManager implements java.io.Serializable {
 
     public synchronized SolveInfo solve(Term query, long maxTime) {
         er1.setGoal(query);
-        SolveInfo s = er1.solve(maxTime);
-        return s;
+        return er1.solve(maxTime);
     }
 }

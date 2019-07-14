@@ -1,7 +1,6 @@
 package alice.tuprolog.concordion;
 
 import alice.tuprolog.*;
-import alice.tuprolog.event.ExceptionEvent;
 import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.PrologException;
 import alice.tuprolog.interfaces.event.ExceptionListener;
@@ -14,14 +13,9 @@ public class ConcordionSingleton {
     private static ConcordionSingleton singleton;
     private String exceptionFounded = "";
     private boolean exFounded = false; // variable used to found an exception
-    private ExceptionListener ex = new ExceptionListener() {
-
-        @Override
-        public void onException(ExceptionEvent e) {
-            exFounded = true;
-            exceptionFounded = e.getMsg();
-
-        }
+    private ExceptionListener ex = e -> {
+        exFounded = true;
+        exceptionFounded = e.getMsg();
     };
 
     private ConcordionSingleton() {
@@ -30,8 +24,8 @@ public class ConcordionSingleton {
     private static void loadAllLibraries(Prolog engine, String[] libraryNames) {
         try {
             if (libraryNames.length > 0) {
-                for (int i = 0; i < libraryNames.length; i++) {
-                        engine.loadLibrary(libraryNames[i]);
+                for (String libraryName : libraryNames) {
+                    engine.loadLibrary(libraryName);
                 }
             }
         } catch (InvalidLibraryException e) {
@@ -152,12 +146,11 @@ public class ConcordionSingleton {
 
                 if ((var.toString()).startsWith(variable)) {
 
-                    variable = (replace == true ? replaceForVariable(
+                    variable = (replace ? replaceForVariable(
                             var.toString(), ' ') : var.toString());
 
                     Term t = info.getVarValue(variable);
-                    results.add(replace == true ? replaceUnderscore(t
-                                                                            .toString()) : t.toString());
+                    results.add(replace ? replaceUnderscore(t.toString()) : t.toString());
 
                 }
 
@@ -167,8 +160,7 @@ public class ConcordionSingleton {
                 variable = replaceForVariable(variable, '_');
             }
             Term t = info.getVarValue(variable);
-            results.add(replace == true ? replaceUnderscore(t.toString()) : t
-                    .toString());
+            results.add(replace ? replaceUnderscore(t.toString()) : t.toString());
 
             if (engine.hasOpenAlternatives()) {
                 info = engine.solveNext();
@@ -252,16 +244,14 @@ public class ConcordionSingleton {
                 variable = replaceForVariable(var.toString(), ' ');
                 Term t = info.getVarValue(variable);
                 System.out.println(t.toString());
-                return (replace == true ? replaceUnderscore(t.toString()) : t
-                        .toString());
+                return (replace ? replaceUnderscore(t.toString()) : t.toString());
 
             }
 
         }
         variable = replaceForVariable(variable, '_');
         Term t = info.getVarValue(variable);
-        return (replace == true ? replaceUnderscore(t.toString()) : t
-                .toString());
+        return (replace ? replaceUnderscore(t.toString()) : t.toString());
     }
 
     private String replaceForVariable(String query, char car) {

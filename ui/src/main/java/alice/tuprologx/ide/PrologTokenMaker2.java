@@ -975,7 +975,7 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
     private static final int ZZ_NO_MATCH = 1;
     private static final int ZZ_PUSHBACK_2BIG = 2;
     /* error messages for the codes above */
-    private static final String ZZ_ERROR_MSG[] = {
+    private static final String[] ZZ_ERROR_MSG = {
             "Unkown internal scanner error",
             "Error: could not match input",
             "Error: pushback value was too large"
@@ -997,10 +997,6 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
      */
     private Reader zzReader;
     /**
-     * the current state of the DFA
-     */
-    private int zzState;
-    /**
      * the current lexical state
      */
     private int zzLexicalState = YYINITIAL;
@@ -1008,7 +1004,7 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
      * this buffer contains the current text to be matched and is
      * the source of the yytext() string
      */
-    private char zzBuffer[];
+    private char[] zzBuffer;
     /**
      * the textposition at the last accepting state
      */
@@ -1256,15 +1252,11 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
 
         // Start off in the proper state.
         int state = Token.NULL;
-        switch (initialTokenType) {
-            case Token.COMMENT_MULTILINE:
-                state = MLC;
-                start = text.offset;
-                break;
+        if (initialTokenType == Token.COMMENT_MULTILINE) {
+            state = MLC;
+            start = text.offset;
 
             /* No documentation comments */
-            default:
-                state = Token.NULL;
         }
 
         s = text;
@@ -1431,11 +1423,6 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
         int zzMarkedPosL;
         int zzEndReadL = zzEndRead;
         char[] zzBufferL = zzBuffer;
-        char[] zzCMapL = ZZ_CMAP;
-
-        int[] zzTransL = ZZ_TRANS;
-        int[] zzRowMapL = ZZ_ROWMAP;
-        int[] zzAttrL = ZZ_ATTRIBUTE;
 
         while (true) {
             zzMarkedPosL = zzMarkedPos;
@@ -1444,7 +1431,10 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
 
             zzCurrentPosL = zzCurrentPos = zzStartRead = zzMarkedPosL;
 
-            zzState = zzLexicalState;
+            /**
+             * the current state of the DFA
+             */
+            int zzState = zzLexicalState;
 
 
             zzForAction:
@@ -1473,13 +1463,13 @@ public class PrologTokenMaker2 extends AbstractJFlexTokenMaker {
                             zzInput = zzBufferL[zzCurrentPosL++];
                         }
                     }
-                    int zzNext = zzTransL[zzRowMapL[zzState] + zzCMapL[zzInput]];
+                    int zzNext = ZZ_TRANS[ZZ_ROWMAP[zzState] + ZZ_CMAP[zzInput]];
                     if (zzNext == -1) {
                         break zzForAction;
                     }
                     zzState = zzNext;
 
-                    int zzAttributes = zzAttrL[zzState];
+                    int zzAttributes = ZZ_ATTRIBUTE[zzState];
                     if ((zzAttributes & 1) == 1) {
                         zzAction = zzState;
                         zzMarkedPosL = zzCurrentPosL;

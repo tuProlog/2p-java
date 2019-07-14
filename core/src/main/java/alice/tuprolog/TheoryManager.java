@@ -135,8 +135,8 @@ public class TheoryManager implements Serializable {
         FamilyClausesList familyQuery;
         if (!retractDBase.containsKey("ctxId " + ctx.getId())) {
             familyQuery = new FamilyClausesList();
-            for (int i = 0; i < family.size(); i++) {
-                familyQuery.add(family.get(i));
+            for (ClauseInfo clauseInfo : family) {
+                familyQuery.add(clauseInfo);
             }
             retractDBase.put("ctxId " + ctx.getId(), familyQuery);
         } else {
@@ -285,7 +285,7 @@ public class TheoryManager implements Serializable {
     public synchronized void removeLibraryTheory(String libName) {
         for (Iterator<ClauseInfo> allClauses = staticDBase.iterator(); allClauses.hasNext(); ) {
             ClauseInfo d = allClauses.next();
-            if (d.libName != null && libName.equals(d.libName)) {
+            if (libName.equals(d.libName)) {
                 try {
                     // Rimuovendolo da allClauses si elimina solo il valore e non la chiave
                     allClauses.remove();
@@ -373,13 +373,11 @@ public class TheoryManager implements Serializable {
      */
     public synchronized String getTheory(boolean onlyDynamic) {
         StringBuffer buffer = new StringBuffer();
-        for (Iterator<ClauseInfo> dynamicClauses = dynamicDBase.iterator(); dynamicClauses.hasNext(); ) {
-            ClauseInfo d = dynamicClauses.next();
+        for (ClauseInfo d : dynamicDBase) {
             buffer.append(d.toString(engine.getOperatorManager())).append("\n");
         }
         if (!onlyDynamic) {
-            for (Iterator<ClauseInfo> staticClauses = staticDBase.iterator(); staticClauses.hasNext(); ) {
-                ClauseInfo d = staticClauses.next();
+            for (ClauseInfo d : staticDBase) {
                 buffer.append(d.toString(engine.getOperatorManager())).append("\n");
             }
         }

@@ -2,8 +2,6 @@ package alice.tuprologx.ide;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -51,40 +49,16 @@ public class PrologConfigFrame
         */
         JButton bDec = new JButton("<");
         bDec.setToolTipText("Reduce Font Dimension");
-        bDec.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                decFontDimension();
-            }
-        });
+        bDec.addActionListener(event -> decFontDimension());
 
         JButton bInc = new JButton(">");
         bInc.setToolTipText("Enlarge Font Dimension");
-        bInc.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                incFontDimension();
-            }
-        });
+        bInc.addActionListener(event -> incFontDimension());
 
         fontDimensionTextField = new JTextField();
         fontDimensionTextField.setText("" + fontDimensionHandler.getFontDimension());
-        fontDimensionTextField.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                setFontDimension();
-            }
-        });
+        fontDimensionTextField.addActionListener(event -> setFontDimension());
 
-        /*Castagna 06/2011*/
-        /*fontDimensionPanel.setLayout(new BorderLayout());
-        fontDimensionPanel.add(fontDimensionLabel,BorderLayout.WEST);
-        JPanel fontDimensionHandlingPanel = new JPanel();
-        fontDimensionPanel.add(fontDimensionHandlingPanel,BorderLayout.EAST);
-        fontDimensionHandlingPanel.add(bDec);
-        fontDimensionHandlingPanel.add(fontDimensionTextField);
-        fontDimensionHandlingPanel.add(bInc);
-        
-        JLabel selectDisplayModalityLabel = new JLabel(" Select the display modality for query Solve solutions:");
-        */
-        /**/
         inColumnsRadioButton = new JRadioButton("Variables in columns");
         inRowsRadioButton = new JRadioButton("Variables in rows");
         inRowsVariableSeparatedRadioButton = new JRadioButton("Variables in rows with separated variable");
@@ -92,86 +66,20 @@ public class PrologConfigFrame
         group.add(inColumnsRadioButton);
         group.add(inRowsRadioButton);
         group.add(inRowsVariableSeparatedRadioButton);
-        /*Castagna 06/2011*/
-        //JLabel millsStopEngineLabel1 = new JLabel(" tuProlog will stop solving after  ");
-        /**/
+
         millsStopEngineTextField = new JTextField("" + millsStopEngine);
-        /*Castagna 06/2011*/
-        /*
-        millsStopEngineTextField.setPreferredSize(new Dimension(50,20));
-        millsStopEngineTextField.setHorizontalAlignment(JTextField.RIGHT);
-        JLabel millsStopEngineLabel2 = new JLabel(" ms ");
-        */
+
         notifyExceptionCheckBox = new JCheckBox();
         enableNotifyException = true;
         notifyExceptionCheckBox.setSelected(enableNotifyException);
-        //notifyExceptionEventCheckBox.setHorizontalAlignment(JTextField.RIGHT);
-
-		/*
-		optionPanel.setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        optionPanel.add(selectDisplayModalityLabel,constraints);
-        constraints.gridy++;
-        optionPanel.add(inColumnsRadioButton,constraints);
-        constraints.gridy++;
-        optionPanel.add(inRowsRadioButton,constraints);
-        constraints.gridy++;
-        optionPanel.add(inRowsVariableSeparatedRadioButton,constraints);
-        constraints.gridy++;
-        constraints.gridy++;
-        optionPanel.add(millsStopEngineLabel1,constraints);
-        constraints.gridx++;
-        optionPanel.add(millsStopEngineTextField,constraints);
-        constraints.gridx++;
-        optionPanel.add(millsStopEngineLabel2,constraints);
-        
-        constraints.gridy++;
-		constraints.gridx = 0;
-		optionPanel.add(notifyExceptionEventLabel,constraints);
-		constraints.gridx++;
-		optionPanel.add(notifyExceptionEventCheckBox,constraints);
-		*/
-        /**/
-		
-/*        constraints.gridy = 4;
-        constraints.gridx = 0;
-        constraints.gridwidth = GridBagConstraints.REMAINDER;
-        optionPanel.add(new JSeparator(),constraints);
-        constraints.gridy = 7;
-        optionPanel.add(new JSeparator(),constraints);*/
 
         JButton ok = new JButton("OK");
-        /*Castagna 06/2011*/
-        //ok.setPreferredSize(new Dimension(80,32));
-        /**/
-        ok.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                ok();
-            }
-        });
+
+        ok.addActionListener(event -> ok());
 
         JButton cancel = new JButton("Cancel");
-        /*Castagna 06/2011*/
-        //cancel.setPreferredSize(new Dimension(80,32));
-        /**/
-        cancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent event) {
-                cancel();
-            }
-        });
+        cancel.addActionListener(event -> cancel());
 
-        /*Castagna 06/2011*/
-        //okCancelPanel.add(ok);
-        //okCancelPanel.add(cancel);
-        /**/
-
-        /*Castagna 06/2011 >*/
-        //Design Block
         {
             Container c = this.getContentPane();
             setLayout(new BorderLayout());

@@ -75,9 +75,8 @@ public class PrimitiveManager implements IPrimitiveManager {
     }
 
     void deletePrimitiveInfo(IPrimitives src) {
-        Iterator<PrimitiveInfo> it = libHashMap.remove(src).iterator();
-        while (it.hasNext()) {
-            String k = it.next().invalidate();
+        for (PrimitiveInfo primitiveInfo : libHashMap.remove(src)) {
+            String k = primitiveInfo.invalidate();
             directiveHashMap.remove(k);
             predicateHashMap.remove(k);
             functorHashMap.remove(k);

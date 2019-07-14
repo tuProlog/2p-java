@@ -18,13 +18,13 @@ public class InspectionUtils {
      */
     public static Method searchForMethod(Class<?> type, String methodName, Class<?>[] parms) {
         Method[] methods = type.getMethods();
-        for (int i = 0; i < methods.length; i++) {
+        for (Method method : methods) {
             // Has to be named the same of course.
-            if (!methods[i].getName().equals(methodName)) {
+            if (!method.getName().equals(methodName)) {
                 continue;
             }
 
-            Class<?>[] types = methods[i].getParameterTypes();
+            Class<?>[] types = method.getParameterTypes();
 
             // Does it have the same number of arguments that we're looking for.
             if (types.length != parms.length) {
@@ -33,7 +33,7 @@ public class InspectionUtils {
 
             // Check for type compatibility
             if (InspectionUtils.areTypesCompatible(types, parms)) {
-                return methods[i];
+                return method;
             }
         }
         return null;

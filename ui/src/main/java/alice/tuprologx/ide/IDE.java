@@ -31,7 +31,7 @@ interface IDE {
      *
      * @param flag true if the commands have to be enabled, false otherwise.
      */
-    public void enableTheoryCommands(boolean flag);
+    void enableTheoryCommands(boolean flag);
 
     /**
      * Check if the theory contained in the edit area of the IDE has been feeded
@@ -40,7 +40,7 @@ interface IDE {
      * @return <code>true</code> if the current theory has been feeded to the engine,
      * <code>false</code> otherwise.
      */
-    public boolean isFeededTheory();
+    boolean isFeededTheory();
 
     /**
      * Set the status of the theory contained in the edit area of the IDE.
@@ -48,26 +48,25 @@ interface IDE {
      * @param flag <code>true</code> if the theory has been feeded to the engine,
      *             <code>false</code> otherwise.
      */
-    public void setFeededTheory(boolean flag);
+    void setFeededTheory(boolean flag);
 
     /**
      * Get the content of the IDE's editor.
      *
      * @return the content of the edit area in the IDE's editor.
      */
-    public String getEditorContent();
+    String getEditorContent();
 
     /**
      * Set the content of the IDE's editor.
      */
-    public void setEditorContent(String text);
+    void setEditorContent(String text);
 
+    void newTheory();
 
-    public void newTheory();
+    void loadTheory();
 
-    public void loadTheory();
+    void saveTheory();
 
-    public void saveTheory();
-
-    public void getTheory();
+    void getTheory();
 } // end IDE interface

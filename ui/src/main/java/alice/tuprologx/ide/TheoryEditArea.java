@@ -31,28 +31,28 @@ interface TheoryEditArea {
      *
      * @return the displayed theory as a <code>java.lang.String</code>.
      */
-    public String getTheory();
+    String getTheory();
 
     /**
      * Display a theory in the edit area.
      *
      * @param theory The theory to be displayed in the edit area.
      */
-    public void setTheory(String theory);
+    void setTheory(String theory);
 
     /**
      * Get the line number corresponding to the caret's current position.
      *
      * @return the line number corresponding to the caret's current position.
      */
-    public int getCaretLine();
+    int getCaretLine();
 
     /**
      * Set the line number corresponding to the caret's current position.
      *
      * @param caretLine The line number corresponding to the caret's current position.
      */
-    public void setCaretLine(int caretLine);
+    void setCaretLine(int caretLine);
 
     /**
      * Check if the theory in the edit area has been modified after the
@@ -62,7 +62,7 @@ interface TheoryEditArea {
      * the last Set Theory operation,
      * <code>false</code> otherwise.
      */
-    public boolean isDirty();
+    boolean isDirty();
 
     /**
      * Set the dirty flag for the theory contained in the edit area.
@@ -71,16 +71,16 @@ interface TheoryEditArea {
      *             the last Set Theory operation,
      *             <code>false</code> otherwise.
      */
-    public void setDirty(boolean flag);
+    void setDirty(boolean flag);
 
     /**
      * Undo last action in the edit area.
      */
-    public void undoAction();
+    void undoAction();
 
     /**
      * Redo last action in the edit area.
      */
-    public void redoAction();
+    void redoAction();
 
-} // end TheoryEditArea interface
+}

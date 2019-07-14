@@ -1,8 +1,6 @@
 package SpyFrame;
 
 import alice.tuprolog.*;
-import alice.tuprolog.event.SpyEvent;
-import alice.tuprolog.interfaces.event.SpyListener;
 import alice.tuprologx.spyframe.TermFrame;
 
 import java.util.List;
@@ -33,23 +31,20 @@ public class Test {
         Term sol;
         final TermFrame tf = new TermFrame(null);
         tf.setBounds(300, 300, 300, 200);
-        prolog.addSpyListener(new SpyListener() {
-            @Override
-            public void onSpy(SpyEvent se) {
-                if (se == null) return;
-                Engine engine = se.getSnapshot();
-                if (engine == null) System.out.println("noengine:" + se);
-                else {
-                    //if(!"Eval".equals(engine.getNextStateName())) return;
-                    List<ExecutionContext> eclist = engine.getExecutionStack();
-                    for (int i = eclist.size() - 1; i >= 0; i--) {
-                        ExecutionContext ec = eclist.get(i);
-                        System.out.println(ec);
-                    }
-                    System.out.println("nextState " + engine.getNextStateName());
-                    System.out.println("\n");
-                    //JOptionPane.showMessageDialog(null, "weiter", "Detail", JOptionPane.INFORMATION_MESSAGE);
+        prolog.addSpyListener(se -> {
+            if (se == null) return;
+            Engine engine = se.getSnapshot();
+            if (engine == null) System.out.println("noengine:" + se);
+            else {
+                //if(!"Eval".equals(engine.getNextStateName())) return;
+                List<ExecutionContext> eclist = engine.getExecutionStack();
+                for (int i = eclist.size() - 1; i >= 0; i--) {
+                    ExecutionContext ec = eclist.get(i);
+                    System.out.println(ec);
                 }
+                System.out.println("nextState " + engine.getNextStateName());
+                System.out.println("\n");
+                //JOptionPane.showMessageDialog(null, "weiter", "Detail", JOptionPane.INFORMATION_MESSAGE);
             }
         });
         prolog.setSpy(true);

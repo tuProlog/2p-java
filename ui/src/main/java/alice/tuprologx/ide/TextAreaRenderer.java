@@ -63,17 +63,10 @@ public class TextAreaRenderer
         }
     }
 
-    private void addSize(JTable table, int row, int column,
-                         int height) {
-        Map<Integer, Map<Integer, Integer>> rows = cellSizes.get(table);
-        if (rows == null) {
-            cellSizes.put(table, rows = new HashMap<Integer, Map<Integer, Integer>>());
-        }
-        Map<Integer, Integer> rowheights = rows.get(new Integer(row));
-        if (rowheights == null) {
-            rows.put(new Integer(row), rowheights = new HashMap<Integer, Integer>());
-        }
-        rowheights.put(new Integer(column), new Integer(height));
+    private void addSize(JTable table, int row, int column, int height) {
+        Map<Integer, Map<Integer, Integer>> rows = cellSizes.computeIfAbsent(table, k -> new HashMap<>());
+        Map<Integer, Integer> rowheights = rows.computeIfAbsent(row, k -> new HashMap<>());
+        rowheights.put(column, height);
     }
 
     /**

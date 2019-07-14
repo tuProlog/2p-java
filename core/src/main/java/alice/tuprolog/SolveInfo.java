@@ -21,7 +21,6 @@ import alice.tuprolog.exceptions.NoSolutionException;
 import alice.tuprolog.exceptions.UnknownVarException;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -154,9 +153,7 @@ public class SolveInfo implements Serializable {
      */
     public Term getVarValue(String varName) throws NoSolutionException {
         if (isSuccess) {
-            Iterator<Var> it = bindings.iterator();
-            while (it.hasNext()) {
-                Var v = it.next();
+            for (Var v : bindings) {
                 if (v != null && v.getName().equals(varName)) {
                     return v.getTerm();
                 }
@@ -181,11 +178,9 @@ public class SolveInfo implements Serializable {
             } else {
                 st.append(". ");
             }
-            Iterator<Var> it = bindings.iterator();
-            while (it.hasNext()) {
-                Var v = it.next();
+            for (Var v : bindings) {
                 if (v != null && !v.isAnonymous() && v.isBound() &&
-                    (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
+                        (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
                     st.append(v);
                     st.append("  ");
                 }
