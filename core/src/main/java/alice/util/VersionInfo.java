@@ -2,8 +2,8 @@ package alice.util;
 
 public class VersionInfo {
     private static final String ENGINE_VERSION = "4.0";
-    private static final String JAVA_SPECIFIC_VERSION = "1";
-    private static final String NET_SPECIFIC_VERSION = "1";
+    private static final String JAVA_SPECIFIC_VERSION = "0";
+    private static final String NET_SPECIFIC_VERSION = "0";
 
     public static String getEngineVersion() {
         return ENGINE_VERSION;
