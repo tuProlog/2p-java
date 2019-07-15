@@ -22,10 +22,22 @@ test:
 deploy_artifacts:
   stage: deploy
   script:
-    - ./gradlew bintrayUpload
+    - ./gradlew publishAllPublicationsToMavenRepository
   environment:
-    name: Bintray
-    url: https://bintray.com/gciatto-unibo/pika-lab
+    name: Staging on Sonatype
+    url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
   when: on_success
   only:
-    - /main/
+    - master
+    - tags
+
+deploy_artifacts_manually:
+  stage: deploy
+  script:
+    - ./gradlew publishAllPublicationsToMavenRepository
+  environment:
+    name: Publish on Maven Central (Manually)
+    url: "https://repo.maven.apache.org/maven2/it/unibo/alice/tuprolog/"
+  when: manual
+  only:
+    - master
