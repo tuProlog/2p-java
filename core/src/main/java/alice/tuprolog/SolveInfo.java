@@ -182,7 +182,7 @@ public class SolveInfo implements Serializable {
                 if (v != null && !v.isAnonymous() && v.isBound() &&
                         (!(v.getTerm() instanceof Var) || (!((Var) (v.getTerm())).getName().startsWith("_")))) {
                     st.append(v);
-                    st.append("  ");
+                    st.append("\n");
                 }
             }
             return st.toString().trim();
