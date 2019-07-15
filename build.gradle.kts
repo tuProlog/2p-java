@@ -1,6 +1,7 @@
 plugins {
     id("maven-publish")
     signing
+    java
 }
 
 version = "4.0.0"
@@ -15,6 +16,8 @@ fun capitalize(s: String): String {
     return s[0].toUpperCase() + s.substring(1)
 }
 
+val signTask: DefaultTask = task<DefaultTask>("sign")
+
 subprojects {
 
     apply(plugin = "signing")
@@ -25,10 +28,33 @@ subprojects {
         jcenter()
         mavenCentral()
     }
+    
+    group = rootProject.group
+    version = rootProject.version
+
+    val jarTask = tasks["jar"] as Jar
+
+    jarTask.archiveBaseName.set("${rootProject.name}-${this@subprojects.name}")
+
+    task<Jar>("sourcesJar") {
+        from(sourceSets["main"].allSource)
+        group = "documentation"
+
+        destinationDirectory.set(jarTask.destinationDirectory.get())
+        archiveBaseName.set(jarTask.archiveBaseName.get())
+        archiveVersion.set(this@subprojects.version.toString())
+        archiveClassifier.set("sources")
+    }
 
     task<Jar>("javadocJar") {
+        dependsOn("javadoc")
         from(tasks["javadoc"])
         group = "documentation"
+
+        destinationDirectory.set(jarTask.destinationDirectory.get())
+        archiveBaseName.set(jarTask.archiveBaseName.get())
+        archiveVersion.set(this@subprojects.version.toString())
+        archiveClassifier.set("javadoc")
     }
 
     publishing {
@@ -44,9 +70,14 @@ subprojects {
 
                 maven(mavenRepoUrl) {
                     credentials {
-                        username = System.getenv("OSSRH-USERNAME")
+                        // env ORG_GRADLE_PROJECT_ossrhUsername
+                        val ossrhUsername: String? by project
+                        // env ORG_GRADLE_PROJECT_ossrhPassword
+                        val ossrhPassword: String? by project
+
+                        username = ossrhUsername
                         //rootProject.property("ossrhUsername").toString()
-                        password = System.getenv("OSSRH-PASSWORD")
+                        password = ossrhPassword
                         // rootProject.property("ossrhPassword").toString()
                     }
                 }
@@ -58,7 +89,8 @@ subprojects {
                 version = rootProject.version.toString()
 
                 artifact(tasks["jar"])
-//                artifact(tasks["javadocJar"])
+                artifact(tasks["javadocJar"])
+                artifact(tasks["sourcesJar"])
 
                 println("$groupId:$artifactId:$version")
 
@@ -100,18 +132,16 @@ subprojects {
     }
 
     signing {
-        val signingKey: String? = System.getenv("2P-TEAM-KEY-ASCII")
-        val signingPassword: String? = System.getenv("2P-TEAM-KEY-PASSPHRASE")
+        // env ORG_GRADLE_PROJECT_signingKey
+        val signingKey: String? by project
+        // env ORG_GRADLE_PROJECT_signingPassword
+        val signingPassword: String? by project
+
         useInMemoryPgpKeys(signingKey, signingPassword)
 
+        // This generates a task for each publication, named `sign<CapitalisedPubName>Publication`
         sign(publishing.publications)
     }
-}
 
-//publishing {
-//    val pubs = publications.withType<MavenPublication>().map{ "sign${capitalize(it.name)}Publication" }
-//
-//    task<Sign>("signAllPublications") {
-//        dependsOn(*pubs.toTypedArray())
-//    }
-//}
+    signTask.dependsOn(tasks["sign${capitalize(this@subprojects.name)}Publication"])
+}
