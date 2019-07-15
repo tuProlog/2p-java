@@ -8,13 +8,17 @@ repositories {
 }
 
 dependencies {
-    antlr("org.antlr:antlr4:4.7.2")
+    antlr("org.antlr", "antlr4", "4.7.2")
+
+    api("org.antlr", "antlr4-runtime", "4.7.2")
     
     testImplementation("pl.pragmatists:JUnitParams:1.1.1")
 }
 
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+configurations {
+    compile {
+        setExtendsFrom(emptyList())
+    }
 }
 
 tasks.generateGrammarSource {

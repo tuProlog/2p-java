@@ -25,7 +25,7 @@ tasks.getByName<Test>("test") {
 
 val jarTask = tasks["jar"] as Jar
 
-task<Jar>("runnableJar") {
+task<Jar>("fatJar") {
     group = "jar"
     dependsOn(configurations.runtimeClasspath)
 
