@@ -92,8 +92,6 @@ subprojects {
                 artifact(tasks["javadocJar"])
                 artifact(tasks["sourcesJar"])
 
-                println("$groupId:$artifactId:$version")
-
                 pom {
                     name.set("tuProlog ${capitalize(this@subprojects.name)}")
                     description.set("${capitalize(this@subprojects.name)} module for tuProlog")
@@ -144,4 +142,8 @@ subprojects {
     }
 
     signTask.dependsOn(tasks["sign${capitalize(this@subprojects.name)}Publication"])
+
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
 }
