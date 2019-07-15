@@ -22,3 +22,20 @@ tasks.getByName<Test>("test") {
     // force tests to run even if code hasn't changed
     outputs.upToDateWhen { false }
 }
+
+val jarTask = tasks["jar"] as Jar
+
+task<Jar>("runnableJar") {
+    group = "jar"
+    dependsOn(configurations.runtimeClasspath)
+
+    from(sourceSets.main.get().output)
+    from(
+            configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    )
+
+    destinationDirectory.set(jarTask.destinationDirectory.get())
+    archiveBaseName.set(rootProject.name)
+    archiveAppendix.set("lib")
+    archiveVersion.set(project.version.toString())
+}
