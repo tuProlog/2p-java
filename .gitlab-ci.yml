@@ -36,7 +36,7 @@ deploy_artifacts_manually:
   script:
     - ./gradlew publishAllPublicationsToMavenRepository
   environment:
-    name: Publish on Maven Central (Manually)
+    name: Manually publish on Maven Central
     url: "https://repo.maven.apache.org/maven2/it/unibo/alice/tuprolog/"
   when: manual
   only:
