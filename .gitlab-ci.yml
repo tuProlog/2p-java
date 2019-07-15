@@ -3,9 +3,6 @@ image: gciatto/my-images:jdk12-alpine-gradle531
 variables:
   GOPTS: "--no-daemon --console=plain"
 
-# before_script:
-#   - chmod +x gradlew
-
 cache:
   paths:
      - /root/.gradle/
@@ -16,13 +13,11 @@ cache:
 
 build:
   stage: build
-#   script: ./gradlew assemble $GOPTS
-  script: gradle assemble $GOPTS
+  script: ./gradlew classes javadoc $GOPTS
 
 test:
   stage: test
-#   script: ./gradlew check $GOPTS
-  script: gradle check $GOPTS
+  script: ./gradlew check $GOPTS
 
 deploy_artifacts:
   stage: deploy
