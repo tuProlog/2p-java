@@ -1,15 +1,11 @@
-image: gciatto/my-images:jdk12-alpine-gradle531
+image: gciatto/my-images:jdk12-alpine-gradle551
 
 variables:
   GOPTS: "--no-daemon --console=plain"
 
 cache:
   paths:
-     - /root/.gradle/
-     - gradle/
-     - build/
-     - .gradle/wrapper
-     - .gradle/caches
+     - build
 
 build:
   stage: build
