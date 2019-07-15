@@ -58,7 +58,6 @@ abstract class IOFileOperations extends JFrame {
     /**
      * Save the engine's current theory to an output device, typically a file.
      *
-     * @param theory The String containing the theory to be saved.
      * @return The identifier of the output device where the theory has been
      * saved (i.e. a filename if the output device is a file), or <code>null</code>
      * if the operation is cancelled.

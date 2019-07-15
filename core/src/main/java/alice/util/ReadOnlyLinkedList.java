@@ -8,10 +8,10 @@ package alice.util;
 import java.util.*;
 
 /**
- * ReadOnlyLinkedList<E> encapsulate a {@link LinkedList<E>}
+ * {@link ReadOnlyLinkedList} encapsulate a {@link LinkedList}
  * and ensures that the given list is navigated only.
  * <p>
- * Even if ReadOnlyLinkedList<E> implements {@link List<E>} it doesn't
+ * Even if {@link ReadOnlyLinkedList} implements {@link List} it doesn't
  * support modifiers methods, and throws {@link UnsupportedOperationException}
  * if invoked.
  *

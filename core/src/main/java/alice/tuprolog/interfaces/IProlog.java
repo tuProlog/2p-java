@@ -1,7 +1,9 @@
 package alice.tuprolog.interfaces;
 
 import alice.tuprolog.*;
+import alice.tuprolog.exceptions.InvalidLibraryException;
 import alice.tuprolog.exceptions.InvalidTheoryException;
+import alice.tuprolog.exceptions.NoMoreSolutionException;
 import alice.tuprolog.interfaces.event.ExceptionListener;
 import alice.tuprolog.interfaces.event.OutputListener;
 import alice.tuprolog.interfaces.event.SpyListener;

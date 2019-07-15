@@ -30,8 +30,6 @@ import java.util.Map;
  * @see Long
  * @see Float
  * @see Double
- * <p>
- * Reviewed by Paolo Contessi: implements Comparable<Number>
  */
 public abstract class Number extends Term implements Comparable<Number> {
 
@@ -88,56 +86,56 @@ public abstract class Number extends Term implements Comparable<Number> {
     /**
      * is an int Integer number?
      *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
+     * @deprecated Use <code>instanceof Int</code> instead.
      */
     public abstract boolean isTypeInt();
 
     /**
      * is an int Integer number?
      *
-     * @deprecated Use <tt>instanceof Int</tt> instead.
+     * @deprecated Use <code>instanceof Int</code> instead.
      */
     public abstract boolean isInt();
 
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Float</code> instead.
      */
     public abstract boolean isTypeFloat();
 
     /**
      * is a float Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Float</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Float</code> instead.
      */
     public abstract boolean isFloat();
 
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Double</code> instead.
      */
     public abstract boolean isTypeDouble();
 
     /**
      * is a double Real number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Double</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Double</code> instead.
      */
     public abstract boolean isDouble();
 
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Long</code> instead.
      */
     public abstract boolean isTypeLong();
 
     /**
      * is a long Integer number?
      *
-     * @deprecated Use <tt>instanceof alice.tuprolog.Long</tt> instead.
+     * @deprecated Use <code>instanceof alice.tuprolog.Long</code> instead.
      */
     public abstract boolean isLong();
 

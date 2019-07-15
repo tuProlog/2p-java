@@ -129,7 +129,7 @@ public abstract class Term implements Serializable {
     /**
      * is this term a prolog numeric term?
      *
-     * @deprecated Use <tt>instanceof Number</tt> instead.
+     * @deprecated Use <code>instanceof Number</code> instead.
      */
     public boolean isNumber() {
         return false;
@@ -138,7 +138,7 @@ public abstract class Term implements Serializable {
     /**
      * is this term a struct?
      *
-     * @deprecated Use <tt>instanceof Struct</tt> instead.
+     * @deprecated Use <code>instanceof Struct</code> instead.
      */
     public boolean isStruct() {
         return false;
@@ -147,7 +147,7 @@ public abstract class Term implements Serializable {
     /**
      * is this term a variable?
      *
-     * @deprecated Use <tt>instanceof Var</tt> instead.
+     * @deprecated Use <code>instanceof Var</code> instead.
      */
     public boolean isVar() {
         return false;

@@ -4,7 +4,7 @@ import alice.tuprolog.Term;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.apache.commons.lang3.tuple.Pair;
+import org.javatuples.Pair;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -43,14 +43,14 @@ class Presentation {
 
     @SuppressWarnings("unchecked")
     public static <T> Serializer<T> getSerializer(Class<? extends T> type, MIMEType mimeType) {
-        final Pair<Class<?>, MIMEType> key1 = Pair.of(type, mimeType);
+        final Pair<Class<?>, MIMEType> key1 = Pair.with(type, mimeType);
         final Optional<Pair<Class<?>, MIMEType>> key2;
 
         if (serializers.containsKey(key1)) {
             return (Serializer<T>) serializers.get(key1);
         } else if ((key2 = serializers.keySet().stream()
-                               .filter(it -> it.getRight().equals(mimeType))
-                               .filter(it -> it.getLeft().isAssignableFrom(type))
+                               .filter(it -> it.getValue1().equals(mimeType))
+                               .filter(it -> it.getValue0().isAssignableFrom(type))
                                .findAny()).isPresent()) {
             return (Serializer<T>) serializers.get(key2.get());
         } else {
@@ -60,14 +60,14 @@ class Presentation {
 
     @SuppressWarnings("unchecked")
     public static <T> Deserializer<T> getDeserializer(Class<? extends T> type, MIMEType mimeType) {
-        final Pair<Class<?>, MIMEType> key1 = Pair.of(type, mimeType);
+        final Pair<Class<?>, MIMEType> key1 = Pair.with(type, mimeType);
         final Optional<Pair<Class<?>, MIMEType>> key2;
 
         if (deserializers.containsKey(key1)) {
             return (Deserializer<T>) deserializers.get(key1);
         } else if ((key2 = deserializers.keySet().stream()
-                                      .filter(it -> it.getRight().equals(mimeType))
-                                      .filter(it -> it.getLeft().isAssignableFrom(type))
+                                        .filter(it -> it.getValue1().equals(mimeType))
+                                        .filter(it -> it.getValue0().isAssignableFrom(type))
                                       .findAny()).isPresent()) {
             return (Deserializer<T>) deserializers.get(key2.get());
         } else {
@@ -76,7 +76,7 @@ class Presentation {
     }
 
     public static <T> void register(Class<T> type, Serializer<? super T> serializer) {
-        final Pair<Class<?>, MIMEType> key = Pair.of(type, serializer.getSupportedMIMEType());
+        final Pair<Class<?>, MIMEType> key = Pair.with(type, serializer.getSupportedMIMEType());
         if (serializers.containsKey(key)) {
             throw new IllegalArgumentException("Class-MIMEType combo already registered: " + type.getName() + " --> " + serializer.getSupportedMIMEType());
         }
@@ -84,7 +84,7 @@ class Presentation {
     }
 
     public static <T> void register(Class<T> type, Deserializer<? extends T> deserializer) {
-        final Pair<Class<?>, MIMEType> key = Pair.of(type, deserializer.getSupportedMIMEType());
+        final Pair<Class<?>, MIMEType> key = Pair.with(type, deserializer.getSupportedMIMEType());
         if (deserializers.containsKey(key)) {
             throw new IllegalArgumentException("Class-MIMEType combo already registered: " + type.getName() + " <-- " + deserializer.getSupportedMIMEType());
         }

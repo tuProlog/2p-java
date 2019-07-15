@@ -638,7 +638,7 @@ public class Var extends Term {
     /**
      * Gets the string representation of this variable.
      * <p>
-     * For bounded variables, the string is <Var Name>/<bound Term>.
+     * For bounded variables, the string is <code>VarName / BoundTerm</code>.
      */
     @Override
     public String toString() {

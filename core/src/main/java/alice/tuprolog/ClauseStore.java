@@ -25,11 +25,7 @@ public class ClauseStore {
 
     /**
      * Carica una famiglia di clausole
-     * <p>
-     * Reviewed by Paolo Contessi:
-     * OneWayList.transform(List) -> OneWayList.transform2(List)
      *
-     * @param familyClauses
      */
     public static ClauseStore build(Term goal, List<Var> vars, List<ClauseInfo> familyClauses) {
         ClauseStore clauseStore = new ClauseStore(goal, vars);
@@ -64,8 +60,6 @@ public class ClauseStore {
     /**
      * Verify if there is a term in compatibleGoals compatible with goal.
      *
-     * @param goal
-     * @param compGoals
      * @return true if compatible or false otherwise.
      */
     protected boolean existCompatibleClause() {

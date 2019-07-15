@@ -202,7 +202,7 @@ public class ToolBar extends JPanel {
     /**
      * Set the tuProlog config frame
      *
-     * @param libraryManager a libraryManager to associate to the libraryDialog
+     * @param configFrame a libraryManager to associate to the libraryDialog
      */
     public void setPrologConfig(PrologConfigFrame configFrame) {
         this.configFrame = configFrame;

@@ -103,7 +103,6 @@ public class PrimitiveInfo {
      *
      * @throws InvocationTargetException
      * @throws IllegalAccessException
-     * @throws Exception                 if invocation directive failure
      */
     public synchronized void evalAsDirective(Struct g) throws IllegalAccessException, InvocationTargetException {
         for (int i = 0; i < primitive_args.length; i++) {

@@ -1,15 +1,7 @@
-image: gciatto/my-images:jdk12-alpine-gradle531
+image: gciatto/my-images:jdk12-alpine-gradle551
 
 variables:
   GOPTS: "--no-daemon --console=plain"
-
-cache:
-  paths:
-     - /root/.gradle/
-     - gradle/
-     - build/
-     - .gradle/wrapper
-     - .gradle/caches
 
 build:
   stage: build
@@ -19,3 +11,25 @@ test:
   stage: test
   script: ./gradlew check $GOPTS
 
+deploy_artifacts:
+  stage: deploy
+  script:
+    - ./gradlew publishAllPublicationsToMavenRepository
+  environment:
+    name: Staging on Sonatype
+    url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+  when: on_success
+  only:
+    - master
+    - tags
+
+deploy_artifacts_manually:
+  stage: deploy
+  script:
+    - ./gradlew publishAllPublicationsToMavenRepository
+  environment:
+    name: Manually publish on Maven Central
+    url: "https://repo.maven.apache.org/maven2/it/unibo/alice/tuprolog/"
+  when: manual
+  only:
+    - master
