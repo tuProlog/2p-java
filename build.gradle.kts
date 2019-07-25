@@ -2,7 +2,6 @@ plugins {
     id("maven-publish")
     signing
     java
-    id("org.danilopianini.publish-on-central") version "0.1.0" apply false
 }
 
 version = "4.0.0"
@@ -23,12 +22,11 @@ subprojects {
     apply(plugin = "signing")
     apply(plugin = "java")
     apply(plugin = "maven-publish")
-    apply(plugin = "org.danilopianini.publish-on-central")
 
     repositories {
         mavenCentral()
     }
-    
+
     group = rootProject.group
     version = rootProject.version
 
@@ -36,26 +34,26 @@ subprojects {
 
     jarTask.archiveBaseName.set("${rootProject.name}-${this@subprojects.name}")
 
-//    task<Jar>("sourcesJar") {
-//        from(sourceSets["main"].allSource)
-//        group = "documentation"
-//
-//        destinationDirectory.set(jarTask.destinationDirectory.get())
-//        archiveBaseName.set(jarTask.archiveBaseName.get())
-//        archiveVersion.set(this@subprojects.version.toString())
-//        archiveClassifier.set("sources")
-//    }
-//
-//    task<Jar>("javadocJar") {
-//        dependsOn("javadoc")
-//        from(tasks["javadoc"])
-//        group = "documentation"
-//
-//        destinationDirectory.set(jarTask.destinationDirectory.get())
-//        archiveBaseName.set(jarTask.archiveBaseName.get())
-//        archiveVersion.set(this@subprojects.version.toString())
-//        archiveClassifier.set("javadoc")
-//    }
+    task<Jar>("sourcesJar") {
+        from(sourceSets["main"].allSource)
+        group = "documentation"
+
+        destinationDirectory.set(jarTask.destinationDirectory.get())
+        archiveBaseName.set(jarTask.archiveBaseName.get())
+        archiveVersion.set(this@subprojects.version.toString())
+        archiveClassifier.set("sources")
+    }
+
+    task<Jar>("javadocJar") {
+        dependsOn("javadoc")
+        from(tasks["javadoc"])
+        group = "documentation"
+
+        destinationDirectory.set(jarTask.destinationDirectory.get())
+        archiveBaseName.set(jarTask.archiveBaseName.get())
+        archiveVersion.set(this@subprojects.version.toString())
+        archiveClassifier.set("javadoc")
+    }
 
     publishing {
         publications {
@@ -83,20 +81,24 @@ subprojects {
                 }
             }
 
-            withType<MavenPublication> {
-//            create<MavenPublication>(this@subprojects.name) {
+            create<MavenPublication>(this@subprojects.name) {
                 groupId = rootProject.group.toString()
                 artifactId = "${rootProject.name}-${this@subprojects.name}"
                 version = rootProject.version.toString()
 
-//                artifact(tasks["jar"])
-//                artifact(tasks["javadocJar"])
-//                artifact(tasks["sourcesJar"])
+                val javaComponent = this@subprojects.components.find { it.name == "java" }
+                        ?: throw IllegalStateException("Cannot find Java project component.")
+
+                from(javaComponent)
+                artifact(tasks["javadocJar"])
+                artifact(tasks["sourcesJar"])
 
                 pom {
                     name.set("tuProlog ${capitalize(this@subprojects.name)}")
                     description.set("${capitalize(this@subprojects.name)} module for tuProlog")
                     url.set("http://tuprolog.unibo.it")
+
+                    packaging = "jar"
 
                     licenses {
                         license {
@@ -130,21 +132,19 @@ subprojects {
         }
     }
 
-    println(this@subprojects.property("ossrhUsername"))
+    signing {
+        // env ORG_GRADLE_PROJECT_signingKey
+        val signingKey: String? by project
+        // env ORG_GRADLE_PROJECT_signingPassword
+        val signingPassword: String? by project
 
-//    signing {
-//        // env ORG_GRADLE_PROJECT_signingKey
-//        val signingKey: String? by project
-//        // env ORG_GRADLE_PROJECT_signingPassword
-//        val signingPassword: String? by project
-//
-//        useInMemoryPgpKeys(signingKey, signingPassword)
-//
-//        // This generates a task for each publication, named `sign<CapitalisedPubName>Publication`
-//        sign(publishing.publications)
-//    }
+        useInMemoryPgpKeys(signingKey, signingPassword)
 
-//    signTask.dependsOn(tasks["sign${capitalize(this@subprojects.name)}Publication"])
+        // This generates a task for each publication, named `sign<CapitalisedPubName>Publication`
+        sign(publishing.publications)
+    }
+
+    signTask.dependsOn(tasks["sign${capitalize(this@subprojects.name)}Publication"])
 
     configure<JavaPluginConvention> {
         sourceCompatibility = JavaVersion.VERSION_1_8
