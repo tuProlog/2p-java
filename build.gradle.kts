@@ -4,7 +4,7 @@ plugins {
     java
 }
 
-version = "4.0.0"
+version = "4.0.1"
 group = "it.unibo.alice.tuprolog"
 
 repositories {
