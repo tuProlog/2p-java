@@ -2,13 +2,13 @@ plugins {
     id("maven-publish")
     signing
     java
+    id("org.danilopianini.publish-on-central") version "0.1.0" apply false
 }
 
 version = "4.0.0"
 group = "it.unibo.alice.tuprolog"
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
@@ -23,9 +23,9 @@ subprojects {
     apply(plugin = "signing")
     apply(plugin = "java")
     apply(plugin = "maven-publish")
+    apply(plugin = "org.danilopianini.publish-on-central")
 
     repositories {
-        jcenter()
         mavenCentral()
     }
     
@@ -36,26 +36,26 @@ subprojects {
 
     jarTask.archiveBaseName.set("${rootProject.name}-${this@subprojects.name}")
 
-    task<Jar>("sourcesJar") {
-        from(sourceSets["main"].allSource)
-        group = "documentation"
-
-        destinationDirectory.set(jarTask.destinationDirectory.get())
-        archiveBaseName.set(jarTask.archiveBaseName.get())
-        archiveVersion.set(this@subprojects.version.toString())
-        archiveClassifier.set("sources")
-    }
-
-    task<Jar>("javadocJar") {
-        dependsOn("javadoc")
-        from(tasks["javadoc"])
-        group = "documentation"
-
-        destinationDirectory.set(jarTask.destinationDirectory.get())
-        archiveBaseName.set(jarTask.archiveBaseName.get())
-        archiveVersion.set(this@subprojects.version.toString())
-        archiveClassifier.set("javadoc")
-    }
+//    task<Jar>("sourcesJar") {
+//        from(sourceSets["main"].allSource)
+//        group = "documentation"
+//
+//        destinationDirectory.set(jarTask.destinationDirectory.get())
+//        archiveBaseName.set(jarTask.archiveBaseName.get())
+//        archiveVersion.set(this@subprojects.version.toString())
+//        archiveClassifier.set("sources")
+//    }
+//
+//    task<Jar>("javadocJar") {
+//        dependsOn("javadoc")
+//        from(tasks["javadoc"])
+//        group = "documentation"
+//
+//        destinationDirectory.set(jarTask.destinationDirectory.get())
+//        archiveBaseName.set(jarTask.archiveBaseName.get())
+//        archiveVersion.set(this@subprojects.version.toString())
+//        archiveClassifier.set("javadoc")
+//    }
 
     publishing {
         publications {
@@ -83,14 +83,15 @@ subprojects {
                 }
             }
 
-            create<MavenPublication>(this@subprojects.name) {
+            withType<MavenPublication> {
+//            create<MavenPublication>(this@subprojects.name) {
                 groupId = rootProject.group.toString()
                 artifactId = "${rootProject.name}-${this@subprojects.name}"
                 version = rootProject.version.toString()
 
-                artifact(tasks["jar"])
-                artifact(tasks["javadocJar"])
-                artifact(tasks["sourcesJar"])
+//                artifact(tasks["jar"])
+//                artifact(tasks["javadocJar"])
+//                artifact(tasks["sourcesJar"])
 
                 pom {
                     name.set("tuProlog ${capitalize(this@subprojects.name)}")
@@ -129,19 +130,21 @@ subprojects {
         }
     }
 
-    signing {
-        // env ORG_GRADLE_PROJECT_signingKey
-        val signingKey: String? by project
-        // env ORG_GRADLE_PROJECT_signingPassword
-        val signingPassword: String? by project
+    println(this@subprojects.property("ossrhUsername"))
 
-        useInMemoryPgpKeys(signingKey, signingPassword)
+//    signing {
+//        // env ORG_GRADLE_PROJECT_signingKey
+//        val signingKey: String? by project
+//        // env ORG_GRADLE_PROJECT_signingPassword
+//        val signingPassword: String? by project
+//
+//        useInMemoryPgpKeys(signingKey, signingPassword)
+//
+//        // This generates a task for each publication, named `sign<CapitalisedPubName>Publication`
+//        sign(publishing.publications)
+//    }
 
-        // This generates a task for each publication, named `sign<CapitalisedPubName>Publication`
-        sign(publishing.publications)
-    }
-
-    signTask.dependsOn(tasks["sign${capitalize(this@subprojects.name)}Publication"])
+//    signTask.dependsOn(tasks["sign${capitalize(this@subprojects.name)}Publication"])
 
     configure<JavaPluginConvention> {
         sourceCompatibility = JavaVersion.VERSION_1_8
