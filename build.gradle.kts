@@ -4,11 +4,10 @@ plugins {
     java
 }
 
-version = "4.0.0"
+version = "4.0.1"
 group = "it.unibo.alice.tuprolog"
 
 repositories {
-    jcenter()
     mavenCentral()
 }
 
@@ -25,10 +24,9 @@ subprojects {
     apply(plugin = "maven-publish")
 
     repositories {
-        jcenter()
         mavenCentral()
     }
-    
+
     group = rootProject.group
     version = rootProject.version
 
@@ -88,7 +86,10 @@ subprojects {
                 artifactId = "${rootProject.name}-${this@subprojects.name}"
                 version = rootProject.version.toString()
 
-                artifact(tasks["jar"])
+                val javaComponent = this@subprojects.components.find { it.name == "java" }
+                        ?: throw IllegalStateException("Cannot find Java project component.")
+
+                from(javaComponent)
                 artifact(tasks["javadocJar"])
                 artifact(tasks["sourcesJar"])
 
@@ -96,6 +97,8 @@ subprojects {
                     name.set("tuProlog ${capitalize(this@subprojects.name)}")
                     description.set("${capitalize(this@subprojects.name)} module for tuProlog")
                     url.set("http://tuprolog.unibo.it")
+
+                    packaging = "jar"
 
                     licenses {
                         license {
