@@ -428,7 +428,9 @@ retract(Fact) :-
     '$retract'(Fact).
 */
 
-retract(Clause) :- '$retract'(Clause).
+retract(Clause) :-
+    clause(Head, _),
+    '$retract'(Clause).
 
 
 retractall(Head) :-
