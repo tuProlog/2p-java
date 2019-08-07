@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class TestPrologParser {
 
     private static PrologLexer lexerForString(String input) {
-        return new PrologLexer(new ANTLRInputStream(input));
+        return new PrologLexer(CharStreams.fromString(input));
     }
 
     private static TokenStream tokenStreamFromLexer(DynamicLexer lexer) {
