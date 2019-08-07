@@ -89,7 +89,7 @@ public class TheoryManagerTestCase extends TestCase {
         TestOutputListener listener = new TestOutputListener();
         engine.addOutputListener(listener);
         engine.setTheory(Theory.parseWithStandardOperators("insect(ant). \n insect(bee)."));
-        SolveInfo info = engine.solve("retract(insect(A)), write(A), retract(insect(B)), write(B),  fail.");
+        SolveInfo info = engine.solve("retract(insect(I)), write(I), retract(insect(bee)), fail.");
         assertFalse(info.isSuccess());
         assertEquals("antbee", listener.output);
 

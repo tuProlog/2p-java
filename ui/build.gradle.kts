@@ -15,11 +15,14 @@ dependencies {
     testImplementation("org.concordion", "concordion-embed-extension", "1.2.0")
 }
 
+val ideMainClass = "alice.tuprologx.ide.GUILauncher"
+val replMainClass = "alice.tuprologx.ide.CUIConsole"
+
 task<JavaExec>("ide") {
     group = "run"
     dependsOn("classes")
 
-    main = "alice.tuprologx.ide.GUILauncher"
+    main = ideMainClass
     sourceSets {
         main {
             classpath = runtimeClasspath
@@ -31,7 +34,7 @@ task<JavaExec>("repl") {
     group = "run"
     dependsOn("classes")
 
-    main = "alice.tuprologx.ide.CUIConsole"
+    main = replMainClass
     sourceSets {
         main {
             classpath = runtimeClasspath
@@ -40,4 +43,24 @@ task<JavaExec>("repl") {
 
     standardInput = System.`in`
     standardOutput = System.out
+}
+
+val jarTask = tasks["jar"] as Jar
+
+task<Jar>("runnableJar") {
+    manifest {
+        attributes["Main-Class"] = ideMainClass
+    }
+
+    group = "jar"
+    dependsOn(configurations.runtimeClasspath)
+
+    from(sourceSets.main.get().output)
+    from(
+            configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    )
+
+    destinationDirectory.set(jarTask.destinationDirectory.get())
+    archiveBaseName.set(rootProject.name)
+    archiveVersion.set(project.version.toString())
 }

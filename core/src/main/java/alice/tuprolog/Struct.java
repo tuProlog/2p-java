@@ -248,7 +248,7 @@ public class Struct extends Term {
      * Builds a compound, with an array of arguments
      */
     @Deprecated
-    private Struct(String f, Term... argList) {
+    public Struct(String f, Term... argList) {
         this(f, argList.length);
         for (int i = 0; i < argList.length; i++) {
             if (argList[i] == null) {
