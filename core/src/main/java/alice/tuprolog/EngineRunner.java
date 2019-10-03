@@ -23,7 +23,7 @@ public class EngineRunner implements java.io.Serializable, Runnable {
     public static final int FALSE = 0;
     public static final int TRUE = 1;
     public static final int TRUE_CP = 2;
-    private static final long serialVersionUID = 1L;
+
     final State INIT;
     final State GOAL_EVALUATION;
     final State EXCEPTION;

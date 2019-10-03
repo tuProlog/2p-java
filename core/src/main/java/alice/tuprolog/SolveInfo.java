@@ -41,7 +41,8 @@ public class SolveInfo implements Serializable {
     static final int FALSE = EngineRunner.FALSE;
     static final int TRUE = EngineRunner.TRUE;
     static final int TRUE_CP = EngineRunner.TRUE_CP;
-    private static final long serialVersionUID = 1L;
+    private static final int TIME_ELAPSED = EngineRunner.TIME_ELAPSED;
+
     private int endState;
     private boolean isSuccess;
 
@@ -84,6 +85,10 @@ public class SolveInfo implements Serializable {
      */
     public boolean isHalted() {
         return (endState == HALT);
+    }
+
+    public boolean isTimeout() {
+        return (endState == TIME_ELAPSED);
     }
 
     /**
@@ -186,12 +191,12 @@ public class SolveInfo implements Serializable {
                 }
             }
             return st.toString().trim();
+        } else if (isTimeout()) {
+            return "timeout.";
+        } else if (isHalted()) {
+            return "halt.";
         } else {
-            if (endState == EngineRunner.HALT) {
-                return ("halt.");
-            } else {
-                return "no.";
-            }
+            return "no.";
         }
     }
 }
