@@ -27,6 +27,7 @@ import alice.tuprolog.interfaces.IProlog;
 import alice.tuprolog.interfaces.event.*;
 import alice.util.Tools;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -105,6 +106,7 @@ public class Prolog implements IProlog, Serializable {
         this(false, true);
         this.defaultLibraryConfiguration();
         theoryText = theory;
+        this.setTheory(Theory.parseWithOperators(theory, getOperatorManager()));
         this.addOutputListener(defaultOutputListener);
         this.canSpawn = true;
     }
@@ -114,25 +116,28 @@ public class Prolog implements IProlog, Serializable {
         this(false, true);
         this.defaultLibraryConfiguration();
         theoryText = theory;
+        this.setTheory(Theory.parseWithOperators(theory, getOperatorManager()));
         goalText = goal;
         this.addOutputListener(defaultOutputListener);
         this.canSpawn = true;
     }
 
     //Alberto
-    public Prolog(InputStream is) {
+    public Prolog(InputStream is) throws IOException {
         this(false, true);
         this.defaultLibraryConfiguration();
         theoryInputStream = is;
+        this.setTheory(Theory.parseWithOperators(is, getOperatorManager()));
         this.addOutputListener(defaultOutputListener);
         this.canSpawn = true;
     }
 
     //Alberto
-    public Prolog(InputStream is, String goal) {
+    public Prolog(InputStream is, String goal) throws IOException {
         this(false, true);
         this.defaultLibraryConfiguration();
         theoryInputStream = is;
+        this.setTheory(Theory.parseWithOperators(is, getOperatorManager()));
         goalText = goal;
         this.addOutputListener(defaultOutputListener);
         this.canSpawn = true;
@@ -1204,9 +1209,9 @@ public class Prolog implements IProlog, Serializable {
     private void body() {
         try {
             if (theoryText == null) {
-                this.setTheory(Theory.parseLazilyWithStandardOperators(theoryInputStream));
+                this.setTheory(Theory.parseWithStandardOperators(theoryInputStream));
             } else {
-                this.setTheory(Theory.parseLazilyWithStandardOperators(theoryText));
+                this.setTheory(Theory.parseWithStandardOperators(theoryText));
             }
             if (goalText != null) {
                 this.solve(goalText);
