@@ -28,6 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.function.Consumer;
 
 
 /**
@@ -41,13 +42,16 @@ import java.awt.event.WindowEvent;
 public class JavaIDE
         extends JFrame {
 
-    private static final long serialVersionUID = 1L;
     private static ConsoleManager consoleManager;
     private TheoryTabbedPane tabbedPane;
 
-    public JavaIDE() {
+    public JavaIDE(Consumer<Prolog> engineInitialiser) {
         super("tuProlog " + Prolog.getVersion() + " IDE");
-        initComponents();
+        initComponents(engineInitialiser);
+    }
+
+    public JavaIDE() {
+        this(engine -> {});
     }
 
     public static ConsoleManager getConsoleManager() {
@@ -57,10 +61,11 @@ public class JavaIDE
     /**
      * Initialize the graphic components and set the dependencies among them.
      */
-    private void initComponents() {
+    private void initComponents(Consumer<Prolog> engineInitialiser) {
         System.out.println("tuProlog system - release " + Prolog.getVersion());
 
         final Prolog engine = new Prolog();
+        engineInitialiser.accept(engine);
 
         DefaultCompletionProvider commonCompletionProvider = CompletionUtils.createCompletionProvider();
         engine.addTheoryListener(new CompletionUpdateTheoryListener(commonCompletionProvider));

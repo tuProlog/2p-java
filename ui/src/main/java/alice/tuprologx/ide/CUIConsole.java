@@ -19,6 +19,7 @@ import alice.tuprolog.lib.IOLibrary;
 import alice.util.Automaton;
 
 import java.io.*;
+import java.util.function.Consumer;
 
 @SuppressWarnings("serial")
 public class CUIConsole extends Automaton implements Serializable, OutputListener, SpyListener, WarningListener/*Castagna 06/2011*/, ExceptionListener/**/ {
@@ -28,6 +29,25 @@ public class CUIConsole extends Automaton implements Serializable, OutputListene
     static String sol = ""; //to do -> correct output of CUI console in order to show multiple results
     BufferedReader stdin;
     Prolog engine;
+
+    public CUIConsole(Consumer<Prolog> engineInitialiser) {
+        engine = new Prolog();
+        engineInitialiser.accept(engine);
+
+        /**
+         * Added the method setExecution to conform
+         * the operation of CUIConsole as that of JavaIDE
+         */
+        IOLibrary IO = (IOLibrary) engine.getLibrary("alice.tuprolog.lib.IOLibrary");
+        IO.setExecutionType(IOLibrary.consoleExecution);
+        /***/
+        stdin = new BufferedReader(new InputStreamReader(System.in));
+        engine.addWarningListener(this);
+        engine.addOutputListener(this);
+        engine.addSpyListener(this);
+        /*Castagna 06/2011*/
+        engine.addExceptionListener(this);
+    }
 
     public CUIConsole(String[] args) {
 
