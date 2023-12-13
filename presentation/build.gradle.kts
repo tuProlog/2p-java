@@ -10,7 +10,7 @@ val jacksonVersion: String by project
 dependencies {
     api(project(":core"))
 
-    compile("org.javatuples", "javatuples", "1.2")
+    implementation("org.javatuples", "javatuples", "1.2")
     implementation("com.fasterxml.jackson.core", "jackson-core", jacksonVersion)
     implementation("com.fasterxml.jackson.datatype", "jackson-datatype-jsr310", jacksonVersion)
     implementation("com.fasterxml.jackson.dataformat", "jackson-dataformat-xml", jacksonVersion)

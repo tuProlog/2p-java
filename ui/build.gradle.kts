@@ -22,7 +22,7 @@ task<JavaExec>("ide") {
     group = "run"
     dependsOn("classes")
 
-    main = ideMainClass
+    mainClass.set(ideMainClass)
     sourceSets {
         main {
             classpath = runtimeClasspath
@@ -34,7 +34,7 @@ task<JavaExec>("repl") {
     group = "run"
     dependsOn("classes")
 
-    main = replMainClass
+    mainClass.set(replMainClass)
     sourceSets {
         main {
             classpath = runtimeClasspath

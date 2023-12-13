@@ -125,7 +125,7 @@ subprojects {
                     scm {
                         connection.set("scm:git:git:///gitlab.com/pika-lab/tuprolog/2p.git")
                         developerConnection.set("scm:git:ssh://gitlab.com/pika-lab/tuprolog/2p.git")
-                        url.set("https://gitlab.com/pika-lab/tuprolog/2p")
+                        url.set("https://github.com/tuProlog/2p-java")
                     }
                 }
             }

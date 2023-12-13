@@ -8,22 +8,20 @@ repositories {
 }
 
 dependencies {
-    antlr("org.antlr", "antlr4", "4.7.2")
+    antlr("org.antlr", "antlr4", "4.13.1")
 
-    api("org.antlr", "antlr4-runtime", "4.7.2")
+    api("org.antlr", "antlr4-runtime", "4.13.1")
     
     testImplementation("pl.pragmatists:JUnitParams:1.1.1")
-}
-
-configurations {
-    compile {
-        setExtendsFrom(emptyList())
-    }
 }
 
 tasks.generateGrammarSource {
     maxHeapSize = "64m"
     arguments = arguments + listOf("-visitor", "-long-messages")
-    outputDirectory = File("${project.buildDir}/generated-src/antlr/main/alice/tuprolog/parser")
+    val buildDir = project.layout.buildDirectory.asFile.getOrElse(project.buildFile.parentFile)
+    outputDirectory = File("$buildDir/generated-src/antlr/main/alice/tuprolog/parser")
 }
 
+tasks.classes {
+    dependsOn(tasks.generateGrammarSource)
+}
