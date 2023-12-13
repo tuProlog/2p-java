@@ -1,4 +1,8 @@
-# tuProlog
+# tuProlog (Java)
+
+This is the Java version of tuProlog.
+This version of tuProlog is unmaintained.
+Please refer to the [Kotlin version](https://github.com/tuProlog/2p-kt) instead.
 
 ## How to develop tuProlog
 
@@ -48,13 +52,11 @@ for that branch must simply ensure that the set of failing tests is left unaffec
 into `develop`, unless some are fixed. Of course this means the feature branch is only allowed to fix broken tests or 
 leave them unaltered. 
 
-          
-
 ## How to run tuProlog
 
 1. Clone this repository
     
-        git clone https://gitlab.com/pika-lab/tuprolog/2p  
+        git clone https://github.com/tuProlog/2p-kt
         
 2. Jump into the `2p` directory created by Git
 
